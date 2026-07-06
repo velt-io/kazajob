@@ -12,5 +12,9 @@ export async function GET() {
   }).from(launchCampaigns)
 
   const active = rows.find((c) => c.freePublishingEnabled && effectiveCampaignStatus(c.state as CampaignState, c.startsAt, c.endsAt) === 'active')
-  return NextResponse.json({ available: !!active, campaignName: active?.name ?? null })
+  return NextResponse.json({
+    available:      !!active,
+    campaignName:   active?.name ?? null,
+    campaignEndsAt: active?.endsAt?.toISOString() ?? null,
+  })
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react'
@@ -23,7 +23,16 @@ function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [launchDays, setLaunchDays] = useState<number | null>(null)
   const { signUp } = useAuth()
+
+  useEffect(() => {
+    fetch('/api/launch/public').then(r => r.ok ? r.json() : null).then(d => {
+      if (!d?.available || !d.campaignEndsAt) return
+      const days = Math.ceil((new Date(d.campaignEndsAt).getTime() - Date.now()) / 86_400_000)
+      if (days > 0) setLaunchDays(days)
+    }).catch(() => {})
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -153,7 +162,10 @@ function RegisterForm() {
           </Button>
           {role === 'recruiter' && (
             <p className="text-xs text-center text-[#6B5A4A] -mt-1">
-              Essai 30 jours · carte requise à l&apos;activation · 1er débit après l&apos;essai.
+              {launchDays
+                ? `Phase de lancement — accès gratuit pendant encore ${launchDays} jours · sans carte bancaire.`
+                : "Essai 30 jours · carte requise à l'activation · 1er débit après l'essai."
+              }
             </p>
           )}
         </form>

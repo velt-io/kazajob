@@ -41,55 +41,62 @@ export async function POST(req: NextRequest) {
 
   const stripe = getStripe()
 
-  // Customer Stripe : réutilise l'existant ou en crée un.
-  let customerId = ctx.subscription?.stripeCustomerId ?? null
-  if (!customerId) {
-    const customer = await stripe.customers.create({
-      email: ctx.owner?.email,
-      name: ctx.company.name,
-      metadata: { companyId: ctx.company.id },
-    })
-    customerId = customer.id
-    await saveStripeState(ctx.company.id, { customerId })
-  }
+  try {
+    // Customer Stripe : réutilise l'existant ou en crée un.
+    let customerId = ctx.subscription?.stripeCustomerId ?? null
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: ctx.owner?.email,
+        name: ctx.company.name,
+        metadata: { companyId: ctx.company.id },
+      })
+      customerId = customer.id
+      await saveStripeState(ctx.company.id, { customerId })
+    }
 
-  // Jours d'essai restants → reportés sur l'abonnement Stripe.
-  let trialDays: number | undefined
-  if (ctx.subscription?.status === 'trial' && ctx.subscription.trialEndsAt) {
-    const remaining = Math.ceil((ctx.subscription.trialEndsAt.getTime() - Date.now()) / 86_400_000)
-    if (remaining > 0) trialDays = remaining
-  }
+    // Jours d'essai restants → reportés sur l'abonnement Stripe.
+    let trialDays: number | undefined
+    if (ctx.subscription?.status === 'trial' && ctx.subscription.trialEndsAt) {
+      const remaining = Math.ceil((ctx.subscription.trialEndsAt.getTime() - Date.now()) / 86_400_000)
+      if (remaining > 0) trialDays = remaining
+    }
 
-  // Code promo : notre validité fait foi ; Stripe applique le coupon associé.
-  let discount: { coupon: string } | null = null
-  if (promoCode) {
-    const v = await validatePromo(String(promoCode))
-    if (v.valid && v.couponId) discount = { coupon: v.couponId }
-  }
+    // Code promo : notre validité fait foi ; Stripe applique le coupon associé.
+    let discount: { coupon: string } | null = null
+    if (promoCode) {
+      const v = await validatePromo(String(promoCode))
+      if (v.valid && v.couponId) discount = { coupon: v.couponId }
+    }
 
-  const checkout = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    customer: customerId,
-    // Collecte du moyen de paiement dès l'inscription (même pendant l'essai) → débit auto en fin d'essai.
-    payment_method_collection: 'always',
-    line_items: [{
-      quantity: 1,
-      price_data: {
-        currency: 'eur',
-        unit_amount: plan.priceCts,
-        recurring: { interval: 'month' },
-        product_data: { name: `Kazajob — Forfait ${plan.name}` },
+    const checkout = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer: customerId,
+      // Collecte du moyen de paiement dès l'inscription (même pendant l'essai) → débit auto en fin d'essai.
+      payment_method_collection: 'always',
+      line_items: [{
+        quantity: 1,
+        price_data: {
+          currency: 'eur',
+          unit_amount: plan.priceCts,
+          recurring: { interval: 'month' },
+          product_data: { name: `Kazajob — Forfait ${plan.name}` },
+        },
+      }],
+      subscription_data: {
+        ...(trialDays ? { trial_period_days: trialDays } : {}),
+        metadata: { companyId: ctx.company.id, planId: plan.id },
       },
-    }],
-    subscription_data: {
-      ...(trialDays ? { trial_period_days: trialDays } : {}),
-      metadata: { companyId: ctx.company.id, planId: plan.id },
-    },
-    metadata: { companyId: ctx.company.id, planId: plan.id, ...(discount ? { promoCode: String(promoCode).trim().toUpperCase() } : {}) },
-    ...(discount ? { discounts: [discount] } : { allow_promotion_codes: true }),
-    success_url: `${APP_URL}/recruiter/company?billing=success`,
-    cancel_url: `${APP_URL}/recruiter/company?billing=cancel`,
-  })
+      metadata: { companyId: ctx.company.id, planId: plan.id, ...(discount ? { promoCode: String(promoCode).trim().toUpperCase() } : {}) },
+      ...(discount ? { discounts: [discount] } : { allow_promotion_codes: true }),
+      success_url: `${APP_URL}/recruiter/company?billing=success`,
+      cancel_url: `${APP_URL}/recruiter/company?billing=cancel`,
+    })
 
-  return NextResponse.json({ url: checkout.url })
+    if (!checkout.url) return NextResponse.json({ error: 'Session Stripe créée sans URL de redirection.' }, { status: 500 })
+    return NextResponse.json({ url: checkout.url })
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Erreur inattendue lors de la création du paiement.'
+    console.error('[checkout] Stripe error:', err)
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
 }

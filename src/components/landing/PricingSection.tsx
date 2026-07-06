@@ -16,11 +16,17 @@ const CANDIDATE_FEATURES = [
 ]
 
 export function PricingSection() {
-  // Bandeau d'annonce (texte seul, jamais une tuile tarifaire) : reflète la campagne
-  // de lancement pilotée par l'admin, indépendante des forfaits ci-dessous.
   const [campaignName, setCampaignName] = useState<string | null>(null)
+  const [launchDays, setLaunchDays] = useState<number | null>(null)
   useEffect(() => {
-    fetch('/api/launch/public').then((r) => (r.ok ? r.json() : null)).then((d) => setCampaignName(d?.available ? d.campaignName : null)).catch(() => {})
+    fetch('/api/launch/public').then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (!d?.available) return
+      setCampaignName(d.campaignName)
+      if (d.campaignEndsAt) {
+        const days = Math.ceil((new Date(d.campaignEndsAt).getTime() - Date.now()) / 86_400_000)
+        if (days > 0) setLaunchDays(days)
+      }
+    }).catch(() => {})
   }, [])
 
   return (
@@ -36,7 +42,10 @@ export function PricingSection() {
           </h2>
           <p className="text-base text-[#6B5A4A] max-w-[520px] mx-auto">
             Les candidats accèdent à <strong className="text-[#1A1410]">100% des fonctionnalités gratuitement</strong>, pour toujours.
-            {' '}Les recruteurs choisissent leur forfait selon leurs besoins. Essai 30 jours, carte requise à l&apos;activation.
+            {' '}{launchDays
+              ? `Phase de lancement en cours — ${launchDays} jours restants · accès gratuit sans carte bancaire.`
+              : 'Les recruteurs choisissent leur forfait selon leurs besoins. Essai 30 jours, carte requise à l\'activation.'
+            }
           </p>
           {campaignName && (
             <p className="mt-3 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full" style={{ background: KZ.violetSoft, color: KZ.violet }}>
@@ -67,7 +76,9 @@ export function PricingSection() {
                 <div className="text-[36px] font-extrabold tracking-tight leading-none mb-1">
                   {euros}€<span className="text-sm font-semibold opacity-60">/mois</span>
                 </div>
-                <div className="text-xs opacity-60 mb-4">30 jours d&apos;essai · 1er débit après l&apos;essai</div>
+                <div className="text-xs opacity-60 mb-4">
+                  {launchDays ? `Lancement · ${launchDays} jours restants` : "30 jours d'essai · 1er débit après l'essai"}
+                </div>
                 <div className="flex flex-col gap-2 mb-6 flex-1">
                   {planFeatures(plan).map((f: string) => (
                     <div key={f} className="flex items-start gap-2 text-sm">
@@ -78,7 +89,7 @@ export function PricingSection() {
                 </div>
                 <Link href={`/auth/register?role=recruiter&plan=${plan.id}`}>
                   <Button kind={hl ? 'primary' : 'outline'} size="lg" full iconRight={<ArrowRight size={14} />}>
-                    Essai gratuit 30 jours
+                    {launchDays ? 'Démarrer gratuitement' : 'Essai gratuit 30 jours'}
                   </Button>
                 </Link>
               </div>
@@ -124,7 +135,9 @@ export function PricingSection() {
           {[
             { label: 'Sans engagement', desc: 'Annulation à tout moment' },
             { label: 'Données en Europe', desc: 'RGPD conforme · Hébergement EU' },
-            { label: 'Essai 30 jours', desc: 'Carte requise · débit après 30j' },
+            launchDays
+              ? { label: `Lancement ${launchDays}j`, desc: 'Accès gratuit · sans carte' }
+              : { label: 'Essai 30 jours', desc: 'Carte requise · débit après 30j' },
             { label: 'Support 974', desc: 'Équipe locale' },
           ].map((g) => (
             <div key={g.label} className="text-center p-4 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>

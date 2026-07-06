@@ -17,7 +17,14 @@ import { EnterpriseLanding }  from '@/components/landing/EnterpriseLanding'
 import { SectionDecor }       from '@/components/landing/SectionDecor'
 import { KZ } from '@/lib/constants'
 import { getLandingData } from '@/lib/queries/landing'
+import { getActiveLaunchPublicData } from '@/lib/queries/launch'
 import { formatSalary } from '@/lib/utils'
+
+function launchDaysLeft(endsAt: string | null): number | null {
+  if (!endsAt) return null
+  const d = Math.ceil((new Date(endsAt).getTime() - Date.now()) / 86_400_000)
+  return d > 0 ? d : null
+}
 
 // Contenu marketing statique — ne change pas en fonction des données
 const HOW_STEPS = [
@@ -47,7 +54,11 @@ export default async function LandingPage({
 }) {
   const params = await searchParams
   const isEnterprise = params?.view === 'entreprise'
-  const { featuredJobs, companies, stats } = await getLandingData()
+  const [{ featuredJobs, companies, stats }, launchData] = await Promise.all([
+    getLandingData(),
+    getActiveLaunchPublicData(),
+  ])
+  const launchDays = launchDaysLeft(launchData?.endsAt ?? null)
 
   // Bande stats — vraies données si disponibles, sinon labels clairs
   const STATS_BAND = [
@@ -64,7 +75,7 @@ export default async function LandingPage({
       {/* ── VUE ENTREPRISE ──────────────────────────────────────── */}
       {isEnterprise ? (
         <>
-          <EnterpriseLanding stats={stats} />
+          <EnterpriseLanding stats={stats} launchDays={launchDays} />
           <Footer />
         </>
       ) : (
@@ -278,7 +289,8 @@ export default async function LandingPage({
               <span style={{ color: KZ.orange }}>Pas de spam. Pas de bruit.</span>
             </h2>
             <p className="text-base leading-relaxed opacity-80 mb-6 max-w-[520px]" style={{ color: KZ.cream }}>
-              Offres illimitées, IA de tri automatique, pipeline Kanban et suivi de vos performances. Essai 30 jours gratuit.
+              Offres illimitées, IA de tri automatique, pipeline Kanban et suivi de vos performances.{' '}
+              {launchDays ? `Phase de lancement — ${launchDays} jours restants.` : 'Essai 30 jours gratuit.'}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/auth/register?role=recruiter">
@@ -329,7 +341,10 @@ export default async function LandingPage({
           </Link>
         </div>
         <p className="text-xs text-[#6B5A4A]">
-          Candidats : 100% gratuit · Recruteurs : essai 30 jours, carte requise · Données hébergées en Europe
+          {launchDays
+            ? `Candidats : 100% gratuit · Recruteurs : lancement (${launchDays}j restants) · sans carte bancaire · Données hébergées en Europe`
+            : 'Candidats : 100% gratuit · Recruteurs : essai 30 jours, carte requise · Données hébergées en Europe'
+          }
         </p>
       </section>
 

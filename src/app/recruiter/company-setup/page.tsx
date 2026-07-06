@@ -471,8 +471,8 @@ export default function CompanySetupPage() {
               <h2 className="text-lg font-bold text-[#1A1410] mb-1">Choisissez votre forfait</h2>
               <p className="text-sm text-[#6B5A4A] mb-5">
                 {launchAvailable
-                  ? `Démarrez gratuitement avec ${launchElig?.campaignName ?? 'notre offre de lancement'}, ou choisissez un forfait payant (30 jours d’essai, carte requise).`
-                  : '30 jours d’essai · Carte bancaire requise · 1er débit à la fin de l’essai · Annulable avant la fin.'}
+                  ? `Démarrez gratuitement avec ${launchElig?.campaignName ?? "notre offre de lancement"}, ou choisissez un forfait payant pour démarrer immédiatement.`
+                  : "30 jours d’essai · Carte bancaire requise · 1er débit à la fin de l’essai · Annulable avant la fin."}
               </p>
 
               {/* Accès gratuit temporaire (campagne de lancement) — jamais un forfait Stripe */}

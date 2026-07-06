@@ -15,9 +15,10 @@ const PARTNER_ICON_MAP: Record<string, React.ReactNode> = {
 
 interface EnterpriseLandingProps {
   stats: { jobs: number; companies: number; users: number }
+  launchDays?: number | null
 }
 
-function PriceCard({ plan, isHighlight }: { plan: typeof SUBSCRIPTION_PLANS[0]; isHighlight?: boolean }) {
+function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTION_PLANS[0]; isHighlight?: boolean; launchDays?: number | null }) {
   const euros = Math.floor(plan.priceCts / 100)
   return (
     <div
@@ -39,7 +40,9 @@ function PriceCard({ plan, isHighlight }: { plan: typeof SUBSCRIPTION_PLANS[0]; 
         {euros}€
         <span className="text-base font-semibold opacity-60">/mois</span>
       </div>
-      <div className="text-xs opacity-60 mb-4">30 jours d&apos;essai · 1er débit après l&apos;essai</div>
+      <div className="text-xs opacity-60 mb-4">
+        {launchDays ? `Lancement · ${launchDays} jours restants` : "30 jours d'essai · 1er débit après l'essai"}
+      </div>
 
       <div className="flex flex-col gap-2 mb-6 flex-1">
         {planFeatures(plan).map(f => (
@@ -78,14 +81,14 @@ function PriceCard({ plan, isHighlight }: { plan: typeof SUBSCRIPTION_PLANS[0]; 
           full
           iconRight={<ArrowRight size={14} />}
         >
-          Essai gratuit 30 jours
+          {launchDays ? 'Démarrer gratuitement' : 'Essai gratuit 30 jours'}
         </Button>
       </Link>
     </div>
   )
 }
 
-export function EnterpriseLanding({ stats }: EnterpriseLandingProps) {
+export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps) {
   const VALUE_PROPS = [
     { icon: <Users size={24} />, color: KZ.violetSoft, title: 'Gestion d\'équipe', desc: 'Plusieurs recruteurs sur un même compte. Rôles, permissions, KazaScore collectif.' },
     ...(MULTIDIFFUSION_ENABLED ? [{ icon: <Globe size={24} />, color: KZ.blueSoft, title: 'Multi-diffusion', desc: 'Publiez une fois, diffusez partout : France Travail, Mission Locale, APEC, Indeed et plus.' }] : []),
@@ -113,7 +116,7 @@ export function EnterpriseLanding({ stats }: EnterpriseLandingProps) {
             <div className="flex flex-wrap gap-3">
               <Link href="/auth/register?role=recruiter">
                 <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>
-                  Essai gratuit 30 jours
+                  {launchDays ? 'Démarrer gratuitement' : 'Essai gratuit 30 jours'}
                 </Button>
               </Link>
               <a href="#tarifs-pro">
@@ -275,7 +278,7 @@ export function EnterpriseLanding({ stats }: EnterpriseLandingProps) {
               { q: 'Puis-je annuler à tout moment ?', a: 'Oui. L\'annulation est effective immédiatement depuis votre espace recruteur. Aucun frais de résiliation, aucun engagement. Le prochain débit est simplement annulé.' },
               { q: 'Combien de recruteurs peuvent utiliser le même compte ?', a: 'Cela dépend de votre plan. Le plan Starter inclut 1 recruteur, Pro 3, Studio 5 et Agency est illimité. Vous pouvez inviter des membres depuis Paramètres > Équipe.' },
               { q: 'Mes offres sont-elles visibles immédiatement après publication ?', a: 'Oui, dès la validation du formulaire votre offre est en ligne. Les candidats la voient en temps réel. Les offres boostées apparaissent en tête de liste pendant la durée du boost.' },
-              { q: 'Que se passe-t-il à la fin des 30 jours d\'essai ?', a: 'Votre carte est débitée automatiquement du montant du plan choisi. Vous recevez un email de rappel 3 jours avant. Si vous annulez avant la fin de l\'essai, aucun débit n\'est effectué.' },
+              { q: 'Comment fonctionne la période de lancement ?', a: launchDays ? `Kazajob est en phase de lancement. Vous pouvez accéder à la plateforme gratuitement encore ${launchDays} jours, sans carte bancaire. À l'issue du lancement, vous choisissez un forfait payant ou votre accès passe en lecture seule.` : "Votre carte est débitée automatiquement du montant du plan choisi. Vous recevez un email de rappel 3 jours avant. Si vous annulez avant la fin de l'essai, aucun débit n'est effectué." },
               { q: 'Les données de mes candidats sont-elles sécurisées ?', a: 'Absolument. Les données sont hébergées en Europe, chiffrées en transit (HTTPS/TLS) et au repos. Kazajob est conforme RGPD. Les candidats peuvent exercer leur droit à l\'effacement à tout moment.' },
               { q: 'Puis-je créer des offres pour une autre entreprise (cabinet RH) ?', a: 'Oui. Le plan Agency est conçu pour les cabinets de recrutement. Vous gérez plusieurs entreprises clientes depuis un seul tableau de bord, avec des offres anonymisées si besoin.' },
             ].map((item) => (
@@ -302,11 +305,15 @@ export function EnterpriseLanding({ stats }: EnterpriseLandingProps) {
             <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410]">
               Un forfait pour chaque taille d&apos;entreprise.
             </h2>
-            <p className="text-sm text-[#6B5A4A] mt-2">30 jours d&apos;essai sur tous les plans · Carte requise · 1er débit après l&apos;essai</p>
+            <p className="text-sm text-[#6B5A4A] mt-2">
+              {launchDays
+                ? `Phase de lancement · ${launchDays} jours restants · accès gratuit sans carte bancaire`
+                : "30 jours d'essai sur tous les plans · Carte requise · 1er débit après l'essai"}
+            </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
             {SUBSCRIPTION_PLANS.map(plan => (
-              <PriceCard key={plan.id} plan={plan} isHighlight={plan.highlight} />
+              <PriceCard key={plan.id} plan={plan} isHighlight={plan.highlight} launchDays={launchDays} />
             ))}
           </div>
           <p className="text-center text-xs text-[#6B5A4A] mt-6">
@@ -329,7 +336,7 @@ export function EnterpriseLanding({ stats }: EnterpriseLandingProps) {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/auth/register?role=recruiter">
             <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>
-              Démarrer l&apos;essai gratuit
+              {launchDays ? 'Démarrer gratuitement' : "Démarrer l'essai gratuit"}
             </Button>
           </Link>
           <Link href="/recruiter/company-setup">

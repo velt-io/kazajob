@@ -48,6 +48,18 @@ async function getCurrentCampaign(now: Date = new Date()): Promise<CampaignRow |
  * pour orienter les entreprises vers l'accès gratuit pendant la période de lancement.
  * N'affecte jamais les abonnements déjà existants (renouvellement, changement de forfait géré ailleurs).
  */
+/**
+ * Données publiques de la campagne active pour les Server Components (page.tsx, etc.).
+ * Retourne null si aucune campagne active ou si freePublishingEnabled = false.
+ */
+export async function getActiveLaunchPublicData(): Promise<{ name: string; endsAt: string | null } | null> {
+  const campaign = await getCurrentCampaign()
+  if (!campaign) return null
+  const status = effectiveCampaignStatus(campaign.state as CampaignState, campaign.startsAt, campaign.endsAt)
+  if (status !== 'active' || !campaign.freePublishingEnabled) return null
+  return { name: campaign.name, endsAt: campaign.endsAt?.toISOString() ?? null }
+}
+
 export async function checkNewSubscriptionsAllowed(): Promise<{ allowed: boolean; campaignName: string | null }> {
   const campaign = await getCurrentCampaign()
   if (!campaign) return { allowed: true, campaignName: null }

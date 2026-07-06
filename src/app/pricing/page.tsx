@@ -22,6 +22,7 @@ interface MonetizationStatus {
   pricingPageVisible: boolean
   campaignName: string | null
   subscriptionsAllowed: boolean
+  campaignEndsAt: string | null
 }
 
 export default function PricingPage() {
@@ -161,7 +162,15 @@ export default function PricingPage() {
       </div>
 
       <div className="mt-10 text-center text-sm text-[#6B5A4A]">
-        Toutes les offres incluent un essai de 30 jours sans engagement.{' '}
+        {status?.campaignEndsAt
+          ? (() => {
+              const days = Math.ceil((new Date(status.campaignEndsAt).getTime() - Date.now()) / 86_400_000)
+              return days > 0
+                ? `Phase de lancement — accès gratuit encore ${days} jours · sans carte bancaire.`
+                : "Toutes les offres incluent un essai de 30 jours sans engagement."
+            })()
+          : "Toutes les offres incluent un essai de 30 jours sans engagement."
+        }{' '}
         <Link href="/contact" className="text-[#6D3BEB] hover:underline">Une question ? Contactez-nous.</Link>
       </div>
     </div>
