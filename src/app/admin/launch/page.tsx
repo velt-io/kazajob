@@ -192,6 +192,36 @@ export default function AdminLaunchPage() {
         </div>
       )}
 
+      {/* ── Rappel lancement écosystème payant ── */}
+      {(() => {
+        const target = new Date('2026-10-06T00:00:00+04:00')
+        const daysLeft = Math.ceil((target.getTime() - Date.now()) / 86_400_000)
+        const activeCampaign = data?.campaigns.find((c) => c.effective_status === 'active')
+        const paidVisible = activeCampaign ? activeCampaign.new_subscriptions_enabled : true
+        return (
+          <div className="kz-card p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
+            style={{ background: daysLeft <= 30 ? '#FFF3E0' : '#FFF9F0', borderColor: daysLeft <= 30 ? '#FF6B35' : '#E8DDC9' }}>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <AlertTriangle size={16} className="text-[#FF6B35] shrink-0" />
+                <span className="font-extrabold text-[#1A1410] text-sm">
+                  Lancement de l&apos;écosystème payant — 6 octobre 2026
+                </span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full"
+                  style={{ background: '#FF6B35', color: 'white' }}>
+                  J{daysLeft > 0 ? `−${daysLeft}` : ' PASSÉ'}
+                </span>
+              </div>
+              <p className="text-xs text-[#6B5A4A] leading-relaxed">
+                À partir de cette date, activer le toggle <b>Abonnements payants</b> sur la campagne active
+                pour que les offres payantes redeviennent visibles dans le tunnel d&apos;activation recruteur.
+                Actuellement&nbsp;: offres payantes <b>{paidVisible ? 'visibles ✓' : 'masquées (skeletons)'}</b>.
+              </p>
+            </div>
+          </div>
+        )
+      })()}
+
       {/* Création d'une campagne */}
       {showCreate && (
         <div className="kz-card p-4 mb-6 bg-white">
@@ -291,15 +321,15 @@ export default function AdminLaunchPage() {
                       className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
                   </label>
                   <label className="text-xs text-[#6B5A4A]">
-                    Offres actives max / entreprise
-                    <input type="number" min={0} defaultValue={c.max_active_jobs_per_company}
-                      onBlur={(e) => { const v = Number(e.target.value); if (v >= 0 && v !== c.max_active_jobs_per_company) patchConfig(c, { maxActiveJobsPerCompany: v }) }}
+                    Offres actives max / entreprise <span className="text-[#8A7A6A]">(−1 = illimité)</span>
+                    <input type="number" min={-1} defaultValue={c.max_active_jobs_per_company}
+                      onBlur={(e) => { const v = Number(e.target.value); if (v >= -1 && v !== c.max_active_jobs_per_company) patchConfig(c, { maxActiveJobsPerCompany: v }) }}
                       className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
                   </label>
                   <label className="text-xs text-[#6B5A4A]">
-                    Formations actives max / entreprise
-                    <input type="number" min={0} defaultValue={c.max_active_trainings_per_company}
-                      onBlur={(e) => { const v = Number(e.target.value); if (v >= 0 && v !== c.max_active_trainings_per_company) patchConfig(c, { maxActiveTrainingsPerCompany: v }) }}
+                    Formations actives max / entreprise <span className="text-[#8A7A6A]">(−1 = illimité)</span>
+                    <input type="number" min={-1} defaultValue={c.max_active_trainings_per_company}
+                      onBlur={(e) => { const v = Number(e.target.value); if (v >= -1 && v !== c.max_active_trainings_per_company) patchConfig(c, { maxActiveTrainingsPerCompany: v }) }}
                       className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
                   </label>
                 </div>

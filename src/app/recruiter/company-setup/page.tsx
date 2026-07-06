@@ -92,7 +92,7 @@ export default function CompanySetupPage() {
 
   // Campagne de lancement (accès gratuit temporaire, indépendant des forfaits) — éligibilité
   // serveur + confirmation obligatoire. N'est jamais un forfait : sélection distincte de planId.
-  const [launchElig, setLaunchElig]     = useState<{ status: string; expiresAt: string | null; campaignName?: string } | null>(null)
+  const [launchElig, setLaunchElig]     = useState<{ status: string; expiresAt: string | null; campaignName?: string; newSubscriptionsEnabled?: boolean } | null>(null)
   const [campaignSelected, setCampaignSelected] = useState(false)
   const [launchConfirmed, setLaunchConfirmed] = useState(false)
   const [launchBusy, setLaunchBusy]     = useState(false)
@@ -502,44 +502,78 @@ export default function CompanySetupPage() {
                 </button>
               )}
 
-              <div className="flex flex-col gap-3 mb-5">
-                {PAID_PLANS.map(plan => {
-                  const euros = Math.floor(plan.priceCts / 100)
-                  const isSelected = !campaignSelected && planId === plan.id
-                  return (
-                    <button
-                      key={plan.id}
-                      onClick={() => { setCampaignSelected(false); setPlanId(plan.id) }}
-                      className="w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all"
-                      style={{
-                        borderColor: isSelected ? KZ.violet : KZ.line,
-                        background: isSelected ? KZ.violetSoft : KZ.cream2,
-                      }}
-                    >
-                      <div className="w-8 h-8 rounded-full border-2 border-[#1A1410] flex items-center justify-center shrink-0"
-                        style={{ background: isSelected ? KZ.violet : 'white' }}>
-                        {isSelected && <Check size={14} color="white" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-[#1A1410]">{plan.name}</span>
-                          {plan.highlight && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]"
-                            style={{ background: KZ.yellowSoft }}>Populaire</span>}
+              {/* Offres payantes — masquées pendant la période KazaLaunch */}
+              {launchAvailable && launchElig?.newSubscriptionsEnabled === false ? (
+                <div className="mb-5">
+                  {/* 4 cards squelettes */}
+                  <div className="flex flex-col gap-3 mb-4">
+                    {[0, 1, 2, 3].map((i) => (
+                      <div key={i} className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-[#E8DDC9] bg-[#F5EFE4] animate-pulse">
+                        <div className="w-8 h-8 rounded-full bg-[#E8DDC9] shrink-0" />
+                        <div className="flex-1 space-y-2">
+                          <div className="h-3 bg-[#E8DDC9] rounded w-2/5" />
+                          <div className="h-2.5 bg-[#E8DDC9] rounded w-3/5" />
                         </div>
-                        <div className="text-xs text-[#6B5A4A]">
-                          {plan.maxMembers} recruteur{plan.maxMembers > 1 ? 's' : ''} ·
-                          {plan.maxJobs === -1 ? ' offres illimitées' : ` ${plan.maxJobs} offres`}
-                          {MULTIDIFFUSION_ENABLED && ` · ${plan.partners.length > 0 ? `${plan.partners.length} plateforme(s)` : 'Kazajob uniquement'}`}
+                        <div className="text-right space-y-1">
+                          <div className="h-4 bg-[#E8DDC9] rounded w-12" />
+                          <div className="h-2 bg-[#E8DDC9] rounded w-8 ml-auto" />
                         </div>
                       </div>
-                      <div className="text-right shrink-0">
-                        <div className="text-lg font-extrabold text-[#1A1410]">{euros}€</div>
-                        <div className="text-[10px] text-[#6B5A4A]">/mois</div>
-                      </div>
-                    </button>
-                  )
-                })}
-              </div>
+                    ))}
+                  </div>
+                  {/* Message informatif */}
+                  <div className="p-4 rounded-xl border border-[#E8DDC9] bg-[#FDFAF5] text-sm text-[#6B5A4A] leading-relaxed">
+                    <p className="font-bold text-[#1A1410] mb-1">Les offres payantes arrivent le 6 octobre 2026</p>
+                    <p className="mb-2">
+                      À partir de cette date, vous pourrez choisir un forfait payant adapté à vos besoins.
+                      Pas de prélèvement automatique. Pas d&apos;enregistrement de carte bancaire pour le moment.
+                    </p>
+                    <p className="text-xs text-[#8A7A6A]">
+                      Vos paiements financeront de meilleures fonctionnalités IA, des intégrations supplémentaires
+                      et des améliorations continues tout au long de l&apos;année.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3 mb-5">
+                  {PAID_PLANS.map(plan => {
+                    const euros = Math.floor(plan.priceCts / 100)
+                    const isSelected = !campaignSelected && planId === plan.id
+                    return (
+                      <button
+                        key={plan.id}
+                        onClick={() => { setCampaignSelected(false); setPlanId(plan.id) }}
+                        className="w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all"
+                        style={{
+                          borderColor: isSelected ? KZ.violet : KZ.line,
+                          background: isSelected ? KZ.violetSoft : KZ.cream2,
+                        }}
+                      >
+                        <div className="w-8 h-8 rounded-full border-2 border-[#1A1410] flex items-center justify-center shrink-0"
+                          style={{ background: isSelected ? KZ.violet : 'white' }}>
+                          {isSelected && <Check size={14} color="white" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold text-[#1A1410]">{plan.name}</span>
+                            {plan.highlight && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]"
+                              style={{ background: KZ.yellowSoft }}>Populaire</span>}
+                          </div>
+                          <div className="text-xs text-[#6B5A4A]">
+                            {plan.maxMembers} recruteur{plan.maxMembers > 1 ? 's' : ''} ·
+                            {plan.maxJobs === -1 ? ' offres illimitées' : ` ${plan.maxJobs} offres`}
+                            {MULTIDIFFUSION_ENABLED && ` · ${plan.partners.length > 0 ? `${plan.partners.length} plateforme(s)` : 'Kazajob uniquement'}`}
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="text-lg font-extrabold text-[#1A1410]">{euros}€</div>
+                          <div className="text-[10px] text-[#6B5A4A]">/mois</div>
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
 
               {planError && (
                 <div className="mb-3 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{planError}</div>

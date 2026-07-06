@@ -4,16 +4,18 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin } from 'lucide-react'
 import { Button } from './Button'
-import { KZ } from '@/lib/constants'
+import { KZ, REUNION_CITIES } from '@/lib/constants'
 
 export function SearchBarLanding() {
   const [query, setQuery] = useState('')
+  const [location, setLocation] = useState('')
   const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const params = new URLSearchParams()
     if (query.trim()) params.set('q', query.trim())
+    if (location) params.set('location', location)
     router.push(`/candidate/jobs${params.toString() ? '?' + params.toString() : ''}`)
   }
 
@@ -33,10 +35,20 @@ export function SearchBarLanding() {
           className="flex-1 bg-transparent text-sm outline-none placeholder:text-[#6B5A4A] text-[#1A1410]"
         />
       </div>
-      <div className="hidden sm:block w-px h-7 bg-[#E8DDC9]" />
-      <div className="hidden sm:flex flex-1 items-center gap-2 px-3 py-1 text-sm text-[#2A2018]">
+      <div className="hidden sm:block w-px h-7 bg-[#E8DDC9] self-center" />
+      <div className="flex items-center gap-2 px-3 py-2 sm:py-1">
         <MapPin size={18} className="text-[#6B5A4A] shrink-0" />
-        Toute la Réunion
+        <select
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="flex-1 bg-transparent text-sm outline-none text-[#2A2018] cursor-pointer appearance-none"
+          style={{ minWidth: 130 }}
+        >
+          <option value="">Toute la Réunion</option>
+          {REUNION_CITIES.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
       </div>
       <Button type="submit" kind="primary" size="md" className="w-full sm:w-auto">
         Rechercher

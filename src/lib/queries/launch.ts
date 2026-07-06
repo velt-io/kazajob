@@ -117,10 +117,11 @@ export async function getActiveCampaignEnrollment(companyId: string, now: Date =
 }
 
 export interface EligibilityResult {
-  status:         LaunchEligibility
-  expiresAt:      string | null   // aperçu de la date de fin si activé maintenant
-  campaignId?:    string
-  campaignName?:  string
+  status:                   LaunchEligibility
+  expiresAt:                string | null   // aperçu de la date de fin si activé maintenant
+  campaignId?:              string
+  campaignName?:            string
+  newSubscriptionsEnabled?: boolean  // false = masquer les offres payantes en attendant le lancement
 }
 
 /**
@@ -155,7 +156,13 @@ export async function checkLaunchEligibility(companyId: string | null | undefine
   if (sub && ACTIVE_PAID_STATUSES.has(sub.status)) return out('active_paid_plan')
 
   const previewExpiry = new Date(Date.now() + campaign.grantDurationDays * 86_400_000)
-  return { status: 'eligible', expiresAt: previewExpiry.toISOString(), campaignId: campaign.id, campaignName: campaign.name }
+  return {
+    status: 'eligible',
+    expiresAt: previewExpiry.toISOString(),
+    campaignId: campaign.id,
+    campaignName: campaign.name,
+    newSubscriptionsEnabled: campaign.newSubscriptionsEnabled,
+  }
 }
 
 export interface ActivationResult {
