@@ -181,7 +181,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
     }
     return {
       title: 'Phase de déploiement active',
-      description: `Kazajob est en phase de déploiement. Vous pouvez publier vos annonces (${activeJobs}/${limitLabel === '-1' ? '∞' : limitLabel}). Les offres d'abonnement seront disponibles prochainement.`,
+      description: `Kazajob est en phase de déploiement. Vous pouvez publier vos annonces (${maxJobs === -1 ? '∞' : `${activeJobs}/${limitLabel}`}). Les offres d'abonnement seront disponibles prochainement.`,
       severity: 'success',
       primaryActionLabel: 'Publier une annonce',
       primaryActionHref:  '/recruiter/jobs/new',

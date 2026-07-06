@@ -276,7 +276,7 @@ export default function CompanyPage() {
           { v: jobCount,    l: 'Offres actives', color: KZ.orangeSoft },
           MULTIDIFFUSION_ENABLED
             ? { v: plan?.partners.length ?? 0, l: 'Partenaires', color: KZ.blueSoft }
-            : { v: plan?.maxJobs === -1 ? '∞' : (plan?.maxJobs ?? 0), l: 'Offres max', color: KZ.blueSoft },
+            : { v: billingSummary?.maxJobs === -1 ? '∞' : (billingSummary?.maxJobs ?? 0), l: 'Offres max', color: KZ.blueSoft },
         ].map(s => (
           <div key={s.l} className="kz-card p-4 text-center bg-white" style={{ background: s.color }}>
             <div className="text-2xl font-extrabold text-[#1A1410]">{s.v}</div>
