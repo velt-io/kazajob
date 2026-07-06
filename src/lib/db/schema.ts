@@ -387,7 +387,7 @@ export const launchCampaigns = pgTable('launch_campaigns', {
   updatedBy:                   uuid('updated_by').references(() => profiles.id, { onDelete: 'set null' }),
   version:                     integer().notNull().default(1),    // concurrence optimiste
   createdAt:                   now(),
-  updatedAt:                   timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt:                   now(),
 })
 
 // ── launch_campaign_enrollments (CampaignEnrollment — historique d'activation) ──

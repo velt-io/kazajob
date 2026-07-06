@@ -6,11 +6,18 @@ import type { Job, JobFilters } from '@/lib/types'
 function toQuery(f: JobFilters): string {
   const sp = new URLSearchParams()
   if (f.q) sp.set('q', f.q)
-  if (f.location) sp.set('location', f.location)
+  if (f.locations && f.locations.length > 0) {
+    f.locations.forEach((l) => sp.append('locations', l))
+  } else if (f.location) {
+    sp.set('location', f.location)
+  }
   if (f.job_type) sp.set('job_type', f.job_type)
   if (f.sector) sp.set('sector', f.sector)
   if (f.remote !== undefined) sp.set('remote', String(f.remote))
   if (f.salary_min) sp.set('salary_min', String(f.salary_min))
+  if (f.date_range) sp.set('date_range', f.date_range)
+  if (f.level) sp.set('level', f.level)
+  if (f.sort && f.sort !== 'newest') sp.set('sort', f.sort)
   sp.set('page', String(f.page ?? 1))
   sp.set('limit', String(f.limit ?? 12))
   return sp.toString()

@@ -3,7 +3,7 @@
  * Couche serveur uniquement. Renvoie des objets conformes à `Job` (snake_case).
  */
 import { cache } from 'react'
-import { and, desc, eq, gte, ilike, lt, or, sql, type SQL } from 'drizzle-orm'
+import { and, asc, desc, eq, gte, ilike, inArray, lt, or, sql, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { candidateSkills, jobs, profiles, skills } from '@/lib/db/schema'
 import type { Job, JobFilters } from '@/lib/types'
@@ -48,11 +48,18 @@ function mapJob(row: JobRow): Job {
 function buildwhere(f: JobFilters): SQL | undefined {
   const conds: SQL[] = [eq(jobs.isActive, true)]
   if (f.q) conds.push(or(ilike(jobs.title, `%${f.q}%`), ilike(jobs.description, `%${f.q}%`))!)
-  if (f.location) conds.push(eq(jobs.location, f.location))
+  if (f.locations && f.locations.length > 0) {
+    conds.push(inArray(jobs.location, f.locations))
+  } else if (f.location) {
+    conds.push(eq(jobs.location, f.location))
+  }
   if (f.job_type) conds.push(eq(jobs.jobType, f.job_type))
   if (f.sector) conds.push(eq(jobs.sector, f.sector))
   if (f.remote !== undefined) conds.push(eq(jobs.remote, f.remote))
   if (f.salary_min) conds.push(gte(jobs.salaryMin, f.salary_min))
+  if (f.date_range === 'week') conds.push(gte(jobs.createdAt, new Date(Date.now() - 7 * 86_400_000)))
+  else if (f.date_range === 'month') conds.push(gte(jobs.createdAt, new Date(Date.now() - 30 * 86_400_000)))
+  if (f.level) conds.push(eq(jobs.requiredLevel, f.level))
   return and(...conds)
 }
 
@@ -66,7 +73,10 @@ export async function listJobs(f: JobFilters): Promise<{ data: Job[]; count: num
   const rows = await db.query.jobs.findMany({
     where,
     with: { company: true, jobSkills: { with: { skill: true } } },
-    orderBy: (j, { desc: d }) => [d(j.isBoosted), d(j.createdAt)],
+    orderBy: (j, { asc: a, desc: d }) =>
+      f.sort === 'salary_desc' ? [d(j.isBoosted), d(j.salaryMax)] :
+      f.sort === 'salary_asc'  ? [d(j.isBoosted), a(j.salaryMin)] :
+      [d(j.isBoosted), d(j.createdAt)],
     limit,
     offset,
   })

@@ -243,6 +243,32 @@ export function hasMentionHF(title: string): boolean {
   return /\(H\/F\)|\(F\/H\)/i.test(title)
 }
 
+// ── Coordonnées GPS des communes de La Réunion (pour le filtre rayon) ──
+export const CITY_COORDS: Record<string, [number, number]> = {
+  'Saint-Denis':    [-20.8789, 55.4481],
+  'Saint-Paul':     [-21.0042, 55.2697],
+  'Saint-Pierre':   [-21.3333, 55.4833],
+  'Le Tampon':      [-21.2667, 55.5167],
+  'Saint-Louis':    [-21.2833, 55.4167],
+  'Saint-André':    [-20.9667, 55.6500],
+  'Saint-Leu':      [-21.1167, 55.2833],
+  'Saint-Benoît':   [-21.0333, 55.7167],
+  'Sainte-Marie':   [-20.9000, 55.5333],
+  'Sainte-Suzanne': [-20.9167, 55.6000],
+  'Saint-Joseph':   [-21.3833, 55.6167],
+  'Cilaos':         [-21.1333, 55.4667],
+  'Saint-Gilles':   [-21.0500, 55.2167],
+  'Bras-Panon':     [-21.0000, 55.7000],
+  'Salazie':        [-21.0333, 55.5500],
+}
+
+export const RADIUS_OPTIONS = [
+  { value: 10, label: '10 km' },
+  { value: 20, label: '20 km' },
+  { value: 40, label: '40 km' },
+  { value: 0,  label: "Toute l'île" },
+] as const
+
 // ── Soft skills (savoir-être) — catalogue candidat ────────────────
 export const SOFT_SKILLS = [
   'Travail en équipe', 'Communication', 'Autonomie', 'Rigueur', 'Adaptabilité',

@@ -251,14 +251,22 @@ export interface Message {
   sender?: Profile
 }
 
+export type DateRange = 'week' | 'month'
+export type SortOrder = 'newest' | 'salary_desc' | 'salary_asc'
+
 export interface JobFilters {
   q?: string
   location?: string
+  locations?: string[]
+  radius?: number
   job_type?: string
   sector?: string
   remote?: boolean
   salary_min?: number
   salary_max?: number
+  date_range?: DateRange
+  level?: string
+  sort?: SortOrder
   page?: number
   limit?: number
 }
