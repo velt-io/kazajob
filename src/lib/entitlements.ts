@@ -187,7 +187,7 @@ export type ListingType = 'job' | 'training'
 
 export interface PublishingAccessDecision {
   allowed:       boolean
-  source:        'subscription' | 'campaign' | 'none'
+  source:        'subscription' | 'campaign' | 'admin_override' | 'none'
   reasonCode:    'ok' | 'limit_reached' | 'read_only' | 'campaign_type_disabled' | 'campaign_ended' | 'no_access'
   max:           number          // -1 = illimité
   used:          number
@@ -195,6 +195,7 @@ export interface PublishingAccessDecision {
   campaignId?:   string
   campaignName?: string
   expiresAt?:    string | null
+  overrideUntil?: string | null  // date d'expiration de la dérogation admin (si applicable)
 }
 
 /**
@@ -208,12 +209,31 @@ export async function resolvePublishingAccess(
   used: number,
 ): Promise<PublishingAccessDecision> {
   const [sub] = await db
-    .select({ planId: companySubscriptions.planId, status: companySubscriptions.status })
+    .select({
+      planId:                companySubscriptions.planId,
+      status:                companySubscriptions.status,
+      adminOverrideEnabled:  companySubscriptions.adminOverrideEnabled,
+      overrideMaxActiveJobs: companySubscriptions.overrideMaxActiveJobs,
+      overrideUntil:         companySubscriptions.overrideUntil,
+    })
     .from(companySubscriptions)
     .where(eq(companySubscriptions.companyId, companyId))
     .limit(1)
 
   if (sub) {
+    // Priorité 1 : dérogation admin active et non expirée
+    const overrideActive = sub.adminOverrideEnabled &&
+      (!sub.overrideUntil || sub.overrideUntil > new Date())
+    if (overrideActive && listingType === 'job') {
+      const max = sub.overrideMaxActiveJobs ?? -1
+      const overrideUntil = sub.overrideUntil?.toISOString() ?? null
+      if (max !== -1 && used >= max) {
+        return { allowed: false, source: 'admin_override', reasonCode: 'limit_reached', max, used, overrideUntil }
+      }
+      return { allowed: true, source: 'admin_override', reasonCode: 'ok', max, used, overrideUntil }
+    }
+
+    // Priorité 2 : abonnement payant
     const plan = resolvePlanEntitlements(sub.planId)
     if (READ_ONLY_STATUSES.has(sub.status)) {
       return { allowed: false, source: 'subscription', reasonCode: 'read_only', max: 0, used, planName: plan.planName }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Users, Edit, Trash2, ToggleLeft, ToggleRight, EyeOff, User, Rocket, ArrowRight } from 'lucide-react'
+import { Plus, Eye, Users, Edit, Trash2, ToggleLeft, ToggleRight, EyeOff, User, Rocket, ArrowRight, AlertTriangle, Info } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 import type { Job } from '@/lib/types'
+import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
 import { timeAgo, formatSalary } from '@/lib/utils'
 import { KZ, JOB_BOOST_OPTIONS } from '@/lib/constants'
 
@@ -20,16 +21,19 @@ export default function RecruiterJobsPage() {
   const [boostFor, setBoostFor] = useState<Job | null>(null)
   const [quota, setQuota] = useState<{ ok: boolean; max: number; used: number; planName: string; reason?: string } | null>(null)
   const [quotaModal, setQuotaModal] = useState(false)
+  const [billingSummary, setBillingSummary] = useState<CompanyBillingSummary | null>(null)
 
   const fetchJobs = async () => {
     if (!profile) return
     try {
-      const [res, q] = await Promise.all([
+      const [res, q, bs] = await Promise.all([
         fetch('/api/recruiter/jobs'),
         fetch('/api/recruiter/quota'),
+        fetch('/api/recruiter/billing-summary'),
       ])
       if (res.ok) setJobs((await res.json()) as Job[])
       if (q.ok) setQuota(await q.json())
+      if (bs.ok) setBillingSummary(await bs.json() as CompanyBillingSummary)
     } catch { /* noop */ }
     setLoading(false)
   }
@@ -70,6 +74,42 @@ export default function RecruiterJobsPage() {
           </Link>
         )}
       </div>
+
+      {/* Bannière facturation contextuelle */}
+      {billingSummary && (() => {
+        const s = billingSummary
+        if (s.source === 'campaign' && s.message.severity === 'success') {
+          return (
+            <div className="mb-4 rounded-xl border border-[#19A974] bg-[#D6F0E0] px-4 py-3 flex items-center gap-2 text-sm">
+              <Info size={15} color={KZ.green} className="shrink-0" />
+              <span className="text-[#1A1410]">
+                Phase de déploiement active : vos annonces restent publiées et les offres seront disponibles prochainement.
+              </span>
+            </div>
+          )
+        }
+        if (s.isOverLimit || !s.canPublishJob) {
+          return (
+            <div className="mb-4 rounded-xl border border-[#FFC93C] bg-[#FFF1C2] px-4 py-3 flex items-start gap-2 text-sm">
+              <AlertTriangle size={15} color="#B45309" className="shrink-0 mt-0.5" />
+              <div className="text-[#1A1410]">
+                <span className="font-semibold">
+                  {s.isOverLimit
+                    ? 'Vous dépassez actuellement la limite de votre offre.'
+                    : s.message.title}
+                </span>
+                {' '}Vos annonces existantes restent visibles, mais les nouvelles publications sont bloquées.{' '}
+                {s.message.primaryActionHref && s.message.primaryActionLabel && (
+                  <Link href={s.message.primaryActionHref} className="font-bold text-[#6D3BEB] hover:underline ml-1">
+                    {s.message.primaryActionLabel} →
+                  </Link>
+                )}
+              </div>
+            </div>
+          )
+        }
+        return null
+      })()}
 
       {loading ? <PageLoader /> : jobs.length === 0 ? (
         <EmptyState

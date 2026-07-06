@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Building2, Check, X } from 'lucide-react'
+import { Building2, Check, X, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 import { Badge } from '@/components/ui/Badge'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { EmptyState } from '@/components/feedback/EmptyState'
@@ -58,14 +59,21 @@ export default function AdminCompaniesPage() {
                   {company.location ?? '—'} · {company.sector ?? 'Secteur non precise'} · {timeAgo(company.created_at)}
                 </div>
               </div>
-              <button
-                onClick={() => toggleVerified(company)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#1A1410] text-sm font-semibold transition-colors"
-                style={{ background: company.is_verified ? KZ.greenSoft : KZ.cream2 }}
-              >
-                {company.is_verified ? <X size={14} /> : <Check size={14} />}
-                {company.is_verified ? 'Retirer' : 'Verifier'}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => toggleVerified(company)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#1A1410] text-sm font-semibold transition-colors"
+                  style={{ background: company.is_verified ? KZ.greenSoft : KZ.cream2 }}
+                >
+                  {company.is_verified ? <X size={14} /> : <Check size={14} />}
+                  {company.is_verified ? 'Retirer' : 'Verifier'}
+                </button>
+                <Link href={`/admin/companies/${company.id}`}>
+                  <button className="p-2 rounded-lg border border-[#E8DDC9] text-[#6B5A4A] hover:text-[#6D3BEB] hover:border-[#6D3BEB]" title="Abonnement & usage">
+                    <ArrowRight size={14} />
+                  </button>
+                </Link>
+              </div>
             </div>
           ))}
         </div>

@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Building2, Users, ArrowRight, Edit3, Globe, Star, Landmark, Target, Briefcase, Search, Rss, CreditCard, Check, RefreshCw, XCircle } from 'lucide-react'
+import { Building2, Users, ArrowRight, Edit3, Globe, Star, Landmark, Target, Briefcase, Search, Rss, CreditCard, Check, RefreshCw, XCircle, AlertTriangle, CheckCircle2, Info, ShieldAlert } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
 import { useAuth } from '@/features/auth/useAuth'
 import { KZ, SUBSCRIPTION_PLANS, PARTNERS, MULTIDIFFUSION_ENABLED } from '@/lib/constants'
+import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
 
 const PARTNER_ICONS: Record<string, React.ReactNode> = {
   Landmark:  <Landmark  size={12} />,
@@ -18,10 +19,24 @@ const PARTNER_ICONS: Record<string, React.ReactNode> = {
 }
 import type { Company, CompanySubscription } from '@/lib/types'
 
+const SEVERITY_ICON: Record<string, React.ReactNode> = {
+  success: <CheckCircle2 size={16} />,
+  info:    <Info         size={16} />,
+  warning: <AlertTriangle size={16} />,
+  danger:  <ShieldAlert  size={16} />,
+}
+const SEVERITY_COLORS: Record<string, { bg: string; text: string }> = {
+  success: { bg: KZ.greenSoft,  text: KZ.green  },
+  info:    { bg: KZ.blueSoft,   text: KZ.blue   },
+  warning: { bg: KZ.yellowSoft, text: '#B45309' },
+  danger:  { bg: KZ.orangeSoft, text: KZ.orange },
+}
+
 export default function CompanyPage() {
   const { profile } = useAuth()
   const [company, setCompany]       = useState<Company | null>(null)
   const [sub, setSub]               = useState<CompanySubscription | null>(null)
+  const [billingSummary, setBillingSummary] = useState<CompanyBillingSummary | null>(null)
   const [memberCount, setMemberCount] = useState(0)
   const [jobCount, setJobCount]     = useState(0)
   const [loading, setLoading]       = useState(true)
@@ -36,7 +51,10 @@ export default function CompanyPage() {
     if (!profile?.company_id) return
     const load = async () => {
       try {
-        const res = await fetch(`/api/companies/${profile.company_id}`)
+        const [res, bsRes] = await Promise.all([
+          fetch(`/api/companies/${profile.company_id}`),
+          fetch('/api/recruiter/billing-summary'),
+        ])
         if (res.ok) {
           const d = await res.json()
           setCompany(d.company as Company)
@@ -44,6 +62,7 @@ export default function CompanyPage() {
           setMemberCount(d.member_count ?? 0)
           setJobCount(d.job_count ?? 0)
         }
+        if (bsRes.ok) setBillingSummary(await bsRes.json() as CompanyBillingSummary)
       } catch { /* noop */ }
       setLoading(false)
     }
@@ -145,7 +164,64 @@ export default function CompanyPage() {
         </div>
       )}
 
-      {/* Abonnement */}
+      {/* ── Mon abonnement (résumé facturation enrichi) ── */}
+      {billingSummary && (() => {
+        const sc = SEVERITY_COLORS[billingSummary.message.severity] ?? SEVERITY_COLORS.info
+        const icon = SEVERITY_ICON[billingSummary.message.severity]
+        const maxLabel = billingSummary.maxJobs === -1 ? '∞' : String(billingSummary.maxJobs)
+        const pct = billingSummary.maxJobs === -1 ? 0 : Math.min(100, Math.round((billingSummary.activeJobs / billingSummary.maxJobs) * 100))
+        return (
+          <div className="kz-card p-5 mb-5 bg-white">
+            <p className="text-xs font-extrabold uppercase tracking-wide text-[#6B5A4A] mb-3">Mon abonnement</p>
+
+            {/* Carte statut */}
+            <div className="rounded-xl border p-3 flex items-start gap-3 mb-4"
+              style={{ background: sc.bg, borderColor: sc.text }}>
+              <span style={{ color: sc.text }}>{icon}</span>
+              <div className="flex-1">
+                <p className="text-sm font-bold text-[#1A1410]">{billingSummary.message.title}</p>
+                <p className="text-xs text-[#6B5A4A] mt-0.5">{billingSummary.message.description}</p>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {billingSummary.message.primaryActionLabel && (
+                    <Link href={billingSummary.message.primaryActionHref ?? '#'}>
+                      <Button kind="primary" size="sm">{billingSummary.message.primaryActionLabel}</Button>
+                    </Link>
+                  )}
+                  {billingSummary.message.secondaryActionLabel && (
+                    <Link href={billingSummary.message.secondaryActionHref ?? '#'}>
+                      <Button kind="outline" size="sm">{billingSummary.message.secondaryActionLabel}</Button>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Barre d'usage */}
+            <div className="mb-3">
+              <div className="flex justify-between text-xs text-[#6B5A4A] mb-1">
+                <span>Annonces actives</span>
+                <span className="font-bold" style={{ color: billingSummary.isOverLimit ? KZ.orange : KZ.ink }}>
+                  {billingSummary.activeJobs} / {maxLabel}
+                </span>
+              </div>
+              {billingSummary.maxJobs !== -1 && (
+                <div className="h-2 rounded-full overflow-hidden" style={{ background: KZ.beige }}>
+                  <div className="h-full rounded-full transition-all"
+                    style={{ width: `${pct}%`, background: billingSummary.isOverLimit ? KZ.orange : KZ.green }} />
+                </div>
+              )}
+            </div>
+
+            {/* Bloc garanties */}
+            <p className="text-[11px] text-[#6B5A4A] leading-relaxed border-t border-[#E8DDC9] pt-3">
+              Vos annonces déjà publiées restent visibles jusqu&apos;à leur expiration.
+              Aucune annonce ne sera supprimée automatiquement.
+            </p>
+          </div>
+        )
+      })()}
+
+      {/* Abonnement Stripe (section existante) */}
       {sub && plan && (
         <div
           className="kz-card p-5 mb-5 flex flex-col sm:flex-row sm:items-center gap-4"

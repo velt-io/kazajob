@@ -121,6 +121,8 @@ export const jobs = pgTable('jobs', {
   startDate:    text('start_date'),
   views:        integer().notNull().default(0),
   applicationsCount: integer('applications_count').notNull().default(0),
+  // ── Traçabilité facturation ──
+  billingOrigin: text('billing_origin').notNull().default('normal'),  // normal | free_launch | admin_granted | migrated
   createdAt:    now(),
   updatedAt:    now(),
 })
@@ -447,6 +449,11 @@ export const companySubscriptions = pgTable('company_subscriptions', {
   stripeCustomerId:     text('stripe_customer_id'),
   stripeSubscriptionId: text('stripe_subscription_id'),
   lastTrialReminder:    integer('last_trial_reminder'),  // dernier palier de relance envoyé (15/7/3/0)
+  // ── Dérogations admin ──
+  adminOverrideEnabled:  boolean('admin_override_enabled').notNull().default(false),
+  overrideMaxActiveJobs: integer('override_max_active_jobs'),   // null = illimité pendant la dérogation
+  overrideReason:        text('override_reason'),
+  overrideUntil:         timestamp('override_until', { withTimezone: true }),
   createdAt:        now(),
 }, (t) => [unique().on(t.companyId)])
 
