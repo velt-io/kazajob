@@ -16,7 +16,6 @@ export interface AdminPlanRow {
   company_count?: number
 }
 
-/** Tous les forfaits payants, par ordre d'affichage (avec comptage entreprises). */
 export async function listPlansAdmin(): Promise<{ plans: AdminPlanRow[] }> {
   const rows = await db.select().from(subscriptionPlans).orderBy(asc(subscriptionPlans.sortOrder))
   const counts = await db
@@ -28,7 +27,6 @@ export async function listPlansAdmin(): Promise<{ plans: AdminPlanRow[] }> {
   return { plans }
 }
 
-/** Champs modifiables par l'administration. */
 export interface PlanSettingsPatch {
   name?:            string
   priceCts?:        number
@@ -51,7 +49,6 @@ const ALLOWED: (keyof PlanSettingsPatch)[] = [
   'startsAt', 'endsAt', 'stripeProductId', 'stripePriceId',
 ]
 
-/** Met à jour la disponibilité d'un forfait (audité). */
 export async function updatePlanSettings(
   actorId: string,
   actorEmail: string | null,
@@ -90,7 +87,6 @@ export async function updatePlanSettings(
   return { error: null }
 }
 
-/** Duplique un forfait existant (nouveau slug auto, désactivé par défaut). */
 export async function duplicatePlan(
   actorId: string,
   actorEmail: string | null,
@@ -121,7 +117,6 @@ export async function duplicatePlan(
   return { error: null, newId }
 }
 
-/** Archive un forfait (isActive=false, isPublic=false, isSelectable=false). Refuse si des abonnements actifs y sont liés. */
 export async function archivePlan(
   actorId: string,
   actorEmail: string | null,
@@ -144,8 +139,6 @@ export async function archivePlan(
   return { error: null }
 }
 
-// ── Dérogations admin par entreprise ─────────────────────────────
-
 export interface AdminOverridePatch {
   adminOverrideEnabled:  boolean
   overrideMaxActiveJobs: number | null
@@ -153,7 +146,6 @@ export interface AdminOverridePatch {
   overrideUntil:         string | null   // ISO date ou null
 }
 
-/** Applique ou retire une dérogation admin sur l'abonnement d'une entreprise. */
 export async function setCompanyOverride(
   actorId: string,
   actorEmail: string | null,

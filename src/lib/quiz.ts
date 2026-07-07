@@ -98,7 +98,7 @@ export interface QuizResult {
   completed_at: string
 }
 
-/** Calcule l'archétype dominant à partir des index de réponses (anti-triche serveur). */
+// Calcul côté serveur — anti-triche
 export function scoreQuiz(answers: number[]): QuizResult | null {
   if (!Array.isArray(answers) || answers.length !== QUIZ.length) return null
   const scores: Record<ArchetypeKey, number> = {

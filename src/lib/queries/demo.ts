@@ -8,7 +8,6 @@ import { bookingSlots, demoBookings } from '@/lib/db/schema'
 
 export interface Slot { id: string; starts_at: string; duration_min: number; is_booked: boolean }
 
-/** Créneaux disponibles (futurs, non réservés) — public. */
 export async function listAvailableSlots(): Promise<Slot[]> {
   const rows = await db.select().from(bookingSlots)
     .where(and(eq(bookingSlots.isBooked, false), gt(bookingSlots.startsAt, new Date())))
@@ -18,7 +17,6 @@ export async function listAvailableSlots(): Promise<Slot[]> {
 
 export interface BookingInput { slotId?: string | null; name: string; company?: string; email: string; phone?: string; message?: string }
 
-/** Réserve un créneau (ou demande libre si pas de créneau). Renvoie l'horaire si créneau. */
 export async function createBooking(input: BookingInput): Promise<{ error?: string; id?: string; when?: Date | null; durationMin?: number }> {
   if (!input.name?.trim() || !input.email?.trim()) return { error: 'Nom et email requis' }
 
@@ -46,15 +44,12 @@ export async function createBooking(input: BookingInput): Promise<{ error?: stri
   return { id: row.id, when, durationMin }
 }
 
-// ── Admin ─────────────────────────────────────────────────────────
-
 export async function adminListSlots(): Promise<Slot[]> {
   const rows = await db.select().from(bookingSlots)
     .where(gt(bookingSlots.startsAt, new Date())).orderBy(asc(bookingSlots.startsAt))
   return rows.map((r) => ({ id: r.id, starts_at: (r.startsAt as Date).toISOString(), duration_min: r.durationMin, is_booked: r.isBooked }))
 }
 
-/** Crée des créneaux en lot (ISO datetimes). */
 export async function adminCreateSlots(starts: string[], durationMin = 30): Promise<number> {
   const values = starts.map((s) => new Date(s)).filter((d) => !isNaN(d.getTime()) && d > new Date())
     .map((d) => ({ startsAt: d, durationMin }))

@@ -10,7 +10,6 @@
 
 import crypto from 'node:crypto'
 
-// ── JWT helpers ───────────────────────────────────────────────────
 function b64url(buf: Buffer | string): string {
   const b = typeof buf === 'string' ? Buffer.from(buf) : buf
   return b.toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '')
@@ -61,7 +60,6 @@ async function getAccessToken(): Promise<string> {
   return data.access_token as string
 }
 
-// ── Upload multipart vers Drive ───────────────────────────────────
 export interface DriveUploadResult {
   fileId:   string
   fileName: string
@@ -118,7 +116,6 @@ export async function uploadToDrive(
   }
 }
 
-// ── Lister les fichiers de backup existants ───────────────────────
 export async function listBackups(): Promise<{ id: string; name: string; createdTime: string; size: string }[]> {
   const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID
   if (!folderId) return []

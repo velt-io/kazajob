@@ -18,7 +18,6 @@ export interface MarketRadar {
 
 const num = (v: unknown): number | null => (v === null || v === undefined ? null : Number(v))
 
-/** Radar emploi : agrégations réelles sur les offres actives. */
 export async function getMarketRadar(): Promise<MarketRadar> {
   const since = new Date(Date.now() - 30 * 86_400_000)
 
@@ -62,7 +61,6 @@ export async function getMarketRadar(): Promise<MarketRadar> {
   }
 }
 
-/** Stats salariales réelles d'un secteur (offres actives avec salaire renseigné). */
 export async function getSectorSalary(sector?: string | null): Promise<{ count: number; min: number | null; avg: number | null; max: number | null } | null> {
   if (!sector) return null
   const [r] = await db
@@ -89,7 +87,6 @@ export interface TrainingReco {
   location: string
 }
 
-/** Formations RÉELLES recommandées (par secteur si fourni), depuis le catalogue. */
 export async function recommendTrainings(sector?: string | null, limit = 4): Promise<TrainingReco[]> {
   const base = sector
     ? and(eq(trainingOffers.isActive, true), eq(trainingOffers.sector, sector))

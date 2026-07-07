@@ -9,7 +9,6 @@ import { trainingApplications, trainingOffers } from '@/lib/db/schema'
 import type { TrainingOffer } from '@/lib/types'
 import { serialize } from './_serialize'
 
-/** Données d'une formation pour le SEO (sans incrément de vues). */
 export const getTrainingSeo = cache(async (id: string) => {
   const row = await db.query.trainingOffers.findFirst({
     where: eq(trainingOffers.id, id),
@@ -52,7 +51,6 @@ function mapPayload(payload: Record<string, unknown>): Record<string, unknown> {
   return set
 }
 
-/** Formations actives (catalogue candidat). */
 export async function listPublishedTrainings(): Promise<TrainingOffer[]> {
   const rows = await db.query.trainingOffers.findMany({
     where: eq(trainingOffers.isActive, true),
@@ -62,7 +60,6 @@ export async function listPublishedTrainings(): Promise<TrainingOffer[]> {
   return serialize<TrainingOffer[]>(rows)
 }
 
-/** Formations d'un recruteur. */
 export async function listRecruiterTrainings(recruiterId: string): Promise<TrainingOffer[]> {
   const rows = await db.select().from(trainingOffers)
     .where(eq(trainingOffers.recruiterId, recruiterId))
@@ -70,7 +67,6 @@ export async function listRecruiterTrainings(recruiterId: string): Promise<Train
   return serialize<TrainingOffer[]>(rows)
 }
 
-/** Détail d'une formation (entreprise + session IC), incrémente les vues. */
 export async function getTraining(id: string): Promise<TrainingOffer | null> {
   const row = await db.query.trainingOffers.findFirst({
     where: eq(trainingOffers.id, id),
@@ -83,7 +79,6 @@ export async function getTraining(id: string): Promise<TrainingOffer | null> {
   return serialize<TrainingOffer>(row)
 }
 
-/** Une formation brute appartenant au recruteur (édition), ou null. */
 export async function getRecruiterTraining(recruiterId: string, id: string): Promise<TrainingOffer | null> {
   const [row] = await db.select().from(trainingOffers).where(eq(trainingOffers.id, id)).limit(1)
   if (!row || row.recruiterId !== recruiterId) return null
@@ -131,7 +126,6 @@ export async function deleteTraining(recruiterId: string, id: string): Promise<{
   return { error: null }
 }
 
-/** Le candidat a-t-il déjà postulé à cette formation ? */
 export async function hasAppliedToTraining(candidateId: string, trainingId: string): Promise<boolean> {
   const [row] = await db.select({ id: trainingApplications.id }).from(trainingApplications)
     .where(and(
@@ -141,7 +135,6 @@ export async function hasAppliedToTraining(candidateId: string, trainingId: stri
   return !!row
 }
 
-/** Postuler à une formation (idempotent + incrémente le compteur). */
 export async function applyToTraining(
   candidateId: string,
   trainingId: string,

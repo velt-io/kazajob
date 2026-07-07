@@ -16,7 +16,6 @@ import { useAuth } from '@/features/auth/useAuth'
 import { REUNION_CITIES, JOB_TYPES, JOB_SECTORS, CITY_COORDS, RADIUS_OPTIONS, REQUIRED_LEVELS } from '@/lib/constants'
 import type { JobFilters } from '@/lib/types'
 
-// ── Haversine ──────────────────────────────────────────────────────
 function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
   const R = 6371
   const dLat = (lat2 - lat1) * Math.PI / 180
@@ -35,7 +34,6 @@ function citiesInRadius(center: string, radiusKm: number): string[] {
   })
 }
 
-// ── Options ────────────────────────────────────────────────────────
 const CITY_OPTIONS = [{ value: '', label: 'Toute la Réunion' }, ...REUNION_CITIES.map((c) => ({ value: c, label: c }))]
 const TYPE_OPTIONS = [{ value: '', label: 'Tous les types' }, ...JOB_TYPES.map((t) => ({ value: t, label: t }))]
 const SECTOR_OPTIONS = [{ value: '', label: 'Tous les secteurs' }, ...JOB_SECTORS.map((s) => ({ value: s, label: s }))]
@@ -59,7 +57,6 @@ const SORT_OPTIONS = [
   { value: 'salary_asc',  label: 'Salaire ↑' },
 ]
 
-// ── Chip label helpers ─────────────────────────────────────────────
 function chipLabel(key: string, value: unknown, city: string, radius: number | null): string | null {
   if (key === 'q') return `"${value}"`
   if (key === 'location') {
@@ -77,7 +74,6 @@ function chipLabel(key: string, value: unknown, city: string, radius: number | n
   return null
 }
 
-// ── Main component ─────────────────────────────────────────────────
 function JobsContent() {
   const searchParams = useSearchParams()
   const [initialFilters] = useState<JobFilters>(() => ({

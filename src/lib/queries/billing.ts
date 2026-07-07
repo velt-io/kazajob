@@ -8,7 +8,6 @@ import { companies, companySubscriptions, profiles } from '@/lib/db/schema'
 
 type SubRow = typeof companySubscriptions.$inferSelect
 
-/** Contexte de facturation (owner uniquement) : entreprise + owner + abonnement. */
 export async function getOwnerBillingContext(
   actorId: string,
   companyId: string,
@@ -38,7 +37,6 @@ export async function getOwnerBillingContext(
   }
 }
 
-/** Met à jour l'état Stripe d'un abonnement (idempotent, utilisé par le webhook). */
 export async function saveStripeState(
   companyId: string,
   data: {
@@ -59,7 +57,6 @@ export async function saveStripeState(
   await db.update(companySubscriptions).set(set).where(eq(companySubscriptions.companyId, companyId))
 }
 
-/** Retrouve l'entreprise liée à un abonnement Stripe (fallback webhook sans metadata). */
 export async function getCompanyByStripeSubscription(subscriptionId: string): Promise<string | null> {
   const [row] = await db
     .select({ companyId: companySubscriptions.companyId })
@@ -121,7 +118,6 @@ export async function listTrialsForReminder(): Promise<Array<{
     .map((r) => ({ ...r, trialEndsAt: r.trialEndsAt as Date }))
 }
 
-/** Mémorise le dernier palier de relance d'essai envoyé (idempotence). */
 export async function setTrialReminder(subId: string, threshold: number): Promise<void> {
   await db
     .update(companySubscriptions)
@@ -129,7 +125,6 @@ export async function setTrialReminder(subId: string, threshold: number): Promis
     .where(eq(companySubscriptions.id, subId))
 }
 
-/** Mappe un statut d'abonnement Stripe vers notre énumération. */
 export function mapStripeStatus(s: string): string {
   switch (s) {
     case 'trialing':           return 'trial'

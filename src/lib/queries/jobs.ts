@@ -10,7 +10,6 @@ import type { Job, JobFilters } from '@/lib/types'
 import { matchScore } from '@/lib/utils'
 import { serialize } from './_serialize'
 
-/** Données d'une offre pour le SEO (métadonnées + JobPosting). Sans incrément de vues. */
 export const getJobSeo = cache(async (id: string) => {
   const row = await db.query.jobs.findFirst({
     where: eq(jobs.id, id),
@@ -65,7 +64,6 @@ function buildwhere(f: JobFilters): SQL | undefined {
   return and(...conds)
 }
 
-/** Liste paginée des offres actives avec entreprise + compétences. */
 export async function listJobs(f: JobFilters): Promise<{ data: Job[]; count: number }> {
   const page = f.page ?? 1
   const limit = f.limit ?? 12
@@ -110,7 +108,6 @@ export async function getRecommendedJobs(candidateId: string, limit = 4): Promis
     .from(profiles).where(eq(profiles.id, candidateId)).limit(1)
   const candLoc = prof?.location?.toLowerCase().split(',')[0]?.trim() ?? ''
 
-  // Offres actives récentes (boostées d'abord), puis scoring.
   const rows = await db.query.jobs.findMany({
     where: eq(jobs.isActive, true),
     with: { company: true, jobSkills: { with: { skill: true } } },
@@ -131,9 +128,6 @@ export async function getRecommendedJobs(candidateId: string, limit = 4): Promis
   return scored.slice(0, limit)
 }
 
-// ── Boost payant d'une offre ──────────────────────────────────────
-
-/** Propriétaire + titre d'une offre (pour le contrôle d'accès au boost). */
 export async function getJobOwner(jobId: string): Promise<{ recruiterId: string; title: string } | null> {
   const [row] = await db
     .select({ recruiterId: jobs.recruiterId, title: jobs.title })
@@ -143,10 +137,9 @@ export async function getJobOwner(jobId: string): Promise<{ recruiterId: string;
   return row ?? null
 }
 
-/** Active (ou prolonge) le boost d'une offre pour `days` jours. */
 export async function activateJobBoost(jobId: string, days: number): Promise<void> {
   if (!days || days <= 0) return
-  // Prolonge à partir de l'échéance actuelle si déjà boostée, sinon à partir de maintenant.
+  // Prolonge depuis l'échéance en cours si déjà boostée, sinon depuis maintenant
   const [cur] = await db
     .select({ expiresAt: jobs.boostExpiresAt, boosted: jobs.isBoosted })
     .from(jobs).where(eq(jobs.id, jobId)).limit(1)
@@ -157,7 +150,6 @@ export async function activateJobBoost(jobId: string, days: number): Promise<voi
     .where(eq(jobs.id, jobId))
 }
 
-/** Désactive les boosts échus. Renvoie le nombre d'offres concernées. */
 export async function expireJobBoosts(): Promise<number> {
   const rows = await db.update(jobs)
     .set({ isBoosted: false })
@@ -166,9 +158,6 @@ export async function expireJobBoosts(): Promise<number> {
   return rows.length
 }
 
-// ── Côté recruteur ────────────────────────────────────────────────
-
-/** Offres d'un recruteur (avec entreprise + auteur). */
 export async function listRecruiterJobs(recruiterId: string): Promise<Job[]> {
   const rows = await db.query.jobs.findMany({
     where: eq(jobs.recruiterId, recruiterId),
@@ -181,7 +170,6 @@ export async function listRecruiterJobs(recruiterId: string): Promise<Job[]> {
   return serialize<Job[]>(rows)
 }
 
-/** Une offre brute appartenant au recruteur (pour l'édition), ou null. */
 export async function getRecruiterJob(recruiterId: string, id: string): Promise<Job | null> {
   const [row] = await db.select().from(jobs).where(eq(jobs.id, id)).limit(1)
   if (!row || row.recruiterId !== recruiterId) return null
@@ -210,7 +198,6 @@ function mapJobPayload(payload: Record<string, unknown>): Record<string, unknown
   return set
 }
 
-/** Crée une offre pour le recruteur. */
 export async function createJob(
   recruiterId: string,
   payload: Record<string, unknown>,
@@ -226,7 +213,6 @@ export async function createJob(
   return row?.id
 }
 
-/** Met à jour une offre (réservé au recruteur propriétaire). */
 export async function updateJob(
   recruiterId: string,
   id: string,
@@ -244,7 +230,6 @@ export async function updateJob(
   return { error: null }
 }
 
-/** Supprime une offre (réservé au recruteur propriétaire). */
 export async function deleteRecruiterJob(recruiterId: string, id: string): Promise<{ error: string | null }> {
   const [job] = await db.select({ recruiterId: jobs.recruiterId }).from(jobs).where(eq(jobs.id, id)).limit(1)
   if (!job) return { error: 'Offre introuvable' }
@@ -253,7 +238,6 @@ export async function deleteRecruiterJob(recruiterId: string, id: string): Promi
   return { error: null }
 }
 
-/** Contexte d'une offre pour KazaIA (sans incrément de vues). */
 export async function getJobAIContext(id: string): Promise<{
   title: string; description: string; location: string; job_type: string
   company_name: string; skills: string[]
@@ -285,7 +269,6 @@ export async function getJobAIContext(id: string): Promise<{
   }
 }
 
-/** Une offre par id (entreprise + compétences), et incrémente les vues. */
 export async function getJob(id: string): Promise<Job | null> {
   const row = await db.query.jobs.findFirst({
     where: eq(jobs.id, id),

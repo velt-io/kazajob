@@ -67,7 +67,6 @@ export function computeQuests(
   const score = profileScore(profile)
 
   return [
-    // ── Profil ──────────────────────────────────────────────────
     {
       id: 'complete_profile',
       title: 'Héros du profil',
@@ -112,7 +111,6 @@ export function computeQuests(
       iconName: 'Video',
       accentColor: '#6D3BEB',
     },
-    // ── Candidatures ─────────────────────────────────────────────
     {
       id: 'first_apply',
       title: 'Premier pas',
@@ -146,7 +144,6 @@ export function computeQuests(
       iconName: 'Heart',
       accentColor: '#19A974',
     },
-    // ── Daily ────────────────────────────────────────────────────
     {
       id: 'streak_3',
       title: 'Série de feu',
@@ -195,15 +192,13 @@ export function useGamification(
   const [skillsCount, setSkillsCount]     = useState(0)
   const [enabled, setEnabled]             = useState(profile?.gamification_enabled ?? true)
 
-  // Sync avec profile — seulement si la colonne existe (pas undefined)
+  // Sync uniquement si la colonne existe — undefined = colonne manquante en DB, on garde l'état local
   useEffect(() => {
     if (profile && profile.gamification_enabled !== undefined) {
       setEnabled(profile.gamification_enabled)
     }
-    // Si undefined (colonne manquante en DB), on garde l'état local sans écraser
   }, [profile?.gamification_enabled])
 
-  // Fetch skills count
   useEffect(() => {
     if (!profile?.id) return
     fetch('/api/candidate-skills')
@@ -215,7 +210,7 @@ export function useGamification(
   const toggle = useCallback(async () => {
     if (!profile?.id) return
     const newVal = !enabled
-    setEnabled(newVal) // optimistic update
+    setEnabled(newVal)
 
     try {
       const res = await fetch('/api/profile', {
@@ -223,7 +218,7 @@ export function useGamification(
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ gamification_enabled: newVal }),
       })
-      if (!res.ok) setEnabled(!newVal) // rollback propre
+      if (!res.ok) setEnabled(!newVal)
     } catch {
       setEnabled(!newVal)
     }

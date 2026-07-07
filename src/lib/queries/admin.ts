@@ -12,14 +12,12 @@ import {
 import type { Company, CompanySubscription, Job, Profile } from '@/lib/types'
 import { serialize } from './_serialize'
 
-/** Compteur générique sur une table, avec condition optionnelle. */
 async function cnt(table: PgTable, where?: SQL): Promise<number> {
   const q = db.select({ value: count() }).from(table)
   const [{ value }] = where ? await q.where(where) : await q
   return value
 }
 
-// ── Utilisateurs ──────────────────────────────────────────────────
 export async function listUsers(search?: string): Promise<Profile[]> {
   const rows = search
     ? await db.select().from(profiles).where(ilike(profiles.fullName, `%${search}%`)).orderBy(desc(profiles.createdAt))
@@ -31,7 +29,6 @@ export async function setUserRole(id: string, role: string): Promise<void> {
   await db.update(profiles).set({ role }).where(eq(profiles.id, id))
 }
 
-// ── Entreprises ───────────────────────────────────────────────────
 export async function listAllCompanies(): Promise<Company[]> {
   const rows = await db.select().from(companies).orderBy(desc(companies.createdAt))
   return serialize<Company[]>(rows)
@@ -41,7 +38,6 @@ export async function setCompanyVerified(id: string, verified: boolean): Promise
   await db.update(companies).set({ isVerified: verified }).where(eq(companies.id, id))
 }
 
-// ── Offres ────────────────────────────────────────────────────────
 export async function listAllJobs(): Promise<Job[]> {
   const rows = await db.query.jobs.findMany({
     with: { company: true },
@@ -59,7 +55,6 @@ export async function deleteJob(id: string): Promise<void> {
   await db.delete(jobs).where(eq(jobs.id, id))
 }
 
-// ── Compétences (référentiel) ─────────────────────────────────────
 export interface SkillWithUsage { id: string; name: string; category: string | null; usage_count: number }
 
 export async function getSkillsWithUsage(): Promise<SkillWithUsage[]> {
@@ -85,7 +80,6 @@ export async function deleteSkill(id: string): Promise<void> {
   await db.delete(skills).where(eq(skills.id, id))
 }
 
-// ── Abonnements ───────────────────────────────────────────────────
 export async function listSubscriptions(): Promise<Array<CompanySubscription & { company: unknown }>> {
   const rows = await db.query.companySubscriptions.findMany({
     with: { company: { columns: { name: true, isVerified: true } } },
@@ -105,7 +99,6 @@ export async function updateSubscription(
   await db.update(companySubscriptions).set(set).where(eq(companySubscriptions.id, id))
 }
 
-// ── Notifications (broadcast) ─────────────────────────────────────
 export async function countUsers(role?: string): Promise<number> {
   const base = db.select({ value: sql<number>`count(*)::int` }).from(profiles)
   const [{ value }] = role ? await base.where(eq(profiles.role, role)) : await base
@@ -132,7 +125,6 @@ export async function broadcastNotification(
   return users.length
 }
 
-// ── Dashboard (compteurs globaux) ─────────────────────────────────
 export async function getDashboardStats() {
   const [
     users, jobsCount, companiesCount, applicationsCount,
@@ -155,7 +147,6 @@ export async function getDashboardStats() {
   }
 }
 
-// ── KazaIA (estimations) ──────────────────────────────────────────
 export async function getAIStats() {
   const [totalApplications, applicationsWithCoverLetter, totalConversations] = await Promise.all([
     cnt(applications),
@@ -165,7 +156,6 @@ export async function getAIStats() {
   return { totalApplications, applicationsWithCoverLetter, totalConversations }
 }
 
-// ── Analytics (8 dernières semaines, agrégation côté client) ──────
 export async function getAnalyticsData() {
   const since = new Date()
   since.setDate(since.getDate() - 56)
@@ -186,7 +176,6 @@ export async function getAnalyticsData() {
   }
 }
 
-// ── KazaEvents ────────────────────────────────────────────────────
 export async function listAdminEvents(): Promise<Array<Record<string, unknown>>> {
   const evs = await db.query.events.findMany({
     with: { organizer: { columns: { fullName: true, email: true } } },

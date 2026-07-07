@@ -1,6 +1,5 @@
 import { KZ } from '@/lib/constants'
 
-// ── Soleil cartoon ────────────────────────────────────────────
 export function Soleil({
   size = 64,
   color = KZ.yellow,
@@ -32,7 +31,6 @@ export function Soleil({
   )
 }
 
-// ── Palme géométrique ─────────────────────────────────────────
 export function Palme({
   size = 80,
   color = KZ.green,
@@ -57,7 +55,6 @@ export function Palme({
   )
 }
 
-// ── Montagne (Piton vibe) ─────────────────────────────────────
 export function Montagne({
   width = 200,
   height = 80,
@@ -82,7 +79,6 @@ export function Montagne({
   )
 }
 
-// ── Vague sinusoïdale ─────────────────────────────────────────
 export function Vague({
   width = 200,
   height = 28,
@@ -104,7 +100,6 @@ export function Vague({
   )
 }
 
-// ── Nuage ─────────────────────────────────────────────────────
 export function Nuage({
   width = 80,
   height = 40,
@@ -128,7 +123,6 @@ export function Nuage({
   )
 }
 
-// ── Hibiscus ──────────────────────────────────────────────────
 export function Hibiscus({
   size = 56,
   color = KZ.orangeSoft,
@@ -162,7 +156,6 @@ export function Hibiscus({
   )
 }
 
-// ── Sparkle ───────────────────────────────────────────────────
 export function Sparkle({
   size = 32,
   color = KZ.yellow,

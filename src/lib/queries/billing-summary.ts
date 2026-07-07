@@ -55,7 +55,6 @@ export interface CompanyBillingSummary {
 }
 
 export async function getCompanyBillingSummary(companyId: string): Promise<CompanyBillingSummary> {
-  // 1. Charger abonnement + plan
   const [subRow] = await db
     .select({
       planId:                companySubscriptions.planId,
@@ -73,16 +72,13 @@ export async function getCompanyBillingSummary(companyId: string): Promise<Compa
     .where(eq(companySubscriptions.companyId, companyId))
     .limit(1)
 
-  // 2. Compter les jobs actifs
   const [{ value: activeJobs }] = await db
     .select({ value: count() })
     .from(jobs)
     .where(and(eq(jobs.companyId, companyId), eq(jobs.isActive, true)))
 
-  // 3. Campagne de lancement
   const enrollment = await getActiveCampaignEnrollment(companyId)
 
-  // ── Déterminer la source et les droits effectifs ──
   const overrideActive = !!(subRow?.adminOverrideEnabled &&
     (!subRow.overrideUntil || subRow.overrideUntil > new Date()))
 
@@ -106,12 +102,10 @@ export async function getCompanyBillingSummary(companyId: string): Promise<Compa
   }
 
   const isOverLimit = maxJobs !== -1 && activeJobs > maxJobs
-  // Renouvellement d'annonce expirée = même règle que publication
   const canRenewJob = canPublishJob
 
   const remaining = maxJobs === -1 ? -1 : Math.max(0, maxJobs - activeJobs)
 
-  // ── Construire le message selon le cas ──
   const message = buildMessage({ source, subRow, enrollment, canPublishJob, activeJobs, maxJobs, isOverLimit })
 
   return {
@@ -152,7 +146,6 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
   const { source, subRow, enrollment, canPublishJob, activeJobs, maxJobs, isOverLimit } = ctx
   const limitLabel = maxJobs === -1 ? 'illimité' : String(maxJobs)
 
-  // Cas F : dérogation admin
   if (source === 'admin_override') {
     const until = subRow?.overrideUntil
       ? `jusqu'au ${new Date(subRow.overrideUntil).toLocaleDateString('fr-FR')}`
@@ -166,7 +159,6 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
     }
   }
 
-  // Cas A : phase de déploiement (campagne active)
   if (source === 'campaign') {
     if (!canPublishJob) {
       return {
@@ -188,7 +180,6 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
     }
   }
 
-  // Cas B : abonnements actifs, aucun plan
   if (source === 'none') {
     return {
       title: 'Aucun abonnement actif',
@@ -201,7 +192,6 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
     }
   }
 
-  // Abonnement présent — vérifier statuts spéciaux
   const status = subRow?.status
   if (status === 'trial') {
     const daysLeft = subRow?.trialEndsAt
@@ -225,7 +215,6 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
     }
   }
 
-  // Cas E : au-dessus de la limite
   if (isOverLimit) {
     return {
       title: 'Vos annonces actuelles restent visibles',
@@ -238,7 +227,6 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
     }
   }
 
-  // Cas C/D : abonnement actif dans les limites
   return {
     title: 'Votre offre est active',
     description: maxJobs === -1

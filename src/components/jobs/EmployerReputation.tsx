@@ -15,7 +15,6 @@ interface Reputation {
   lastActiveDays: number | null
 }
 
-/** Réputation employeur — indicateurs RÉELS (sans système d'avis). */
 export function EmployerReputation({ companyId }: { companyId?: string | null }) {
   const [rep, setRep] = useState<Reputation | null>(null)
   const [loaded, setLoaded] = useState(false)

@@ -13,7 +13,6 @@ const sora = Sora({
   display: 'swap',
 })
 
-// ── Métadonnées SEO complètes ──────────────────────────────────
 export const metadata: Metadata = {
   metadataBase: new URL('https://kazajob.re'),
 
@@ -37,7 +36,6 @@ export const metadata: Metadata = {
   creator: 'Kazajob SAS',
   publisher: 'Kazajob SAS',
 
-  // ── Open Graph ────────────────────────────────────────────────
   openGraph: {
     type: 'website',
     locale: 'fr_RE',
@@ -56,7 +54,6 @@ export const metadata: Metadata = {
     ],
   },
 
-  // ── Twitter Card ──────────────────────────────────────────────
   twitter: {
     card: 'summary_large_image',
     site: '@kazajob_re',
@@ -66,7 +63,6 @@ export const metadata: Metadata = {
     images: ['/kazajob.png'],
   },
 
-  // ── Robots ───────────────────────────────────────────────────
   robots: {
     index: true,
     follow: true,
@@ -79,19 +75,16 @@ export const metadata: Metadata = {
     },
   },
 
-  // ── Canonique + App ───────────────────────────────────────────
   alternates: {
     canonical: 'https://kazajob.re',
     languages: { 'fr-RE': 'https://kazajob.re' },
   },
   category: 'jobs',
 
-  // ── Vérification ─────────────────────────────────────────────
   // verification: {
   //   google: 'VOTRE_CODE_GOOGLE_SEARCH_CONSOLE',
   // },
 
-  // ── App manifest ─────────────────────────────────────────────
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -99,7 +92,6 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
   },
 
-  // ── Icons ────────────────────────────────────────────────────
   icons: {
     icon: '/favicon.ico',
     apple: '/kazajob.png',
@@ -113,7 +105,6 @@ export const viewport: Viewport = {
   themeColor: '#6D3BEB',
 }
 
-// ── Données structurées JSON-LD ────────────────────────────────
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [

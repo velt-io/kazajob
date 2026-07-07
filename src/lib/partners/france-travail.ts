@@ -37,7 +37,6 @@ async function getAccessToken(): Promise<string> {
   return data.access_token
 }
 
-/** Convertit un job Kazajob au format France Travail */
 function toFranceTravailPayload(job: PartnerJob) {
   return {
     intitule:         job.title,

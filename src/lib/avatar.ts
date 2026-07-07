@@ -132,7 +132,6 @@ export const DEFAULT_AVATAR_CONFIG: AvatarConfig = {
   facialHair:   'blank',
 }
 
-// ── Générer une config aléatoire ──────────────────────────────────
 export function randomAvatarConfig(): AvatarConfig {
   const pick = <T>(arr: { id: string }[]) => arr[Math.floor(Math.random() * arr.length)].id as T
   return {
@@ -149,8 +148,7 @@ export function randomAvatarConfig(): AvatarConfig {
   }
 }
 
-// ── Génération SVG locale (npm @dicebear/core + @dicebear/collection) ──
-// Aucun appel HTTP — génération 100% côté client, pas de 400/CORS possible
+// Génération SVG locale — pas d'appel HTTP, pas de 400/CORS possible
 import { createAvatar } from '@dicebear/core'
 import { avataaars } from '@dicebear/collection'
 
@@ -159,29 +157,26 @@ export function generateAvatarSvg(config: AvatarConfig): string {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const style = avataaars as any
     const avatar = createAvatar(style, {
-      seed:         'kazajob-avatar',       // seed fixe → pas de hasard non voulu
+      seed:         'kazajob-avatar',
       skinColor:    [config.skinColor],
       top:          [config.top],
       hairColor:    [config.hairColor],
       eyes:         [config.eyes],
-      eyebrows:     [config.eyebrow],       // ← 'eyebrows' (pluriel) dans DiceBear
+      eyebrows:     [config.eyebrow],       // 'eyebrows' (pluriel) dans DiceBear
       mouth:        [config.mouth],
-      clothing:     [config.clothes],       // ← 'clothing' dans DiceBear
-      clothesColor: [config.clothesColor],  // ← 'clothesColor' (pas 'clothingColor') — bug corrigé
+      clothing:     [config.clothes],       // 'clothing' (pas 'clothes') dans DiceBear
+      clothesColor: [config.clothesColor],  // 'clothesColor' (pas 'clothingColor') dans DiceBear
       accessories:  config.accessories === 'blank' ? [] : [config.accessories],
       facialHair:   config.facialHair   === 'blank' ? [] : [config.facialHair],
     })
     return avatar.toString()
   } catch {
-    // Fallback minimal en cas d'option invalide
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return createAvatar(avataaars as any, { seed: config.skinColor }).toString()
   }
 }
 
-// ── Personnage par domaine métier ────────────────────────────────
-// On "évoque" le métier via tenue + couleur (DiceBear n'a pas de tenues
-// métier dédiées). Le candidat peut tout personnaliser ensuite.
+// DiceBear n'ayant pas de tenues métier dédiées, le domaine est évoqué via tenue + couleur.
 export const CHARACTER_GENDERS = [
   { id: 'femme', label: 'Femme',  top: 'longButNotTooLong' },
   { id: 'homme', label: 'Homme',  top: 'shortCurly'        },
@@ -211,7 +206,6 @@ export const CHARACTER_DOMAINS: CharacterDomain[] = [
   { id: 'autre',          label: 'Autre domaine',         emoji: '✨', clothes: 'shirtCrewNeck',    clothesColor: '65c9ff' },
 ]
 
-/** Construit une config avatar "personnage" à partir d'un domaine + genre */
 export function buildCharacterConfig(domainId: string, genderId: string): AvatarConfig {
   const domain = CHARACTER_DOMAINS.find(d => d.id === domainId)
   const gender = CHARACTER_GENDERS.find(g => g.id === genderId)
@@ -224,13 +218,11 @@ export function buildCharacterConfig(domainId: string, genderId: string): Avatar
   }
 }
 
-/** Rétrocompatibilité — utilisé dans resolveAvatarSrc */
+/** @deprecated Conservé pour compatibilité — préférer generateAvatarSvg */
 export function buildAvatarUrl(_config: AvatarConfig): string {
-  // Conservé pour compatibilité, mais generateAvatarSvg est préféré
   return ''
 }
 
-/** Résout la source de l'avatar : DiceBear > photo > null (initiales) */
 export function resolveAvatarSrc(
   avatarConfig: AvatarConfig | Record<string, string> | null | undefined,
   avatarUrl: string | null | undefined

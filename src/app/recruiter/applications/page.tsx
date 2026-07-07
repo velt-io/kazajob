@@ -279,7 +279,6 @@ export default function RecruiterApplicationsPage() {
   )
 }
 
-// ── Modal "Sauvegarder dans le vivier" ─────────────────────────
 function SaveToPoolModal({ app, onClose }: { app: Application | null; onClose: () => void }) {
   const [category, setCategory] = useState<string>('a_contacter')
   const [note, setNote] = useState('')
@@ -340,7 +339,6 @@ function recoFromScore(score: number): { label: string; bg: string; color: strin
   return                  { label: 'Peu prioritaire',    bg: KZ.cream2,     color: KZ.mute }
 }
 
-// ── Modal synthèse IA d'une candidature ────────────────────────
 function ApplicationSummaryModal({ app, onClose }: { app: Application | null; onClose: () => void }) {
   const { generating, summary, raw, error, locked, generate, reset } = useApplicationSummaryAI()
   const candidate = app?.candidate as { full_name?: string } | undefined

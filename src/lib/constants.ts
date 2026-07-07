@@ -91,11 +91,10 @@ export const SALARY_BENCHMARKS_974 = [
   { maxMonthly: Infinity, label: 'Bien payé 974',      color: '#19A974', bg: '#D6F0E0' },
 ] as const
 
-/** Retourne le label de benchmarking salarial pour La Réunion */
 export function getSalaryLabel(min?: number | null, max?: number | null) {
   const ref = min ?? max
   if (!ref) return null
-  // Détecte brut annuel (>15 000) ou mensuel
+  // Valeur > 15 000 = brut annuel, sinon mensuel
   const monthly = ref > 15_000 ? Math.round(ref / 12) : ref
   return SALARY_BENCHMARKS_974.find(b => monthly < b.maxMonthly) ?? SALARY_BENCHMARKS_974[3]
 }
@@ -147,7 +146,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
 ]
 
-/** Alias historique : tous les forfaits sont désormais payants (plus de forfait gratuit). */
+/** @deprecated Alias — tous les forfaits sont désormais payants */
 export const PAID_PLANS = SUBSCRIPTION_PLANS
 
 // ── Multidiffusion (désactivée visuellement — réactivation = passer à true) ──
@@ -156,7 +155,6 @@ export const MULTIDIFFUSION_ENABLED = false
 
 const DIFFUSION_FEATURE_RE = /diffusion|france travail|mission locale|apec|indeed|plateforme|flux xml/i
 
-/** Features d'un forfait, en masquant les lignes de multidiffusion tant qu'elle est OFF. */
 export function planFeatures(plan: SubscriptionPlan): string[] {
   return MULTIDIFFUSION_ENABLED ? plan.features : plan.features.filter((f) => !DIFFUSION_FEATURE_RE.test(f))
 }
@@ -254,7 +252,6 @@ export const TRAINING_STATUS: Record<string, { label: string; color: string }> =
   withdrawn: { label: 'Retiré',      color: 'cream'  },
 }
 
-/** Vérifie que le titre contient la mention (H/F) ou (F/H) */
 export function hasMentionHF(title: string): boolean {
   return /\(H\/F\)|\(F\/H\)/i.test(title)
 }

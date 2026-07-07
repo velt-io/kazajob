@@ -57,7 +57,6 @@ export function KazaScoreBadge({ recruiterId, size = 'md', showDetails = false }
   const circ   = 2 * Math.PI * radius
   const dash   = (data.score / 100) * circ
 
-  // ── Inline badge (sm) ──────────────────────────────────────
   if (size === 'sm') {
     return (
       <span
@@ -76,7 +75,6 @@ export function KazaScoreBadge({ recruiterId, size = 'md', showDetails = false }
     )
   }
 
-  // ── Badge medium / large avec jauge circulaire ─────────────
   const svgSize = (radius + stroke) * 2 + 4
   const cx = svgSize / 2
   const cy = svgSize / 2
@@ -137,12 +135,10 @@ export function KazaScoreBadge({ recruiterId, size = 'md', showDetails = false }
   )
 }
 
-/** Version compacte pour les fiches offres */
 export function KazaScoreMini({ recruiterId }: { recruiterId: string }) {
   return <KazaScoreBadge recruiterId={recruiterId} size="sm" />
 }
 
-/** Version bloc pour le dashboard recruteur */
 export function KazaScoreCard({ recruiterId }: { recruiterId: string }) {
   return (
     <div className="kz-card p-5 bg-white">

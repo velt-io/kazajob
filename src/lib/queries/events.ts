@@ -7,7 +7,6 @@ import { db } from '@/lib/db'
 import { eventRegistrations, events } from '@/lib/db/schema'
 import { serialize } from './_serialize'
 
-/** Construit une map eventId → nombre d'inscrits pour les ids donnés. */
 async function registrationCounts(): Promise<Map<string, number>> {
   const rows = await db
     .select({ eventId: eventRegistrations.eventId, c: count() })
@@ -26,7 +25,6 @@ function withCount(
   }))
 }
 
-/** Événements d'un organisateur (avec nb d'inscrits). */
 export async function listOrganizerEvents(organizerId: string) {
   const rows = await db.select().from(events)
     .where(eq(events.organizerId, organizerId))
@@ -34,7 +32,6 @@ export async function listOrganizerEvents(organizerId: string) {
   return withCount(rows, await registrationCounts())
 }
 
-/** Crée un événement. */
 export async function createEvent(
   organizerId: string,
   form: Record<string, unknown>,
@@ -54,7 +51,6 @@ export async function createEvent(
   return row?.id
 }
 
-/** Supprime un événement (réservé à son organisateur). */
 export async function deleteOrganizerEvent(
   organizerId: string,
   id: string,
@@ -67,9 +63,6 @@ export async function deleteOrganizerEvent(
   return { error: null }
 }
 
-// ── Côté candidat (utilisé au sous-lot 7c) ────────────────────────
-
-/** Événements publiés (à venir en premier), avec nb d'inscrits. */
 export async function listPublishedEvents() {
   const rows = await db.select().from(events)
     .where(eq(events.isPublished, true))
@@ -77,7 +70,6 @@ export async function listPublishedEvents() {
   return withCount(rows, await registrationCounts())
 }
 
-/** Ids des événements auxquels un candidat est inscrit. */
 export async function listMyRegistrations(candidateId: string): Promise<string[]> {
   const rows = await db.select({ eventId: eventRegistrations.eventId })
     .from(eventRegistrations).where(eq(eventRegistrations.candidateId, candidateId))

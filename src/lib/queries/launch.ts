@@ -21,7 +21,6 @@ import {
 } from '@/lib/launch'
 import { writeAudit } from './audit'
 
-/** Statuts d'abonnement payant incompatibles avec une activation gratuite. */
 const ACTIVE_PAID_STATUSES = new Set(['trial', 'active', 'past_due'])
 
 type CampaignRow = typeof launchCampaigns.$inferSelect
@@ -42,16 +41,6 @@ async function getCurrentCampaign(now: Date = new Date()): Promise<CampaignRow |
   return scheduled[0]?.c ?? null
 }
 
-/**
- * Les nouveaux abonnements Stripe sont-ils autorisés ? Une campagne active peut
- * suspendre temporairement les nouvelles souscriptions payantes (`new_subscriptions_enabled`)
- * pour orienter les entreprises vers l'accès gratuit pendant la période de lancement.
- * N'affecte jamais les abonnements déjà existants (renouvellement, changement de forfait géré ailleurs).
- */
-/**
- * Données publiques de la campagne active pour les Server Components (page.tsx, etc.).
- * Retourne null si aucune campagne active ou si freePublishingEnabled = false.
- */
 export async function getActiveLaunchPublicData(): Promise<{ name: string; endsAt: string | null } | null> {
   const campaign = await getCurrentCampaign()
   if (!campaign) return null
@@ -143,14 +132,13 @@ export async function checkLaunchEligibility(companyId: string | null | undefine
   const [company] = await db.select({ id: companies.id }).from(companies).where(eq(companies.id, companyId)).limit(1)
   if (!company) return out('company_identity_required')
 
-  // Déjà enrôlée dans CETTE campagne ? (historique immuable, contrainte unique en base)
+  // Contrainte unique en base : une seule activation par (entreprise, campagne)
   const [used] = await db.select({ id: launchCampaignEnrollments.id })
     .from(launchCampaignEnrollments)
     .where(and(eq(launchCampaignEnrollments.companyId, companyId), eq(launchCampaignEnrollments.campaignId, campaign.id)))
     .limit(1)
   if (used) return out('already_used')
 
-  // Abonnement payant actif incompatible ?
   const [sub] = await db.select({ status: companySubscriptions.status })
     .from(companySubscriptions).where(eq(companySubscriptions.companyId, companyId)).limit(1)
   if (sub && ACTIVE_PAID_STATUSES.has(sub.status)) return out('active_paid_plan')
@@ -215,7 +203,6 @@ export interface LaunchStatus {
   trainingsMax:  number
 }
 
-/** État de campagne d'une entreprise pour le dashboard (compte à rebours réel). */
 export async function getLaunchStatus(companyId: string): Promise<LaunchStatus | null> {
   const [row] = await db
     .select({ enrollment: launchCampaignEnrollments, campaign: launchCampaigns })
@@ -301,7 +288,6 @@ export async function processLaunchReminders(now: Date = new Date()): Promise<nu
   return sent
 }
 
-/** Compteurs d'impact pour l'administration (avant pause/extension/arrêt d'une campagne). */
 export async function getLaunchUsage(campaignId?: string): Promise<{ companies: number; activeJobs: number; activeTrainings: number }> {
   const scope = campaignId
     ? and(eq(launchCampaignEnrollments.status, 'active'), eq(launchCampaignEnrollments.campaignId, campaignId))

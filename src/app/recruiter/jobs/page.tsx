@@ -242,7 +242,6 @@ export default function RecruiterJobsPage() {
   )
 }
 
-// ── Modal de mise en avant payante d'une offre ─────────────────
 function BoostModal({ job, onClose }: { job: Job | null; onClose: () => void }) {
   const [days, setDays] = useState(15)
   const [loading, setLoading] = useState(false)

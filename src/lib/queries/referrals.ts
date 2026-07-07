@@ -5,7 +5,6 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { profiles, referrals } from '@/lib/db/schema'
 
-/** Stats de parrainage d'un utilisateur : nombre de filleuls + récompensés. */
 export async function getReferralStats(referrerId: string): Promise<{ count: number; rewarded: number }> {
   const rows = await db
     .select({ rewarded: referrals.rewarded })
@@ -17,7 +16,6 @@ export async function getReferralStats(referrerId: string): Promise<{ count: num
   }
 }
 
-/** Génère un code de parrainage si l'utilisateur n'en a pas. Renvoie le code. */
 export async function generateReferralCode(userId: string): Promise<string | null> {
   const [profile] = await db
     .select({ code: profiles.referralCode })

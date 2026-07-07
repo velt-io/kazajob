@@ -20,7 +20,6 @@ export interface TalentPoolEntry {
   }
 }
 
-/** Sauvegarde (ou met à jour) un candidat dans le vivier du recruteur. */
 export async function saveToPool(
   recruiterId: string,
   candidateId: string,
@@ -35,7 +34,6 @@ export async function saveToPool(
     })
 }
 
-/** Liste le vivier du recruteur (avec infos candidat). */
 export async function listPool(recruiterId: string): Promise<TalentPoolEntry[]> {
   const rows = await db
     .select({
@@ -69,7 +67,6 @@ export async function listPool(recruiterId: string): Promise<TalentPoolEntry[]> 
   }))
 }
 
-/** Retire un candidat du vivier du recruteur. */
 export async function removeFromPool(recruiterId: string, candidateId: string): Promise<void> {
   await db.delete(talentPool)
     .where(and(eq(talentPool.recruiterId, recruiterId), eq(talentPool.candidateId, candidateId)))

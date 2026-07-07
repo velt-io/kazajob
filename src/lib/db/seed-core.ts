@@ -72,7 +72,6 @@ export async function upsertAdmin(input: AdminInput): Promise<AdminResult> {
   return { email, id: created.id, created: true }
 }
 
-/** Vérifie qu'il existe exactement un admin (l'email attendu) et aucun autre. */
 export async function assertSingleAdmin(expectedEmail: string): Promise<{ ok: boolean; admins: number; strays: string[] }> {
   const email = expectedEmail.toLowerCase().trim()
   const admins = await db.select({ email: profiles.email }).from(profiles).where(eq(profiles.role, 'admin'))
@@ -80,7 +79,6 @@ export async function assertSingleAdmin(expectedEmail: string): Promise<{ ok: bo
   return { ok: admins.length === 1 && strays.length === 0, admins: admins.length, strays }
 }
 
-/** Supprime tout autre compte admin que celui attendu (réconciliation). */
 export async function pruneOtherAdmins(expectedEmail: string): Promise<number> {
   const email = expectedEmail.toLowerCase().trim()
   const removed = await db.delete(profiles)

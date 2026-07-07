@@ -17,5 +17,4 @@ export function getStripe(): Stripe {
   return _stripe
 }
 
-/** URL de base pour les redirections Checkout / Portal. */
 export const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kazajob.re'

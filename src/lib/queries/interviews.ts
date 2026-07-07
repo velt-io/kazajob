@@ -23,12 +23,10 @@ interface CreateInterviewInput {
   notes?: string
 }
 
-/** Crée un entretien (réservé au recruteur propriétaire de l'offre). */
 export async function createInterview(
   recruiterId: string,
   input: CreateInterviewInput,
 ): Promise<{ error: string | null; interview?: Record<string, unknown> }> {
-  // Vérifie que le recruteur possède l'offre liée à la candidature.
   const app = await db.query.applications.findFirst({
     where: eq(applications.id, input.applicationId),
     with: { job: { columns: { recruiterId: true } } },
@@ -64,7 +62,6 @@ export async function createInterview(
     row.visioLink = link
   }
 
-  // La candidature passe en "interview".
   await db.update(applications)
     .set({ status: 'interview', updatedAt: new Date() })
     .where(eq(applications.id, input.applicationId))
@@ -72,7 +69,6 @@ export async function createInterview(
   return { error: null, interview: serialize<Record<string, unknown>>(row) }
 }
 
-/** Entretiens d'un utilisateur (selon son rôle). */
 export async function listInterviews(userId: string, isRecruiter: boolean) {
   const rows = await db.query.interviews.findMany({
     where: isRecruiter ? eq(interviews.recruiterId, userId) : eq(interviews.candidateId, userId),
@@ -86,7 +82,6 @@ export async function listInterviews(userId: string, isRecruiter: boolean) {
   return serialize<Record<string, unknown>[]>(rows)
 }
 
-/** Met à jour un entretien (recruteur ou candidat concerné). */
 export async function updateInterview(
   userId: string,
   id: string,
@@ -97,7 +92,6 @@ export async function updateInterview(
   if (!itw) return { error: 'Entretien introuvable' }
   if (itw.recruiterId !== userId && itw.candidateId !== userId) return { error: 'Non autorisé' }
 
-  // Liste blanche des champs modifiables.
   const set: Record<string, unknown> = { updatedAt: new Date() }
   if ('status' in updates) set.status = updates.status
   if ('notes' in updates) set.notes = updates.notes

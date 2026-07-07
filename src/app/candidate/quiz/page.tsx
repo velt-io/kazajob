@@ -52,7 +52,6 @@ export default function CandidateQuizPage() {
 
   const restart = () => { setStep(0); setAnswers([]); setDone(false); setArchetype(null) }
 
-  // ── Écran résultat ────────────────────────────────────────────────
   if (done && archetype) {
     const a = ARCHETYPES[archetype]
     return (
@@ -77,7 +76,6 @@ export default function CandidateQuizPage() {
     )
   }
 
-  // ── Quiz en cours ─────────────────────────────────────────────────
   const question = QUIZ[step]
   return (
     <div className="max-w-[560px] mx-auto py-6">

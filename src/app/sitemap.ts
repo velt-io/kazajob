@@ -5,7 +5,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = 'https://kazajob.re'
   const now = new Date()
 
-  // ── Pages statiques ───────────────────────────────────────────
   // Pages d'auth volontairement exclues (cohérence avec robots.txt qui disallow /auth/)
   const staticPages: MetadataRoute.Sitemap = [
     { url: base,                         lastModified: now, changeFrequency: 'daily',   priority: 1.0 },
@@ -15,7 +14,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/candidate/training`, lastModified: now, changeFrequency: 'daily',   priority: 0.8 },
   ]
 
-  // ── Pages dynamiques : offres + formations publiques ──────────
   let dynamicPages: MetadataRoute.Sitemap = []
   try {
     const [jobs, trainings] = await Promise.all([getSitemapJobs(), getSitemapTrainings()])

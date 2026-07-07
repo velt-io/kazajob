@@ -15,7 +15,6 @@ export interface FeaturedJob {
   skills: Array<{ skill: { name: string } | null }>
 }
 
-/** Offres vedettes + entreprises vérifiées + compteurs. */
 export async function getLandingData(): Promise<{
   featuredJobs: FeaturedJob[]
   companies: Company[]
@@ -50,7 +49,6 @@ export async function getLandingData(): Promise<{
   }
 }
 
-/** Offres actives pour le sitemap (id + date de maj). */
 export async function getSitemapJobs(): Promise<Array<{ id: string; updated_at: string }>> {
   const rows = await db
     .select({ id: jobs.id, updatedAt: jobs.updatedAt })
@@ -61,7 +59,6 @@ export async function getSitemapJobs(): Promise<Array<{ id: string; updated_at: 
   return rows.map((r) => ({ id: r.id, updated_at: r.updatedAt.toISOString() }))
 }
 
-/** Formations actives pour le sitemap. */
 export async function getSitemapTrainings(): Promise<Array<{ id: string; updated_at: string }>> {
   const rows = await db
     .select({ id: trainingOffers.id, updatedAt: trainingOffers.updatedAt })

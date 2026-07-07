@@ -3,7 +3,6 @@ import { requireAdmin } from '@/lib/admin-guard'
 import { exportSupabaseData, formatBytes } from '@/lib/backup/supabase-export'
 import { uploadToDrive, listBackups } from '@/lib/backup/google-drive'
 
-// ── Vérification admin (ou cron secret) ───────────────────────────
 // NB : `exportSupabaseData` exporte toujours depuis Supabase (legacy/rollback).
 async function isAuthorized(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
@@ -12,7 +11,6 @@ async function isAuthorized(req: NextRequest) {
   return !!(await requireAdmin())
 }
 
-// ── POST — déclencher un backup ───────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
     const isAdmin = await isAuthorized(req)
@@ -57,7 +55,6 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// ── GET — lister les backups existants ────────────────────────────
 export async function GET(req: NextRequest) {
   try {
     const isAdmin = await isAuthorized(req)

@@ -42,7 +42,6 @@ const EDITABLE: Record<string, keyof ProfileInsert> = {
   realisations:          'realisations',
 }
 
-/** Met à jour le profil de l'utilisateur (champs en liste blanche uniquement). */
 export async function updateProfile(
   userId: string,
   patch: Record<string, unknown>,
@@ -56,7 +55,6 @@ export async function updateProfile(
   await db.update(profiles).set(set as Partial<ProfileInsert>).where(eq(profiles.id, userId))
 }
 
-/** Compétences d'un candidat (objets Skill). */
 export async function getCandidateSkills(candidateId: string): Promise<Skill[]> {
   const rows = await db.query.candidateSkills.findMany({
     where: eq(candidateSkills.candidateId, candidateId),
@@ -75,7 +73,6 @@ export async function removeCandidateSkill(candidateId: string, skillId: string)
     .where(and(eq(candidateSkills.candidateId, candidateId), eq(candidateSkills.skillId, skillId)))
 }
 
-/** Ajoute en masse des compétences à partir de leurs noms (idempotent). */
 export async function addCandidateSkillsByNames(candidateId: string, names: string[]): Promise<void> {
   if (!names.length) return
   const found = await db.select({ id: skills.id }).from(skills).where(inArray(skills.name, names))
@@ -86,12 +83,10 @@ export async function addCandidateSkillsByNames(candidateId: string, names: stri
     .onConflictDoNothing()
 }
 
-/** Toutes les compétences (référentiel), triées par nom. */
 export async function listSkills(): Promise<Skill[]> {
   return db.select().from(skills).orderBy(skills.name)
 }
 
-/** Active un KazaBoost (coûte des XP). Vérifie le solde côté serveur. */
 export async function boostProfile(userId: string): Promise<{ error: string | null }> {
   const [me] = await db
     .select({ xp: profiles.xp, boostedUntil: profiles.boostedUntil })
@@ -108,7 +103,6 @@ export async function boostProfile(userId: string): Promise<{ error: string | nu
   return { error: null }
 }
 
-/** Active (ou prolonge) un boost de profil payant pour `days` jours. */
 export async function activateProfileBoost(userId: string, days: number): Promise<void> {
   if (!days || days <= 0) return
   const [me] = await db
@@ -122,7 +116,7 @@ export async function activateProfileBoost(userId: string, days: number): Promis
     .where(eq(profiles.id, userId))
 }
 
-/** Calcule (serveur, anti-triche) et enregistre le résultat du quiz candidat. */
+// Calcul côté serveur — anti-triche
 export async function saveQuizResult(
   userId: string,
   answers: number[],
@@ -133,7 +127,6 @@ export async function saveQuizResult(
   return { error: null, result }
 }
 
-/** Profil public d'un candidat (sans hash), pour la vue recruteur. */
 export async function getPublicProfile(id: string): Promise<Profile | null> {
   const [row] = await db.select().from(profiles).where(eq(profiles.id, id)).limit(1)
   if (!row) return null
