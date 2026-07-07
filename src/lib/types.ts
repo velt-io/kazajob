@@ -178,6 +178,11 @@ export interface Job {
   missions: string | null
   benefits: string | null
   required_level: string | null
+  start_date: string | null
+  internship_duration: string | null
+  internship_paid: boolean | null
+  internship_compensation: string | null
+  internship_agreement_required: boolean
   views: number
   applications_count: number
   created_at: string
@@ -267,6 +272,9 @@ export interface JobFilters {
   date_range?: DateRange
   level?: string
   sort?: SortOrder
+  // Stage-specific filters
+  internship_paid?: boolean
+  internship_duration?: string
   page?: number
   limit?: number
 }

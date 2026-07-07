@@ -12,10 +12,10 @@ import { useAuth } from '@/features/auth/useAuth'
 
 type View = 'candidat' | 'entreprise'
 
-// Navigation publique adaptée à l'audience.
 const LINKS: Record<View, { href: string; label: string }[]> = {
   candidat: [
     { href: '/candidate/jobs',     label: 'Offres' },
+    { href: '/stages',             label: 'Stages' },
     { href: '/candidate/training', label: 'Formations' },
     { href: '#comment',            label: 'Comment ça marche' },
     { href: '#faq',                label: 'FAQ' },
@@ -28,21 +28,18 @@ const LINKS: Record<View, { href: string; label: string }[]> = {
 
 function ViewToggle({ view, onNavigate }: { view: View; onNavigate?: () => void }) {
   const router = useRouter()
-  // État local optimiste → réponse visuelle IMMÉDIATE avant que le serveur réponde
   const [active, setActive] = useState<View>(view)
 
-  // Resync quand la navigation côté serveur se règle
   useEffect(() => { setActive(view) }, [view])
 
-  // Prefetch les deux vues dès le montage → navigation quasi-instantanée
   useEffect(() => {
     router.prefetch('/')
     router.prefetch('/?view=entreprise')
   }, [router])
 
   const go = (v: View) => {
-    if (active === v) return            // déjà actif, on ignore les doubles clics
-    setActive(v)                        // feedback visuel immédiat
+    if (active === v) return
+    setActive(v)
     onNavigate?.()
     router.push(v === 'candidat' ? '/' : '/?view=entreprise', { scroll: false })
   }

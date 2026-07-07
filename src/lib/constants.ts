@@ -230,6 +230,22 @@ export const REQUIRED_LEVELS = [
   { id: 'Expert',        label: 'Expert (8+ ans)'          },
 ]
 
+export const INTERNSHIP_LEVELS = [
+  { id: 'college',     label: 'Collège (3ème)' },
+  { id: 'lycee',       label: 'Lycée / Bac'    },
+  { id: 'bac+1',       label: 'Bac+1'          },
+  { id: 'bac+2',       label: 'Bac+2'          },
+  { id: 'bac+3',       label: 'Bac+3'          },
+  { id: 'bac+4',       label: 'Bac+4'          },
+  { id: 'bac+5',       label: 'Bac+5 et plus'  },
+  { id: 'reconversion',label: 'Reconversion'   },
+]
+
+export const INTERNSHIP_DURATIONS = [
+  '1 mois', '2 mois', '3 mois', '4 mois', '5 mois', '6 mois',
+  '1 semaine', '2 semaines', '3 semaines', '4 semaines',
+]
+
 export const TRAINING_STATUS: Record<string, { label: string; color: string }> = {
   pending:   { label: 'En attente',  color: 'yellow' },
   viewed:    { label: 'Dossier vu',  color: 'blue'   },

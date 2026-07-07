@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LayoutDashboard, Briefcase, Users, MessageCircle, Plus, Calendar, Star, Building2, GraduationCap, BarChart2, User, Bookmark } from 'lucide-react'
+import { LayoutDashboard, Briefcase, Users, MessageCircle, Plus, Calendar, Star, Building2, GraduationCap, BarChart2, User, Bookmark, ClipboardList } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
 import { Sidebar, type NavItem } from '@/components/layout/Sidebar'
 import { CompanySwitcher } from '@/components/layout/CompanySwitcher'
@@ -14,6 +14,7 @@ import { KZ } from '@/lib/constants'
 const NAV_ITEMS: NavItem[] = [
   { href: '/recruiter/dashboard',    label: 'Tableau de bord', icon: <LayoutDashboard size={16} /> },
   { href: '/recruiter/jobs',         label: 'Mes offres',       icon: <Briefcase size={16} /> },
+  { href: '/recruiter/stages',       label: 'Stages',           icon: <ClipboardList size={16} /> },
   { href: '/recruiter/training',     label: 'Formations',       icon: <GraduationCap size={16} /> },
   { href: '/recruiter/applications', label: 'Candidatures',     icon: <Users size={16} /> },
   { href: '/recruiter/talent-pool',  label: 'Vivier de talents', icon: <Bookmark size={16} /> },

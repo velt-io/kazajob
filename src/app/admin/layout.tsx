@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, Briefcase, Building2, Shield, Star, Bell, BookOpen, BarChart2, Sparkles, CreditCard, HardDrive, Activity, Bug, Ticket, CalendarClock, Rocket, Tag } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Building2, Shield, Star, Bell, BookOpen, BarChart2, Sparkles, CreditCard, HardDrive, Activity, Bug, Ticket, CalendarClock, Rocket, Tag, ClipboardList } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
 import { Sidebar, type NavItem } from '@/components/layout/Sidebar'
 import { useAuth } from '@/features/auth/useAuth'
@@ -15,6 +15,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin/traffic',        label: 'Trafic',           icon: <Activity size={16} /> },
   { href: '/admin/users',          label: 'Utilisateurs',     icon: <Users size={16} /> },
   { href: '/admin/jobs',           label: 'Offres',           icon: <Briefcase size={16} /> },
+  { href: '/admin/stages',         label: 'Stages',           icon: <ClipboardList size={16} /> },
   { href: '/admin/companies',      label: 'Entreprises',      icon: <Building2 size={16} /> },
   { href: '/admin/events',         label: 'KazaEvents',       icon: <Star size={16} /> },
   { href: '/admin/notifications',  label: 'Notifications',    icon: <Bell size={16} /> },

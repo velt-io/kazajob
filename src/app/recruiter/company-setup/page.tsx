@@ -61,18 +61,15 @@ export default function CompanySetupPage() {
   const [mode, setMode] = useState<Mode>('search')
   const [step, setStep] = useState(1)
 
-  // Étape 1 — Recherche
   const [query, setQuery]               = useState('')
   const [results, setResults]           = useState<Company[]>([])
   const [searching, setSearching]       = useState(false)
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
 
-  // Étape 2a — Rejoindre
   const [joinMessage, setJoinMessage]   = useState('')
   const [joining, setJoining]           = useState(false)
   const [joinSent, setJoinSent]         = useState(false)
 
-  // Étape 2b — Créer
   const [logoFile, setLogoFile]         = useState<File | null>(null)
   const [logoPreview, setLogoPreview]   = useState<string | null>(null)
   const [form, setForm] = useState({
@@ -83,15 +80,12 @@ export default function CompanySetupPage() {
   const [creating, setCreating]         = useState(false)
   const [newCompany, setNewCompany]     = useState<Company | null>(null)
 
-  // Étape 3 — Plan
   const [planId, setPlanId]             = useState('pro')
   const [planSaving, setPlanSaving]     = useState(false)
   const [planError, setPlanError]       = useState('')
   const [promoCode, setPromoCode]       = useState('')
   const [promoMsg, setPromoMsg]         = useState<{ ok: boolean; text: string } | null>(null)
 
-  // Campagne de lancement (accès gratuit temporaire, indépendant des forfaits) — éligibilité
-  // serveur + confirmation obligatoire. N'est jamais un forfait : sélection distincte de planId.
   const [launchElig, setLaunchElig]     = useState<{ status: string; expiresAt: string | null; campaignName?: string; newSubscriptionsEnabled?: boolean } | null>(null)
   const [campaignSelected, setCampaignSelected] = useState(false)
   const [launchConfirmed, setLaunchConfirmed] = useState(false)
@@ -106,21 +100,17 @@ export default function CompanySetupPage() {
     setPromoMsg(d.valid ? { ok: true, text: `Code valide : ${d.label}` } : { ok: false, text: d.reason ?? 'Code invalide' })
   }
 
-  // Redirige UNIQUEMENT au chargement initial si l'utilisateur a déjà une entreprise.
-  // (Ne pas rediriger pendant la création en cours, sinon on saute l'étape Forfait + paiement.)
   useEffect(() => {
     if (initialGuardRef.current || authLoading) return
     initialGuardRef.current = true
     if (profile?.company_id) router.replace('/recruiter/dashboard')
   }, [authLoading, profile, router])
 
-  // Présélection du forfait depuis ?plan= (clic depuis la page tarifs)
   useEffect(() => {
     const p = new URLSearchParams(window.location.search).get('plan')
     if (p && SUBSCRIPTION_PLANS.some((pl) => pl.id === p)) setPlanId(p)
   }, [])
 
-  // Live search
   const handleSearch = useCallback(async (q: string) => {
     setQuery(q)
     if (q.length < 2) { setResults([]); return }
@@ -167,13 +157,11 @@ export default function CompanySetupPage() {
     setCreating(true)
     let logoUrl: string | null = null
 
-    // Upload logo (Vercel Blob)
     if (logoFile) {
       const { url } = await uploadFile(logoFile, 'company-logos')
       logoUrl = url
     }
 
-    // Créer la company (+ owner member + rattachement profil) côté serveur
     const res = await fetch('/api/companies', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -195,14 +183,12 @@ export default function CompanySetupPage() {
     setPlanSaving(true)
     setPlanError('')
 
-    // 1. Démarre l'essai 30 j en base (nécessaire pour reporter les jours restants sur Stripe)
     await fetch(`/api/companies/${company.id}/subscription`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ planId }),
     })
 
-    // 2. Paiement obligatoire : Stripe collecte la carte maintenant, 1er débit après l'essai de 30 j.
     try {
       const co = await fetch('/api/billing/checkout', {
         method: 'POST',
@@ -220,11 +206,9 @@ export default function CompanySetupPage() {
       setPlanError('Connexion au paiement impossible. Vérifie ta connexion et réessaie.')
     }
 
-    // Aucun accès sans carte : on reste sur l'étape forfait pour réessayer.
     setPlanSaving(false)
   }
 
-  // Vérifie l'éligibilité KazaLaunch à l'arrivée sur l'étape forfait (décision serveur).
   useEffect(() => {
     if (mode !== 'plan') return
     fetch('/api/launch/eligibility')
@@ -232,7 +216,7 @@ export default function CompanySetupPage() {
       .then((d) => {
         if (!d) return
         setLaunchElig(d)
-        if (d.status === 'eligible') setCampaignSelected(true)  // l'accès gratuit est mis en avant
+        if (d.status === 'eligible') setCampaignSelected(true)
       })
       .catch(() => {})
   }, [mode])
@@ -257,7 +241,6 @@ export default function CompanySetupPage() {
     setLaunchBusy(false)
   }
 
-  // ── Rendu ─────────────────────────────────────────────────────
   const currentStep = mode === 'search' ? 1 : mode === 'join' || mode === 'create' ? 2 : mode === 'plan' ? 3 : 4
 
   return (

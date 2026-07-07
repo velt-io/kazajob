@@ -60,6 +60,8 @@ function buildwhere(f: JobFilters): SQL | undefined {
   if (f.date_range === 'week') conds.push(gte(jobs.createdAt, new Date(Date.now() - 7 * 86_400_000)))
   else if (f.date_range === 'month') conds.push(gte(jobs.createdAt, new Date(Date.now() - 30 * 86_400_000)))
   if (f.level) conds.push(eq(jobs.requiredLevel, f.level))
+  if (f.internship_paid !== undefined) conds.push(eq(jobs.internshipPaid, f.internship_paid))
+  if (f.internship_duration) conds.push(eq(jobs.internshipDuration, f.internship_duration))
   return and(...conds)
 }
 
@@ -195,6 +197,9 @@ const JOB_FIELDS: Record<string, keyof typeof jobs.$inferInsert> = {
   prequal_questions: 'prequalQuestions',
   missions: 'missions', benefits: 'benefits', required_level: 'requiredLevel',
   contact_email: 'contactEmail', external_company: 'externalCompany',
+  internship_duration: 'internshipDuration', internship_paid: 'internshipPaid',
+  internship_compensation: 'internshipCompensation',
+  internship_agreement_required: 'internshipAgreementRequired',
 }
 
 function mapJobPayload(payload: Record<string, unknown>): Record<string, unknown> {

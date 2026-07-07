@@ -119,10 +119,14 @@ export const jobs = pgTable('jobs', {
   contactEmail:    text('contact_email'),         // annonce externe (admin) : email destinataire des candidatures
   externalCompany: text('external_company'),      // annonce externe (admin) : nom entreprise affiché
   startDate:    text('start_date'),
+  // ── Champs spécifiques aux stages ──
+  internshipDuration:          text('internship_duration'),
+  internshipPaid:              boolean('internship_paid'),
+  internshipCompensation:      text('internship_compensation'),
+  internshipAgreementRequired: boolean('internship_agreement_required').notNull().default(true),
   views:        integer().notNull().default(0),
   applicationsCount: integer('applications_count').notNull().default(0),
-  // ── Traçabilité facturation ──
-  billingOrigin: text('billing_origin').notNull().default('normal'),  // normal | free_launch | admin_granted | migrated
+  billingOrigin: text('billing_origin').notNull().default('normal'),
   createdAt:    now(),
   updatedAt:    now(),
 })

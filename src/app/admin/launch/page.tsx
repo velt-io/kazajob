@@ -1,11 +1,5 @@
 'use client'
 
-/**
- * Administration > Lancement — pilotage de la campagne de lancement (accès gratuit
- * temporaire), totalement indépendante des forfaits Stripe. Activer/planifier/mettre
- * en pause/prolonger/arrêter sans redéploiement. Toute action est auditée côté serveur ;
- * les actions à impact sur les entreprises déjà enrôlées affichent un aperçu avant confirmation.
- */
 import { useCallback, useEffect, useState } from 'react'
 import { Rocket, Building2, Briefcase, BookOpen, AlertTriangle, Plus } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
@@ -287,7 +281,6 @@ export default function AdminLaunchPage() {
                   </div>
                 </div>
 
-                {/* Arrêt d'urgence — coupe l'accès gratuit immédiatement pour TOUTES les entreprises enrôlées */}
                 <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg border mb-3"
                   style={{ borderColor: c.free_publishing_enabled ? KZ.line : '#E54E4E', background: c.free_publishing_enabled ? KZ.cream2 : '#FFEAEA' }}>
                   <div className="flex items-center gap-2">
