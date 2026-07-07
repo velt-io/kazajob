@@ -105,7 +105,6 @@ export function LogoLoader({ size = 64, className = '' }: LogoLoaderProps) {
   )
 }
 
-/** Version pleine page centrée — remplace les <PageLoader> */
 export function FullPageLoader() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FFF7EE]">
@@ -119,7 +118,6 @@ export function FullPageLoader() {
   )
 }
 
-/** Version inline — remplace les petits spinners */
 export function InlineLoader({ size = 32 }: { size?: number }) {
   return <LogoLoader size={size} />
 }

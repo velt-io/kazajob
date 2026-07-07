@@ -23,7 +23,6 @@ export interface CampaignAdminRow {
   effective_status: EffectiveCampaignStatus
 }
 
-/** Toutes les campagnes (les plus récentes en premier) + leur statut effectif calculé. */
 export async function listCampaignsAdmin(): Promise<CampaignAdminRow[]> {
   const rows = await db.select().from(launchCampaigns).orderBy(desc(launchCampaigns.updatedAt))
   return rows.map((c) => ({
@@ -43,7 +42,6 @@ export interface CampaignCreateInput {
   recruiterMessage?: string | null
 }
 
-/** Crée une nouvelle campagne à l'état DRAFT (jamais active d'emblée). Auditée. */
 export async function createCampaign(
   actorId: string, actorEmail: string | null, input: CampaignCreateInput,
 ): Promise<{ id: string } | { error: string }> {
@@ -96,7 +94,6 @@ const CONFIG_FIELDS: (keyof CampaignConfigPatch)[] = [
   'grantDurationDays', 'requireAdminApproval', 'autoPublish', 'endOfCampaignBehavior', 'recruiterMessage',
 ]
 
-/** Met à jour la configuration d'une campagne (jamais son état — voir `transitionCampaignState`). */
 export async function updateCampaignConfig(
   actorId: string, actorEmail: string | null, campaignId: string,
   patch: CampaignConfigPatch, expectedVersion: number,
@@ -119,7 +116,6 @@ export async function updateCampaignConfig(
   return { error: null }
 }
 
-/** Transition d'état (activer/mettre en pause/reprendre/terminer/annuler) — validée par la state machine, auditée. */
 export async function transitionCampaignState(
   actorId: string, actorEmail: string | null, campaignId: string,
   toState: CampaignState, expectedVersion: number,

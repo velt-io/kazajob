@@ -20,7 +20,6 @@ export function useKazaChat(jobContext?: { title?: string; company?: string }) {
   const sendMessage = useCallback(async (content: string) => {
     if (streaming || !content.trim()) return
 
-    // Ajouter le message utilisateur
     const userMsg: ChatMessage = { id: crypto.randomUUID(), role: 'user', content }
     const assistantMsgId = crypto.randomUUID()
     const assistantMsg: ChatMessage = { id: assistantMsgId, role: 'assistant', content: '', loading: true }
@@ -28,7 +27,6 @@ export function useKazaChat(jobContext?: { title?: string; company?: string }) {
     setMessages(prev => [...prev, userMsg, assistantMsg])
     setStreaming(true)
 
-    // Construire l'historique pour l'API
     const history: AIMessage[] = messages
       .filter(m => !m.loading)
       .map(m => ({ role: m.role, content: m.content }))
@@ -49,7 +47,6 @@ export function useKazaChat(jobContext?: { title?: string; company?: string }) {
         throw new Error(err.error ?? 'Erreur API')
       }
 
-      // Lire le stream chunk par chunk
       const reader = res.body!.getReader()
       const decoder = new TextDecoder()
       let accumulated = ''
@@ -60,7 +57,6 @@ export function useKazaChat(jobContext?: { title?: string; company?: string }) {
 
         accumulated += decoder.decode(value, { stream: true })
 
-        // Mettre à jour le message en temps réel
         setMessages(prev =>
           prev.map(m => m.id === assistantMsgId
             ? { ...m, content: accumulated, loading: false }

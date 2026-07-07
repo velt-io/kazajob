@@ -19,7 +19,6 @@ const INVITE_TTL_DAYS = 7
 
 const MEMBER_PROFILE = { fullName: true, email: true, avatarUrl: true } as const
 
-/** Recherche d'entreprises par nom (max 6). */
 export async function searchCompanies(q: string): Promise<Company[]> {
   if (q.trim().length < 2) return []
   const rows = await db
@@ -30,7 +29,6 @@ export async function searchCompanies(q: string): Promise<Company[]> {
   return serialize<Company[]>(rows)
 }
 
-/** Vue d'ensemble d'une entreprise : infos + abonnement + compteurs. */
 export async function getCompanyOverview(companyId: string): Promise<{
   company: Company | null
   subscription: CompanySubscription | null
@@ -62,7 +60,6 @@ export async function getCompanyOverview(companyId: string): Promise<{
   }
 }
 
-/** Crée une entreprise, ajoute l'owner et rattache son profil. */
 export async function createCompany(
   ownerId: string,
   data: Record<string, unknown>,
@@ -115,7 +112,6 @@ export async function requestToJoin(
   return { error: null, id: row?.id }
 }
 
-/** Crée/renouvelle l'abonnement (essai 30 j). Réservé à l'owner. */
 export async function setCompanySubscription(
   actorId: string,
   companyId: string,
@@ -138,8 +134,6 @@ export async function setCompanySubscription(
     })
   return { error: null }
 }
-
-// ── Forfait & quotas ───────────────────────────────────────────────
 
 // Repli explicite Starter, utilisé UNIQUEMENT pour les limites de sièges (équipe) —
 // jamais pour les droits de publication (voir resolvePublishingAccess, entitlements.ts).
@@ -177,7 +171,6 @@ export async function getActiveMembership(
   return first ?? null
 }
 
-/** Toutes les entreprises dont le recruteur est membre actif (pour le sélecteur). */
 export async function listMemberships(recruiterId: string): Promise<Membership[]> {
   const [prof] = await db
     .select({ companyId: profiles.companyId })
@@ -204,7 +197,6 @@ export async function listMemberships(recruiterId: string): Promise<Membership[]
   }))
 }
 
-/** Bascule l'entreprise active du recruteur (doit en être membre). */
 export async function setActiveCompany(
   recruiterId: string,
   companyId: string,
@@ -216,7 +208,6 @@ export async function setActiveCompany(
   return { error: null }
 }
 
-/** Limites du forfait courant de l'entreprise (abonnement → plan, repli Starter). */
 export async function getPlanLimits(
   companyId: string,
 ): Promise<{ maxJobs: number; maxMembers: number; planName: string; status: string | null }> {
@@ -286,9 +277,6 @@ export async function canPublishTraining(
   }
 }
 
-// ── Équipe ────────────────────────────────────────────────────────
-
-/** Vérifie que l'acteur est membre actif de l'entreprise. */
 export async function isCompanyMember(actorId: string, companyId: string): Promise<boolean> {
   const [m] = await db
     .select({ id: companyMembers.id }).from(companyMembers)
@@ -300,7 +288,6 @@ export async function isCompanyMember(actorId: string, companyId: string): Promi
   return !!m
 }
 
-/** Vérifie que l'acteur est owner/admin actif de l'entreprise. */
 async function isCompanyAdmin(actorId: string, companyId: string): Promise<boolean> {
   const [m] = await db
     .select({ role: companyMembers.role }).from(companyMembers)
@@ -312,7 +299,6 @@ async function isCompanyAdmin(actorId: string, companyId: string): Promise<boole
   return m?.role === 'owner' || m?.role === 'admin'
 }
 
-/** Membres actifs + demandes en attente. */
 export async function getTeam(companyId: string): Promise<{
   members: CompanyMember[]
   requests: CompanyJoinRequest[]
@@ -333,7 +319,6 @@ export async function getTeam(companyId: string): Promise<{
   }
 }
 
-/** Approuve/refuse une demande d'adhésion (owner/admin uniquement). */
 export async function respondJoinRequest(
   actorId: string,
   requestId: string,
@@ -345,7 +330,6 @@ export async function respondJoinRequest(
   if (!(await isCompanyAdmin(actorId, req.companyId))) return { error: 'Non autorisé' }
 
   if (approve) {
-    // Plafond d'équipe selon le forfait
     const { maxMembers, planName } = await getPlanLimits(req.companyId)
     if (maxMembers !== -1 && (await countActiveMembers(req.companyId)) >= maxMembers) {
       return { error: `Limite d'équipe atteinte pour le forfait ${planName} (${maxMembers} recruteur(s)). Passez à un forfait supérieur pour en ajouter.` }
@@ -358,7 +342,6 @@ export async function respondJoinRequest(
         target: [companyMembers.companyId, companyMembers.recruiterId],
         set: { status: 'active', role: 'member' },
       })
-    // Multi-entreprises : ne devient l'entreprise active que si le recruteur n'en a pas déjà une.
     await db.update(profiles)
       .set({ companyId: sql`COALESCE(${profiles.companyId}, ${req.companyId}::uuid)` })
       .where(eq(profiles.id, req.recruiterId))
@@ -369,7 +352,6 @@ export async function respondJoinRequest(
   return { error: null }
 }
 
-/** Retire un membre (suspend + détache son profil). */
 export async function removeMember(actorId: string, memberId: string): Promise<{ error: string | null }> {
   const [member] = await db.select().from(companyMembers)
     .where(eq(companyMembers.id, memberId)).limit(1)
@@ -382,7 +364,6 @@ export async function removeMember(actorId: string, memberId: string): Promise<{
   return { error: null }
 }
 
-/** Repointe l'entreprise active d'un recruteur s'il vient de quitter celle qui était active. */
 async function repointActiveCompany(recruiterId: string, leftCompanyId: string): Promise<void> {
   const [other] = await db
     .select({ companyId: companyMembers.companyId })
@@ -394,7 +375,6 @@ async function repointActiveCompany(recruiterId: string, leftCompanyId: string):
     .where(and(eq(profiles.id, recruiterId), eq(profiles.companyId, leftCompanyId)))
 }
 
-/** Change le rôle d'un membre (admin/member). */
 export async function changeMemberRole(
   actorId: string,
   memberId: string,
@@ -462,9 +442,6 @@ export async function transferOwnership(
   return { error: null }
 }
 
-// ── Invitations (Tier 2 : token) ───────────────────────────────────
-
-/** Crée une invitation par token (owner/admin). Renvoie le token. */
 export async function createInvitation(
   actorId: string,
   companyId: string,
@@ -485,7 +462,6 @@ export async function createInvitation(
   return { error: null, token }
 }
 
-/** Invitations en attente d'une entreprise (page équipe). */
 export async function listInvitations(companyId: string): Promise<CompanyInvitation[]> {
   const rows = await db.select().from(companyInvitations)
     .where(and(eq(companyInvitations.companyId, companyId), eq(companyInvitations.status, 'pending')))
@@ -493,7 +469,6 @@ export async function listInvitations(companyId: string): Promise<CompanyInvitat
   return serialize<CompanyInvitation[]>(rows)
 }
 
-/** Révoque une invitation (owner/admin). */
 export async function revokeInvitation(
   actorId: string,
   invitationId: string,
@@ -506,7 +481,6 @@ export async function revokeInvitation(
   return { error: null }
 }
 
-/** Détail public d'une invitation valide (page d'acceptation). */
 export async function getInvitationByToken(token: string): Promise<CompanyInvitation | null> {
   const [inv] = await db.select().from(companyInvitations)
     .where(and(
@@ -535,7 +509,6 @@ export async function acceptInvitation(
     )).limit(1)
   if (!inv) return { error: 'Invitation invalide ou expirée.' }
 
-  // Invitation ciblée par e-mail : doit correspondre au compte connecté.
   if (inv.email) {
     const [prof] = await db.select({ email: profiles.email }).from(profiles).where(eq(profiles.id, recruiterId)).limit(1)
     if (prof?.email?.toLowerCase() !== inv.email.toLowerCase()) {
@@ -543,7 +516,6 @@ export async function acceptInvitation(
     }
   }
 
-  // Déjà membre : on consomme l'invitation sans dupliquer.
   if (await isCompanyMember(recruiterId, inv.companyId)) {
     await db.update(companyInvitations).set({ status: 'accepted', acceptedBy: recruiterId })
       .where(eq(companyInvitations.id, inv.id))

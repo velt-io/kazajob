@@ -22,7 +22,6 @@ function LinkedInLogo() {
   )
 }
 
-/** Boutons de connexion sociale (Google / LinkedIn) — style DA Kazajob. */
 export function OAuthButtons({ role }: { role?: 'candidate' | 'recruiter' }) {
   const { signInWithProvider } = useAuth()
   return (

@@ -12,7 +12,6 @@ type FavRow = typeof favorites.$inferSelect & {
   job?: { jobSkills?: Array<{ skill: unknown }> } & Record<string, unknown>
 }
 
-/** Favoris d'un candidat (offre + entreprise + compétences aplaties). */
 export async function listFavorites(candidateId: string): Promise<Favorite[]> {
   const rows = await db.query.favorites.findMany({
     where: eq(favorites.candidateId, candidateId),
@@ -36,7 +35,6 @@ export async function listFavorites(candidateId: string): Promise<Favorite[]> {
   return serialize<Favorite[]>(mapped)
 }
 
-/** Ajoute/retire un favori. Renvoie l'état final (`favorited`). */
 export async function toggleFavorite(
   candidateId: string,
   jobId: string,

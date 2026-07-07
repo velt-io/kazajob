@@ -7,7 +7,6 @@ import { KZ } from '@/lib/constants'
 interface SectorSalary { count: number; min: number | null; avg: number | null; max: number | null }
 interface AIEstimate   { min: number; max: number; median: number; source: 'ia' }
 
-// ── Zones de référence 974 (brut annuel) ──────────────────────────
 const SCALE_MIN = 15_000
 const SCALE_MAX = 65_000
 const RANGE     = SCALE_MAX - SCALE_MIN

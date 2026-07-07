@@ -14,7 +14,6 @@ import type { PgTable } from 'drizzle-orm/pg-core'
 
 const BACKUP_DIR = join(process.cwd(), 'backups')
 
-/** Toutes les tables pgTable exportées par le schéma. */
 function allTables(): { name: string; table: PgTable }[] {
   const out: { name: string; table: PgTable }[] = []
   for (const value of Object.values(schema)) {
@@ -39,7 +38,6 @@ function stamp(d = new Date()): string {
   return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}`
 }
 
-/** Exporte toutes les tables en JSON. Lève si la sauvegarde semble vide/invalide. */
 export async function exportBackup(label = 'kazajob-backup-before-launch-reset'): Promise<BackupResult> {
   mkdirSync(BACKUP_DIR, { recursive: true })
   const tables = allTables()
@@ -64,7 +62,6 @@ export async function exportBackup(label = 'kazajob-backup-before-launch-reset')
   return { file, counts, total, bytes }
 }
 
-/** Décompte de lignes par table sensible (sans tout exporter). */
 export async function countRows(): Promise<Record<string, number>> {
   const counts: Record<string, number> = {}
   for (const { name, table } of allTables()) {

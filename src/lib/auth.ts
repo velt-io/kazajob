@@ -98,7 +98,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
 })
 
-/** Profil complet de l'utilisateur connecté (côté serveur), ou null. */
 export async function getCurrentUser() {
   const session = await auth()
   if (!session?.user?.id) return null

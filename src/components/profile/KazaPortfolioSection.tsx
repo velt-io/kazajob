@@ -18,7 +18,6 @@ interface ProfileLike {
   realisations?: Realisation[] | null
 }
 
-/** KazaPortfolio — liens pro, PDF et réalisations du candidat. Sauvegarde via /api/profile. */
 export function KazaPortfolioSection({ profile, onSaved }: { profile: Record<string, unknown> | null; onSaved?: () => void | Promise<void> }) {
   const p = (profile ?? {}) as ProfileLike
   const [linkedin, setLinkedin] = useState(p.linkedin_url ?? '')

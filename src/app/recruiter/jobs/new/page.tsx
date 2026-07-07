@@ -37,7 +37,6 @@ export default function NewJobPage() {
       <h1 className="kz-h2 text-[#1A1410] mb-6">Publier une nouvelle offre</h1>
 
       {blocked && billing ? (
-        // ── Écran de blocage propre ──
         <div className="kz-card p-8 bg-white text-center">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
             style={{ background: KZ.orangeSoft }}>

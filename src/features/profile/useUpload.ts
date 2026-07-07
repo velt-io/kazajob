@@ -4,7 +4,6 @@ import { useState, useCallback } from 'react'
 
 type UploadResult = { url: string | null; error: string | null }
 
-/** Upload générique vers Vercel Blob (via /api/upload). Renvoie l'URL publique. */
 export async function uploadFile(file: File, folder: string): Promise<UploadResult> {
   try {
     const fd = new FormData()

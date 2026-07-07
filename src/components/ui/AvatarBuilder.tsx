@@ -11,7 +11,6 @@ import {
   type AvatarConfig,
 } from '@/lib/avatar'
 
-// ── Hook : génère SVG localement via npm (0 appel HTTP) ──────────
 function useLocalSvg(config: AvatarConfig) {
   const [svg, setSvg] = useState<string | null>(null)
 

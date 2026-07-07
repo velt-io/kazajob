@@ -128,8 +128,6 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
   const remaining = MAX_SECONDS - elapsed
   const pct = (elapsed / MAX_SECONDS) * 100
 
-  // ── Rendu selon état ──────────────────────────────────────────
-
   if (state === 'done' && currentUrl) {
     return (
       <div className="flex flex-col gap-3">

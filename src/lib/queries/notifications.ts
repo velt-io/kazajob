@@ -30,7 +30,6 @@ function toDTO(n: typeof notifications.$inferSelect): NotificationDTO {
   }
 }
 
-/** 30 dernières notifications d'un utilisateur. */
 export async function listNotifications(userId: string): Promise<NotificationDTO[]> {
   const rows = await db
     .select()
@@ -41,7 +40,6 @@ export async function listNotifications(userId: string): Promise<NotificationDTO
   return rows.map(toDTO)
 }
 
-/** Marque une notification comme lue (réservé à son propriétaire). */
 export async function markNotificationRead(userId: string, id: string): Promise<void> {
   await db
     .update(notifications)
@@ -49,7 +47,6 @@ export async function markNotificationRead(userId: string, id: string): Promise<
     .where(and(eq(notifications.id, id), eq(notifications.userId, userId)))
 }
 
-/** Marque toutes les notifications de l'utilisateur comme lues. */
 export async function markAllNotificationsRead(userId: string): Promise<void> {
   await db
     .update(notifications)

@@ -23,7 +23,6 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // ── Candidats avec alertes activées ─────────────────────────
     const candidates = await db
       .select({
         id: profiles.id,
@@ -55,9 +54,7 @@ export async function GET(req: NextRequest) {
       limit: 20,
     })
 
-    // ── Nouvelles offres : dernières 24h ──────────────────────────
     const recentJobs = await jobsSince(dayAgo)
-    // ── Offres 7 derniers jours (pour weekly, lundi) ──────────────
     const weeklyJobs = isMonday ? await jobsSince(weekAgo) : null
 
     type JobRow = {

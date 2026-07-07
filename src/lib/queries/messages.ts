@@ -8,7 +8,6 @@ import { conversations, messages } from '@/lib/db/schema'
 import type { Conversation, Message } from '@/lib/types'
 import { serialize } from './_serialize'
 
-/** Vérifie que l'utilisateur est partie prenante de la conversation. */
 export async function isParticipant(conversationId: string, userId: string): Promise<boolean> {
   const [row] = await db
     .select({ candidateId: conversations.candidateId, recruiterId: conversations.recruiterId })
@@ -18,7 +17,6 @@ export async function isParticipant(conversationId: string, userId: string): Pro
   return !!row && (row.candidateId === userId || row.recruiterId === userId)
 }
 
-/** Conversations d'un utilisateur (candidat ou recruteur). */
 export async function listConversations(userId: string): Promise<Conversation[]> {
   const rows = await db.query.conversations.findMany({
     where: or(eq(conversations.candidateId, userId), eq(conversations.recruiterId, userId)),
@@ -32,7 +30,6 @@ export async function listConversations(userId: string): Promise<Conversation[]>
   return serialize<Conversation[]>(rows)
 }
 
-/** Messages d'une conversation (avec expéditeur), ordre chronologique. */
 export async function listMessages(conversationId: string): Promise<Message[]> {
   const rows = await db.query.messages.findMany({
     where: eq(messages.conversationId, conversationId),
@@ -42,7 +39,6 @@ export async function listMessages(conversationId: string): Promise<Message[]> {
   return serialize<Message[]>(rows)
 }
 
-/** Marque comme lus les messages reçus (non envoyés par l'utilisateur). */
 export async function markConversationRead(conversationId: string, userId: string): Promise<void> {
   await db
     .update(messages)
@@ -50,7 +46,6 @@ export async function markConversationRead(conversationId: string, userId: strin
     .where(and(eq(messages.conversationId, conversationId), ne(messages.senderId, userId)))
 }
 
-/** Envoie un message et met à jour `last_message_at`. */
 export async function sendMessage(
   conversationId: string,
   senderId: string,
@@ -63,7 +58,6 @@ export async function sendMessage(
     .where(eq(conversations.id, conversationId))
 }
 
-/** Récupère (ou crée) une conversation entre un candidat et un recruteur. */
 export async function startConversation(
   candidateId: string,
   recruiterId: string,

@@ -23,23 +23,19 @@ export function addCalendarMonths(from: Date, months: number): Date {
   return result
 }
 
-/** Date d'expiration d'un enrôlement de campagne, `months` mois calendaires après l'activation. */
 export function launchExpiry(activatedAt: Date, months: number): Date {
   return addCalendarMonths(activatedAt, months)
 }
 
-/** Jours entiers restants avant `expiresAt` (0 si dépassé). */
 export function daysUntil(expiresAt: Date, now: Date = new Date()): number {
   const ms = expiresAt.getTime() - now.getTime()
   return ms <= 0 ? 0 : Math.ceil(ms / 86_400_000)
 }
 
-/** L'enrôlement a-t-il expiré ? */
 export function isLaunchExpired(expiresAt: Date, now: Date = new Date()): boolean {
   return now.getTime() >= expiresAt.getTime()
 }
 
-/** Paliers de rappel d'expiration par défaut (en jours avant la fin). */
 export const LAUNCH_REMINDER_DAYS = [30, 15, 7, 3, 1, 0] as const
 
 /**
@@ -57,7 +53,6 @@ export function dueLaunchReminder(
   return palier ?? null
 }
 
-/** Niveau d'alerte UI selon les jours restants (pour la bannière dashboard). */
 export function launchAlertLevel(daysLeft: number): 'info' | 'reminder' | 'warning' | 'urgent' | 'expired' {
   if (daysLeft <= 0) return 'expired'
   if (daysLeft <= 7) return 'urgent'
@@ -66,7 +61,6 @@ export function launchAlertLevel(daysLeft: number): 'info' | 'reminder' | 'warni
   return 'info'
 }
 
-// ── Statuts d'éligibilité d'une entreprise à une campagne (décision serveur uniquement) ──
 export type LaunchEligibility =
   | 'eligible'
   | 'already_used'
@@ -76,10 +70,8 @@ export type LaunchEligibility =
   | 'active_paid_plan'
   | 'company_identity_required'
 
-// ── State machine de la campagne (indépendante des forfaits commerciaux) ──
 export type CampaignState = 'draft' | 'scheduled' | 'active' | 'paused' | 'ended' | 'cancelled'
 
-/** Statut "effectif" calculé à l'instant `now`, combinant l'état admin et les bornes de dates. */
 export type EffectiveCampaignStatus = 'draft' | 'scheduled' | 'active' | 'paused' | 'ended' | 'cancelled'
 
 /**
@@ -107,7 +99,7 @@ export function effectiveCampaignStatus(
   return 'active'
 }
 
-/** Transitions admin valides (état → états atteignables). `ended`/`cancelled` sont terminaux. */
+// `ended`/`cancelled` sont terminaux.
 const CAMPAIGN_TRANSITIONS: Record<CampaignState, CampaignState[]> = {
   draft:     ['scheduled', 'active', 'cancelled'],
   scheduled: ['draft', 'active', 'cancelled'],
@@ -117,7 +109,6 @@ const CAMPAIGN_TRANSITIONS: Record<CampaignState, CampaignState[]> = {
   cancelled: [],
 }
 
-/** La transition admin `from` → `to` est-elle autorisée par la state machine ? */
 export function canTransitionCampaignState(from: CampaignState, to: CampaignState): boolean {
   return CAMPAIGN_TRANSITIONS[from]?.includes(to) ?? false
 }

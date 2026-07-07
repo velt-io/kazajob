@@ -5,7 +5,6 @@
 
 export const SYSTEM_PROMPTS = {
 
-  // ── Génération de lettre de motivation ──────────────────────
   coverLetter: (candidate: {
     name: string
     bio?: string | null
@@ -46,7 +45,6 @@ Génère uniquement la lettre de motivation (sans objet ni coordonnées — just
 Commence directement par l'accroche.
 `.trim(),
 
-  // ── Chat IA général ────────────────────────────────────────
   chat: (candidate?: {
     name?: string
     skills?: string[]
@@ -80,7 +78,6 @@ RÈGLES :
 - Tu ne donnes jamais de conseils médicaux, juridiques ou financiers précis
 `.trim(),
 
-  // ── Analyse de CV ─────────────────────────────────────────
   cvAnalysis: `
 Tu es KazaIA. Analyse ce CV et extrait les informations structurées suivantes en JSON strict :
 {
@@ -93,7 +90,6 @@ Tu es KazaIA. Analyse ce CV et extrait les informations structurées suivantes e
 Répond UNIQUEMENT avec le JSON, sans texte avant ou après.
 `.trim(),
 
-  // ── Explication / simplification d'une offre (candidat) ────
   explainJob: (job: {
     title: string
     company: string
@@ -129,7 +125,6 @@ Réponds UNIQUEMENT avec un JSON strict (aucun texte avant/après), de cette for
 Règles : français clair, concret, honnête. Si une info manque, déduis raisonnablement. N'invente pas de chiffres précis pour le salaire : donne une fourchette prudente.
 `.trim(),
 
-  // ── Synthèse d'une candidature (recruteur, plans 3 & 4) ────
   applicationSummary: (data: {
     job: { title: string; description: string; requirements?: string | null; skills: string[] }
     candidate: { fullName: string; location?: string | null; bio?: string | null; skills: string[]; softSkills: string[] }
@@ -165,7 +160,6 @@ Réponds UNIQUEMENT avec un JSON strict (aucun texte avant/après) :
 Règles : "adequation" est un nombre entier 0-100 (taux d'adéquation avec l'offre). Sois honnête, factuel, nuancé. Base-toi uniquement sur les infos fournies, n'invente pas d'expériences. Français clair.
 `.trim(),
 
-  // ── KazaCoach (assistant candidat) ─────────────────────────
   kazaCoach: (candidate: {
     name: string
     bio?: string | null
@@ -196,7 +190,6 @@ Réponds UNIQUEMENT avec un JSON strict (aucun texte avant/après) :
 Règles : "compatibilite" = note entière 0-100 estimant la force/employabilité du profil sur le marché 974 (sois honnête mais encourageant). Français clair, concret, adapté à La Réunion. N'invente pas d'expériences. Si peu d'infos, base-toi sur le métier visé / les compétences listées.
 `.trim(),
 
-  // ── Préparation d'entretien ────────────────────────────────
   interviewPrep: (jobTitle: string, company: string, skills: string[]) => `
 Tu es KazaIA, expert en recrutement à La Réunion.
 Génère 8 questions d'entretien pertinentes pour le poste "${jobTitle}" chez "${company}".

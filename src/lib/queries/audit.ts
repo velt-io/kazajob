@@ -42,7 +42,6 @@ export async function writeAudit(e: AuditEntry): Promise<string | null> {
   }
 }
 
-/** Derniers événements d'audit (admin). */
 export async function listAudit(limit = 50) {
   const rows = await db.select().from(auditLogs).orderBy(desc(auditLogs.createdAt)).limit(limit)
   return serialize(rows)

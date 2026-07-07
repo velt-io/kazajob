@@ -30,7 +30,6 @@ export async function POST(req: NextRequest) {
     const session = await auth()
     if (!session?.user?.id) return NextResponse.json({ error: 'Non authentifié' }, { status: 401 })
 
-    // ── Entretien (invitation / rappel) ────────────────────────────
     if (type === 'interview_invite' || type === 'interview_reminder') {
       const { interviewId, recipient } = body
       const interview = await db.query.interviews.findFirst({
@@ -71,7 +70,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Candidature retirée (→ recruteur) ──────────────────────────
     if (type === 'application_withdrawn') {
       const { applicationId } = body
       const app = await db.query.applications.findFirst({
@@ -96,7 +94,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Bienvenue ──────────────────────────────────────────────────
     if (type === 'welcome') {
       const { email: to, fullName, role } = body
       if (!to || !fullName) return NextResponse.json({ error: 'Champs manquants' }, { status: 400 })
@@ -110,7 +107,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Nouvelle candidature (→ recruteur ou contact externe) ──────
     if (type === 'new_application') {
       const { applicationId } = body
       const app = await db.query.applications.findFirst({
@@ -144,7 +140,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Changement de statut (→ candidat) ──────────────────────────
     if (type === 'application_status') {
       const { applicationId, status } = body
       const app = await db.query.applications.findFirst({
@@ -170,7 +165,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Nouveau message ────────────────────────────────────────────
     if (type === 'new_message') {
       const { conversationId, senderId } = body
       const conv = await db.query.conversations.findFirst({
@@ -205,7 +199,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Demande d'adhésion (→ owner) ───────────────────────────────
     if (type === 'join_request') {
       const { requestId } = body
       const jr = await db.query.companyJoinRequests.findFirst({
@@ -233,7 +226,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Réponse à une demande (→ recruteur) ────────────────────────
     if (type === 'join_response') {
       const { requestId, approved } = body
       const jr = await db.query.companyJoinRequests.findFirst({
@@ -254,7 +246,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true })
     }
 
-    // ── Invitation équipe (→ invité par e-mail) ────────────────────
     if (type === 'team_invitation') {
       const { token } = body
       const inv = await db.query.companyInvitations.findFirst({

@@ -100,7 +100,6 @@ export async function incrementRedemption(code: string): Promise<void> {
     .where(eq(promoCodes.code, code.trim().toUpperCase()))
 }
 
-/** Applique le coupon aux abonnements Stripe en cours (essai/actif). */
 export async function applyToActiveSubscriptions(id: string): Promise<{ applied: number }> {
   const [p] = await db.select().from(promoCodes).where(eq(promoCodes.id, id)).limit(1)
   if (!p?.stripeCouponId || !STRIPE_ENABLED) return { applied: 0 }

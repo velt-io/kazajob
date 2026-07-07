@@ -78,9 +78,6 @@ export async function diffuseJob(
   return results
 }
 
-/**
- * Retire une offre de tous les partenaires (lors de la dépublication).
- */
 export async function retractJob(
   jobId: string,
   activePartners: string[]

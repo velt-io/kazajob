@@ -6,7 +6,6 @@ import { Download, Trash2, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { KZ } from '@/lib/constants'
 
-/** Bloc RGPD : export de ses données + suppression définitive du compte. */
 export function AccountActions() {
   const [deleting, setDeleting] = useState(false)
 

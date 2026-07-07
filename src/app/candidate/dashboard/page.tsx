@@ -61,7 +61,6 @@ export default function CandidateDashboard() {
   const pendingApps   = applications.filter(a => a.status === 'pending').length
   const interviewApps = applications.filter(a => a.status === 'interview').length
 
-  // ── Mode gamification ────────────────────────────────────────────
   if (gami.enabled && profile) {
     return (
       <div className="max-w-[1100px] mx-auto">

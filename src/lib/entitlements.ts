@@ -14,7 +14,6 @@ import { companySubscriptions } from '@/lib/db/schema'
 import { SUBSCRIPTION_PLANS, type SubscriptionPlan } from '@/lib/constants'
 import { getActiveCampaignEnrollment } from '@/lib/queries/launch'
 
-// ── Clés de fonctionnalités typées ────────────────────────────────
 export const FEATURES = {
   jobActiveLimit:        'job.active_limit',
   recruiterSeatLimit:    'recruiter.seat_limit',
@@ -39,7 +38,6 @@ export const FEATURES = {
 
 export type FeatureKey = (typeof FEATURES)[keyof typeof FEATURES]
 
-// ── Fonctionnalités communes à tous les forfaits (gratuit inclus) ─
 const BASE_FEATURES: FeatureKey[] = [
   FEATURES.applicationsReceive,
   FEATURES.messagingAccess,
@@ -71,7 +69,6 @@ const ENTERPRISE_FEATURES: FeatureKey[] = [
   FEATURES.accountMultiCompany,
 ]
 
-/** Matrice forfait → fonctionnalités autorisées. */
 const PLAN_FEATURES: Record<string, FeatureKey[]> = {
   starter:          BASE_FEATURES,
   pro:              PRO_FEATURES,
@@ -79,7 +76,6 @@ const PLAN_FEATURES: Record<string, FeatureKey[]> = {
   enterprise:       ENTERPRISE_FEATURES,
 }
 
-/** Statuts d'abonnement applicatif qui coupent l'accès en écriture. */
 const READ_ONLY_STATUSES = new Set(['expired', 'cancelled'])
 
 export interface PlanEntitlements {
@@ -93,10 +89,9 @@ export interface PlanEntitlements {
 const planById = (slug?: string | null): SubscriptionPlan | undefined =>
   SUBSCRIPTION_PLANS.find((p) => p.id === slug)
 
-/** Forfait de repli si l'entreprise n'a aucun abonnement : Starter (le plus restrictif payant). */
+// Forfait de repli si l'entreprise n'a aucun abonnement : Starter (le plus restrictif payant).
 const FALLBACK_PLAN: SubscriptionPlan = planById('starter') ?? SUBSCRIPTION_PLANS[0]
 
-/** Droits dérivés d'un slug de forfait (pur, sans DB). */
 export function resolvePlanEntitlements(planSlug?: string | null): PlanEntitlements {
   const plan = planById(planSlug) ?? FALLBACK_PLAN
   return {
@@ -108,7 +103,6 @@ export function resolvePlanEntitlements(planSlug?: string | null): PlanEntitleme
   }
 }
 
-/** Un forfait (par slug) autorise-t-il la fonctionnalité ? (pur) */
 export function planHasFeature(planSlug: string | null | undefined, feature: FeatureKey): boolean {
   return resolvePlanEntitlements(planSlug).features.has(feature)
 }
@@ -118,7 +112,6 @@ export interface CompanyEntitlements extends PlanEntitlements {
   readOnly:   boolean   // true → publication/écriture coupée (essai/abonnement terminé)
 }
 
-/** Droits effectifs d'une entreprise (lecture DB de son abonnement). */
 export async function getCompanyEntitlements(companyId: string): Promise<CompanyEntitlements> {
   const [sub] = await db
     .select({ planId: companySubscriptions.planId, status: companySubscriptions.status })
@@ -133,7 +126,6 @@ export async function getCompanyEntitlements(companyId: string): Promise<Company
   }
 }
 
-/** L'entreprise peut-elle utiliser la fonctionnalité ? (DB) */
 export async function canUseFeature(companyId: string, feature: FeatureKey): Promise<boolean> {
   const ent = await getCompanyEntitlements(companyId)
   return ent.features.has(feature)
@@ -179,8 +171,7 @@ export async function assertUsageLimit(
   return { ok: used < max, max, used, planName: ent.planName, reason: 'limit' }
 }
 
-// ── Droit de publication (offres / formations) — service central unique ──
-// Priorité : abonnement payant actif > campagne de lancement active. Aucune des deux
+// Priorité publication : abonnement payant actif > campagne de lancement active. Aucune des deux
 // → publication refusée. Une campagne n'est JAMAIS un forfait : elle ne crée aucune
 // ligne d'abonnement et ne passe jamais par Stripe.
 export type ListingType = 'job' | 'training'

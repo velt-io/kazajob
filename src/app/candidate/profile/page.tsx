@@ -120,7 +120,6 @@ export default function CandidateProfilePage() {
     if (url) window.open(url, '_blank')
   }
 
-  // ── Video Pitch ───────────────────────────────────────────────
   const handleVideoPitchUpload = async (blob: Blob, mimeType: string) => {
     if (!profile?.id) return { url: null, error: 'Non authentifié' }
     const file = new File([blob], 'pitch.webm', { type: mimeType })

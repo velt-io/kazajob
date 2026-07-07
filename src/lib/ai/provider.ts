@@ -17,8 +17,6 @@ export interface AIStreamChunk {
   done: boolean
 }
 
-// ── Config providers ──────────────────────────────────────────
-
 const GROQ_CONFIG = {
   baseUrl: 'https://api.groq.com/openai/v1',
   model:   'llama-3.3-70b-versatile',      // Meilleur modèle Groq gratuit
@@ -34,13 +32,9 @@ const ANTHROPIC_CONFIG = {
   model: 'claude-opus-4-5',    // Meilleur pour la rédaction (ou sonnet pour moins cher)
 }
 
-// ── Helpers ───────────────────────────────────────────────────
-
 function getProvider(): 'groq' | 'anthropic' {
   return (process.env.AI_PROVIDER ?? 'groq') as 'groq' | 'anthropic'
 }
-
-// ── Génération complète (non-streaming) ───────────────────────
 
 export async function generateText(
   messages: AIMessage[],
@@ -59,8 +53,6 @@ export async function generateText(
   throw new Error(`Provider inconnu : ${provider}`)
 }
 
-// ── Stream (Server-Sent Events) ───────────────────────────────
-
 export async function streamText(
   messages: AIMessage[],
   options?: { maxTokens?: number; temperature?: number }
@@ -77,8 +69,6 @@ export async function streamText(
 
   throw new Error(`Provider inconnu : ${provider}`)
 }
-
-// ── Implémentation Groq (OpenAI-compatible) ───────────────────
 
 async function generateWithGroq(
   messages: AIMessage[],
@@ -174,8 +164,6 @@ async function streamWithGroq(
     },
   })
 }
-
-// ── Implémentation Anthropic (Claude) — prêt pour le futur ────
 
 async function generateWithAnthropic(
   messages: AIMessage[],

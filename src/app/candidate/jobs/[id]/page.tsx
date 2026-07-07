@@ -446,7 +446,6 @@ export default function JobDetailPage() {
   )
 }
 
-// ── Section « Comprendre l'offre en clair » ───────────────────
 import { useInterviewPrepAI, useExplainJobAI } from '@/features/ai/useKazaIA'
 import { Modal as ModalBase } from '@/components/ui/Modal'
 

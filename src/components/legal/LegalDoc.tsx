@@ -2,7 +2,6 @@ import { PublicShell } from '@/components/layout/PublicShell'
 
 export interface LegalSection { h: string; body: string[] }
 
-/** Rendu d'un document légal/éditorial (titre + sections). */
 export function LegalDoc({
   title, updated, intro, sections,
 }: { title: string; updated?: string; intro?: string; sections: LegalSection[] }) {

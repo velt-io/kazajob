@@ -15,8 +15,6 @@ import { useAuth } from '@/features/auth/useAuth'
 import { PROFESSION_CATEGORIES } from '@/lib/onboarding-categories'
 import { KZ, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
 
-// ── Types ─────────────────────────────────────────────────────
-
 interface CvExperience {
   id: string
   company: string
@@ -49,8 +47,6 @@ interface CvData {
   links: { label: string; url: string }[]
 }
 
-// ── Templates ─────────────────────────────────────────────────
-
 const TEMPLATES = [
   { id: 'modern',   label: 'Moderne',   desc: 'Sobre et professionnel' },
   { id: 'creative', label: 'Créatif',   desc: 'Coloré et dynamique' },
@@ -63,8 +59,6 @@ const PRESET_COLORS = [
 ]
 
 function uid() { return Math.random().toString(36).slice(2) }
-
-// ── CV Preview Components ─────────────────────────────────────
 
 function CvModern({ data, color }: { data: CvData; color: string }) {
   return (
@@ -352,8 +346,6 @@ function Section({ title, color, children, compact }: { title: string; color: st
     </div>
   )
 }
-
-// ── Main CV Builder ───────────────────────────────────────────
 
 export default function CvBuilderPage() {
   const { profile, refetch } = useAuth()

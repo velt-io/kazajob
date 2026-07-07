@@ -11,7 +11,6 @@ import { serialize } from './_serialize'
 
 const withJob = { job: { with: { company: true } } } as const
 
-/** Candidatures d'un candidat (avec offre + entreprise). */
 export async function listCandidateApplications(candidateId: string): Promise<Application[]> {
   const rows = await db.query.applications.findMany({
     where: eq(applications.candidateId, candidateId),
@@ -21,7 +20,6 @@ export async function listCandidateApplications(candidateId: string): Promise<Ap
   return serialize<Application[]>(rows)
 }
 
-/** Candidatures reçues par un recruteur (offre + entreprise + candidat). */
 export async function listRecruiterApplications(recruiterId: string): Promise<Application[]> {
   const jobRows = await db
     .select({ id: jobs.id })
@@ -117,14 +115,12 @@ export async function getApplicationAIContext(applicationId: string): Promise<{
   }
 }
 
-/** Postuler à une offre. Renvoie l'id créé ou une erreur métier. */
 export async function applyToJob(
   candidateId: string,
   jobId: string,
   coverLetter?: string,
   prequalAnswers?: PrequalAnswer[],
 ): Promise<{ error: string | null; id?: string }> {
-  // Valide que l'offre existe et est toujours active avant toute candidature.
   const [job] = await db
     .select({ isActive: jobs.isActive })
     .from(jobs)
@@ -154,7 +150,6 @@ export async function applyToJob(
   return { error: null, id: inserted.id }
 }
 
-/** Retire sa candidature (réservé au candidat propriétaire). */
 export async function withdrawApplication(
   candidateId: string,
   applicationId: string,
@@ -174,14 +169,12 @@ export async function withdrawApplication(
   return { error: null }
 }
 
-/** Change le statut d'une candidature (réservé au recruteur propriétaire). */
 export async function updateApplicationStatus(
   recruiterId: string,
   applicationId: string,
   status: Application['status'],
   notes?: string,
 ): Promise<{ error: string | null }> {
-  // Vérifie que la candidature porte sur une offre du recruteur.
   const row = await db.query.applications.findFirst({
     where: eq(applications.id, applicationId),
     with: { job: { columns: { recruiterId: true } } },

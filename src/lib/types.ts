@@ -137,7 +137,6 @@ export interface CompanySubscription {
   created_at: string
 }
 
-/** Appartenance d'un recruteur à une entreprise (pour le sélecteur multi-entreprises). */
 export interface Membership {
   company_id: string
   company_name: string

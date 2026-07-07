@@ -12,10 +12,6 @@ interface CompanyRequiredProps {
   action?: string
 }
 
-/**
- * Guard : affiche un message d'erreur + redirection si le recruteur
- * n'a pas encore configuré/rejoint une entreprise.
- */
 export function CompanyRequired({ children, action = 'effectuer cette action' }: CompanyRequiredProps) {
   const { profile, loading } = useAuth()
 

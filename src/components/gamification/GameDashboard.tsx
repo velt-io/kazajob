@@ -16,7 +16,6 @@ import type { Profile, Application } from '@/lib/types'
 import type { Job } from '@/lib/types'
 import type { GamificationData, Quest } from '@/features/gamification/useGamification'
 
-// ── Map icônes ────────────────────────────────────────────────────
 const ICON_MAP: Record<string, React.ReactNode> = {
   User:        <User       size={16} />,
   FileText:    <FileText   size={16} />,
@@ -29,7 +28,6 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   TrendingUp:  <TrendingUp size={16} />,
 }
 
-// ── Carte quête individuelle ──────────────────────────────────────
 function QuestCard({ quest }: { quest: Quest }) {
   const done = quest.completed
 
@@ -98,7 +96,6 @@ function QuestCard({ quest }: { quest: Quest }) {
   )
 }
 
-// ── XP Progress bar ───────────────────────────────────────────────
 function XpBar({ xp, xpProgress, level, nextLevel }: {
   xp: number; xpProgress: number
   level: { title: string; color: string; emoji: string }
@@ -147,7 +144,6 @@ function XpBar({ xp, xpProgress, level, nextLevel }: {
   )
 }
 
-// ── Badge de niveau (compact) ─────────────────────────────────────
 function LevelPill({ level, xp }: { level: { level: number; title: string; color: string; emoji: string }; xp: number }) {
   return (
     <div
@@ -161,7 +157,6 @@ function LevelPill({ level, xp }: { level: { level: number; title: string; color
   )
 }
 
-// ── Props ─────────────────────────────────────────────────────────
 interface GameDashboardProps {
   profile: Profile
   gami: GamificationData
@@ -172,7 +167,6 @@ interface GameDashboardProps {
   favoritesCount: number
 }
 
-// ── Composant principal ───────────────────────────────────────────
 export function GameDashboard({
   profile, gami, applications, appsLoading, recommendedJobs, jobsLoading, favoritesCount,
 }: GameDashboardProps) {
