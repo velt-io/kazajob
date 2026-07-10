@@ -79,8 +79,8 @@ export default function AdminStagesPage() {
           icon={<ClipboardList size={28} />}
         />
       ) : (
-        <div className="kz-card bg-white overflow-hidden">
-          <table className="w-full">
+        <div className="kz-card bg-white overflow-x-auto">
+          <table className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
                 {['Titre', 'Entreprise', 'Ville', 'Durée', 'Statut', 'Candidatures', 'Publié', 'Actions'].map((h) => (

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Edit3, Check, Plus, X, Download, ExternalLink } from 'lucide-react'
+import { MapPin, Phone, Mail, Edit3, Check, X, Download, ExternalLink } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
@@ -24,15 +24,21 @@ import { useAuth } from '@/features/auth/useAuth'
 import { useApplications } from '@/features/applications/useApplications'
 import { useAvatarUpload, useCvUpload, uploadFile } from '@/features/profile/useUpload'
 import { KZ, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
+import { SkillSelector } from '@/components/skills/SkillSelector'
+import { computeCvCompletion } from '@/lib/cv'
+import type { Skill } from '@/lib/types'
 
-interface SkillRow { id: string; name: string; category: string | null }
-
-async function patchProfile(patch: Record<string, unknown>) {
-  await fetch('/api/profile', {
+async function patchProfile(patch: Record<string, unknown>): Promise<{ ok: boolean; error?: string }> {
+  const res = await fetch('/api/profile', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(patch),
-  })
+  }).catch(() => null)
+  if (!res || !res.ok) {
+    const data = await res?.json().catch(() => ({})) ?? {}
+    return { ok: false, error: (data as { error?: string }).error ?? 'Connexion au serveur impossible' }
+  }
+  return { ok: true }
 }
 
 export default function CandidateProfilePage() {
@@ -47,14 +53,12 @@ export default function CandidateProfilePage() {
   const [bio, setBio] = useState('')
   const [location, setLocation] = useState('')
   const [phone, setPhone] = useState('')
-  const [skills, setSkills] = useState<SkillRow[]>([])
+  const [skills, setSkills] = useState<Skill[]>([])
   const [softSkills, setSoftSkills] = useState<string[]>([])
   const [hobbies, setHobbies] = useState<string[]>([])
-  const [allSkills, setAllSkills] = useState<SkillRow[]>([])
-  const [skillSearch, setSkillSearch] = useState('')
-  const [showSkillSearch, setShowSkillSearch] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [cvFileName, setCvFileName] = useState<string | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   useEffect(() => {
     if (profile) {
@@ -71,29 +75,24 @@ export default function CandidateProfilePage() {
     if (!profile?.id) return
     const fetchSkills = async () => {
       const res = await fetch('/api/candidate-skills')
-      if (res.ok) setSkills(((await res.json()) as SkillRow[]).filter(Boolean))
+      if (res.ok) setSkills(((await res.json()) as Skill[]).filter(Boolean))
     }
     fetchSkills()
   }, [profile?.id])
 
-  useEffect(() => {
-    if (!showSkillSearch) return
-    fetch('/api/skills')
-      .then((r) => (r.ok ? r.json() : []))
-      .then((d) => setAllSkills(d as SkillRow[]))
-  }, [showSkillSearch])
-
   const handleSave = async () => {
     if (!profile) return
     setSaving(true)
-    await fetch('/api/profile', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        full_name: fullName, bio, location, phone,
-        soft_skills: softSkills, hobbies,
-      }),
+    setSaveError(null)
+    const { ok, error } = await patchProfile({
+      full_name: fullName, bio, location, phone,
+      soft_skills: softSkills, hobbies,
     })
+    if (!ok) {
+      setSaveError(error ?? 'Échec de l\'enregistrement')
+      setSaving(false)
+      return
+    }
     await refetch?.()
     setSaving(false)
     setEditing(false)
@@ -125,40 +124,37 @@ export default function CandidateProfilePage() {
     const file = new File([blob], 'pitch.webm', { type: mimeType })
     const { url, error } = await uploadFile(file, 'video-pitches')
     if (error || !url) return { url: null, error: error ?? 'Échec de l’upload' }
-    await patchProfile({ video_pitch_url: url })
+    const patch = await patchProfile({ video_pitch_url: url })
+    if (!patch.ok) return { url: null, error: patch.error ?? 'Échec de l\'enregistrement' }
     await refetch?.()
     return { url, error: null }
   }
 
   const handleVideoPitchDelete = async () => {
     if (!profile?.id) return
-    await patchProfile({ video_pitch_url: null })
-    await refetch?.()
+    const { ok } = await patchProfile({ video_pitch_url: null })
+    if (ok) await refetch?.()
   }
 
-  const addSkill = async (skill: SkillRow) => {
+  const addSkill = async (skill: Skill) => {
     if (!profile?.id || skills.find(s => s.id === skill.id)) return
-    await fetch('/api/candidate-skills', {
+    const res = await fetch('/api/candidate-skills', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ skillId: skill.id }),
     })
+    if (!res.ok) return
     setSkills(prev => [...prev, skill])
-    setSkillSearch('')
   }
 
   const removeSkill = async (skillId: string) => {
     if (!profile?.id) return
-    await fetch(`/api/candidate-skills?skillId=${skillId}`, { method: 'DELETE' })
+    const res = await fetch(`/api/candidate-skills?skillId=${skillId}`, { method: 'DELETE' })
+    if (!res.ok) return
     setSkills(prev => prev.filter(s => s.id !== skillId))
   }
 
-  const fields = [profile?.full_name, profile?.bio, profile?.location, profile?.phone, profile?.cv_url, profile?.avatar_url]
-  const profileScore = Math.round((fields.filter(Boolean).length / fields.length) * 100)
-
-  const filteredSkills = allSkills.filter(s =>
-    s.name.toLowerCase().includes(skillSearch.toLowerCase()) && !skills.find(cs => cs.id === s.id)
-  )
+  const profileScore = computeCvCompletion(profile ?? {})
 
   const hasCv = !!profile?.cv_url
   const hasCvBuilder = !!profile?.cv_data
@@ -176,6 +172,12 @@ export default function CandidateProfilePage() {
           </div>
         )}
       </div>
+
+      {saveError && (
+        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2">
+          <X size={15} />{saveError}
+        </div>
+      )}
 
       {uploadError && (
         <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2">
@@ -398,52 +400,8 @@ export default function CandidateProfilePage() {
 
           {/* Compétences */}
           <div className="kz-card p-5 bg-white">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold text-[#1A1410]">Competences</h2>
-              <Button kind="soft" size="sm" icon={<Plus size={13} />} onClick={() => setShowSkillSearch(v => !v)}>
-                Ajouter
-              </Button>
-            </div>
-
-            {showSkillSearch && (
-              <div className="mb-4 relative">
-                <Input
-                  value={skillSearch}
-                  onChange={(e) => setSkillSearch(e.target.value)}
-                  placeholder="Rechercher React, Python, Figma..."
-                  autoFocus
-                />
-                {skillSearch.length > 0 && filteredSkills.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 z-20 bg-white border border-[#1A1410] rounded-lg shadow-[3px_3px_0_#1A1410] mt-1 max-h-44 overflow-y-auto">
-                    {filteredSkills.slice(0, 8).map(s => (
-                      <button key={s.id} onClick={() => { addSkill(s); setShowSkillSearch(false) }}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-[#FBEFE0] text-sm">
-                        <span className="font-semibold text-[#1A1410]">{s.name}</span>
-                        {s.category && <span className="text-xs text-[#6B5A4A]">{s.category}</span>}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                {skillSearch.length > 0 && filteredSkills.length === 0 && (
-                  <p className="mt-2 text-xs text-[#6B5A4A]">Aucune competence trouvee.</p>
-                )}
-              </div>
-            )}
-
-            {skills.length === 0 ? (
-              <div className="text-sm text-[#6B5A4A] py-4 text-center border border-dashed border-[#E8DDC9] rounded-lg">
-                Aucune competence — clique sur &quot;Ajouter&quot; pour commencer.
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {skills.map((s) => (
-                  <span key={s.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold border border-[#1A1410] rounded-md" style={{ background: KZ.violetSoft }}>
-                    {s.name}
-                    <button onClick={() => removeSkill(s.id)} className="text-[#6B5A4A] hover:text-red-600"><X size={10} /></button>
-                  </span>
-                ))}
-              </div>
-            )}
+            <h2 className="text-lg font-bold text-[#1A1410] mb-4">Competences</h2>
+            <SkillSelector selected={skills} onAdd={addSkill} onRemove={removeSkill} placeholder="Rechercher React, Python, Figma..." />
           </div>
 
           {/* Soft skills */}

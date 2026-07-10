@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { LayoutDashboard, Users, Briefcase, Building2, Shield, Star, Bell, BookOpen, BarChart2, Sparkles, CreditCard, HardDrive, Activity, Bug, Ticket, CalendarClock, Rocket, Tag, ClipboardList } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Building2, Shield, Star, Bell, BookOpen, BarChart2, Sparkles, CreditCard, HardDrive, Activity, Bug, Ticket, CalendarClock, Rocket, Tag, ClipboardList, Radio } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
 import { Sidebar, type NavItem } from '@/components/layout/Sidebar'
 import { useAuth } from '@/features/auth/useAuth'
@@ -28,6 +28,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/admin/demo',           label: 'Démos / RDV',      icon: <CalendarClock size={16} /> },
   { href: '/admin/bug-reports',    label: 'Signalements',     icon: <Bug size={16} /> },
   { href: '/admin/backup',         label: 'Sauvegarde',       icon: <HardDrive size={16} /> },
+  { href: '/admin/settings/tracking', label: 'Tracking & Ads', icon: <Radio size={16} /> },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

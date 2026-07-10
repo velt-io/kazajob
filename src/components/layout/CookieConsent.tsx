@@ -5,24 +5,25 @@ import Link from 'next/link'
 import { Cookie } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { KZ } from '@/lib/constants'
+import { readConsent, writeConsent, type ConsentState } from '@/lib/consent'
 
-const KEY = 'kazajob_cookie_consent'
-
-/**
- * Bandeau de consentement cookies.
- * Kazajob n'utilise que des cookies essentiels (session) — pas de traçage tiers.
- * Le choix est mémorisé localement ; aucun script non essentiel n'est chargé.
- */
 export function CookieConsent() {
   const [show, setShow] = useState(false)
+  const [customizing, setCustomizing] = useState(false)
+  const [analytics, setAnalytics] = useState(false)
+  const [marketing, setMarketing] = useState(false)
 
   useEffect(() => {
-    try { if (!localStorage.getItem(KEY)) setShow(true) } catch { /* SSR / storage off */ }
+    const saved = readConsent()
+    if (!saved) { setShow(true); return }
+    setAnalytics(saved.analytics)
+    setMarketing(saved.marketing)
   }, [])
 
-  const choose = (v: 'accepted' | 'refused') => {
-    try { localStorage.setItem(KEY, v) } catch { /* noop */ }
+  const persist = (state: ConsentState) => {
+    writeConsent(state)
     setShow(false)
+    setCustomizing(false)
   }
 
   if (!show) return null
@@ -30,7 +31,7 @@ export function CookieConsent() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[60] p-3 sm:p-4" role="dialog" aria-label="Consentement cookies">
       <div
-        className="max-w-[760px] mx-auto rounded-2xl border border-[#1A1410] bg-white p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-4"
+        className="max-w-[760px] mx-auto rounded-2xl border border-[#1A1410] bg-white p-4 sm:p-5 flex flex-col gap-4"
         style={{ boxShadow: '4px 4px 0 #1A1410' }}
       >
         <div className="flex items-start gap-3 flex-1">
@@ -38,14 +39,45 @@ export function CookieConsent() {
             <Cookie size={16} className="text-[#1A1410]" />
           </div>
           <p className="text-xs sm:text-sm text-[#2A2018] leading-relaxed">
-            Kazajob utilise uniquement des <strong>cookies essentiels</strong> au fonctionnement (session de connexion).
-            Aucun traçage publicitaire ni revente de données.{' '}
+            Kazajob utilise des <strong>cookies essentiels</strong> au fonctionnement (session de connexion), et,
+            avec ton accord, des cookies de mesure d&apos;audience et publicitaires.{' '}
             <Link href="/legal/cookies" className="font-bold underline" style={{ color: KZ.violet }}>En savoir plus</Link>.
           </p>
         </div>
-        <div className="flex gap-2 shrink-0">
-          <Button kind="outline" size="md" onClick={() => choose('refused')}>Refuser</Button>
-          <Button kind="primary" size="md" onClick={() => choose('accepted')}>Accepter</Button>
+
+        {customizing && (
+          <div className="flex flex-col gap-2 pl-12">
+            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[#2A2018]">
+              <span>Cookies nécessaires <span className="text-[#6B5A4A]">(toujours actifs)</span></span>
+              <input type="checkbox" checked disabled className="w-4 h-4" />
+            </label>
+            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[#2A2018] cursor-pointer">
+              <span>Mesure d&apos;audience (Analytics)</span>
+              <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="w-4 h-4" />
+            </label>
+            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[#2A2018] cursor-pointer">
+              <span>Publicité (Marketing)</span>
+              <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} className="w-4 h-4" />
+            </label>
+          </div>
+        )}
+
+        <div className="flex gap-2 shrink-0 flex-wrap justify-end">
+          {!customizing && (
+            <Button kind="ghost" size="md" onClick={() => setCustomizing(true)}>Personnaliser</Button>
+          )}
+          <Button kind="outline" size="md" onClick={() => persist({ necessary: true, analytics: false, marketing: false })}>
+            Refuser tout
+          </Button>
+          {customizing ? (
+            <Button kind="primary" size="md" onClick={() => persist({ necessary: true, analytics, marketing })}>
+              Enregistrer mes choix
+            </Button>
+          ) : (
+            <Button kind="primary" size="md" onClick={() => persist({ necessary: true, analytics: true, marketing: true })}>
+              Accepter tout
+            </Button>
+          )}
         </div>
       </div>
     </div>

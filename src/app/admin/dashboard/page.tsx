@@ -82,7 +82,7 @@ export default function AdminDashboard() {
         <StatCard label="Parrainages"    value={stats.referrals.toLocaleString('fr-FR')}     color={KZ.yellowSoft} icon={<Zap size={16} />} />
       </div>
 
-      <div className="grid grid-cols-[1.5fr_1fr] gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-5">
         {/* Offres récentes */}
         <div className="kz-card p-6 bg-white">
           <div className="flex justify-between items-center mb-5">
