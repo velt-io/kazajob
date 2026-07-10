@@ -7,36 +7,36 @@ const FOOTER_LINKS = [
     links: [
       { label: "Offres d'emploi", href: '/candidate/jobs' },
       { label: 'Radar Emploi 974/976', href: '/radar-emploi' },
-      { label: 'Mon profil',      href: '/candidate/profile' },
-      { label: 'Candidatures',   href: '/candidate/applications' },
-      { label: 'Favoris',        href: '/candidate/favorites' },
+      { label: 'Mon profil', href: '/candidate/profile' },
+      { label: 'Candidatures', href: '/candidate/applications' },
+      { label: 'Favoris', href: '/candidate/favorites' },
     ],
   },
   {
     title: 'Recruteurs',
     links: [
-      { label: 'Publier une offre',    href: '/auth/register?role=recruiter' },
-      { label: 'Demander une démo',    href: '/demo' },
-      { label: 'Espace recruteur',     href: '/recruiter/dashboard' },
-      { label: 'Voir les candidats',   href: '/recruiter/applications' },
+      { label: 'Publier une offre', href: '/auth/register?role=recruiter' },
+      { label: 'Demander une démo', href: '/demo' },
+      { label: 'Espace recruteur', href: '/recruiter/dashboard' },
+      { label: 'Voir les candidats', href: '/recruiter/applications' },
     ],
   },
   {
     title: 'Entreprise',
     links: [
       { label: 'À propos', href: '/a-propos' },
-      { label: 'Blog',     href: '/blog' },
-      { label: 'Contact',  href: '/contact' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Contact', href: '/contact' },
     ],
   },
   {
     title: 'Légal',
     links: [
-      { label: 'Mentions légales',  href: '/legal/mentions-legales' },
-      { label: 'CGU',               href: '/legal/cgu' },
-      { label: 'CGV',               href: '/legal/cgv' },
-      { label: 'Confidentialité',   href: '/legal/confidentialite' },
-      { label: 'Cookies',           href: '/legal/cookies' },
+      { label: 'Mentions légales', href: '/legal/mentions-legales' },
+      { label: 'CGU', href: '/legal/cgu' },
+      { label: 'CGV', href: '/legal/cgv' },
+      { label: 'Confidentialité', href: '/legal/confidentialite' },
+      { label: 'Cookies', href: '/legal/cookies' },
     ],
   },
 ]
@@ -79,6 +79,23 @@ export function Footer() {
         <span>© 2026 Kazajob · La Réunion 974</span>
         <span>Fait avec passion dans le 974</span>
       </div>
+      <script type="text/javascript">
+        _linkedin_partner_id = "10534089";
+        window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+        window._linkedin_data_partner_ids.push(_linkedin_partner_id);
+      </script><script type="text/javascript">
+        (function(l) {
+if (!l){window.lintrk = function (a, b) { window.lintrk.q.push([a, b]) };
+window.lintrk.q=[]}
+        var s = document.getElementsByTagName("script")[0];
+        var b = document.createElement("script");
+        b.type = "text/javascript";b.async = true;
+        b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
+s.parentNode.insertBefore(b, s);})(window.lintrk);
+      </script>
+      <noscript>
+        <img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=10534089&fmt=gif" />
+      </noscript>
     </footer>
   )
 }
