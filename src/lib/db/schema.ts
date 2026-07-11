@@ -55,6 +55,7 @@ export const profiles = pgTable('profiles', {
   quizResult:    jsonb('quiz_result'),
   characterDomain: text('character_domain'),
   gender:        text(),
+  claimedQuests: text('claimed_quests').array(),
   createdAt:     now(),
   updatedAt:     now(),
 })
@@ -85,9 +86,20 @@ export const companies = pgTable('companies', {
 
 // ── skills ────────────────────────────────────────────────────────
 export const skills = pgTable('skills', {
-  id:       uuid().primaryKey().default(sql`gen_random_uuid()`),
-  name:     text().notNull().unique(),
-  category: text(),
+  id:               uuid().primaryKey().default(sql`gen_random_uuid()`),
+  name:             text().notNull().unique(),
+  category:         text(),
+  normalizedName:   text('normalized_name'),
+  status:           text().notNull().default('approved'),
+  source:           text().notNull().default('admin'),
+  createdById:      uuid('created_by_id').references(() => profiles.id),
+  mergedIntoId:     uuid('merged_into_id'),
+  approvedById:     uuid('approved_by_id').references(() => profiles.id),
+  approvedAt:       timestamp('approved_at', { withTimezone: true }),
+  rejectionReason:  text('rejection_reason'),
+  aliases:          text().array(),
+  createdAt:        now(),
+  updatedAt:        now(),
 })
 
 // ── jobs ──────────────────────────────────────────────────────────
@@ -423,6 +435,36 @@ export const auditLogs = pgTable('audit_logs', {
   newValues:     jsonb('new_values'),
   correlationId: text('correlation_id'),
   context:       jsonb(),
+  createdAt:     now(),
+})
+
+// ── tracking_integrations (pixels/scripts Ads pilotés par l'admin) ─
+export const trackingIntegrations = pgTable('tracking_integrations', {
+  id:              uuid().primaryKey().default(sql`gen_random_uuid()`),
+  name:            text().notNull(),
+  description:     text(),
+  provider:        text().notNull(),        // linkedin_insight | meta_pixel | ga4 | gtm | custom
+  identifier:      text(),                  // partner id / pixel id / measurement id / container id
+  customCode:      text('custom_code'),     // uniquement provider = 'custom'
+  placement:       text().notNull().default('body_end'), // head | body_start | body_end
+  environment:     text().notNull().default('production'), // production | staging | all
+  consentCategory: text('consent_category').notNull().default('marketing'), // necessary | analytics | marketing
+  routeScope:      jsonb('route_scope'),    // { mode: 'all'|'public'|'candidate'|'recruiter'|'admin'|'custom', include?, exclude? }
+  isActive:        boolean('is_active').notNull().default(false),
+  startsAt:        timestamp('starts_at', { withTimezone: true }),
+  endsAt:          timestamp('ends_at', { withTimezone: true }),
+  createdById:     uuid('created_by_id').references(() => profiles.id),
+  updatedById:     uuid('updated_by_id').references(() => profiles.id),
+  createdAt:       now(),
+  updatedAt:       now(),
+})
+
+export const trackingIntegrationVersions = pgTable('tracking_integration_versions', {
+  id:            uuid().primaryKey().default(sql`gen_random_uuid()`),
+  integrationId: uuid('integration_id').notNull().references(() => trackingIntegrations.id, { onDelete: 'cascade' }),
+  version:       integer().notNull(),
+  snapshot:      jsonb().notNull(),
+  createdById:   uuid('created_by_id').references(() => profiles.id),
   createdAt:     now(),
 })
 

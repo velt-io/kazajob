@@ -170,6 +170,7 @@ export default function AdminBackupPage() {
             </p>
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead style={{ background: KZ.cream2 }}>
               <tr>
@@ -208,6 +209,7 @@ export default function AdminBackupPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

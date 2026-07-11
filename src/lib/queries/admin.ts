@@ -10,6 +10,7 @@ import {
   eventRegistrations, events, jobs, notifications, profiles, referrals, skills,
 } from '@/lib/db/schema'
 import type { Company, CompanySubscription, Job, Profile } from '@/lib/types'
+import { normalizeSkillName } from '@/lib/skills'
 import { serialize } from './_serialize'
 
 async function cnt(table: PgTable, where?: SQL): Promise<number> {
@@ -55,7 +56,10 @@ export async function deleteJob(id: string): Promise<void> {
   await db.delete(jobs).where(eq(jobs.id, id))
 }
 
-export interface SkillWithUsage { id: string; name: string; category: string | null; usage_count: number }
+export interface SkillWithUsage {
+  id: string; name: string; category: string | null; usage_count: number
+  status: string; source: string
+}
 
 export async function getSkillsWithUsage(): Promise<SkillWithUsage[]> {
   const rows = await db
@@ -63,6 +67,8 @@ export async function getSkillsWithUsage(): Promise<SkillWithUsage[]> {
       id: skills.id,
       name: skills.name,
       category: skills.category,
+      status: skills.status,
+      source: skills.source,
       usage_count: count(candidateSkills.candidateId),
     })
     .from(skills)
@@ -73,7 +79,7 @@ export async function getSkillsWithUsage(): Promise<SkillWithUsage[]> {
 }
 
 export async function createSkill(name: string, category: string | null): Promise<void> {
-  await db.insert(skills).values({ name, category }).onConflictDoNothing()
+  await db.insert(skills).values({ name, category, normalizedName: normalizeSkillName(name), status: 'approved', source: 'admin' }).onConflictDoNothing()
 }
 
 export async function deleteSkill(id: string): Promise<void> {

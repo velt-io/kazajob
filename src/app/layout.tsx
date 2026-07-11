@@ -4,6 +4,8 @@ import './globals.css'
 import { Providers } from './providers'
 import { CookieConsent } from '@/components/layout/CookieConsent'
 import { PageViewTracker } from '@/components/layout/PageViewTracker'
+import { TrackingScripts } from '@/components/tracking/TrackingScripts'
+import { getActiveIntegrations } from '@/lib/queries/tracking'
 import { Analytics } from '@vercel/analytics/next'
 
 const sora = Sora({
@@ -148,7 +150,10 @@ const jsonLd = {
   ],
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const environment = process.env.NODE_ENV === 'production' ? 'production' : 'staging'
+  const integrations = await getActiveIntegrations(environment).catch(() => [])
+
   return (
     <html lang="fr" className={sora.variable}>
       <head>
@@ -161,11 +166,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-[#FFF7EE] text-[#1A1410] antialiased min-h-screen">
         <Providers>{children}</Providers>
         <CookieConsent />
+        <TrackingScripts integrations={integrations} />
         <PageViewTracker />
         <Analytics />
       </body>
-      <footer>
-      </footer>
     </html>
   )
 }

@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Download, Check, Plus, Trash2, ArrowRight, Palette,
-  LayoutTemplate, ChevronDown, ChevronUp, Loader2, Eye
+  LayoutTemplate, Loader2, Eye
 } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
@@ -14,6 +14,9 @@ import { Logo } from '@/components/layout/Logo'
 import { useAuth } from '@/features/auth/useAuth'
 import { PROFESSION_CATEGORIES } from '@/lib/onboarding-categories'
 import { KZ, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
+import { useDraftSave, DRAFT_SAVE_LABEL } from '@/features/profile/useDraftSave'
+import { Stepper } from '@/components/ui/Stepper'
+import { computeCvCompletion } from '@/lib/cv'
 
 interface CvExperience {
   id: string
@@ -56,6 +59,16 @@ const TEMPLATES = [
 const PRESET_COLORS = [
   '#FF6B35', '#6D3BEB', '#19A974', '#1B4FB8', '#FFC93C', '#1A1410',
   '#E54E1A', '#8B5CF6', '#059669', '#2563EB', '#D97706', '#374151',
+]
+
+const SECTIONS = [
+  { id: 'info',        label: 'Informations' },
+  { id: 'bio',         label: 'Bio' },
+  { id: 'skills',      label: 'Compétences' },
+  { id: 'softskills',  label: 'Soft skills' },
+  { id: 'hobbies',     label: 'Loisirs' },
+  { id: 'experiences', label: 'Expériences' },
+  { id: 'education',   label: 'Formation' },
 ]
 
 function uid() { return Math.random().toString(36).slice(2) }
@@ -356,7 +369,8 @@ export default function CvBuilderPage() {
   const [template, setTemplate] = useState('modern')
   const [color, setColor] = useState<string>(KZ.violet)
   const [saving, setSaving] = useState(false)
-  const [activeSection, setActiveSection] = useState<string | null>('info')
+  const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  const [visitedSteps, setVisitedSteps] = useState<Set<string>>(new Set([SECTIONS[0].id]))
 
   const [cvData, setCvData] = useState<CvData>({
     fullName: '',
@@ -375,9 +389,23 @@ export default function CvBuilderPage() {
 
   const [newSkill, setNewSkill] = useState('')
 
-  // Init depuis le profil
   useEffect(() => {
     if (!profile) return
+
+    const saved = profile.cv_data as Partial<CvData> | null
+    const hasSavedCv = !!saved && Object.keys(saved).length > 0
+
+    if (hasSavedCv) {
+      setCvData(prev => ({
+        ...prev,
+        ...saved,
+        softSkills: saved!.softSkills ?? profile.soft_skills ?? prev.softSkills,
+        hobbies:    saved!.hobbies ?? profile.hobbies ?? prev.hobbies,
+      }))
+      setColor(profile.cv_color ?? KZ.violet)
+      setTemplate(profile.cv_template ?? 'modern')
+      return
+    }
 
     const primaryCat = PROFESSION_CATEGORIES.find(c => c.id === (profile.avatar_category ?? profile.avatar_categories?.[0]))
     const suggestedSkills = profile.avatar_categories
@@ -437,21 +465,62 @@ export default function CvBuilderPage() {
       ? cvData.hobbies.filter(k => k !== h)
       : [...cvData.hobbies, h])
 
+  const draftPayload = useMemo(() => ({
+    cv_data:     cvData,
+    cv_template: template,
+    cv_color:    color,
+    soft_skills: cvData.softSkills,
+    hobbies:     cvData.hobbies,
+  }), [cvData, template, color])
+
+  const patchProfile = useCallback(async (patch: Record<string, unknown>): Promise<{ ok: boolean; error?: string }> => {
+    const res = await fetch('/api/profile', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    }).catch(() => null)
+    if (!res || !res.ok) {
+      const data = await res?.json().catch(() => ({})) ?? {}
+      return { ok: false, error: (data as { error?: string }).error ?? 'Connexion au serveur impossible' }
+    }
+    return { ok: true }
+  }, [])
+
+  const { status: draftStatus, error: draftError, isDirty } = useDraftSave(
+    draftPayload, patchProfile, { enabled: !!profile },
+  )
+
+  const [saveError, setSaveError] = useState('')
+
+  useEffect(() => {
+    setVisitedSteps(prev => new Set(prev).add(SECTIONS[currentStepIndex].id))
+  }, [currentStepIndex])
+
+  useEffect(() => {
+    const handler = (e: BeforeUnloadEvent) => {
+      if (!isDirty) return
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [isDirty])
+
+  const goToStep = (index: number) => setCurrentStepIndex(index)
+  const goNext = () => setCurrentStepIndex(i => Math.min(i + 1, SECTIONS.length - 1))
+  const goPrev = () => setCurrentStepIndex(i => Math.max(i - 1, 0))
+  const cvCompletion = computeCvCompletion({ ...profile, cv_data: { ...draftPayload.cv_data } })
+
   const handleSave = async () => {
     if (!profile) return
     setSaving(true)
-    await fetch('/api/profile', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        cv_data:     cvData,
-        cv_template: template,
-        cv_color:    color,
-        soft_skills: cvData.softSkills,
-        hobbies:     cvData.hobbies,
-        onboarding_completed: true,
-      }),
-    })
+    setSaveError('')
+    const { ok, error } = await patchProfile({ ...draftPayload, onboarding_completed: true })
+    if (!ok) {
+      setSaveError(error ?? 'Erreur d\'enregistrement')
+      setSaving(false)
+      return
+    }
     await refetch?.()
     setSaving(false)
     router.push('/candidate/dashboard')
@@ -534,16 +603,6 @@ export default function CvBuilderPage() {
 
   const CvComponent = template === 'creative' ? CvCreative : template === 'minimal' ? CvMinimal : CvModern
 
-  const SECTIONS = [
-    { id: 'info',        label: 'Informations' },
-    { id: 'bio',         label: 'Bio' },
-    { id: 'skills',      label: 'Compétences' },
-    { id: 'softskills',  label: 'Soft skills' },
-    { id: 'hobbies',     label: 'Loisirs' },
-    { id: 'experiences', label: 'Expériences' },
-    { id: 'education',   label: 'Formation' },
-  ]
-
   return (
     <div className="min-h-screen flex flex-col bg-[#F0EDE8]">
       {/* Header */}
@@ -553,6 +612,10 @@ export default function CvBuilderPage() {
           <div className="h-5 w-px bg-[#E8DDC9] hidden sm:block" />
           <span className="text-sm font-bold text-[#1A1410] hidden sm:block">CV Builder</span>
           <Badge color="violet" size="sm">Beta</Badge>
+          <span className="text-xs font-bold hidden sm:block" style={{ color: KZ.violet }}>{cvCompletion}% complet</span>
+          <span className="text-xs hidden md:block" style={{ color: draftStatus === 'error' ? '#E54E4E' : '#6B5A4A' }}>
+            {DRAFT_SAVE_LABEL[draftStatus]}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <Button kind="outline" size="sm" icon={downloading ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />} onClick={handleDownload} disabled={downloading}>
@@ -563,6 +626,12 @@ export default function CvBuilderPage() {
           </Button>
         </div>
       </header>
+
+      {(saveError || draftError) && (
+        <div className="px-4 py-2 bg-red-50 border-b border-red-200 text-red-700 text-xs">
+          {saveError || draftError}
+        </div>
+      )}
 
       <div className="flex flex-1 overflow-hidden">
         {/* ── Panneau gauche — édition ──────────────────────── */}
@@ -621,18 +690,14 @@ export default function CvBuilderPage() {
           </div>
 
           {/* Sections accordéon */}
-          {SECTIONS.map(section => (
-            <div key={section.id} className="border-b border-[#E8DDC9]">
-              <button
-                onClick={() => setActiveSection(activeSection === section.id ? null : section.id)}
-                className="w-full flex items-center justify-between px-4 py-3 hover:bg-[#FBEFE0] transition-colors"
-              >
-                <span className="text-sm font-bold text-[#1A1410]">{section.label}</span>
-                {activeSection === section.id ? <ChevronUp size={15} className="text-[#6B5A4A]" /> : <ChevronDown size={15} className="text-[#6B5A4A]" />}
-              </button>
+          <Stepper steps={SECTIONS} currentIndex={currentStepIndex} visitedIds={visitedSteps} onStepClick={goToStep} />
 
-              {activeSection === section.id && (
-                <div className="px-4 pb-4 flex flex-col gap-3">
+          <div className="px-4 py-4 flex flex-col gap-3">
+            {(() => {
+              const section = SECTIONS[currentStepIndex]
+              return (
+                <>
+                  <span className="text-sm font-bold text-[#1A1410]">{section.label}</span>
 
                   {section.id === 'info' && (
                     <>
@@ -734,10 +799,15 @@ export default function CvBuilderPage() {
                       <Button kind="outline" size="sm" full icon={<Plus size={13} />} onClick={addEducation}>Ajouter une formation</Button>
                     </>
                   )}
-                </div>
-              )}
-            </div>
-          ))}
+                </>
+              )
+            })()}
+          </div>
+
+          <div className="flex gap-2 p-4 border-t border-[#E8DDC9]">
+            <Button kind="outline" size="sm" full disabled={currentStepIndex === 0} onClick={goPrev}>Précédent</Button>
+            <Button kind="primary" size="sm" full disabled={currentStepIndex === SECTIONS.length - 1} onClick={goNext}>Suivant</Button>
+          </div>
         </div>
 
         {/* ── Panneau droit — preview A4 ─────────────────────── */}

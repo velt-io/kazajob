@@ -212,10 +212,23 @@ export interface Favorite {
   job?: Job
 }
 
+export type SkillStatus = 'approved' | 'pending' | 'rejected' | 'merged' | 'archived'
+export type SkillSource = 'admin' | 'candidate' | 'recruiter' | 'import' | 'system'
+
 export interface Skill {
   id: string
   name: string
   category: string | null
+  normalized_name?: string | null
+  status?: string
+  source?: string
+  created_by_id?: string | null
+  merged_into_id?: string | null
+  approved_by_id?: string | null
+  approved_at?: string | null
+  rejection_reason?: string | null
+  aliases?: string[] | null
+  usage_count?: number
 }
 
 export interface CandidateSkill {
@@ -289,3 +302,43 @@ export interface PaginatedResult<T> {
 export type BadgeColor = 'orange' | 'violet' | 'blue' | 'green' | 'yellow' | 'ink' | 'cream' | 'paper'
 export type ButtonKind = 'primary' | 'dark' | 'violet' | 'yellow' | 'outline' | 'ghost' | 'soft' | 'danger'
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'xl'
+
+export type TrackingProvider = 'linkedin_insight' | 'meta_pixel' | 'ga4' | 'gtm' | 'custom'
+export type TrackingPlacement = 'head' | 'body_start' | 'body_end'
+export type TrackingEnvironment = 'production' | 'staging' | 'all'
+export type ConsentCategory = 'necessary' | 'analytics' | 'marketing'
+
+export interface RouteScope {
+  mode: 'all' | 'public' | 'candidate' | 'recruiter' | 'admin' | 'custom'
+  include?: string[]
+  exclude?: string[]
+}
+
+export interface TrackingIntegration {
+  id: string
+  name: string
+  description: string | null
+  provider: TrackingProvider
+  identifier: string | null
+  custom_code: string | null
+  placement: TrackingPlacement
+  environment: TrackingEnvironment
+  consent_category: ConsentCategory
+  route_scope: RouteScope | null
+  is_active: boolean
+  starts_at: string | null
+  ends_at: string | null
+  created_by_id: string | null
+  updated_by_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface TrackingIntegrationVersion {
+  id: string
+  integration_id: string
+  version: number
+  snapshot: Record<string, unknown>
+  created_by_id: string | null
+  created_at: string
+}

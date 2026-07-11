@@ -74,8 +74,8 @@ export default function AdminEventsPage() {
       ) : events.length === 0 ? (
         <EmptyState title="Aucun événement" icon={<Star size={24} />} />
       ) : (
-        <div className="kz-card bg-white overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="kz-card bg-white overflow-x-auto">
+          <table className="w-full text-sm min-w-[640px]">
             <thead>
               <tr className="border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
                 <th className="text-left p-3 font-bold text-[#1A1410]">Événement</th>

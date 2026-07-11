@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Plus, Trash2, Search, BookOpen } from 'lucide-react'
+import { Plus, Trash2, Search, BookOpen, Check, X, GitMerge } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Badge } from '@/components/ui/Badge'
@@ -12,6 +12,20 @@ interface Skill {
   name: string
   category: string | null
   usage_count?: number
+  status: string
+  source: string
+}
+
+const STATUS_TABS = [
+  { id: 'all',      label: 'Toutes' },
+  { id: 'pending',  label: 'En attente' },
+  { id: 'approved', label: 'Approuvées' },
+  { id: 'rejected', label: 'Rejetées' },
+  { id: 'merged',   label: 'Fusionnées' },
+]
+
+const STATUS_COLOR: Record<string, 'green' | 'yellow' | 'orange' | 'cream'> = {
+  approved: 'green', pending: 'yellow', rejected: 'orange', merged: 'cream',
 }
 
 export default function AdminSkillsPage() {
@@ -19,10 +33,14 @@ export default function AdminSkillsPage() {
   const [filtered, setFiltered]   = useState<Skill[]>([])
   const [loading, setLoading]     = useState(true)
   const [search, setSearch]       = useState('')
+  const [statusTab, setStatusTab] = useState('all')
   const [newName, setNewName]     = useState('')
   const [newCat, setNewCat]       = useState('')
   const [adding, setAdding]       = useState(false)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [mergeMode, setMergeMode] = useState(false)
+  const [mergeSelection, setMergeSelection] = useState<string[]>([])
+  const [merging, setMerging]     = useState(false)
 
   const fetchSkills = async () => {
     try {
@@ -30,7 +48,6 @@ export default function AdminSkillsPage() {
       const enriched = res.ok ? ((await res.json()) as Skill[]) : []
       enriched.sort((a, b) => (b.usage_count ?? 0) - (a.usage_count ?? 0))
       setSkills(enriched)
-      setFiltered(enriched)
     } catch { /* noop */ }
     setLoading(false)
   }
@@ -39,10 +56,10 @@ export default function AdminSkillsPage() {
 
   useEffect(() => {
     const q = search.toLowerCase()
-    setFiltered(
-      q ? skills.filter(s => s.name.toLowerCase().includes(q) || (s.category ?? '').toLowerCase().includes(q)) : skills
-    )
-  }, [search, skills])
+    let list = statusTab === 'all' ? skills : skills.filter(s => s.status === statusTab)
+    if (q) list = list.filter(s => s.name.toLowerCase().includes(q) || (s.category ?? '').toLowerCase().includes(q))
+    setFiltered(list)
+  }, [search, skills, statusTab])
 
   const handleAdd = async () => {
     if (!newName.trim()) return
@@ -64,22 +81,76 @@ export default function AdminSkillsPage() {
     setDeletingId(null)
   }
 
-  // Grouper par catégorie pour les stats
+  const handleModerate = async (id: string, action: 'approve' | 'reject') => {
+    if (action === 'reject' && !confirm('Rejeter cette compétence proposée ?')) return
+    await fetch(`/api/admin/skills/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action }),
+    })
+    await fetchSkills()
+  }
+
+  const toggleMergeSelection = (id: string) => {
+    setMergeSelection(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : prev.length < 2 ? [...prev, id] : prev
+    )
+  }
+
+  const handleMerge = async () => {
+    if (mergeSelection.length !== 2) return
+    const [sourceId, targetId] = mergeSelection
+    const source = skills.find(s => s.id === sourceId)
+    const target = skills.find(s => s.id === targetId)
+    if (!confirm(`Fusionner « ${source?.name} » dans « ${target?.name} » ? Toutes les relations seront déplacées vers « ${target?.name} ».`)) return
+    setMerging(true)
+    await fetch('/api/admin/skills/merge', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sourceId, targetId }),
+    })
+    setMerging(false)
+    setMergeMode(false)
+    setMergeSelection([])
+    await fetchSkills()
+  }
+
   const categoryStats = skills.reduce<Record<string, number>>((acc, s) => {
     const cat = s.category ?? 'Autre'
     acc[cat] = (acc[cat] ?? 0) + 1
     return acc
   }, {})
   const topCats = Object.entries(categoryStats).sort((a, b) => b[1] - a[1]).slice(0, 5)
+  const pendingCount = skills.filter(s => s.status === 'pending').length
 
   return (
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-extrabold text-[#1A1410]">Référentiel compétences</h1>
-          <p className="text-sm text-[#6B5A4A] mt-1">{skills.length} compétences · catalogue global</p>
+          <p className="text-sm text-[#6B5A4A] mt-1">
+            {skills.length} compétences · catalogue global
+            {pendingCount > 0 && <span className="ml-2 font-semibold" style={{ color: KZ.orange }}>· {pendingCount} en attente</span>}
+          </p>
         </div>
+        <Button
+          kind={mergeMode ? 'dark' : 'outline'} size="sm" icon={<GitMerge size={14} />}
+          onClick={() => { setMergeMode(v => !v); setMergeSelection([]) }}
+        >
+          {mergeMode ? 'Annuler fusion' : 'Fusionner deux compétences'}
+        </Button>
       </div>
+
+      {mergeMode && (
+        <div className="kz-card p-3 mb-4 flex items-center justify-between gap-3" style={{ background: KZ.violetSoft }}>
+          <p className="text-xs text-[#1A1410]">
+            Sélectionne 2 compétences dans la liste ({mergeSelection.length}/2). La 1ère sera fusionnée dans la 2nde.
+          </p>
+          <Button kind="primary" size="sm" loading={merging} disabled={mergeSelection.length !== 2} onClick={handleMerge}>
+            Fusionner
+          </Button>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-5">
         {/* Liste */}
@@ -115,9 +186,20 @@ export default function AdminSkillsPage() {
             </div>
           </div>
 
-          {/* Recherche + liste */}
+          {/* Onglets statut + recherche + liste */}
           <div className="kz-card bg-white overflow-hidden">
-            <div className="p-4 border-b border-[#E8DDC9]">
+            <div className="p-4 border-b border-[#E8DDC9] flex flex-col gap-3">
+              <div className="flex gap-1.5 flex-wrap">
+                {STATUS_TABS.map(tab => (
+                  <button key={tab.id} onClick={() => setStatusTab(tab.id)}
+                    className="px-2.5 py-1 text-xs font-semibold rounded-full border transition-all"
+                    style={statusTab === tab.id
+                      ? { background: KZ.violet, color: 'white', borderColor: KZ.violet }
+                      : { background: KZ.paper, color: '#6B5A4A', borderColor: '#E8DDC9' }}>
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
               <Input
                 label=""
                 value={search}
@@ -131,15 +213,16 @@ export default function AdminSkillsPage() {
                 {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-10 rounded-lg bg-[#FBEFE0] animate-pulse" />)}
               </div>
             ) : (
-              <div className="max-h-[500px] overflow-y-auto">
+              <div className="max-h-[500px] overflow-auto">
                 {filtered.length === 0 ? (
                   <p className="text-center text-sm text-[#6B5A4A] py-8">Aucun résultat.</p>
                 ) : (
-                  <table className="w-full text-sm">
+                  <table className="w-full text-sm min-w-[560px]">
                     <thead className="sticky top-0" style={{ background: KZ.cream2 }}>
                       <tr>
+                        {mergeMode && <th className="p-3 w-8" />}
                         <th className="text-left p-3 font-bold text-[#1A1410]">Compétence</th>
-                        <th className="text-left p-3 font-bold text-[#1A1410] hidden sm:table-cell">Catégorie</th>
+                        <th className="text-left p-3 font-bold text-[#1A1410] hidden sm:table-cell">Statut</th>
                         <th className="text-center p-3 font-bold text-[#1A1410]">Utilisations</th>
                         <th className="p-3" />
                       </tr>
@@ -147,11 +230,19 @@ export default function AdminSkillsPage() {
                     <tbody>
                       {filtered.map(skill => (
                         <tr key={skill.id} className="border-t border-[#E8DDC9] hover:bg-[#FBEFE0] transition-colors">
-                          <td className="p-3 font-semibold text-[#1A1410]">{skill.name}</td>
+                          {mergeMode && (
+                            <td className="p-3">
+                              <input type="checkbox" checked={mergeSelection.includes(skill.id)}
+                                onChange={() => toggleMergeSelection(skill.id)}
+                                disabled={!mergeSelection.includes(skill.id) && mergeSelection.length >= 2} />
+                            </td>
+                          )}
+                          <td className="p-3 font-semibold text-[#1A1410]">
+                            {skill.name}
+                            {skill.category && <span className="block text-[10px] font-normal text-[#6B5A4A]">{skill.category}</span>}
+                          </td>
                           <td className="p-3 hidden sm:table-cell">
-                            {skill.category
-                              ? <Badge color="cream" size="sm">{skill.category}</Badge>
-                              : <span className="text-[#6B5A4A] text-xs">—</span>}
+                            <Badge color={STATUS_COLOR[skill.status] ?? 'cream'} size="sm">{skill.status}</Badge>
                           </td>
                           <td className="p-3 text-center">
                             <span className="text-xs font-bold" style={{ color: (skill.usage_count ?? 0) > 0 ? KZ.green : KZ.mute }}>
@@ -159,14 +250,30 @@ export default function AdminSkillsPage() {
                             </span>
                           </td>
                           <td className="p-3 text-right">
-                            <button
-                              onClick={() => handleDelete(skill.id, skill.name)}
-                              disabled={deletingId === skill.id}
-                              className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-400 hover:text-red-500 transition-colors"
-                              title="Supprimer"
-                            >
-                              <Trash2 size={13} />
-                            </button>
+                            <div className="flex items-center justify-end gap-1">
+                              {skill.status === 'pending' && (
+                                <>
+                                  <button onClick={() => handleModerate(skill.id, 'approve')}
+                                    className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-green-400 hover:text-green-600 transition-colors"
+                                    title="Approuver">
+                                    <Check size={13} />
+                                  </button>
+                                  <button onClick={() => handleModerate(skill.id, 'reject')}
+                                    className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-400 hover:text-red-500 transition-colors"
+                                    title="Rejeter">
+                                    <X size={13} />
+                                  </button>
+                                </>
+                              )}
+                              <button
+                                onClick={() => handleDelete(skill.id, skill.name)}
+                                disabled={deletingId === skill.id}
+                                className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-400 hover:text-red-500 transition-colors"
+                                title="Supprimer"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}

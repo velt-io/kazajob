@@ -61,7 +61,7 @@ export default function CandidateDetailPage() {
         Retour
       </button>
 
-      <div className="grid grid-cols-[260px_1fr] gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-[260px_1fr] gap-5">
         {/* Left */}
         <div className="flex flex-col gap-4">
           <div className="kz-card p-5 bg-white text-center">

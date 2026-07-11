@@ -60,8 +60,8 @@ export default function AdminUsersPage() {
       </div>
 
       {loading ? <PageLoader /> : (
-        <div className="kz-card bg-white overflow-hidden">
-          <table className="w-full">
+        <div className="kz-card bg-white overflow-x-auto">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
                 {['Utilisateur', 'Email', 'Role', 'Inscription', 'Actions'].map((h) => (
