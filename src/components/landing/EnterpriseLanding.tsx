@@ -4,6 +4,9 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { KZ, SUBSCRIPTION_PLANS, PARTNERS, MULTIDIFFUSION_ENABLED, planFeatures } from '@/lib/constants'
 import { PartnerCarousel } from './PartnerCarousel'
+import { QualityModerationSection } from './QualityModerationSection'
+import { EnterpriseComparisonSection } from './EnterpriseComparisonSection'
+import { RiskReversalSection } from './RiskReversalSection'
 
 const PARTNER_ICON_MAP: Record<string, React.ReactNode> = {
   Landmark:  <Landmark  size={16} />,
@@ -230,6 +233,9 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
         </div>
       </section>
 
+      {/* QUALITÉ & MODÉRATION ───────────────────────────────── */}
+      <QualityModerationSection />
+
       {/* GARANTIES ──────────────────────────────────────────── */}
       <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[#1A1410]" style={{ background: KZ.ink }}>
         <div className="max-w-[1280px] mx-auto">
@@ -264,6 +270,9 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
         </div>
       </section>
 
+      {/* COMPARATIF ─────────────────────────────────────────── */}
+      <EnterpriseComparisonSection />
+
       {/* FAQ RECRUTEUR ──────────────────────────────────────── */}
       <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[#1A1410]" style={{ background: KZ.cream }}>
         <div className="max-w-[860px] mx-auto">
@@ -295,6 +304,9 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
           </div>
         </div>
       </section>
+
+      {/* RÉASSURANCE SANS RISQUE ────────────────────────────── */}
+      <RiskReversalSection launchDays={launchDays} />
 
       {/* PRICING ─────────────────────────────────────────────── */}
       <section id="tarifs-pro" className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410]"

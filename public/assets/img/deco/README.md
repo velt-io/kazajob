@@ -5,6 +5,7 @@ Déposez ici vos images d'arrière-plan, nommées :
 ```
 hero.png        → section héro de l'accueil candidat
 comment.png     → section « Comment ça marche »
+moderation.png  → section « Qualité garantie » (vue entreprise)
 ```
 
 - Format conseillé : PNG transparent, illustration cartoon/BD.
