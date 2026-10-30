@@ -7,9 +7,9 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Logo } from '@/components/layout/Logo'
 import { OAuthButtons } from '@/components/auth/OAuthButtons'
-import { Soleil, Palme, Nuage, Hibiscus, Vague } from '@/components/illustrations/Tropical'
 import { useAuth } from '@/features/auth/useAuth'
 import { KZ } from '@/lib/constants'
+import { PortalPanel } from '@/components/quest/PortalPanel'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -45,40 +45,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col md:grid md:grid-cols-2" style={{ background: KZ.cream }}>
-      {/* Panneau gauche — visuel (caché sur très petit mobile) */}
-      <div className="hidden md:block relative overflow-hidden border-r border-[var(--kz-edge)]">
-        {/* Image de fond en niveaux de gris */}
-        <img
-          src="/assets/img/logimage.webp"
-          decoding="async"
-          alt=""
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'grayscale(100%) contrast(1.1) brightness(0.85)' }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(135deg, rgba(109,59,235,0.72) 0%, rgba(109,59,235,0.55) 100%)' }}
-        />
-        <div className="relative z-10 h-full p-8 flex flex-col">
-          <Logo size={32} mono color="var(--kz-cream)" accentColor="var(--kz-orange)" href="/" />
-          <div className="absolute top-16 right-8 opacity-70"><Soleil size={80} color="var(--kz-yellow)" stroke="var(--kz-cream)" /></div>
-          <div className="absolute top-[200px] left-8 opacity-50"><Nuage width={80} height={40} color="rgba(255,247,238,0.3)" stroke="var(--kz-cream)" /></div>
-          <div className="absolute bottom-[200px] right-12 opacity-60"><Hibiscus size={56} color="var(--kz-orange)" stroke="var(--kz-cream)" /></div>
-          <div className="absolute bottom-8 left-[-10px] opacity-80"><Palme size={130} color="var(--kz-green)" stroke="var(--kz-cream)" /></div>
-          <div className="absolute bottom-20 right-[-20px] opacity-70"><Palme size={110} color="var(--kz-green)" stroke="var(--kz-cream)" rotate={20} /></div>
-          <div className="absolute bottom-0 left-0 right-0"><Vague width={520} height={24} color="rgba(255,247,238,0.4)" /></div>
-          <div className="mt-auto pb-4">
-            <p className="kz-eyebrow mb-3" style={{ color: KZ.orange }}>Connexion</p>
-            <h1 className="text-3xl lg:text-[44px] font-extrabold tracking-tight leading-none mb-4 text-white">
-              Rebonjour,<br />marmaille.
-            </h1>
-            <p className="text-sm text-white/75 max-w-[320px] leading-relaxed">
-              Le bon, le la — retrouve toutes les opportunités sauvegardées et continue tes candidatures.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Panneau gauche — portail (caché sur mobile) */}
+      <PortalPanel
+        eyebrow="Retour en jeu"
+        title={<>Rebonjour,<br /><span className="qx-text-arcane">marmaille.</span></>}
+        text="Ton aventure t'attend là où tu l'as laissée : quêtes en cours, offres sauvegardées, candidatures."
+      />
 
       {/* Panneau droit — formulaire */}
       <div className="flex flex-col justify-center px-5 py-10 sm:px-10 md:px-12 lg:px-16" style={{ background: KZ.cream }}>

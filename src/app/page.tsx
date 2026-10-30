@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRight, Sparkles, Users, Briefcase, MapPin } from 'lucide-react'
 import { NavLanding } from '@/components/layout/NavLanding'
 import { Footer } from '@/components/layout/Footer'
@@ -7,13 +6,12 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Tag } from '@/components/ui/Tag'
 import { SearchBarLanding } from '@/components/ui/SearchBarLanding'
-import { HeroIllustrationNew } from '@/components/illustrations/HeroIllustrationNew'
-import { Soleil, Sparkle } from '@/components/illustrations/Tropical'
+import { QuestShowcase } from '@/components/quest/QuestShowcase'
+import { GuildRoster } from '@/components/quest/GuildRoster'
 import { WhySection }         from '@/components/landing/WhySection'
 import { KazaIASpotlight }    from '@/components/landing/KazaIASpotlight'
 import { RoadmapSection }     from '@/components/landing/RoadmapSection'
 import { FaqSection }         from '@/components/landing/FaqSection'
-import { SectionDecor }       from '@/components/landing/SectionDecor'
 import { SectorsSection }     from '@/components/landing/SectorsSection'
 import { AvatarShowcaseSection } from '@/components/landing/AvatarShowcaseSection'
 import { IllustratedCta }     from '@/components/landing/IllustratedCta'
@@ -71,62 +69,44 @@ export default async function LandingPage() {
     <div className="min-h-screen flex flex-col" style={{ background: KZ.cream }}>
       <NavLanding view="candidat" />
 
-      {/* HERO ──────────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 pt-10 lg:pt-20 pb-0 relative overflow-hidden" style={{ background: KZ.cream }}>
-        <SectionDecor className="w-full" src="/assets/img/logimage.webp" opacity={0.08} position="center bottom" size="cover" />
-        <div className="absolute top-16 left-4 opacity-40 hidden lg:block"><Sparkle size={36} color={KZ.violet} /></div>
-        <div className="absolute bottom-56 right-10 opacity-40 hidden lg:block"><Sparkle size={28} color={KZ.green} /></div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center max-w-[1280px] mx-auto relative z-10">
-          <div>
-            <Badge color="orange" size="lg" icon={<MapPin size={12} />} className="mb-5">
-              974 · La Réunion
-            </Badge>
-            <h1 className="text-[48px] sm:text-[64px] lg:text-[80px] font-extrabold tracking-[-0.04em] leading-[0.92] text-[var(--kz-ink)] mb-5">
-              Ton kaz<br />
-              <span style={{ color: KZ.violet }}>ton job</span><br />
-              ton pei.
+      {/* HERO — l'aventure commence ──────────────────────── */}
+      <section className="px-4 sm:px-8 lg:px-16 pt-12 lg:pt-20 pb-16 relative overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-14 items-center max-w-[1280px] mx-auto relative z-10">
+          <div className="qx-rise">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-[#FACC15]/40 bg-[rgba(250,204,21,0.08)] text-[11px] font-bold uppercase tracking-[0.18em] text-[#FDE68A] mb-6">
+              <MapPin size={12} /> Nouvelle aventure · 974
+            </div>
+            <h1 className="text-[46px] sm:text-[64px] lg:text-[78px] font-bold leading-[0.95] text-white mb-6">
+              Ton kaz.<br /><span className="qx-text-arcane">Ton job.</span><br />Ton péi.
             </h1>
-            <p className="text-base lg:text-lg leading-relaxed text-[var(--kz-text)] max-w-[520px] mb-6">
-              La plateforme d&apos;emploi qui matche vraiment les talents réunionnais
-              avec les meilleures opportunités locales. Avec un peu d&apos;IA et beaucoup de soleil.
+            <p className="text-[16px] lg:text-[19px] leading-relaxed text-[var(--kz-text)] max-w-[540px] mb-8">
+              Ta recherche d&apos;emploi devient une quête : crée ton héros, forge tes compétences,
+              lance tes candidatures et grimpe jusqu&apos;au trésor — ton prochain job à La Réunion.
             </p>
-
-            {/* Barre de recherche — composant client pour permettre la saisie */}
             <SearchBarLanding />
-
-            <div className="flex gap-2 flex-wrap items-center">
+            <div className="flex gap-2 flex-wrap items-center mb-8">
               <span className="text-xs text-[var(--kz-mute)]">Populaire :</span>
-              {['Developpeur', 'BTP', 'Tourisme', 'Comptable', 'Infirmier'].map((k) => (
+              {['Développeur', 'BTP', 'Tourisme', 'Comptable', 'Infirmier'].map((k) => (
                 <Link key={k} href={`/candidate/jobs?q=${k}`}>
-                  <Tag color="cream">{k}</Tag>
+                  <Tag color="violet">{k}</Tag>
                 </Link>
               ))}
             </div>
-          </div>
-
-          <div className="hidden lg:flex justify-center">
-            <HeroIllustrationNew />
-          </div>
-          {/* Illustration mobile / tablette */}
-          <div className="lg:hidden relative rounded-2xl border-[1.5px] border-[var(--kz-edge)] overflow-hidden aspect-[4/3] mt-2" style={{ boxShadow: '5px 5px 0 var(--kz-shadow)' }}>
-            <Image src="/assets/img/homepage/hero.webp" alt="Deux jeunes Réunionnais devant le Piton de la Fournaise" fill sizes="100vw" className="object-cover" />
-          </div>
-        </div>
-        <div className="my-10" />
-      </section>
-      {/* STATS BAND — vraies données ────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-6 lg:py-8 border-y border-[var(--kz-edge)]" style={{ background: KZ.inverse }}>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-[1280px] mx-auto">
-          {STATS_BAND.map((s) => (
-            <div key={s.l}>
-              <div className="text-[32px] lg:text-[44px] font-extrabold tracking-tighter leading-none" style={{ color: KZ.orange }}>{s.v}</div>
-              <div className="text-sm opacity-70 mt-1" style={{ color: KZ.onInverse }}>{s.l}</div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {STATS_BAND.map((s) => (
+                <div key={s.l} className="rounded-xl border border-[#C084FC]/25 bg-[rgba(24,12,44,0.7)] px-3 py-3">
+                  <div className="text-[24px] font-bold leading-none qx-text-legend">{s.v}</div>
+                  <div className="text-[11px] text-[var(--kz-mute)] mt-1.5">{s.l}</div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+          <div className="qx-rise" style={{ animationDelay: '0.15s' }}>
+            <QuestShowcase />
+          </div>
         </div>
       </section>
-      
+
       {/* LOGOS ENTREPRISES — vraies entreprises ─────────────── */}
       {companies.length > 0 && (
         <section className="px-4 sm:px-8 lg:px-16 py-8 lg:py-10" style={{ background: KZ.cream }}>
@@ -143,14 +123,6 @@ export default async function LandingPage() {
 
       {/* OFFRES VEDETTES — vraies offres ───────────────────── */}
       <section className="py-12 lg:py-20 relative overflow-hidden" style={{ background: KZ.cream2 }}>
-        {/* Perso 1 — masqué sur mobile */}
-        <div className="hidden xl:block absolute left-[-120px] top-[0px]  overflow-hidden z-10 pointer-events-none select-none" style={{ width: '22vw' }}>
-          <Image src="/assets/img/homepage/perso1.webp" alt="" aria-hidden width={700} height={1244} sizes="22vw" className="w-full h-auto object-contain object-bottom drop-shadow-xl" />
-        </div>
-        {/* Perso 2 — masqué sur mobile */}
-        <div className="hidden xl:block absolute right-[-100px] top-[0px] overflow-hidden  z-10 pointer-events-none select-none" style={{ width: '22vw' }}>
-          <Image src="/assets/img/homepage/perso2.webp" alt="" aria-hidden width={700} height={1244} sizes="22vw" className="w-full h-auto object-contain object-bottom drop-shadow-xl" />
-        </div>
 
         <div className="px-4 sm:px-8 lg:px-16 max-w-[1280px] mx-auto relative z-0">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-7">
@@ -273,8 +245,7 @@ export default async function LandingPage() {
 
       {/* BANNIERE RECRUTEURS ────────────────────────────────── */}
       <section className="px-4 sm:px-8 lg:px-16 py-12 lg:py-16 relative overflow-hidden" style={{ background: KZ.inverse }}>
-        <div className="absolute top-[-20px] right-8 lg:right-16 opacity-40"><Soleil size={90} stroke={KZ.onInverse} color={KZ.orange} /></div>
-        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 lg:gap-12 items-center relative z-10">
+        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-8 lg:gap-12 items-center relative z-10">
           <div>
             <Badge color="yellow" size="lg" className="mb-4">Recruteurs</Badge>
             <h2 className="text-3xl lg:text-[44px] font-extrabold tracking-tight leading-tight mb-4" style={{ color: KZ.onInverse }}>
@@ -290,15 +261,14 @@ export default async function LandingPage() {
                 <Button kind="primary" size="lg">Publier une offre — gratuit</Button>
               </Link>
               <Link href="/entreprise">
-                <Button kind="outline" size="lg" className="!text-[var(--kz-on-inverse)] !border-[var(--kz-cream)] !bg-transparent">
+                <Button kind="outline" size="lg" className="">
                   Découvrir Kazajob Entreprises
                 </Button>
               </Link>
             </div>
           </div>
-          <Link href="/entreprise" className="block relative rounded-2xl border-[1.5px] border-[var(--kz-cream)] overflow-hidden aspect-[16/10] rotate-[1.5deg] transition-transform hover:rotate-0"
-            style={{ boxShadow: '6px 6px 0 var(--kz-orange)' }}>
-            <Image src="/assets/img/scenes/recrutement.webp" alt="Une recruteuse réunionnaise rencontre un candidat" fill sizes="(min-width: 1024px) 480px, 100vw" className="object-cover" />
+          <Link href="/entreprise" aria-label="Découvrir Kazajob Entreprises" className="block">
+            <GuildRoster />
           </Link>
         </div>
       </section>

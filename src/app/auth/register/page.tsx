@@ -8,9 +8,9 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Logo } from '@/components/layout/Logo'
 import { OAuthButtons } from '@/components/auth/OAuthButtons'
-import { Soleil, Palme, Vague, Sparkle } from '@/components/illustrations/Tropical'
 import { useAuth } from '@/features/auth/useAuth'
 import { KZ } from '@/lib/constants'
+import { PortalPanel } from '@/components/quest/PortalPanel'
 
 function RegisterForm() {
   const searchParams = useSearchParams()
@@ -69,39 +69,12 @@ function RegisterForm() {
 
   return (
     <div className="min-h-screen flex flex-col md:grid md:grid-cols-2" style={{ background: KZ.cream }}>
-      {/* Panneau gauche */}
-      <div className="hidden md:block relative overflow-hidden border-r border-[var(--kz-edge)]">
-        <img
-          src="/assets/img/logimage.webp"
-          decoding="async"
-          alt=""
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'grayscale(100%) contrast(1.1) brightness(0.8)' }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: 'linear-gradient(135deg, rgba(255,107,53,0.75) 0%, rgba(255,107,53,0.55) 100%)' }}
-        />
-        <div className="relative z-10 h-full p-8 flex flex-col">
-          <Logo size={32} mono color="var(--kz-cream)" accentColor="var(--kz-yellow-soft)" href="/" />
-          <div className="absolute top-12 right-8 opacity-70"><Soleil size={72} color={KZ.yellow} stroke="var(--kz-cream)" /></div>
-          <div className="absolute top-24 left-16 opacity-80"><Sparkle size={28} color="var(--kz-cream)" stroke="var(--kz-cream)" /></div>
-          <div className="absolute bottom-[260px] right-12 opacity-70"><Sparkle size={22} color="var(--kz-yellow-soft)" stroke="var(--kz-cream)" /></div>
-          <div className="absolute bottom-8 left-[-20px] opacity-80"><Palme size={150} color="var(--kz-green)" stroke="var(--kz-cream)" /></div>
-          <div className="absolute bottom-16 right-[-10px] opacity-70"><Palme size={130} color="var(--kz-green)" stroke="var(--kz-cream)" rotate={18} /></div>
-          <div className="absolute bottom-0 left-0 right-0"><Vague width={520} height={24} color="rgba(255,247,238,0.35)" /></div>
-          <div className="mt-auto pb-6">
-            <p className="kz-eyebrow mb-3 text-white/90">Inscription · 3 min</p>
-            <h1 className="text-3xl lg:text-[44px] font-extrabold tracking-tight leading-none mb-4 text-white">
-              Bienvenue<br />sur Kazajob.
-            </h1>
-            <p className="text-sm text-white/75 max-w-[320px] leading-relaxed">
-              Rejoins les candidats actifs et trouve ton prochain job dans le 974. C&apos;est gratuit, c&apos;est rapide.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Panneau gauche — portail (caché sur mobile) */}
+      <PortalPanel
+        eyebrow="Nouveau héros · 3 min"
+        title={<>Crée ton<br /><span className="qx-text-arcane">héros.</span></>}
+        text="Rejoins l'aventure Kazajob et trouve ton prochain job dans le 974. Gratuit, rapide, et beaucoup plus fun."
+      />
 
       {/* Panneau droit */}
       <div className="flex flex-col justify-center px-5 py-10 sm:px-10 md:px-12 lg:px-16" style={{ background: KZ.cream }}>

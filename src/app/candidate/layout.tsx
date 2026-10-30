@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { LayoutDashboard, Search, Heart, Briefcase, MessageCircle, User, Sparkles, Calendar, Settings, Star, Users, Flame, Gamepad2, GraduationCap, Compass } from 'lucide-react'
+import { Map as MapIcon, LayoutDashboard, Search, Heart, Briefcase, MessageCircle, User, Sparkles, Calendar, Settings, Star, Users, Flame, Gamepad2, GraduationCap, Compass } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
 import { Sidebar, type NavItem } from '@/components/layout/Sidebar'
 import { NavLanding } from '@/components/layout/NavLanding'
@@ -16,7 +16,8 @@ import { useGamification, getLevel } from '@/features/gamification/useGamificati
 import { KZ } from '@/lib/constants'
 
 const NAV_ITEMS: NavItem[] = [
-  { href: '/candidate/dashboard',    label: 'Tableau de bord', icon: <LayoutDashboard size={16} /> },
+  { href: '/candidate/dashboard',    label: 'QG du héros',      icon: <LayoutDashboard size={16} /> },
+  { href: '/candidate/quetes',       label: 'Mon aventure',     icon: <MapIcon size={16} /> },
   { href: '/candidate/jobs',         label: 'Offres d\'emploi', icon: <Search size={16} /> },
   { href: '/candidate/training',     label: 'Formations',       icon: <GraduationCap size={16} /> },
   { href: '/candidate/favorites',    label: 'Favoris',          icon: <Heart size={16} /> },

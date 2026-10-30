@@ -1,15 +1,13 @@
-import Image from 'next/image'
 import type { ReactNode } from 'react'
 
 /**
- * Bandeau d'appel à l'action posé sur une illustration de la DA (cadres tropicaux,
- * coucher de soleil). Le contenu est centré dans une carte pour rester lisible
- * quelle que soit l'image et la largeur d'écran.
+ * Thème Quest : appel à l'action dans un « portail » arcanique (anneaux néon,
+ * nébuleuse). La prop `image` de la DA cartoon est conservée mais non affichée.
  */
 export function IllustratedCta({
-  image, alt = '', eyebrow, title, text, actions, footnote, id,
+  eyebrow, title, text, actions, footnote, id,
 }: {
-  image: string
+  image?: string
   alt?: string
   eyebrow?: ReactNode
   title: ReactNode
@@ -19,17 +17,20 @@ export function IllustratedCta({
   id?: string
 }) {
   return (
-    <section id={id} className="relative overflow-hidden border-t border-[var(--kz-edge)] px-4 sm:px-8 py-16 lg:py-28">
-      <Image src={image} alt={alt} fill sizes="100vw" className="object-cover" />
-      <div className="relative max-w-[680px] mx-auto text-center rounded-2xl border-[1.5px] border-[var(--kz-edge)] px-6 py-9 sm:px-10 sm:py-11"
-        style={{ background: 'rgba(255,247,238,0.94)', boxShadow: '6px 6px 0 var(--kz-shadow)' }}>
-        {eyebrow && <div className="mb-4 flex justify-center">{eyebrow}</div>}
-        <h2 className="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-[-0.03em] leading-[1.02] text-[var(--kz-ink)] mb-4">
+    <section id={id} className="relative overflow-hidden px-4 sm:px-8 py-20 lg:py-32">
+      {/* Portail */}
+      <div aria-hidden className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[760px] max-w-[140vw] aspect-square rounded-full border border-[#C084FC]/25 animate-spin-slow" style={{ boxShadow: '0 0 80px -10px rgba(168,85,247,0.6), inset 0 0 120px -20px rgba(232,121,249,0.4)' }} />
+      <div aria-hidden className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] max-w-[110vw] aspect-square rounded-full border-2 border-dashed border-[#FACC15]/20 animate-spin-slow [animation-direction:reverse]" />
+      <div aria-hidden className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] aspect-square rounded-full bg-[radial-gradient(closest-side,rgba(232,121,249,0.35),rgba(124,58,237,0.15),transparent)] blur-2xl" />
+
+      <div className="relative max-w-[720px] mx-auto text-center qx-panel px-6 py-12 sm:px-12 sm:py-14">
+        {eyebrow && <div className="mb-5 flex justify-center">{eyebrow}</div>}
+        <h2 className="text-[34px] sm:text-[48px] lg:text-[58px] font-bold leading-[1.02] text-white mb-5 qx-glow-text">
           {title}
         </h2>
-        {text && <p className="text-sm sm:text-base lg:text-lg text-[var(--kz-text)] mb-7 max-w-[520px] mx-auto">{text}</p>}
+        {text && <p className="text-[15px] sm:text-[17px] text-[var(--kz-text)] mb-8 max-w-[520px] mx-auto leading-relaxed">{text}</p>}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">{actions}</div>
-        {footnote && <p className="text-xs text-[var(--kz-mute)] mt-5">{footnote}</p>}
+        {footnote && <p className="text-xs text-[var(--kz-mute)] mt-6">{footnote}</p>}
       </div>
     </section>
   )

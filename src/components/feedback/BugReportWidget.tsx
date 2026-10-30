@@ -54,11 +54,10 @@ export function BugReportWidget({ stacked = false }: { stacked?: boolean }) {
       <button
         onClick={() => setOpen(true)}
         title="Signaler un bug"
-        className={`fixed ${stacked ? 'bottom-24' : 'bottom-6'} right-6 z-30 flex items-center gap-2 h-11 px-4 rounded-full border-2 border-[var(--kz-edge)] font-bold text-xs transition-all hover:scale-105 active:scale-95`}
-        style={{ background: KZ.yellow, color: KZ.ink, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
+        aria-label="Signaler un bug"
+        className={`fixed ${stacked ? 'bottom-24' : 'bottom-6'} right-[34px] z-30 flex items-center justify-center w-10 h-10 rounded-lg border border-[#C084FC]/40 bg-[rgba(24,12,44,0.9)] text-[var(--kz-mute)] hover:text-white hover:shadow-[0_0_16px_-4px_rgba(232,121,249,0.8)] transition-all`}
       >
         <Bug size={16} />
-        <span className="hidden sm:inline">Signaler un bug</span>
       </button>
 
       <Modal open={open} onClose={close} title="Signaler un bug" size="md">

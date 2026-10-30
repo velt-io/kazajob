@@ -45,19 +45,25 @@ function ViewToggle({ view, onNavigate }: { view: View; onNavigate?: () => void 
   }
 
   return (
-    <div className="inline-flex items-center gap-0.5 p-0.5 rounded-full border border-[var(--kz-edge)] shrink-0" style={{ background: KZ.paper }}>
+    // Contrôle segmenté façon iOS : la pastille active glisse d'un segment à l'autre.
+    <div className="relative inline-grid grid-cols-2 items-center p-[3px] rounded-xl bg-[rgba(12,5,24,0.8)] border border-[#C084FC]/30 shrink-0">
+      <span
+        aria-hidden
+        className="absolute top-[3px] bottom-[3px] left-[3px] w-[calc(50%-3px)] rounded-lg bg-[linear-gradient(120deg,#7C3AED,#C026D3)] shadow-[0_0_16px_-4px_rgba(232,121,249,0.9)] transition-transform duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+        style={{ transform: active === 'entreprise' ? 'translateX(100%)' : 'translateX(0)' }}
+      />
       <button
         onClick={() => go('candidat')}
-        className="flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded-full text-[11px] lg:text-xs font-bold transition-colors duration-100"
-        style={active === 'candidat' ? { background: KZ.orange, color: KZ.ink, boxShadow: '2px 2px 0 var(--kz-shadow)' } : { color: KZ.mute }}
+        className="relative z-10 flex items-center justify-center gap-1.5 px-2.5 lg:px-3.5 py-1.5 rounded-full text-[11px] lg:text-xs font-semibold transition-colors duration-200"
+        style={{ color: active === 'candidat' ? '#fff' : KZ.mute }}
       >
         <Users size={12} />
         <span className="hidden md:inline">Je cherche un emploi</span><span className="md:hidden">Emploi</span>
       </button>
       <button
         onClick={() => go('entreprise')}
-        className="flex items-center gap-1.5 px-2.5 lg:px-3 py-1.5 rounded-full text-[11px] lg:text-xs font-bold transition-colors duration-100"
-        style={active === 'entreprise' ? { background: KZ.violet, color: 'white', boxShadow: '2px 2px 0 var(--kz-shadow)' } : { color: KZ.mute }}
+        className="relative z-10 flex items-center justify-center gap-1.5 px-2.5 lg:px-3.5 py-1.5 rounded-full text-[11px] lg:text-xs font-semibold transition-colors duration-200"
+        style={{ color: active === 'entreprise' ? '#fff' : KZ.mute }}
       >
         <Building2 size={12} />
         <span className="hidden md:inline">Je recrute</span><span className="md:hidden">Recruter</span>
@@ -90,13 +96,13 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
   const profilePath = profile?.role === 'recruiter' ? '/recruiter/profile' : '/candidate/profile'
 
   return (
-    <header className="h-[64px] lg:h-[72px] px-4 md:px-8 lg:px-10 border-b border-[var(--kz-edge)] bg-[var(--kz-cream)] flex items-center gap-4 sticky top-0 z-50">
+    <header className="h-[60px] lg:h-[64px] px-4 md:px-8 lg:px-10 border-b border-[#C084FC]/20 bg-[rgba(11,6,20,0.82)] backdrop-blur-xl shadow-[0_1px_0_rgba(232,121,249,0.15)] flex items-center gap-4 sticky top-0 z-50">
       <Logo size={28} className="lg:scale-[1.15] origin-left" />
 
       {/* Nav desktop (audience) */}
       <nav className="hidden lg:flex gap-6 ml-7">
         {links.map((l) => (
-          <Link key={l.href} href={l.href} className="text-sm font-semibold text-[var(--kz-text)] hover:text-[var(--kz-orange)] transition-colors">
+          <Link key={l.href} href={l.href} className="text-[13px] font-medium text-[var(--kz-mute)] hover:text-white transition-colors">
             {l.label}
           </Link>
         ))}
@@ -111,8 +117,7 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
           <div className="relative">
             <button
               onClick={() => setProfileOpen(v => !v)}
-              className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-[var(--kz-edge)] hover:bg-[var(--kz-cream2)] transition-colors"
-              style={{ background: KZ.paper }}
+              className="flex items-center gap-2.5 pl-1 pr-3 py-1 rounded-lg bg-[rgba(168,85,247,0.12)] border border-[#C084FC]/30 hover:bg-[rgba(168,85,247,0.22)] transition-colors"
             >
               <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={28} color={KZ.orangeSoft} />
               <span className="hidden sm:block text-sm font-bold text-[var(--kz-ink)] max-w-[120px] truncate">
@@ -124,8 +129,7 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setProfileOpen(false)} />
                 <div
-                  className="absolute right-0 top-full mt-2 w-52 z-40 rounded-xl border border-[var(--kz-edge)] overflow-hidden"
-                  style={{ background: KZ.paper, boxShadow: '4px 4px 0 var(--kz-shadow)' }}
+                  className="absolute right-0 top-full mt-2 w-52 z-40 rounded-2xl qx-panel overflow-hidden qx-rise shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)]"
                 >
                   <div className="px-4 py-3 border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                     <div className="text-xs font-bold text-[var(--kz-ink)] truncate">{profile.full_name}</div>
@@ -177,7 +181,8 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
 
         {/* Hamburger mobile */}
         <button onClick={() => setDrawerOpen(true)}
-          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg border border-[var(--kz-edge)] bg-[var(--kz-paper)]">
+          aria-label="Ouvrir le menu"
+          className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-[rgba(168,85,247,0.12)] border border-[#C084FC]/30 hover:bg-[rgba(168,85,247,0.22)]">
           <Menu size={18} />
         </button>
       </div>
@@ -185,14 +190,13 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
       {/* Drawer mobile */}
       {drawerOpen && (
         <>
-          <div className="fixed inset-0 bg-[var(--kz-inverse)]/50 z-40 lg:hidden" onClick={() => setDrawerOpen(false)} />
+          <div className="fixed inset-0 qx-scrim backdrop-blur-sm z-40 lg:hidden" onClick={() => setDrawerOpen(false)} />
           <div
-            className="fixed top-0 right-0 bottom-0 w-[280px] z-50 flex flex-col p-6 lg:hidden border-l border-[var(--kz-edge)]"
-            style={{ background: KZ.cream, boxShadow: '-4px 0 0 var(--kz-ink)' }}
+            className="fixed top-0 right-0 bottom-0 w-[300px] z-50 flex flex-col p-6 lg:hidden qx-panel !rounded-none animate-slide-up"
           >
             <div className="flex justify-between items-center mb-6">
               <Logo size={24} />
-              <button onClick={() => setDrawerOpen(false)} className="w-8 h-8 flex items-center justify-center rounded-lg border border-[var(--kz-edge)] bg-[var(--kz-paper)]">
+              <button onClick={() => setDrawerOpen(false)} aria-label="Fermer le menu" className="w-8 h-8 flex items-center justify-center rounded-lg bg-[rgba(168,85,247,0.12)] border border-[#C084FC]/30 hover:bg-[rgba(168,85,247,0.22)]">
                 <X size={16} />
               </button>
             </div>

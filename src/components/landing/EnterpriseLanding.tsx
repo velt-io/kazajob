@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRight, Check, Users, BarChart2, Zap, Shield, Globe, Landmark, Target, Briefcase, Search, Rss, Lock, HeartHandshake, Clock, FileText, Gift, MapPin, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -13,6 +12,7 @@ import { RecruiterPainSection } from './RecruiterPainSection'
 import { ProductPreviewSection } from './ProductPreviewSection'
 import { SectorsSection } from './SectorsSection'
 import { IllustratedCta } from './IllustratedCta'
+import { GuildRoster } from '@/components/quest/GuildRoster'
 
 const PARTNER_ICON_MAP: Record<string, React.ReactNode> = {
   Landmark:  <Landmark  size={16} />,
@@ -33,7 +33,7 @@ function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTIO
     <div
       className="kz-card p-6 flex flex-col relative"
       style={{
-        background: isHighlight ? KZ.violet : KZ.paper,
+        background: isHighlight ? 'linear-gradient(180deg, rgba(88,28,135,0.95), rgba(30,12,60,0.95))' : KZ.paper,
         color: isHighlight ? 'white' : KZ.ink,
         boxShadow: isHighlight ? '6px 6px 0 var(--kz-shadow)' : '3px 3px 0 var(--kz-shadow)',
         transform: isHighlight ? 'scale(1.03)' : 'none',
@@ -130,9 +130,9 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
           <div>
             <Badge color="violet" size="lg" className="mb-5">Kazajob Entreprises · 974</Badge>
             <h1 className="text-[40px] sm:text-[56px] lg:text-[66px] font-extrabold tracking-[-0.04em] leading-[0.95] text-[var(--kz-ink)] mb-5">
-              Recrutez les<br />
-              <span style={{ color: KZ.violet }}>meilleurs talents</span><br />
-              de La Réunion.
+              Recrutez votre<br />
+              <span className="qx-text-arcane">guilde de talents</span><br />
+              à La Réunion.
             </h1>
             <p className="text-base lg:text-lg leading-relaxed text-[var(--kz-text)] mb-7 max-w-[520px]">
               Publiez vos offres, recevez des candidats locaux triés par l&apos;IA et gérez tout votre recrutement
@@ -160,38 +160,16 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
             </div>
           </div>
 
-          {/* Illustration + cartes flottantes */}
+          {/* Votre future guilde */}
           <div className="relative">
-            <div className="relative rounded-2xl border-[1.5px] border-[var(--kz-edge)] overflow-hidden aspect-[16/10]" style={{ boxShadow: '8px 8px 0 var(--kz-shadow)' }}>
-              <Image
-                src="/assets/img/scenes/recrutement.webp"
-                alt="Une recruteuse réunionnaise rencontre un candidat sur la route du littoral"
-                fill priority sizes="(min-width: 1024px) 640px, 100vw" className="object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-6 left-2 sm:left-6 w-[230px] p-3 rounded-xl border-[1.5px] border-[var(--kz-edge)] bg-[var(--kz-paper)] rotate-[-3deg]"
-              style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
-              <div className="text-[10px] font-extrabold uppercase tracking-widest mb-2" style={{ color: KZ.violet }}>Nouvelle candidature</div>
-              <div className="flex items-center gap-2.5">
-                <Avatar name="Maëva L." avatarConfig={HERO_CANDIDATE} size={38} color={KZ.orangeSoft} />
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-bold text-[var(--kz-ink)] truncate">Maëva L.</div>
-                  <div className="text-[11px] text-[var(--kz-mute)] truncate">Réceptionniste · Saint-Paul</div>
-                </div>
-                <span className="text-sm font-extrabold" style={{ color: KZ.green }}>92%</span>
+            <div aria-hidden className="absolute -inset-8 bg-[radial-gradient(closest-side,rgba(168,85,247,0.35),transparent)] blur-2xl" />
+            <div className="relative">
+              <div className="kz-eyebrow text-[var(--qx-gold)] mb-3 text-center">Votre future guilde</div>
+              <GuildRoster />
+              <div className="mt-4 mx-auto w-fit flex items-center gap-2 px-4 py-2 rounded-lg border border-[#FACC15]/40 bg-[rgba(250,204,21,0.08)] text-[12px] font-bold uppercase tracking-[0.1em] text-[#FDE68A]">
+                {launchDays ? <><Gift size={14} /> Gratuit pendant le lancement</> : <><Sparkles size={14} /> Tri des CV par KazaIA</>}
               </div>
             </div>
-            {launchDays ? (
-              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[var(--kz-edge)] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
-                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', color: KZ.ink }}>
-                <Gift size={14} /> Gratuit pendant le lancement
-              </div>
-            ) : (
-              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[var(--kz-edge)] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
-                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', color: KZ.ink }}>
-                <Sparkles size={14} /> Tri des CV par IA
-              </div>
-            )}
           </div>
         </div>
       </section>

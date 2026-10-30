@@ -176,6 +176,10 @@ h1 { text-shadow: 0 0 32px rgba(192, 132, 252, 0.35); }
   box-shadow: 0 0 14px rgba(232, 121, 249, 0.8);
 }
 
+/* Trait fin et survols « magiques » au lieu du style cartoon */
+[class*="border-[1.5px]"], .border-2 { border-width: 1px !important; }
+[class*="hover:translate-x-[-1px]"]:hover, [class*="hover:translate-x-[1px]"]:hover { translate: 0 -2px !important; box-shadow: 0 0 24px -6px rgba(232,121,249,0.7) !important; }
+
 /* Fonds assombris (modales, menus) */
 .qx-scrim { background: rgba(6, 2, 14, 0.72); }
 
