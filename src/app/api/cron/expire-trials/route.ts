@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { expireEndedTrials } from '@/lib/queries/billing'
 import { expireJobBoosts, expirePublishedJobs } from '@/lib/queries/jobs'
 import { expireLaunchSubscriptions } from '@/lib/queries/launch'
+import { purgeRateLimits } from '@/lib/rate-limit'
 
 export async function GET(req: NextRequest) {
   const cronSecret = process.env.CRON_SECRET
@@ -21,7 +22,8 @@ export async function GET(req: NextRequest) {
     const boostsExpired = await expireJobBoosts()
     const launchExpired = await expireLaunchSubscriptions()
     const jobsExpired = await expirePublishedJobs()
-    return NextResponse.json({ ok: true, expired, boostsExpired, launchExpired, jobsExpired })
+    const rateLimitsPurged = await purgeRateLimits()
+    return NextResponse.json({ ok: true, expired, boostsExpired, launchExpired, jobsExpired, rateLimitsPurged })
   } catch (err) {
     console.error('[Cron expire-trials]', err)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })

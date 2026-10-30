@@ -9,6 +9,7 @@ import { db } from '@/lib/db'
 import { profiles } from '@/lib/db/schema'
 import { createResetToken } from '@/lib/password-reset'
 import { passwordResetEmail } from '@/lib/email/templates'
+import { AUTH_LIMITS, clientIp, hitRateLimit, rateLimitKey, retryMessage } from '@/lib/rate-limit'
 
 const FROM = process.env.RESEND_FROM ?? 'Kazajob <contact@velt.re>'
 const APP_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kazajob.re'
@@ -19,6 +20,15 @@ export async function POST(request: Request) {
   if (!email || !email.includes('@')) {
     return NextResponse.json({ error: 'Email invalide.' }, { status: 400 })
   }
+
+  const byIp = await hitRateLimit(rateLimitKey('forgot-ip', clientIp(request.headers)), AUTH_LIMITS.forgotIp)
+  if (!byIp.allowed) {
+    return NextResponse.json({ error: retryMessage(byIp.retryAfterSec) }, { status: 429 })
+  }
+  // Par adresse : au-delà de 3 emails/heure on n'envoie plus, sans le signaler
+  // (même réponse que pour un compte inexistant).
+  const byEmail = await hitRateLimit(rateLimitKey('forgot-email', email), AUTH_LIMITS.forgotEmail)
+  if (!byEmail.allowed) return NextResponse.json({ ok: true })
 
   try {
     const [user] = await db

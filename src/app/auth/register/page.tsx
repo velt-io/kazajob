@@ -43,6 +43,8 @@ function RegisterForm() {
     if (err) {
       if (err.includes('fetch') || err.includes('network') || err.includes('Failed')) {
         setError('Connexion impossible au serveur. Vérifie ta connexion internet et réessaie.')
+      } else if (err.startsWith('Trop de tentatives')) {
+        setError(err)
       } else if (err.includes('already registered') || err.includes('already been registered')) {
         setError('Cet email est déjà utilisé. Connecte-toi ou utilise un autre email.')
       } else if (err.includes('Password')) {

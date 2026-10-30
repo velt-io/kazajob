@@ -50,6 +50,9 @@ export function useAuth() {
 
   const signIn = useCallback(async (email: string, password: string) => {
     const res = await nextSignIn('credentials', { email, password, redirect: false })
+    if (res?.code === 'rate_limited') {
+      return { error: 'Trop de tentatives de connexion. Patiente 15 minutes ou réinitialise ton mot de passe.' }
+    }
     return { error: res?.error ? 'Email ou mot de passe incorrect.' : null }
   }, [])
 
