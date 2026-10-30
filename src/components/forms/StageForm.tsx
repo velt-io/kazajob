@@ -88,7 +88,7 @@ export function StageForm({ job, companyId, onSuccess }: StageFormProps) {
 
     setSaving(false)
     onSuccess?.()
-    router.push('/recruiter/stages')
+    router.push('/recruteur/stages')
   }
 
   return (
@@ -162,7 +162,7 @@ export function StageForm({ job, companyId, onSuccess }: StageFormProps) {
       )}
 
       <div className="flex gap-3">
-        <Button type="button" kind="outline" full onClick={() => router.push('/recruiter/stages')}>
+        <Button type="button" kind="outline" full onClick={() => router.push('/recruteur/stages')}>
           Annuler
         </Button>
         <Button type="submit" kind="primary" full loading={saving}>

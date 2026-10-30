@@ -5,20 +5,20 @@ const FOOTER_LINKS = [
   {
     title: 'Candidats',
     links: [
-      { label: "Offres d'emploi", href: '/candidate/jobs' },
+      { label: "Offres d'emploi", href: '/candidat/offres' },
       { label: 'Radar Emploi 974/976', href: '/radar-emploi' },
-      { label: 'Mon profil', href: '/candidate/profile' },
-      { label: 'Candidatures', href: '/candidate/applications' },
-      { label: 'Favoris', href: '/candidate/favorites' },
+      { label: 'Mon profil', href: '/candidat/profil' },
+      { label: 'Candidatures', href: '/candidat/candidatures' },
+      { label: 'Favoris', href: '/candidat/favoris' },
     ],
   },
   {
     title: 'Recruteurs',
     links: [
-      { label: 'Publier une offre', href: '/auth/register?role=recruiter' },
+      { label: 'Publier une offre', href: '/inscription?role=recruiter' },
       { label: 'Demander une démo', href: '/demo' },
-      { label: 'Espace recruteur', href: '/recruiter/dashboard' },
-      { label: 'Voir les candidats', href: '/recruiter/applications' },
+      { label: 'Espace recruteur', href: '/recruteur/tableau-de-bord' },
+      { label: 'Voir les candidats', href: '/recruteur/candidatures' },
     ],
   },
   {

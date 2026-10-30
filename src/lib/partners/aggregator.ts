@@ -32,7 +32,7 @@ export function generateXMLFeed(jobs: PartnerJob[]): string {
   const items = jobs.map(job => `
     <job>
       <title><![CDATA[${job.title}]]></title>
-      <url>https://kazajob.re/candidate/jobs/${job.id}</url>
+      <url>https://kazajob.re/candidat/offres/${job.id}</url>
       <company><![CDATA[${job.company.name}]]></company>
       <city><![CDATA[${job.location}]]></city>
       <state>974</state>

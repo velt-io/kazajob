@@ -83,7 +83,7 @@ function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTIO
         )}
       </div>
 
-      <Link href={`/auth/register?role=recruiter&plan=${plan.id}`}>
+      <Link href={`/inscription?role=recruiter&plan=${plan.id}`}>
         <Button
           kind={isHighlight ? 'primary' : 'outline'}
           size="lg"
@@ -139,7 +139,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
               au même endroit. Simple, rapide, pensé pour les entreprises du 974.
             </p>
             <div className="flex flex-wrap gap-3 mb-5">
-              <Link href="/auth/register?role=recruiter">
+              <Link href="/inscription?role=recruiter">
                 <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>{ctaLabel}</Button>
               </Link>
               <a href="#tarifs-pro">
@@ -221,7 +221,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
                   Invitez votre équipe RH. Chaque recruteur a son tableau de bord, les offres sont partagées.
                 </p>
               </div>
-              <Link href="/auth/register?role=recruiter" className="mt-4">
+              <Link href="/inscription?role=recruiter" className="mt-4">
                 <Button kind="primary" size="md" full>Créer mon compte entreprise</Button>
               </Link>
             </div>
@@ -273,7 +273,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
           title={<>Publiez vos offres<br /><span style={{ color: KZ.violet }}>gratuitement.</span></>}
           text="Pendant le lancement de Kazajob, les entreprises réunionnaises publient sans payer et sans carte bancaire. Profitez-en pour constituer votre vivier de talents."
           actions={
-            <Link href="/auth/register?role=recruiter">
+            <Link href="/inscription?role=recruiter">
               <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>J&apos;en profite</Button>
             </Link>
           }
@@ -392,7 +392,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
         text="Créez votre compte entreprise en 3 minutes et publiez votre première offre dès aujourd'hui."
         actions={
           <>
-            <Link href="/auth/register?role=recruiter">
+            <Link href="/inscription?role=recruiter">
               <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>{ctaLabel}</Button>
             </Link>
             <Link href="/contact">

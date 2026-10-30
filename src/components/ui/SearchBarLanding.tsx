@@ -16,7 +16,7 @@ export function SearchBarLanding() {
     const params = new URLSearchParams()
     if (query.trim()) params.set('q', query.trim())
     if (location) params.set('location', location)
-    router.push(`/candidate/jobs${params.toString() ? '?' + params.toString() : ''}`)
+    router.push(`/candidat/jobs${params.toString() ? '?' + params.toString() : ''}`)
   }
 
   return (

@@ -65,7 +65,7 @@ export function useAuth() {
     if (role === 'recruiter') {
       document.cookie = 'kazajob_signup_role=recruiter; path=/; max-age=600; samesite=lax'
     }
-    nextSignIn(provider, { callbackUrl: '/auth/post-oauth' })
+    nextSignIn(provider, { callbackUrl: '/connexion/oauth' })
   }, [])
 
   const signUp = useCallback(async (

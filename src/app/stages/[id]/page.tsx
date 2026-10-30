@@ -181,7 +181,7 @@ export default function StageDetailPage() {
                 </div>
               ) : (
                 <Button kind="primary" size="lg" full onClick={() => {
-                  if (!profile) { router.push('/auth/login'); return }
+                  if (!profile) { router.push('/connexion'); return }
                   setApplyModal(true)
                 }}>
                   Candidater

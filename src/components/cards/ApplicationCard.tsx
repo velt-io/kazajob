@@ -34,7 +34,7 @@ export function ApplicationCard({ application, showActions }: ApplicationCardPro
         {statusInfo.label}
       </Badge>
       {showActions && (
-        <Link href={`/candidate/applications/${application.id}`} className="text-[var(--kz-mute)] hover:text-[var(--kz-orange)]">
+        <Link href={`/candidat/candidatures/${application.id}`} className="text-[var(--kz-mute)] hover:text-[var(--kz-orange)]">
           <ArrowRight size={16} />
         </Link>
       )}

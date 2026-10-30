@@ -203,7 +203,7 @@ export async function runDemoSeed(db: typeof defaultDb, password: string): Promi
     }
     await db.insert(notifications).values({
       userId: candidateIds[ci], type: 'new_job_match', title: 'Nouvelle offre pour toi',
-      message: 'Une offre correspondant à tes compétences vient d’être publiée.', link: '/candidate/jobs',
+      message: 'Une offre correspondant à tes compétences vient d’être publiée.', link: '/candidat/offres',
     })
   }
   for (const [jobId, n] of counts) await db.update(jobs).set({ applicationsCount: n }).where(sql`${jobs.id} = ${jobId}`)

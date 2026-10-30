@@ -138,7 +138,7 @@ export default async function RadarEmploiPage() {
           <TrendingUp size={28} className="mx-auto mb-2" color={KZ.violet} />
           <h2 className="text-xl font-extrabold text-[var(--kz-ink)] mb-2">Trouvez votre prochain job péi</h2>
           <p className="text-sm text-[var(--kz-mute)] mb-4 max-w-[460px] mx-auto">Des centaines d&apos;opportunités locales, le matching IA et KazaCoach pour booster vos chances.</p>
-          <Link href="/candidate/jobs">
+          <Link href="/candidat/offres">
             <span className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-[var(--kz-edge)] font-bold text-sm"
               style={{ background: KZ.orange, color: KZ.ink, boxShadow: '3px 3px 0 var(--kz-shadow)' }}>
               Voir les offres <ArrowRight size={15} />

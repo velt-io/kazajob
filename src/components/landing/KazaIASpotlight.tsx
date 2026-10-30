@@ -77,7 +77,7 @@ export function KazaIASpotlight() {
               ))}
             </div>
 
-            <Link href="/auth/register">
+            <Link href="/inscription">
               <Button kind="violet" size="lg" iconRight={<ArrowRight size={16} />}>
                 Essayer KazaIA gratuitement
               </Button>

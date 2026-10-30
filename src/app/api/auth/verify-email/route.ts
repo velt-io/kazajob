@@ -10,7 +10,7 @@ import { markEmailVerified, readVerifyToken, verifyVerifyToken } from '@/lib/ema
 
 export async function GET(req: NextRequest) {
   const token = req.nextUrl.searchParams.get('token') ?? ''
-  const done = (status: 'ok' | 'invalid') => NextResponse.redirect(new URL(`/auth/email-verified?status=${status}`, req.url))
+  const done = (status: 'ok' | 'invalid') => NextResponse.redirect(new URL(`/email-confirme?status=${status}`, req.url))
 
   const parsed = readVerifyToken(token)
   if (!parsed) return done('invalid')

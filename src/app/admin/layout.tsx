@@ -10,25 +10,25 @@ import { FullPageLoader } from '@/components/ui/LogoLoader'
 import { KZ } from '@/lib/constants'
 
 const NAV_ITEMS: NavItem[] = [
-  { href: '/admin/dashboard',      label: 'Dashboard',        icon: <LayoutDashboard size={16} /> },
-  { href: '/admin/analytics',      label: 'Analytics',        icon: <BarChart2 size={16} /> },
-  { href: '/admin/traffic',        label: 'Trafic',           icon: <Activity size={16} /> },
-  { href: '/admin/users',          label: 'Utilisateurs',     icon: <Users size={16} /> },
-  { href: '/admin/jobs',           label: 'Offres',           icon: <Briefcase size={16} /> },
+  { href: '/admin/tableau-de-bord',      label: 'Dashboard',        icon: <LayoutDashboard size={16} /> },
+  { href: '/admin/statistiques',      label: 'Analytics',        icon: <BarChart2 size={16} /> },
+  { href: '/admin/trafic',        label: 'Trafic',           icon: <Activity size={16} /> },
+  { href: '/admin/utilisateurs',          label: 'Utilisateurs',     icon: <Users size={16} /> },
+  { href: '/admin/offres',           label: 'Offres',           icon: <Briefcase size={16} /> },
   { href: '/admin/stages',         label: 'Stages',           icon: <ClipboardList size={16} /> },
-  { href: '/admin/companies',      label: 'Entreprises',      icon: <Building2 size={16} /> },
-  { href: '/admin/events',         label: 'KazaEvents',       icon: <Star size={16} /> },
+  { href: '/admin/entreprises',      label: 'Entreprises',      icon: <Building2 size={16} /> },
+  { href: '/admin/evenements',         label: 'KazaEvents',       icon: <Star size={16} /> },
   { href: '/admin/notifications',  label: 'Notifications',    icon: <Bell size={16} /> },
-  { href: '/admin/skills',         label: 'Compétences',      icon: <BookOpen size={16} /> },
-  { href: '/admin/ai',             label: 'KazaIA Stats',     icon: <Sparkles size={16} /> },
-  { href: '/admin/plans',          label: 'Forfaits',         icon: <Tag size={16} /> },
-  { href: '/admin/subscriptions',  label: 'Abonnements',      icon: <CreditCard size={16} /> },
-  { href: '/admin/launch',         label: 'Lancement',        icon: <Rocket size={16} /> },
-  { href: '/admin/promos',         label: 'Codes promo',      icon: <Ticket size={16} /> },
-  { href: '/admin/demo',           label: 'Démos / RDV',      icon: <CalendarClock size={16} /> },
-  { href: '/admin/bug-reports',    label: 'Signalements',     icon: <Bug size={16} /> },
-  { href: '/admin/backup',         label: 'Sauvegarde',       icon: <HardDrive size={16} /> },
-  { href: '/admin/settings/tracking', label: 'Tracking & Ads', icon: <Radio size={16} /> },
+  { href: '/admin/competences',         label: 'Compétences',      icon: <BookOpen size={16} /> },
+  { href: '/admin/ia',             label: 'KazaIA Stats',     icon: <Sparkles size={16} /> },
+  { href: '/admin/forfaits',          label: 'Forfaits',         icon: <Tag size={16} /> },
+  { href: '/admin/abonnements',  label: 'Abonnements',      icon: <CreditCard size={16} /> },
+  { href: '/admin/lancement',         label: 'Lancement',        icon: <Rocket size={16} /> },
+  { href: '/admin/codes-promo',         label: 'Codes promo',      icon: <Ticket size={16} /> },
+  { href: '/admin/demos',           label: 'Démos / RDV',      icon: <CalendarClock size={16} /> },
+  { href: '/admin/signalements',    label: 'Signalements',     icon: <Bug size={16} /> },
+  { href: '/admin/sauvegardes',         label: 'Sauvegarde',       icon: <HardDrive size={16} /> },
+  { href: '/admin/parametres/suivi', label: 'Tracking & Ads', icon: <Radio size={16} /> },
 ]
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (!loading && (!profile || profile.role !== 'admin')) {
-      router.push('/auth/login')
+      router.push('/connexion')
     }
   }, [profile, loading, router])
 

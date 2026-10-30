@@ -155,7 +155,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
       description: `Une dérogation spéciale est active sur votre compte. Vous pouvez publier jusqu'à ${limitLabel} annonces actives ${until}.`,
       severity: 'info',
       primaryActionLabel: 'Publier une annonce',
-      primaryActionHref:  '/recruiter/jobs/new',
+      primaryActionHref:  '/recruteur/offres/nouvelle',
     }
   }
 
@@ -166,7 +166,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
         description: `Vous utilisez ${activeJobs}/${limitLabel} annonces actives pendant la phase de déploiement. Attendez l'expiration d'une annonce pour en publier une nouvelle.`,
         severity: 'warning',
         primaryActionLabel: 'Voir mes annonces',
-        primaryActionHref:  '/recruiter/jobs',
+        primaryActionHref:  '/recruteur/offres',
         secondaryActionLabel: 'Contacter Kazajob',
         secondaryActionHref:  '/contact',
       }
@@ -176,7 +176,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
       description: `Kazajob est en phase de déploiement. Vous pouvez publier vos annonces (${maxJobs === -1 ? '∞' : `${activeJobs}/${limitLabel}`}). Les offres d'abonnement seront disponibles prochainement.`,
       severity: 'success',
       primaryActionLabel: 'Publier une annonce',
-      primaryActionHref:  '/recruiter/jobs/new',
+      primaryActionHref:  '/recruteur/offres/nouvelle',
     }
   }
 
@@ -186,7 +186,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
       description: 'Vos annonces actuelles restent visibles jusqu\'à leur expiration. Pour publier de nouvelles annonces, choisissez une offre adaptée.',
       severity: 'warning',
       primaryActionLabel: 'Voir les offres',
-      primaryActionHref:  '/pricing',
+      primaryActionHref:  '/tarifs',
       secondaryActionLabel: 'Contacter Kazajob',
       secondaryActionHref:  '/contact',
     }
@@ -202,7 +202,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
       description: `Vous bénéficiez des fonctionnalités ${subRow?.planName ?? ''} pendant votre essai (${activeJobs}/${limitLabel === '-1' ? '∞' : limitLabel} annonces actives).`,
       severity: daysLeft <= 7 ? 'warning' : 'info',
       primaryActionLabel: 'Activer mon abonnement',
-      primaryActionHref:  '/recruiter/company',
+      primaryActionHref:  '/recruteur/entreprise',
     }
   }
   if (status === 'expired' || status === 'cancelled') {
@@ -211,7 +211,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
       description: 'Votre abonnement est expiré ou résilié. Vos annonces existantes restent visibles. Choisissez une offre pour reprendre la publication.',
       severity: 'danger',
       primaryActionLabel: 'Voir les offres',
-      primaryActionHref:  '/pricing',
+      primaryActionHref:  '/tarifs',
     }
   }
 
@@ -221,7 +221,7 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
       description: `Votre offre permet ${limitLabel} annonces actives. Vous en avez ${activeJobs}. Vous ne pouvez pas publier de nouvelle annonce pour le moment.`,
       severity: 'warning',
       primaryActionLabel: 'Passer à une offre supérieure',
-      primaryActionHref:  '/pricing',
+      primaryActionHref:  '/tarifs',
       secondaryActionLabel: 'Contacter Kazajob',
       secondaryActionHref:  '/contact',
     }
@@ -234,6 +234,6 @@ function buildMessage(ctx: MessageContext): CompanyBillingSummary['message'] {
       : `Vous utilisez ${activeJobs}/${maxJobs} annonces actives (forfait ${subRow?.planName ?? ''}).`,
     severity: 'success',
     primaryActionLabel: 'Publier une annonce',
-    primaryActionHref:  '/recruiter/jobs/new',
+    primaryActionHref:  '/recruteur/offres/nouvelle',
   }
 }

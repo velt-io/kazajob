@@ -95,7 +95,7 @@ export function JobCard({ job, isFavorite, onToggleFavorite, showMatch = true, c
         )}
       </div>
 
-      <Link href={`/candidate/jobs/${job.id}`} className="absolute inset-0" aria-label={job.title} />
+      <Link href={`/candidat/offres/${job.id}`} className="absolute inset-0" aria-label={job.title} />
     </div>
   )
 }

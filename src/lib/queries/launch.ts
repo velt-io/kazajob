@@ -278,7 +278,7 @@ export async function processLaunchReminders(now: Date = new Date()): Promise<nu
 
     await db.insert(notifications).values({
       userId: r.ownerId, type: 'launch_reminder', title, message,
-      link: '/recruiter/company', data: { palier, expiresAt: r.expiresAt.toISOString() },
+      link: '/recruteur/entreprise', data: { palier, expiresAt: r.expiresAt.toISOString() },
     })
     await db.update(launchCampaignEnrollments)
       .set({ lastReminderMilestone: palier })

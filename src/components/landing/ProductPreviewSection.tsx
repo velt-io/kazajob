@@ -71,7 +71,7 @@ export function ProductPreviewSection() {
               </div>
             ))}
           </div>
-          <Link href="/auth/register?role=recruiter">
+          <Link href="/inscription?role=recruiter">
             <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>Publier ma première offre</Button>
           </Link>
         </div>

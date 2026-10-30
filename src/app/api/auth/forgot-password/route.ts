@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 
     if (user && process.env.RESEND_API_KEY) {
       const token = createResetToken(user.id, user.passwordHash)
-      const resetUrl = `${APP_URL}/auth/reset-password?token=${encodeURIComponent(token)}`
+      const resetUrl = `${APP_URL}/nouveau-mot-de-passe?token=${encodeURIComponent(token)}`
       const { subject, html } = passwordResetEmail({ fullName: user.fullName || email.split('@')[0], resetUrl })
       await new Resend(process.env.RESEND_API_KEY).emails.send({ from: FROM, to: email, subject, html })
     }

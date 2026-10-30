@@ -140,7 +140,7 @@ export default function AdminNotificationsPage() {
             label="Lien (optionnel)"
             value={link}
             onChange={e => setLink(e.target.value)}
-            placeholder="/candidate/events"
+            placeholder="/candidat/evenements"
           />
 
           {sent && (

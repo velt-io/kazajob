@@ -21,7 +21,7 @@ export default function Page() {
         <p className="text-base text-[var(--kz-mute)] mb-8 max-w-[480px] mx-auto">
           Conseils carrière, tendances de l&apos;emploi à La Réunion et astuces recrutement — c&apos;est pour très vite.
         </p>
-        <Link href="/candidate/jobs">
+        <Link href="/candidat/offres">
           <Button kind="primary" size="lg">Voir les offres en attendant</Button>
         </Link>
       </div>

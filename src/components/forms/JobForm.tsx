@@ -132,7 +132,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
 
     setSaving(false)
     onSuccess?.()
-    router.push(admin ? '/admin/jobs' : asDraft ? '/recruiter/jobs?status=draft' : '/recruiter/jobs')
+    router.push(admin ? '/admin/offres' : asDraft ? '/recruteur/offres?status=draft' : '/recruteur/offres')
   }
 
   return (

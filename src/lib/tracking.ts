@@ -88,8 +88,8 @@ export function matchesRouteScope(integration: TrackingIntegration, pathname: st
   const scope = integration.route_scope
   if (!scope || scope.mode === 'all') return true
   if (scope.mode === 'public') return !/^\/(candidate|recruiter|admin)/.test(pathname)
-  if (scope.mode === 'candidate') return pathname.startsWith('/candidate')
-  if (scope.mode === 'recruiter') return pathname.startsWith('/recruiter')
+  if (scope.mode === 'candidate') return pathname.startsWith('/candidat')
+  if (scope.mode === 'recruiter') return pathname.startsWith('/recruteur')
   if (scope.mode === 'admin') return pathname.startsWith('/admin')
   if (scope.mode === 'custom') {
     if (scope.exclude?.some((p) => pathname.startsWith(p))) return false

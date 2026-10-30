@@ -284,7 +284,7 @@ export async function expirePublishedJobs(): Promise<number> {
       type: 'job_expired',
       title: 'Offre expirée',
       message: `« ${r.title} » n'est plus visible des candidats. Republiez-la en un clic pour 60 jours de plus.`,
-      link: '/recruiter/jobs?status=expired',
+      link: '/recruteur/offres?status=expired',
       data: { jobId: r.id },
     })))
   }

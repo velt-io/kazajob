@@ -45,7 +45,7 @@ export function CompanySwitcher() {
   if (memberships.length === 0) {
     return (
       <a
-        href="/recruiter/company-setup"
+        href="/recruteur/creation-entreprise"
         className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-line)] text-xs font-bold text-[var(--kz-ink)]"
         style={{ background: KZ.cream2 }}
       >
@@ -101,7 +101,7 @@ export function CompanySwitcher() {
               </button>
             ))}
           </div>
-          <a href="/recruiter/company-setup"
+          <a href="/recruteur/creation-entreprise"
             className="flex items-center gap-2 p-3 text-xs font-bold text-[var(--kz-ink)] hover:bg-[var(--kz-cream2)] transition-colors border-t border-[var(--kz-edge)]"
             style={{ background: KZ.cream2 }}>
             <Plus size={14} /> Créer / rejoindre une entreprise
