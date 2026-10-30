@@ -108,7 +108,7 @@ function RegisterForm() {
           <Logo size={36} />
         </div>
 
-        <h2 className="text-2xl lg:text-[28px] font-extrabold tracking-tight mb-2 text-[#1A1410]">Creer un compte</h2>
+        <h2 className="text-2xl lg:text-[28px] font-extrabold tracking-tight mb-2 text-[#1A1410]">Créer un compte</h2>
         <p className="text-sm text-[#6B5A4A] mb-6">
           Deja inscrit ?{' '}
           <Link href="/auth/login" className="font-bold" style={{ color: KZ.orange }}>Se connecter</Link>
@@ -159,7 +159,7 @@ function RegisterForm() {
             <span className="font-semibold" style={{ color: KZ.orange }}>politique de confidentialite</span>.
           </p>
           <Button kind="primary" size="lg" full iconRight={<ArrowRight size={16} />} loading={loading} type="submit">
-            {role === 'recruiter' ? 'Créer mon espace recruteur' : 'Creer mon compte — gratuit'}
+            {role === 'recruiter' ? 'Créer mon espace recruteur' : 'Créer mon compte — gratuit'}
           </Button>
           {role === 'recruiter' && (
             <p className="text-xs text-center text-[#6B5A4A] -mt-1">
@@ -171,13 +171,10 @@ function RegisterForm() {
           )}
         </form>
 
-        <div className="flex items-center gap-3 my-5 text-xs text-[#6B5A4A]">
-          <div className="flex-1 h-px bg-[#E8DDC9]" />ou<div className="flex-1 h-px bg-[#E8DDC9]" />
-        </div>
         <OAuthButtons role={role} />
 
         <p className="text-center text-xs text-[#6B5A4A] mt-6">
-          <Link href="/" className="hover:text-[#FF6B35] font-semibold">← Retour a l&apos;accueil</Link>
+          <Link href="/" className="hover:text-[#FF6B35] font-semibold">← Retour à l&apos;accueil</Link>
         </p>
       </div>
     </div>
