@@ -7,8 +7,14 @@ import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { profiles } from '@/lib/db/schema'
+import { AUTH_LIMITS, clientIp, hitRateLimit, rateLimitKey, retryMessage } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
+  const limited = await hitRateLimit(rateLimitKey('register-ip', clientIp(request.headers)), AUTH_LIMITS.register)
+  if (!limited.allowed) {
+    return NextResponse.json({ error: retryMessage(limited.retryAfterSec), code: 'rate_limited' }, { status: 429 })
+  }
+
   let body: { email?: string; password?: string; fullName?: string; role?: string }
   try {
     body = await request.json()

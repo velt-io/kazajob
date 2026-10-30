@@ -7,10 +7,14 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { profiles } from '@/lib/db/schema'
 import { readResetToken, verifyResetToken } from '@/lib/password-reset'
+import { AUTH_LIMITS, clientIp, hitRateLimit, rateLimitKey, retryMessage } from '@/lib/rate-limit'
 
 const INVALID = 'Ce lien est invalide ou a expiré. Refais une demande de réinitialisation.'
 
 export async function POST(request: Request) {
+  const limited = await hitRateLimit(rateLimitKey('reset-ip', clientIp(request.headers)), AUTH_LIMITS.resetIp)
+  if (!limited.allowed) return NextResponse.json({ error: retryMessage(limited.retryAfterSec) }, { status: 429 })
+
   const body = await request.json().catch(() => ({}))
   const token = String(body?.token ?? '')
   const password = String(body?.password ?? '')

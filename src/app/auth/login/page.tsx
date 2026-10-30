@@ -25,7 +25,7 @@ export default function LoginPage() {
     setError('')
     const { error: err } = await signIn(email, password)
     if (err) {
-      setError('Email ou mot de passe incorrect.')
+      setError(err)
       setLoading(false)
       return
     }

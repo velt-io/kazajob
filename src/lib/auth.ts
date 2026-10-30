@@ -3,7 +3,7 @@
  * Credentials (email + mot de passe), sessions JWT.
  * `profiles` = table utilisateur (colonne `password_hash`).
  */
-import NextAuth, { type NextAuthConfig } from 'next-auth'
+import NextAuth, { CredentialsSignin, type NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import Google from 'next-auth/providers/google'
 import LinkedIn from 'next-auth/providers/linkedin'
@@ -11,6 +11,12 @@ import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { profiles } from '@/lib/db/schema'
+import { AUTH_LIMITS, clearRateLimit, clientIp, hitRateLimit, rateLimitKey } from '@/lib/rate-limit'
+
+/** Trop de tentatives : code renvoyé au client (signIn(...).code). */
+class RateLimited extends CredentialsSignin {
+  code = 'rate_limited'
+}
 
 // Providers OAuth activés seulement si leurs identifiants sont configurés.
 const oauthProviders: NextAuthConfig['providers'] = []
@@ -23,10 +29,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: { email: {}, password: {} },
-      async authorize(creds) {
+      async authorize(creds, request) {
         const email = String(creds?.email ?? '').toLowerCase().trim()
         const password = String(creds?.password ?? '')
         if (!email || !password) return null
+
+        // Anti-abus : par compte (échecs, remis à zéro au succès) et par IP.
+        const emailKey = rateLimitKey('login-email', email)
+        const [byEmail, byIp] = await Promise.all([
+          hitRateLimit(emailKey, AUTH_LIMITS.loginEmail),
+          hitRateLimit(rateLimitKey('login-ip', clientIp(request.headers)), AUTH_LIMITS.loginIp),
+        ])
+        if (!byEmail.allowed || !byIp.allowed) throw new RateLimited()
 
         const [user] = await db
           .select()
@@ -38,6 +52,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const ok = await bcrypt.compare(password, user.passwordHash)
         if (!ok) return null
 
+        await clearRateLimit(emailKey)
         return { id: user.id, email: user.email, name: user.fullName, role: user.role }
       },
     }),
