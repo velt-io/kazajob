@@ -83,8 +83,7 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
               {/* CTA nouvelle offre */}
               <a
                 href="/recruteur/offres/nouvelle"
-                className="flex items-center justify-center gap-2 p-3 rounded-xl border border-[var(--kz-edge)] font-bold text-sm transition-all"
-                style={{ background: KZ.orange, color: KZ.ink, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
+                className="flex items-center justify-center gap-2 p-3 font-bold text-sm transition-all rounded-xl uppercase tracking-[0.08em] text-white border border-[#F0ABFC]/60 bg-[linear-gradient(120deg,#7C3AED,#A855F7_45%,#E879F9)] shadow-[0_0_22px_-4px_rgba(232,121,249,0.75)] hover:-translate-y-0.5"
               >
                 <Plus size={16} />
                 Nouvelle offre
