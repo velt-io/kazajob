@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { createJob, initialJobStatus, listRecruiterJobs } from '@/lib/queries/jobs'
 import { canPublishJob, getActiveMembership } from '@/lib/queries/companies'
+import { isEmailVerified, UNVERIFIED_PUBLISH_ERROR } from '@/lib/email-verification'
 
 // GET /api/recruiter/jobs — mes offres
 export async function GET() {
@@ -34,6 +35,10 @@ export async function POST(req: NextRequest) {
       )
     }
     companyId = membership.companyId
+    // Anti-arnaque : publication réservée aux adresses confirmées (brouillon autorisé).
+    if (initialJobStatus(body) === 'published' && !(await isEmailVerified(userId))) {
+      return NextResponse.json({ error: UNVERIFIED_PUBLISH_ERROR, code: 'email_unverified' }, { status: 403 })
+    }
     // Plafond d'offres actives selon le forfait (un brouillon n'en consomme pas).
     const quota = initialJobStatus(body) === 'published' ? await canPublishJob(companyId) : { ok: true as const }
     if (!quota.ok) {

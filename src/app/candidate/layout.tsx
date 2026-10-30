@@ -10,6 +10,7 @@ import { Footer } from '@/components/layout/Footer'
 import { useAuth } from '@/features/auth/useAuth'
 import { FullPageLoader } from '@/components/ui/LogoLoader'
 import { ChatAssistantDrawer } from '@/components/ui/ChatAssistantDrawer'
+import { EmailVerifyBanner } from '@/components/auth/EmailVerifyBanner'
 import { BugReportWidget } from '@/components/feedback/BugReportWidget'
 import { useGamification, getLevel } from '@/features/gamification/useGamification'
 import { KZ } from '@/lib/constants'
@@ -74,6 +75,7 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
         searchPlaceholder="Metier, entreprise, ville..."
         onMenuClick={() => setSidebarOpen(true)}
       />
+      {profile.email_verified === false && <EmailVerifyBanner email={profile.email} />}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
           title="Candidat"

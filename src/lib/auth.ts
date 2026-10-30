@@ -12,6 +12,7 @@ import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { profiles } from '@/lib/db/schema'
 import { AUTH_LIMITS, clearRateLimit, clientIp, hitRateLimit, rateLimitKey } from '@/lib/rate-limit'
+import { markEmailVerified } from '@/lib/email-verification'
 
 /** Trop de tentatives : code renvoyé au client (signIn(...).code). */
 class RateLimited extends CredentialsSignin {
@@ -68,6 +69,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const [existing] = await db
         .select({ id: profiles.id })
         .from(profiles).where(eq(profiles.email, email)).limit(1)
+
+      // Google / LinkedIn garantissent l'adresse : un compte email existant devient vérifié.
+      if (existing) await markEmailVerified(existing.id)
 
       if (!existing) {
         // Rôle voulu (déposé en cookie avant la redirection, sinon candidat).

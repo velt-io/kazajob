@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { changeJobStatus, deleteRecruiterJob, getRecruiterJob, updateJob } from '@/lib/queries/jobs'
 import { canPublishJob } from '@/lib/queries/companies'
 import type { JobAction } from '@/lib/job-lifecycle'
+import { isEmailVerified, UNVERIFIED_PUBLISH_ERROR } from '@/lib/email-verification'
 
 async function requireUser() {
   const session = await auth()
@@ -41,6 +42,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (action) {
     const job = await getRecruiterJob(userId, id)
     if (!job) return NextResponse.json({ error: 'Introuvable' }, { status: 404 })
+    if (action === 'publish' && !(await isEmailVerified(userId))) {
+      return NextResponse.json({ error: UNVERIFIED_PUBLISH_ERROR, code: 'email_unverified' }, { status: 403 })
+    }
     // Mise en ligne : revérifier le plafond du forfait.
     if (action === 'publish' && !job.is_active && job.company_id) {
       const quota = await canPublishJob(job.company_id)
