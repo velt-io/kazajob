@@ -70,7 +70,8 @@ function RegisterForm() {
       {/* Panneau gauche */}
       <div className="hidden md:block relative overflow-hidden border-r border-[#1A1410]">
         <img
-          src="/assets/img/logimage.png"
+          src="/assets/img/logimage.webp"
+          decoding="async"
           alt=""
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover"

@@ -1,3 +1,4 @@
+import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { listCampaignsAdmin, createCampaign, type CampaignCreateInput } from '@/lib/queries/launch-admin'
@@ -21,5 +22,6 @@ export async function POST(req: NextRequest) {
 
   const result = await createCampaign(session.user.id, session.user.email ?? null, body as CampaignCreateInput)
   if ('error' in result) return NextResponse.json({ error: result.error }, { status: 400 })
+  revalidateTag('launch', 'max')
   return NextResponse.json(result, { status: 201 })
 }

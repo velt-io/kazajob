@@ -8,6 +8,10 @@ import { conversations, messages } from '@/lib/db/schema'
 import type { Conversation, Message } from '@/lib/types'
 import { serialize } from './_serialize'
 
+// Seules les infos publiques de l'interlocuteur sont envoyées au client
+// (jamais le hash de mot de passe, l'email, le téléphone ou le CV).
+const PUBLIC_PROFILE = { columns: { id: true, fullName: true, avatarUrl: true, avatarConfig: true, role: true } } as const
+
 export async function isParticipant(conversationId: string, userId: string): Promise<boolean> {
   const [row] = await db
     .select({ candidateId: conversations.candidateId, recruiterId: conversations.recruiterId })
@@ -21,8 +25,8 @@ export async function listConversations(userId: string): Promise<Conversation[]>
   const rows = await db.query.conversations.findMany({
     where: or(eq(conversations.candidateId, userId), eq(conversations.recruiterId, userId)),
     with: {
-      candidate: true,
-      recruiter: true,
+      candidate: PUBLIC_PROFILE,
+      recruiter: PUBLIC_PROFILE,
       job: { columns: { title: true }, with: { company: { columns: { name: true } } } },
     },
     orderBy: (c, { desc }) => [desc(c.lastMessageAt)],
@@ -33,7 +37,7 @@ export async function listConversations(userId: string): Promise<Conversation[]>
 export async function listMessages(conversationId: string): Promise<Message[]> {
   const rows = await db.query.messages.findMany({
     where: eq(messages.conversationId, conversationId),
-    with: { sender: true },
+    with: { sender: PUBLIC_PROFILE },
     orderBy: (m, { asc }) => [asc(m.createdAt)],
   })
   return serialize<Message[]>(rows)

@@ -18,7 +18,7 @@ export interface Interview {
   status: 'pending' | 'confirmed' | 'cancelled' | 'done'
   reminder_sent: boolean
   created_at: string
-  candidate?: { id: string; full_name: string; email: string; avatar_url?: string }
+  candidate?: { id: string; full_name: string; email: string; avatar_url?: string; avatar_config?: Record<string, unknown> | null }
   recruiter?: { id: string; full_name: string }
   job?: { title: string; company?: { name: string } }
 }

@@ -74,7 +74,7 @@ export default function AdminUsersPage() {
                 <tr key={user.id} className="border-b border-[#E8DDC9] last:border-0 hover:bg-[#FBEFE0] transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2.5">
-                      <Avatar name={user.full_name} src={user.avatar_url} size={32} color={KZ.orangeSoft} />
+                      <Avatar name={user.full_name} src={user.avatar_url} avatarConfig={user.avatar_config} size={32} color={KZ.orangeSoft} />
                       <span className="text-sm font-semibold text-[#1A1410]">{user.full_name}</span>
                     </div>
                   </td>

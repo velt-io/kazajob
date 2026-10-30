@@ -191,7 +191,7 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
               className="flex items-center gap-2 px-2 py-1 rounded-xl border border-[#1A1410] hover:bg-[#FBEFE0] transition-colors"
               style={{ background: KZ.paper }}
             >
-              <Avatar name={profile.full_name} src={profile.avatar_url} size={28} color={KZ.orangeSoft} badge />
+              <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={28} color={KZ.orangeSoft} badge />
               <span className="hidden md:block text-sm font-bold text-[#1A1410] max-w-[100px] truncate">
                 {profile.full_name.split(' ')[0]}
               </span>

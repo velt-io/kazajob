@@ -34,14 +34,14 @@ function ViewToggle({ view, onNavigate }: { view: View; onNavigate?: () => void 
 
   useEffect(() => {
     router.prefetch('/')
-    router.prefetch('/?view=entreprise')
+    router.prefetch('/entreprise')
   }, [router])
 
   const go = (v: View) => {
     if (active === v) return
     setActive(v)
     onNavigate?.()
-    router.push(v === 'candidat' ? '/' : '/?view=entreprise', { scroll: false })
+    router.push(v === 'candidat' ? '/' : '/entreprise')
   }
 
   return (
@@ -114,7 +114,7 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
               className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-[#1A1410] hover:bg-[#FBEFE0] transition-colors"
               style={{ background: KZ.paper }}
             >
-              <Avatar name={profile.full_name} src={profile.avatar_url} size={28} color={KZ.orangeSoft} />
+              <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={28} color={KZ.orangeSoft} />
               <span className="hidden sm:block text-sm font-bold text-[#1A1410] max-w-[120px] truncate">
                 {profile.full_name.split(' ')[0]}
               </span>
@@ -202,7 +202,7 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
 
             {profile && (
               <div className="flex items-center gap-3 p-3 rounded-xl border border-[#E8DDC9] mb-4" style={{ background: KZ.cream2 }}>
-                <Avatar name={profile.full_name} src={profile.avatar_url} size={36} color={KZ.orangeSoft} />
+                <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={36} color={KZ.orangeSoft} />
                 <div className="min-w-0">
                   <div className="text-sm font-bold text-[#1A1410] truncate">{profile.full_name}</div>
                   <div className="text-xs text-[#6B5A4A] capitalize">{profile.role}</div>

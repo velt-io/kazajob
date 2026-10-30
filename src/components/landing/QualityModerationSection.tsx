@@ -1,6 +1,5 @@
 import { ShieldCheck, Flag, UserCheck, Eye } from 'lucide-react'
 import { KZ } from '@/lib/constants'
-import { SectionDecor } from './SectionDecor'
 
 const ITEMS = [
   {
@@ -32,7 +31,6 @@ const ITEMS = [
 export function QualityModerationSection() {
   return (
     <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410] relative overflow-hidden" style={{ background: KZ.cream }}>
-      <SectionDecor src="/assets/img/deco/moderation.png" opacity={0.08} position="left center" size="contain" />
       <div className="max-w-[1280px] mx-auto relative z-10">
         <div className="text-center mb-12">
           <p className="kz-eyebrow mb-2" style={{ color: KZ.green }}>Qualité garantie</p>

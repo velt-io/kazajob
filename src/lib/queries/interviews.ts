@@ -73,7 +73,7 @@ export async function listInterviews(userId: string, isRecruiter: boolean) {
   const rows = await db.query.interviews.findMany({
     where: isRecruiter ? eq(interviews.recruiterId, userId) : eq(interviews.candidateId, userId),
     with: {
-      candidate: { columns: { id: true, fullName: true, email: true, avatarUrl: true } },
+      candidate: { columns: { id: true, fullName: true, email: true, avatarUrl: true, avatarConfig: true } },
       recruiter: { columns: { id: true, fullName: true } },
       job: { columns: { title: true }, with: { company: { columns: { name: true } } } },
     },

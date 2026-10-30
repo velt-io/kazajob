@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowRight, Sparkles, Users, Briefcase, MapPin } from 'lucide-react'
 import { NavLanding } from '@/components/layout/NavLanding'
 import { Footer } from '@/components/layout/Footer'
@@ -7,91 +8,79 @@ import { Badge } from '@/components/ui/Badge'
 import { Tag } from '@/components/ui/Tag'
 import { SearchBarLanding } from '@/components/ui/SearchBarLanding'
 import { HeroIllustrationNew } from '@/components/illustrations/HeroIllustrationNew'
-import { Soleil, Palme, Hibiscus, Sparkle } from '@/components/illustrations/Tropical'
-import { ReassuranceBar }     from '@/components/landing/ReassuranceBar'
+import { Soleil, Sparkle } from '@/components/illustrations/Tropical'
 import { WhySection }         from '@/components/landing/WhySection'
 import { KazaIASpotlight }    from '@/components/landing/KazaIASpotlight'
 import { RoadmapSection }     from '@/components/landing/RoadmapSection'
 import { FaqSection }         from '@/components/landing/FaqSection'
-import { EnterpriseLanding }  from '@/components/landing/EnterpriseLanding'
 import { SectionDecor }       from '@/components/landing/SectionDecor'
+import { SectorsSection }     from '@/components/landing/SectorsSection'
+import { AvatarShowcaseSection } from '@/components/landing/AvatarShowcaseSection'
+import { IllustratedCta }     from '@/components/landing/IllustratedCta'
 import { KZ } from '@/lib/constants'
-import { getLandingData } from '@/lib/queries/landing'
-import { getActiveLaunchPublicData } from '@/lib/queries/launch'
+import { getCachedLandingData, getCachedLaunchPublicData } from '@/lib/queries/cached'
 import { formatSalary } from '@/lib/utils'
 
-function launchDaysLeft(endsAt: string | null): number | null {
-  if (!endsAt) return null
-  const d = Math.ceil((new Date(endsAt).getTime() - Date.now()) / 86_400_000)
-  return d > 0 ? d : null
-}
+import { launchDaysLeft } from '@/lib/launch'
+
+// Page pré-générée (ISR) : servie instantanément, régénérée en arrière-plan toutes les 5 min.
+export const revalidate = 300
 
 // Contenu marketing statique — ne change pas en fonction des données
 const HOW_STEPS = [
   {
     n: '1', color: KZ.violetSoft, icon: <Users size={28} />,
-    title: 'Cree ton profil',
+    title: 'Crée ton profil',
     desc: "3 minutes chrono. Importe ton CV, on l'analyse, on remplit pour toi.",
   },
   {
     n: '2', color: KZ.yellowSoft, icon: <Sparkles size={28} />,
     title: 'On matche pour toi',
-    desc: 'Notre IA croise tes competences avec toutes les offres locales. Top 5 chaque matin.',
+    desc: 'Notre IA croise tes compétences avec les offres locales et te montre celles qui te correspondent.',
   },
   {
     n: '3', color: KZ.greenSoft, icon: <ArrowRight size={28} />,
     title: 'Postule en 1 clic',
-    desc: 'CV pre-rempli, message personnalise suggere. Le recruteur te repond direct.',
+    desc: 'CV pré-rempli, message personnalisé suggéré. Le recruteur te répond directement.',
   },
 ]
 
 const CARD_COLORS = [KZ.orangeSoft, KZ.violetSoft, KZ.greenSoft, KZ.yellowSoft, KZ.blueSoft]
 
-export default async function LandingPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ view?: string }>
-}) {
-  const params = await searchParams
-  const isEnterprise = params?.view === 'entreprise'
+// Badge « Nouveau » : offre publiée il y a moins de 3 jours (évalué à chaque régénération ISR)
+function isRecent(iso: string): boolean {
+  return Date.now() - new Date(iso).getTime() < 86_400_000 * 3
+}
+
+export default async function LandingPage() {
   const [{ featuredJobs, companies, stats }, launchData] = await Promise.all([
-    getLandingData(),
-    getActiveLaunchPublicData(),
+    getCachedLandingData(),
+    getCachedLaunchPublicData(),
   ])
   const launchDays = launchDaysLeft(launchData?.endsAt ?? null)
 
   // Bande stats — vraies données si disponibles, sinon labels clairs
   const STATS_BAND = [
-    { v: stats.jobs > 0 ? `${stats.jobs.toLocaleString('fr-FR')}` : '—', l: 'Offres actives' },
-    { v: stats.companies > 0 ? `${stats.companies}` : '—', l: 'Entreprises locales' },
-    { v: stats.users > 0 ? `${stats.users.toLocaleString('fr-FR')}` : '—', l: 'Candidats inscrits' },
+    stats.jobs > 0 ? { v: stats.jobs.toLocaleString('fr-FR'), l: 'Offres actives' } : { v: '24', l: 'Communes couvertes' },
+    stats.companies > 0 ? { v: `${stats.companies}`, l: 'Entreprises locales' } : { v: '100 %', l: 'Local 974' },
+    stats.users > 0 ? { v: stats.users.toLocaleString('fr-FR'), l: 'Candidats inscrits' } : { v: '3 min', l: 'Pour créer ton profil' },
     { v: '0 €', l: 'Pour les candidats' },
   ]
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: KZ.cream }}>
-      <NavLanding view={isEnterprise ? 'entreprise' : 'candidat'} />
-
-      {/* ── VUE ENTREPRISE ──────────────────────────────────────── */}
-      {isEnterprise ? (
-        <>
-          <EnterpriseLanding stats={stats} launchDays={launchDays} />
-          <Footer />
-        </>
-      ) : (
-      /* ── VUE CANDIDAT (existante) ───────────────────────────── */
-      <>
+      <NavLanding view="candidat" />
 
       {/* HERO ──────────────────────────────────────────────── */}
       <section className="px-4 sm:px-8 lg:px-16 pt-10 lg:pt-20 pb-0 relative overflow-hidden" style={{ background: KZ.cream }}>
-        <SectionDecor className="w-full" src="/assets/img/logimage.png" opacity={0.08} position="center bottom" size="cover" />
+        <SectionDecor className="w-full" src="/assets/img/logimage.webp" opacity={0.08} position="center bottom" size="cover" />
         <div className="absolute top-16 left-4 opacity-40 hidden lg:block"><Sparkle size={36} color={KZ.violet} /></div>
         <div className="absolute bottom-56 right-10 opacity-40 hidden lg:block"><Sparkle size={28} color={KZ.green} /></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center max-w-[1280px] mx-auto relative z-10">
           <div>
             <Badge color="orange" size="lg" icon={<MapPin size={12} />} className="mb-5">
-              974 · La Reunion
+              974 · La Réunion
             </Badge>
             <h1 className="text-[48px] sm:text-[64px] lg:text-[80px] font-extrabold tracking-[-0.04em] leading-[0.92] text-[#1A1410] mb-5">
               Ton kaz<br />
@@ -99,8 +88,8 @@ export default async function LandingPage({
               ton pei.
             </h1>
             <p className="text-base lg:text-lg leading-relaxed text-[#2A2018] max-w-[520px] mb-6">
-              La plateforme d&apos;emploi qui matche vraiment les talents reunionnais
-              avec les meilleures opportunites locales. Avec un peu d&apos;IA et beaucoup de soleil.
+              La plateforme d&apos;emploi qui matche vraiment les talents réunionnais
+              avec les meilleures opportunités locales. Avec un peu d&apos;IA et beaucoup de soleil.
             </p>
 
             {/* Barre de recherche — composant client pour permettre la saisie */}
@@ -119,8 +108,12 @@ export default async function LandingPage({
           <div className="hidden lg:flex justify-center">
             <HeroIllustrationNew />
           </div>
+          {/* Illustration mobile / tablette */}
+          <div className="lg:hidden relative rounded-2xl border-[1.5px] border-[#1A1410] overflow-hidden aspect-[4/3] mt-2" style={{ boxShadow: '5px 5px 0 #1A1410' }}>
+            <Image src="/assets/img/homepage/hero.webp" alt="Deux jeunes Réunionnais devant le Piton de la Fournaise" fill sizes="100vw" className="object-cover" />
+          </div>
         </div>
-       <section className='my-10 '></section>   
+        <div className="my-10" />
       </section>
       {/* STATS BAND — vraies données ────────────────────────── */}
       <section className="px-4 sm:px-8 lg:px-16 py-6 lg:py-8 border-y border-[#1A1410]" style={{ background: KZ.ink }}>
@@ -152,18 +145,18 @@ export default async function LandingPage({
       <section className="py-12 lg:py-20 relative overflow-hidden" style={{ background: KZ.cream2 }}>
         {/* Perso 1 — masqué sur mobile */}
         <div className="hidden xl:block absolute left-[-120px] top-[0px]  overflow-hidden z-10 pointer-events-none select-none" style={{ width: '22vw' }}>
-          <img src="/assets/img/homepage/perso1.png" alt="" aria-hidden className="w-full object-contain object-bottom drop-shadow-xl" />
+          <Image src="/assets/img/homepage/perso1.webp" alt="" aria-hidden width={700} height={1244} sizes="22vw" className="w-full h-auto object-contain object-bottom drop-shadow-xl" />
         </div>
         {/* Perso 2 — masqué sur mobile */}
         <div className="hidden xl:block absolute right-[-100px] top-[0px] overflow-hidden  z-10 pointer-events-none select-none" style={{ width: '22vw' }}>
-          <img src="/assets/img/homepage/perso2.png" alt="" aria-hidden className="w-full object-contain object-bottom drop-shadow-xl" />
+          <Image src="/assets/img/homepage/perso2.webp" alt="" aria-hidden width={700} height={1244} sizes="22vw" className="w-full h-auto object-contain object-bottom drop-shadow-xl" />
         </div>
 
         <div className="px-4 sm:px-8 lg:px-16 max-w-[1280px] mx-auto relative z-0">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-7">
             <div>
               <p className="kz-eyebrow mb-2" style={{ color: KZ.orange }}>Offres du moment</p>
-              <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410] max-w-[600px]">Des opportunites fraiches, livrees chaque matin.</h2>
+              <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410] max-w-[600px]">Des opportunités fraîches, mises à jour chaque jour.</h2>
             </div>
             <Link href="/candidate/jobs" className="shrink-0">
               <Button kind="outline" iconRight={<ArrowRight size={14} />}>Toutes les offres</Button>
@@ -173,10 +166,10 @@ export default async function LandingPage({
           {featuredJobs.length === 0 ? (
             <div className="text-center py-16">
               <Briefcase className="mx-auto mb-4 text-[#6B5A4A]" size={40} />
-              <p className="text-lg font-bold text-[#1A1410] mb-2">Les offres arrivent bientot</p>
-              <p className="text-sm text-[#6B5A4A] mb-6">Sois le premier a publier une offre ou a t&apos;inscrire.</p>
+              <p className="text-lg font-bold text-[#1A1410] mb-2">Les offres arrivent bientôt</p>
+              <p className="text-sm text-[#6B5A4A] mb-6">Crée ton profil dès maintenant : tu seras parmi les premiers à être contactés.</p>
               <div className="flex gap-3 justify-center">
-                <Link href="/auth/register"><Button kind="primary">Creer un compte</Button></Link>
+                <Link href="/auth/register"><Button kind="primary">Créer un compte</Button></Link>
                 <Link href="/auth/register?role=recruiter"><Button kind="outline">Publier une offre</Button></Link>
               </div>
             </div>
@@ -184,7 +177,7 @@ export default async function LandingPage({
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
               {featuredJobs.map((job, i) => {
                 const color = CARD_COLORS[i % CARD_COLORS.length]
-                const isNew = Date.now() - new Date(job.created_at).getTime() < 86400000 * 3
+                const isNew = isRecent(job.created_at)
                 const jobSkills = job.skills?.map((s) => s.skill?.name).filter(Boolean).slice(0, 3) ?? []
 
                 return (
@@ -236,6 +229,9 @@ export default async function LandingPage({
         </div>
       </section>
 
+      {/* SECTEURS ─────────────────────────────────────────────── */}
+      <SectorsSection variant="candidat" />
+
       {/* COMMENT CA MARCHE ──────────────────────────────────── */}
       <section id="comment" className="px-4 sm:px-8 lg:px-16 py-12 lg:py-20 relative overflow-hidden" style={{ background: KZ.cream }}>
         {/* <SectionDecor src="/assets/img/deco/comment.png" opacity={0.08} position="left center" size="contain" /> */}
@@ -266,17 +262,14 @@ export default async function LandingPage({
         </div>
       </section>
 
+      {/* AVATAR — postuler sans photo ───────────────────────── */}
+      <AvatarShowcaseSection />
+
       {/* POURQUOI KAZAJOB + COMPARATIF ──────────────────────── */}
       <WhySection />
 
       {/* KAZAIA SPOTLIGHT ───────────────────────────────────── */}
       <KazaIASpotlight />
-
-      {/* ROADMAP ─────────────────────────────────────────────── */}
-      <RoadmapSection />
-
-      {/* FAQ ─────────────────────────────────────────────────── */}
-      <FaqSection />
 
       {/* BANNIERE RECRUTEURS ────────────────────────────────── */}
       <section className="px-4 sm:px-8 lg:px-16 py-12 lg:py-16 relative overflow-hidden" style={{ background: KZ.ink }}>
@@ -289,68 +282,54 @@ export default async function LandingPage({
               <span style={{ color: KZ.orange }}>Pas de spam. Pas de bruit.</span>
             </h2>
             <p className="text-base leading-relaxed opacity-80 mb-6 max-w-[520px]" style={{ color: KZ.cream }}>
-              Offres illimitées, IA de tri automatique, pipeline Kanban et suivi de vos performances.{' '}
-              {launchDays ? `Phase de lancement — ${launchDays} jours restants.` : 'Essai 30 jours gratuit.'}
+              Publiez vos offres, recevez des candidats locaux triés par l&apos;IA et suivez tout votre recrutement au même endroit.{' '}
+              {launchDays ? `Offre de lancement : gratuit encore ${launchDays} jours, sans carte bancaire.` : 'Essai gratuit 30 jours.'}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/auth/register?role=recruiter">
                 <Button kind="primary" size="lg">Publier une offre — gratuit</Button>
               </Link>
-              <Link href="/?view=entreprise#tarifs-pro">
+              <Link href="/entreprise">
                 <Button kind="outline" size="lg" className="!text-[#FFF7EE] !border-[#FFF7EE] !bg-transparent">
-                  Voir les tarifs
+                  Découvrir Kazajob Entreprises
                 </Button>
               </Link>
             </div>
           </div>
-          <div className="hidden lg:grid grid-cols-2 gap-3" style={{ transform: 'rotate(2deg)' }}>
-            {[
-              { l: 'Offres actives', v: stats.jobs || '—', color: KZ.orangeSoft },
-              { l: 'Candidats', v: stats.users || '—', color: KZ.violetSoft },
-              { l: 'Entreprises', v: stats.companies || '—', color: KZ.greenSoft },
-              { l: 'Villes couvertes', v: '15', color: KZ.yellowSoft },
-            ].map((c) => (
-              <div key={c.l} className="text-center p-3 rounded-xl border border-[#1A1410]" style={{ background: c.color, boxShadow: '2px 2px 0 #1A1410' }}>
-                <div className="text-2xl font-extrabold text-[#1A1410]">{c.v}</div>
-                <div className="text-[10px] font-semibold text-[#6B5A4A]">{c.l}</div>
-              </div>
-            ))}
-          </div>
+          <Link href="/entreprise" className="block relative rounded-2xl border-[1.5px] border-[#FFF7EE] overflow-hidden aspect-[16/10] rotate-[1.5deg] transition-transform hover:rotate-0"
+            style={{ boxShadow: '6px 6px 0 #FF6B35' }}>
+            <Image src="/assets/img/scenes/recrutement.webp" alt="Une recruteuse réunionnaise rencontre un candidat" fill sizes="(min-width: 1024px) 480px, 100vw" className="object-cover" />
+          </Link>
         </div>
       </section>
 
-      {/* FOOTER CTA ─────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-20 text-center border-t border-[#1A1410]" style={{ background: KZ.cream }}>
-        <div className="flex justify-center gap-3 mb-5">
-          <Hibiscus size={40} />
-          <Soleil size={40} />
-          <Palme size={48} />
-        </div>
-        <h2 className="text-[40px] sm:text-[52px] lg:text-[64px] font-extrabold tracking-[-0.04em] leading-none text-[#1A1410] mb-4">
-          Alon commencé ?
-        </h2>
-        <p className="text-base lg:text-lg text-[#2A2018] mb-7 max-w-[540px] mx-auto">
-          3 minutes pour créer ton profil. 0 € pour postuler.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-          <Link href="/auth/register">
-            <Button kind="primary" size="lg" className="w-full sm:w-auto">Créer mon profil — gratuit</Button>
-          </Link>
-          <Link href="/?view=entreprise#tarifs-pro">
-            <Button kind="outline" size="lg" className="w-full sm:w-auto">Voir les tarifs recruteur</Button>
-          </Link>
-        </div>
-        <p className="text-xs text-[#6B5A4A]">
-          {launchDays
-            ? `Candidats : 100% gratuit · Recruteurs : lancement (${launchDays}j restants) · sans carte bancaire · Données hébergées en Europe`
-            : 'Candidats : 100% gratuit · Recruteurs : essai 30 jours, carte requise · Données hébergées en Europe'
-          }
-        </p>
-      </section>
+      {/* ROADMAP ─────────────────────────────────────────────── */}
+      <RoadmapSection />
+
+      {/* FAQ ─────────────────────────────────────────────────── */}
+      <FaqSection />
+
+      {/* CTA FINAL ─────────────────────────────────────────── */}
+      <IllustratedCta
+        image="/assets/img/scenes/cadre-tropical-2.webp"
+        title={<>Alon commencé&nbsp;?</>}
+        text="3 minutes pour créer ton profil. 0 € pour postuler. Ton prochain job t'attend quelque part sur l'île."
+        actions={
+          <>
+            <Link href="/auth/register">
+              <Button kind="primary" size="lg" className="w-full sm:w-auto">Créer mon profil — gratuit</Button>
+            </Link>
+            <Link href="/candidate/jobs">
+              <Button kind="outline" size="lg" className="w-full sm:w-auto">Parcourir les offres</Button>
+            </Link>
+          </>
+        }
+        footnote={launchDays
+          ? `Candidats : 100 % gratuit · Recruteurs : publication gratuite encore ${launchDays} jours · Données hébergées en Europe`
+          : 'Candidats : 100 % gratuit · Recruteurs : essai 30 jours · Données hébergées en Europe'}
+      />
 
       <Footer />
-      </>
-      )}
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { updateCampaignConfig, transitionCampaignState, type CampaignConfigPatch } from '@/lib/queries/launch-admin'
@@ -26,11 +27,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (body.transitionTo) {
     const { error } = await transitionCampaignState(session.user.id, session.user.email ?? null, id, body.transitionTo, body.version)
     if (error) return NextResponse.json({ error }, { status: 400 })
+    revalidateTag('launch', 'max')
     return NextResponse.json({ ok: true })
   }
   if (body.patch) {
     const { error } = await updateCampaignConfig(session.user.id, session.user.email ?? null, id, body.patch, body.version)
     if (error) return NextResponse.json({ error }, { status: 400 })
+    revalidateTag('launch', 'max')
     return NextResponse.json({ ok: true })
   }
   return NextResponse.json({ error: 'patch ou transitionTo requis' }, { status: 400 })

@@ -8,6 +8,7 @@ import { candidateSkills, profiles, skills } from '@/lib/db/schema'
 import type { Profile, Skill } from '@/lib/types'
 import { KAZA_BOOST_COST_XP, KAZA_BOOST_HOURS } from '@/lib/constants'
 import { scoreQuiz } from '@/lib/quiz'
+import { sanitizeAvatarConfig } from '@/lib/avatar'
 import { serialize } from './_serialize'
 
 type ProfileInsert = typeof profiles.$inferInsert
@@ -51,6 +52,8 @@ export async function updateProfile(
     if (apiKey in patch) set[column] = patch[apiKey]
   }
   if (Object.keys(set).length === 0) return
+  // L'avatar est rendu en SVG injecté dans le HTML : on ne stocke que des valeurs connues.
+  if (set.avatarConfig != null) set.avatarConfig = sanitizeAvatarConfig(set.avatarConfig)
   set.updatedAt = new Date()
   await db.update(profiles).set(set as Partial<ProfileInsert>).where(eq(profiles.id, userId))
 }

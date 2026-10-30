@@ -15,6 +15,7 @@ export interface TalentPoolEntry {
     id: string
     full_name: string
     avatar_url: string | null
+    avatar_config: Record<string, unknown> | null
     location: string | null
     bio: string | null
   }
@@ -44,6 +45,7 @@ export async function listPool(recruiterId: string): Promise<TalentPoolEntry[]> 
       candidateId: profiles.id,
       fullName: profiles.fullName,
       avatarUrl: profiles.avatarUrl,
+      avatarConfig: profiles.avatarConfig,
       location: profiles.location,
       bio: profiles.bio,
     })
@@ -61,6 +63,7 @@ export async function listPool(recruiterId: string): Promise<TalentPoolEntry[]> 
       id: r.candidateId,
       full_name: r.fullName,
       avatar_url: r.avatarUrl,
+      avatar_config: (r.avatarConfig ?? null) as Record<string, unknown> | null,
       location: r.location,
       bio: r.bio,
     },
