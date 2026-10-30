@@ -1317,3 +1317,50 @@ export function applicationStatusEmail(data: {
 
   return { subject, html: shell(conf.bg, body) }
 }
+
+// ══════════════════════════════════════════════════════════════════
+// TEMPLATE — Réinitialisation du mot de passe
+// ══════════════════════════════════════════════════════════════════
+
+export function passwordResetEmail(data: {
+  fullName: string
+  resetUrl: string
+}): { subject: string; html: string } {
+  const firstName = data.fullName.split(' ')[0].replace(/[<>&"]/g, '')
+  const subject = 'Réinitialise ton mot de passe Kazajob'
+
+  const body = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:28px 32px 16px;">
+          <h1 style="margin:0;font-size:28px;font-weight:900;color:${C.ink};
+            letter-spacing:-0.03em;line-height:1.1;font-family:Arial,sans-serif;">
+            Nouveau mot de passe
+          </h1>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:12px 32px 24px;">
+          <p style="margin:0;font-size:14px;color:#2A2018;line-height:1.6;font-family:Arial,sans-serif;">
+            Bonjour <strong style="color:${C.ink};">${firstName}</strong>,<br><br>
+            Tu as demandé à réinitialiser le mot de passe de ton compte Kazajob.
+            Clique sur le bouton ci-dessous pour en choisir un nouveau. Ce lien est valable <strong>1 heure</strong>.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 32px 24px;text-align:center;">
+          ${ctaButton('Choisir un nouveau mot de passe', data.resetUrl)}
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 32px 28px;">
+          <p style="margin:0;font-size:12px;color:${C.mute};line-height:1.6;font-family:Arial,sans-serif;">
+            Tu n'es pas à l'origine de cette demande ? Ignore simplement cet email : ton mot de passe reste inchangé.
+          </p>
+        </td>
+      </tr>
+    </table>`
+
+  return { subject, html: shell(C.orange, body) }
+}

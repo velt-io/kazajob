@@ -74,7 +74,7 @@ export default function LoginPage() {
               Rebonjour,<br />marmaille.
             </h1>
             <p className="text-sm text-white/75 max-w-[320px] leading-relaxed">
-              Le bon, le la — retrouve toutes les opportunites sauvegardees et continue tes candidatures.
+              Le bon, le la — retrouve toutes les opportunités sauvegardées et continue tes candidatures.
             </p>
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
         <h2 className="text-2xl lg:text-[28px] font-extrabold tracking-tight mb-2 text-[#1A1410]">Connecte-toi</h2>
         <p className="text-sm text-[#6B5A4A] mb-7">
           Pas encore inscrit ?{' '}
-          <Link href="/auth/register" className="font-bold" style={{ color: KZ.orange }}>Creer un compte</Link>
+          <Link href="/auth/register" className="font-bold" style={{ color: KZ.orange }}>Créer un compte</Link>
         </p>
 
         {error && (
@@ -113,27 +113,18 @@ export default function LoginPage() {
             }
             required
           />
-          <div className="flex justify-between items-center -mt-1">
-            <label className="flex items-center gap-2 text-sm text-[#2A2018] cursor-pointer">
-              <div className="w-4 h-4 rounded border border-[#1A1410] bg-[#1A1410] flex items-center justify-center shrink-0">
-                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="#FFF7EE" strokeWidth="2"><path d="M2 6 L5 9 L10 3" /></svg>
-              </div>
-              Rester connecte
-            </label>
-            <Link href="#" className="text-sm font-semibold" style={{ color: KZ.orange }}>Mot de passe oublie ?</Link>
+          <div className="flex justify-end -mt-1">
+            <Link href="/auth/forgot-password" className="text-sm font-semibold" style={{ color: KZ.orange }}>Mot de passe oublié ?</Link>
           </div>
           <Button kind="primary" size="lg" full iconRight={<ArrowRight size={16} />} loading={loading} type="submit">
             Se connecter
           </Button>
         </form>
 
-        <div className="flex items-center gap-3 my-5 text-xs text-[#6B5A4A]">
-          <div className="flex-1 h-px bg-[#E8DDC9]" />ou<div className="flex-1 h-px bg-[#E8DDC9]" />
-        </div>
         <OAuthButtons />
 
         <p className="text-center text-xs text-[#6B5A4A] mt-6">
-          <Link href="/" className="hover:text-[#FF6B35] font-semibold">← Retour a l&apos;accueil</Link>
+          <Link href="/" className="hover:text-[#FF6B35] font-semibold">← Retour à l&apos;accueil</Link>
         </p>
       </div>
     </div>

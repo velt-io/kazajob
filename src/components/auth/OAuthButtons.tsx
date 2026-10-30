@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+import { getProviders } from 'next-auth/react'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/features/auth/useAuth'
 
@@ -22,18 +24,38 @@ function LinkedInLogo() {
   )
 }
 
+// N'affiche que les providers réellement configurés côté serveur (AUTH_GOOGLE_ID, AUTH_LINKEDIN_ID).
 export function OAuthButtons({ role }: { role?: 'candidate' | 'recruiter' }) {
   const { signInWithProvider } = useAuth()
+  const [enabled, setEnabled] = useState<{ google: boolean; linkedin: boolean } | null>(null)
+
+  useEffect(() => {
+    getProviders()
+      .then((p) => setEnabled({ google: !!p?.google, linkedin: !!p?.linkedin }))
+      .catch(() => setEnabled({ google: false, linkedin: false }))
+  }, [])
+
+  if (!enabled || (!enabled.google && !enabled.linkedin)) return null
+
   return (
-    <div className="flex flex-col gap-2.5">
-      <Button kind="outline" size="md" full type="button" icon={<GoogleLogo />}
-        onClick={() => signInWithProvider('google', role)}>
-        Continuer avec Google
-      </Button>
-      <Button kind="outline" size="md" full type="button" icon={<LinkedInLogo />}
-        onClick={() => signInWithProvider('linkedin', role)}>
-        Continuer avec LinkedIn
-      </Button>
-    </div>
+    <>
+      <div className="flex items-center gap-3 my-5 text-xs text-[#6B5A4A]">
+        <div className="flex-1 h-px bg-[#E8DDC9]" />ou<div className="flex-1 h-px bg-[#E8DDC9]" />
+      </div>
+      <div className="flex flex-col gap-2.5">
+        {enabled.google && (
+          <Button kind="outline" size="md" full type="button" icon={<GoogleLogo />}
+            onClick={() => signInWithProvider('google', role)}>
+            Continuer avec Google
+          </Button>
+        )}
+        {enabled.linkedin && (
+          <Button kind="outline" size="md" full type="button" icon={<LinkedInLogo />}
+            onClick={() => signInWithProvider('linkedin', role)}>
+            Continuer avec LinkedIn
+          </Button>
+        )}
+      </div>
+    </>
   )
 }
