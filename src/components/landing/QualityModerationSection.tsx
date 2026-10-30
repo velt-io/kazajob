@@ -30,25 +30,25 @@ const ITEMS = [
 
 export function QualityModerationSection() {
   return (
-    <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410] relative overflow-hidden" style={{ background: KZ.cream }}>
+    <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[var(--kz-edge)] relative overflow-hidden" style={{ background: KZ.cream }}>
       <div className="max-w-[1280px] mx-auto relative z-10">
         <div className="text-center mb-12">
           <p className="kz-eyebrow mb-2" style={{ color: KZ.green }}>Qualité garantie</p>
-          <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410] max-w-[720px] mx-auto">
+          <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)] max-w-[720px] mx-auto">
             Une plateforme modérée, pas un mur d&apos;annonces anonymes.
           </h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {ITEMS.map((item) => (
-            <div key={item.title} className="kz-card p-6 bg-white">
+            <div key={item.title} className="kz-card p-6 bg-[var(--kz-paper)]">
               <div
-                className="w-12 h-12 rounded-xl border border-[#1A1410] flex items-center justify-center mb-4 text-[#1A1410]"
+                className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center mb-4 text-[var(--kz-ink)]"
                 style={{ background: item.color }}
               >
                 {item.icon}
               </div>
-              <h3 className="text-base font-bold text-[#1A1410] mb-2">{item.title}</h3>
-              <p className="text-sm text-[#6B5A4A] leading-relaxed">{item.desc}</p>
+              <h3 className="text-base font-bold text-[var(--kz-ink)] mb-2">{item.title}</h3>
+              <p className="text-sm text-[var(--kz-mute)] leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>

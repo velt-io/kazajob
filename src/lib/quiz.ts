@@ -16,27 +16,27 @@ export interface Archetype {
 
 export const ARCHETYPES: Record<ArchetypeKey, Archetype> = {
   fonceur: {
-    key: 'fonceur', label: 'Le Fonceur', emoji: '🚀', color: '#FF6B35',
+    key: 'fonceur', label: 'Le Fonceur', emoji: '🚀', color: 'var(--kz-orange)',
     tagline: 'Énergique et orienté action — tu passes vite du projet au concret.',
     recruiterHint: "Prend des initiatives, avance vite. Idéal pour des missions à fort rythme.",
   },
   creatif: {
-    key: 'creatif', label: 'Le Créatif', emoji: '🎨', color: '#6D3BEB',
+    key: 'creatif', label: 'Le Créatif', emoji: '🎨', color: 'var(--kz-violet)',
     tagline: 'Imaginatif — tu apportes des idées que personne n’attendait.',
     recruiterHint: "Force de proposition et originalité. Atout pour l'innovation.",
   },
   analyste: {
-    key: 'analyste', label: "L'Analyste", emoji: '🧩', color: '#1B4FB8',
+    key: 'analyste', label: "L'Analyste", emoji: '🧩', color: 'var(--kz-blue)',
     tagline: 'Rigoureux — tu aimes comprendre à fond et structurer.',
     recruiterHint: "Méthodique et fiable sur les sujets complexes et techniques.",
   },
   collaboratif: {
-    key: 'collaboratif', label: 'Le Collaboratif', emoji: '🤝', color: '#19A974',
+    key: 'collaboratif', label: 'Le Collaboratif', emoji: '🤝', color: 'var(--kz-green)',
     tagline: 'Esprit d’équipe — l’humain et la communication d’abord.',
     recruiterHint: "Excellent relationnel et esprit d'équipe. Renforce la cohésion.",
   },
   strategique: {
-    key: 'strategique', label: 'Le Stratège', emoji: '🧭', color: '#FFC93C',
+    key: 'strategique', label: 'Le Stratège', emoji: '🧭', color: 'var(--kz-yellow)',
     tagline: 'Vision d’ensemble — tu planifies et gardes le cap.',
     recruiterHint: "Sait prioriser et tenir les objectifs. Bon pour piloter/organiser.",
   },

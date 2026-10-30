@@ -42,13 +42,13 @@ export default function CandidateMessagesPage() {
 
   return (
     <div className="max-w-[1000px] mx-auto flex flex-col" style={{ height: 'calc(100vh - 120px)' }}>
-      <h1 className="text-2xl font-extrabold text-[#1A1410] mb-4 shrink-0">Messages</h1>
+      <h1 className="text-2xl font-extrabold text-[var(--kz-ink)] mb-4 shrink-0">Messages</h1>
 
-      <div className="flex-1 flex rounded-xl border border-[#1A1410] overflow-hidden min-h-0" style={{ boxShadow: '4px 4px 0 #1A1410' }}>
+      <div className="flex-1 flex rounded-xl border border-[var(--kz-edge)] overflow-hidden min-h-0" style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
         {/* Liste conversations */}
-        <div className={`w-full md:w-64 border-r border-[#1A1410] bg-white overflow-y-auto shrink-0 ${activeConvId && !showList ? 'hidden md:block' : 'block'}`}>
+        <div className={`w-full md:w-64 border-r border-[var(--kz-edge)] bg-[var(--kz-paper)] overflow-y-auto shrink-0 ${activeConvId && !showList ? 'hidden md:block' : 'block'}`}>
           {loading ? (
-            <div className="p-4 text-sm text-[#6B5A4A]">Chargement...</div>
+            <div className="p-4 text-sm text-[var(--kz-mute)]">Chargement...</div>
           ) : conversations.length === 0 ? (
             <EmptyState title="Aucune conversation" icon={<MessageCircle size={24} />} />
           ) : (
@@ -56,12 +56,12 @@ export default function CandidateMessagesPage() {
               const other = otherUser(conv)
               return (
                 <button key={conv.id} onClick={() => openConv(conv.id)}
-                  className="w-full flex items-center gap-3 p-4 border-b border-[#E8DDC9] text-left transition-colors"
+                  className="w-full flex items-center gap-3 p-4 border-b border-[var(--kz-line)] text-left transition-colors"
                   style={{ background: conv.id === activeConvId ? KZ.cream2 : 'white' }}>
                   <Avatar name={other?.full_name ?? 'KZ'} src={other?.avatar_url} avatarConfig={other?.avatar_config} size={38} color={KZ.orangeSoft} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-[#1A1410] truncate">{other?.full_name}</div>
-                    {conv.job && <div className="text-xs text-[#6B5A4A] truncate">{conv.job.title}</div>}
+                    <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{other?.full_name}</div>
+                    {conv.job && <div className="text-xs text-[var(--kz-mute)] truncate">{conv.job.title}</div>}
                   </div>
                 </button>
               )
@@ -70,19 +70,19 @@ export default function CandidateMessagesPage() {
         </div>
 
         {/* Zone message */}
-        <div className={`flex-1 flex flex-col bg-[#FFF7EE] min-w-0 ${!activeConvId || showList ? 'hidden md:flex' : 'flex'}`}>
+        <div className={`flex-1 flex flex-col bg-[var(--kz-cream)] min-w-0 ${!activeConvId || showList ? 'hidden md:flex' : 'flex'}`}>
           {!activeConvId ? (
             <div className="flex-1 flex items-center justify-center">
               <EmptyState title="Selectionne une conversation" icon={<MessageCircle size={28} />} />
             </div>
           ) : (
             <>
-              <div className="flex items-center gap-3 p-3.5 border-b border-[#E8DDC9] bg-white shrink-0">
-                <button onClick={() => setShowList(true)} className="md:hidden mr-1 text-[#6B5A4A]">←</button>
+              <div className="flex items-center gap-3 p-3.5 border-b border-[var(--kz-line)] bg-[var(--kz-paper)] shrink-0">
+                <button onClick={() => setShowList(true)} className="md:hidden mr-1 text-[var(--kz-mute)]">←</button>
                 {activeConv && (
                   <>
                     <Avatar name={otherUser(activeConv)?.full_name ?? 'KZ'} src={otherUser(activeConv)?.avatar_url} avatarConfig={otherUser(activeConv)?.avatar_config} size={34} color={KZ.orangeSoft} />
-                    <div className="text-sm font-bold text-[#1A1410]">{otherUser(activeConv)?.full_name}</div>
+                    <div className="text-sm font-bold text-[var(--kz-ink)]">{otherUser(activeConv)?.full_name}</div>
                   </>
                 )}
               </div>
@@ -91,8 +91,8 @@ export default function CandidateMessagesPage() {
                   const isMe = msg.sender_id === profile?.id
                   return (
                     <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                      <div className="max-w-[80%] sm:max-w-[70%] px-3.5 py-2.5 rounded-xl border border-[#1A1410] text-sm"
-                        style={{ background: isMe ? KZ.orange : KZ.paper, color: KZ.ink, boxShadow: '2px 2px 0 #1A1410' }}>
+                      <div className="max-w-[80%] sm:max-w-[70%] px-3.5 py-2.5 rounded-xl border border-[var(--kz-edge)] text-sm"
+                        style={{ background: isMe ? KZ.orange : KZ.paper, color: KZ.ink, boxShadow: '2px 2px 0 var(--kz-shadow)' }}>
                         <p>{msg.content}</p>
                         <p className="text-[10px] mt-1 opacity-60">{timeAgo(msg.created_at)}</p>
                       </div>
@@ -101,9 +101,9 @@ export default function CandidateMessagesPage() {
                 })}
                 <div ref={bottomRef} />
               </div>
-              <form onSubmit={handleSend} className="flex gap-2 p-3 border-t border-[#E8DDC9] bg-white shrink-0">
+              <form onSubmit={handleSend} className="flex gap-2 p-3 border-t border-[var(--kz-line)] bg-[var(--kz-paper)] shrink-0">
                 <input value={input} onChange={(e) => setInput(e.target.value)}
-                  className="flex-1 h-10 px-3 bg-[#FFF7EE] border border-[#1A1410] rounded-lg text-sm outline-none"
+                  className="flex-1 h-10 px-3 bg-[var(--kz-cream)] border border-[var(--kz-edge)] rounded-lg text-sm outline-none"
                   placeholder="Ecrire un message..." />
                 <Button type="submit" kind="primary" size="md" icon={<Send size={15} />}>
                   <span className="hidden sm:inline">Envoyer</span>

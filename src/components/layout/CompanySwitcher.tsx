@@ -46,7 +46,7 @@ export function CompanySwitcher() {
     return (
       <a
         href="/recruiter/company-setup"
-        className="flex items-center gap-2.5 p-3 rounded-xl border border-[#E8DDC9] text-xs font-bold text-[#1A1410]"
+        className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-line)] text-xs font-bold text-[var(--kz-ink)]"
         style={{ background: KZ.cream2 }}
       >
         <Plus size={15} /> Créer / rejoindre une entreprise
@@ -59,27 +59,27 @@ export function CompanySwitcher() {
       <button
         type="button"
         onClick={() => memberships.length > 1 && setOpen((o) => !o)}
-        className="w-full flex items-center gap-2.5 p-3 rounded-xl border border-[#E8DDC9]"
+        className="w-full flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-line)]"
         style={{ background: KZ.cream2, cursor: memberships.length > 1 ? 'pointer' : 'default' }}
       >
         {active?.logo_url ? (
-          <img src={active.logo_url} alt="" className="w-8 h-8 rounded-lg border border-[#1A1410] object-cover shrink-0" />
+          <img src={active.logo_url} alt="" className="w-8 h-8 rounded-lg border border-[var(--kz-edge)] object-cover shrink-0" />
         ) : (
-          <div className="w-8 h-8 rounded-lg border border-[#1A1410] flex items-center justify-center text-[11px] font-extrabold shrink-0"
+          <div className="w-8 h-8 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center text-[11px] font-extrabold shrink-0"
             style={{ background: KZ.orangeSoft }}>
             {active?.company_name.slice(0, 2).toUpperCase() ?? <Building2 size={14} />}
           </div>
         )}
         <span className="flex-1 min-w-0 text-left">
-          <span className="block text-xs font-bold text-[#1A1410] truncate">{active?.company_name}</span>
-          <span className="block text-[10px] text-[#6B5A4A]">{ROLE_LABEL[active?.role ?? 'member']}</span>
+          <span className="block text-xs font-bold text-[var(--kz-ink)] truncate">{active?.company_name}</span>
+          <span className="block text-[10px] text-[var(--kz-mute)]">{ROLE_LABEL[active?.role ?? 'member']}</span>
         </span>
-        {memberships.length > 1 && <ChevronDown size={14} className="text-[#6B5A4A] shrink-0" />}
+        {memberships.length > 1 && <ChevronDown size={14} className="text-[var(--kz-mute)] shrink-0" />}
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 right-0 mb-2 rounded-xl border border-[#1A1410] bg-white overflow-hidden z-50"
-          style={{ boxShadow: '3px 3px 0 #1A1410' }}>
+        <div className="absolute bottom-full left-0 right-0 mb-2 rounded-xl border border-[var(--kz-edge)] bg-[var(--kz-paper)] overflow-hidden z-50"
+          style={{ boxShadow: '3px 3px 0 var(--kz-shadow)' }}>
           <div className="max-h-64 overflow-y-auto">
             {memberships.map((m) => (
               <button
@@ -87,22 +87,22 @@ export function CompanySwitcher() {
                 type="button"
                 onClick={() => (m.is_active ? setOpen(false) : switchTo(m.company_id))}
                 disabled={switching}
-                className="w-full flex items-center gap-2.5 p-3 text-left hover:bg-[#FBEFE0] transition-colors border-b border-[#E8DDC9] last:border-0"
+                className="w-full flex items-center gap-2.5 p-3 text-left hover:bg-[var(--kz-cream2)] transition-colors border-b border-[var(--kz-line)] last:border-0"
               >
-                <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center text-[10px] font-extrabold shrink-0"
+                <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center text-[10px] font-extrabold shrink-0"
                   style={{ background: m.is_active ? KZ.violetSoft : KZ.cream2 }}>
                   {m.company_name.slice(0, 2).toUpperCase()}
                 </div>
                 <span className="flex-1 min-w-0">
-                  <span className="block text-xs font-bold text-[#1A1410] truncate">{m.company_name}</span>
-                  <span className="block text-[10px] text-[#6B5A4A]">{ROLE_LABEL[m.role]}</span>
+                  <span className="block text-xs font-bold text-[var(--kz-ink)] truncate">{m.company_name}</span>
+                  <span className="block text-[10px] text-[var(--kz-mute)]">{ROLE_LABEL[m.role]}</span>
                 </span>
                 {m.is_active && <Check size={14} style={{ color: KZ.green }} className="shrink-0" />}
               </button>
             ))}
           </div>
           <a href="/recruiter/company-setup"
-            className="flex items-center gap-2 p-3 text-xs font-bold text-[#1A1410] hover:bg-[#FBEFE0] transition-colors border-t border-[#1A1410]"
+            className="flex items-center gap-2 p-3 text-xs font-bold text-[var(--kz-ink)] hover:bg-[var(--kz-cream2)] transition-colors border-t border-[var(--kz-edge)]"
             style={{ background: KZ.cream2 }}>
             <Plus size={14} /> Créer / rejoindre une entreprise
           </a>

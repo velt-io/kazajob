@@ -41,7 +41,7 @@ export function KazaIASpotlight() {
       {/* Décor */}
       <div
         className="absolute inset-0 opacity-[0.03]"
-        style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #6D3BEB 1px, transparent 0)', backgroundSize: '32px 32px' }}
+        style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--kz-violet) 1px, transparent 0)', backgroundSize: '32px 32px' }}
       />
 
       <div className="max-w-[1280px] mx-auto relative z-10">
@@ -51,27 +51,27 @@ export function KazaIASpotlight() {
           <div>
             <div className="flex items-center gap-3 mb-5">
               <div
-                className="w-11 h-11 rounded-xl border border-[#1A1410] flex items-center justify-center"
-                style={{ background: KZ.violet, boxShadow: '3px 3px 0 #1A1410' }}
+                className="w-11 h-11 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center"
+                style={{ background: KZ.violet, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
               >
                 <Sparkles size={22} color="white" />
               </div>
               <Badge color="violet" size="lg">KazaIA — Intelligence artificielle</Badge>
             </div>
 
-            <h2 className="text-3xl lg:text-[42px] font-extrabold tracking-tight text-[#1A1410] mb-4">
+            <h2 className="text-3xl lg:text-[42px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-4">
               L&apos;IA qui travaille<br />
               <span style={{ color: KZ.violet }}>à ta place.</span>
             </h2>
 
-            <p className="text-base text-[#2A2018] leading-relaxed mb-6 max-w-[480px]">
+            <p className="text-base text-[var(--kz-text)] leading-relaxed mb-6 max-w-[480px]">
               KazaIA est intégré directement dans Kazajob. Pas besoin de ChatGPT, pas besoin de copier-coller.
               L&apos;IA connaît ton profil et chaque offre pour te donner des réponses vraiment personnalisées.
             </p>
 
             <div className="flex flex-wrap gap-2 mb-8">
               {['Gratuit pour les candidats', 'Groq · GPT-OSS (bientôt Claude)', 'Données confidentielles'].map(tag => (
-                <span key={tag} className="text-xs font-semibold px-3 py-1 rounded-full border border-[#1A1410]" style={{ background: KZ.cream }}>
+                <span key={tag} className="text-xs font-semibold px-3 py-1 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.cream }}>
                   {tag}
                 </span>
               ))}
@@ -94,21 +94,21 @@ export function KazaIASpotlight() {
               >
                 <div className="flex items-start justify-between">
                   <div
-                    className="w-10 h-10 rounded-xl border border-[#1A1410] flex items-center justify-center text-[#1A1410]"
+                    className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-[var(--kz-ink)]"
                     style={{ background: KZ.violetSoft }}
                   >
                     {f.icon}
                   </div>
                   <span
-                    className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+                    className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                     style={{ background: f.badgeColor + '30', color: f.badgeColor }}
                   >
                     {f.badge}
                   </span>
                 </div>
                 <div>
-                  <div className="text-sm font-bold text-[#1A1410] mb-1">{f.title}</div>
-                  <div className="text-xs text-[#6B5A4A] leading-relaxed">{f.desc}</div>
+                  <div className="text-sm font-bold text-[var(--kz-ink)] mb-1">{f.title}</div>
+                  <div className="text-xs text-[var(--kz-mute)] leading-relaxed">{f.desc}</div>
                 </div>
               </div>
             ))}

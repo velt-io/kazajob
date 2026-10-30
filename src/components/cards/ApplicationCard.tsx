@@ -20,13 +20,13 @@ export function ApplicationCard({ application, showActions }: ApplicationCardPro
   const companyInitials = (company?.name ?? 'CO').slice(0, 2).toUpperCase()
 
   return (
-    <div className="flex items-center gap-4 py-3 border-b border-[#E8DDC9] last:border-0">
-      <div className="w-10 h-10 rounded-lg bg-[#FFF7EE] border border-[#1A1410] flex items-center justify-center font-bold text-sm text-[#1A1410] shrink-0">
+    <div className="flex items-center gap-4 py-3 border-b border-[var(--kz-line)] last:border-0">
+      <div className="w-10 h-10 rounded-lg bg-[var(--kz-cream)] border border-[var(--kz-edge)] flex items-center justify-center font-bold text-sm text-[var(--kz-ink)] shrink-0">
         {companyInitials}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-bold text-[#1A1410] truncate">{application.job?.title}</div>
-        <div className="text-xs text-[#6B5A4A]">
+        <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{application.job?.title}</div>
+        <div className="text-xs text-[var(--kz-mute)]">
           {company?.name} · {timeAgo(application.created_at)}
         </div>
       </div>
@@ -34,7 +34,7 @@ export function ApplicationCard({ application, showActions }: ApplicationCardPro
         {statusInfo.label}
       </Badge>
       {showActions && (
-        <Link href={`/candidate/applications/${application.id}`} className="text-[#6B5A4A] hover:text-[#FF6B35]">
+        <Link href={`/candidate/applications/${application.id}`} className="text-[var(--kz-mute)] hover:text-[var(--kz-orange)]">
           <ArrowRight size={16} />
         </Link>
       )}

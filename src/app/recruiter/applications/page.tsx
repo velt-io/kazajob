@@ -102,8 +102,8 @@ export default function RecruiterApplicationsPage() {
     <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="kz-h2 text-[#1A1410] mb-1">Candidatures recues</h1>
-          <p className="text-sm text-[#6B5A4A]">{applications.length} candidature(s)</p>
+          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Candidatures recues</h1>
+          <p className="text-sm text-[var(--kz-mute)]">{applications.length} candidature(s)</p>
         </div>
         <Select
           options={STATUS_OPTIONS}
@@ -127,14 +127,14 @@ export default function RecruiterApplicationsPage() {
             const initials = candidate?.full_name?.split(' ').map((n: string) => n[0]).join('') ?? 'CA'
 
             return (
-              <div key={app.id} className="kz-card p-5 bg-white flex items-center gap-5">
-                <div className="w-12 h-12 rounded-full border border-[#1A1410] flex items-center justify-center font-bold text-sm shrink-0" style={{ background: KZ.orangeSoft }}>
+              <div key={app.id} className="kz-card p-5 bg-[var(--kz-paper)] flex items-center gap-5">
+                <div className="w-12 h-12 rounded-full border border-[var(--kz-edge)] flex items-center justify-center font-bold text-sm shrink-0" style={{ background: KZ.orangeSoft }}>
                   {initials}
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-base font-bold text-[#1A1410]">{candidate?.full_name}</span>
+                    <span className="text-base font-bold text-[var(--kz-ink)]">{candidate?.full_name}</span>
                     {(() => {
                       const bu = (candidate as unknown as { boosted_until?: string | null })?.boosted_until
                       return bu && new Date(bu) > new Date() ? (
@@ -142,19 +142,19 @@ export default function RecruiterApplicationsPage() {
                       ) : null
                     })()}
                   </div>
-                  <div className="text-sm text-[#6B5A4A]">
+                  <div className="text-sm text-[var(--kz-mute)]">
                     {app.job?.title} · {app.job?.company?.name} · {timeAgo(app.created_at)}
                   </div>
                   {app.cover_letter && (
-                    <p className="text-xs text-[#6B5A4A] mt-1 line-clamp-1">{app.cover_letter}</p>
+                    <p className="text-xs text-[var(--kz-mute)] mt-1 line-clamp-1">{app.cover_letter}</p>
                   )}
                   {(() => {
                     const ans = (app as unknown as { prequal_answers?: { label: string; value: string }[] }).prequal_answers
                     return ans && ans.some((a) => a.value) ? (
                       <div className="flex flex-wrap gap-1.5 mt-1.5">
                         {ans.filter((a) => a.value).map((a, i) => (
-                          <span key={i} className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                            {a.label} : <strong className="text-[#1A1410]">{a.value}</strong>
+                          <span key={i} className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                            {a.label} : <strong className="text-[var(--kz-ink)]">{a.value}</strong>
                           </span>
                         ))}
                       </div>
@@ -167,7 +167,7 @@ export default function RecruiterApplicationsPage() {
                   <select
                     value={app.status}
                     onChange={(e) => updateStatus(app.id, e.target.value as Application['status'])}
-                    className="text-xs font-semibold h-8 px-2 border border-[#1A1410] rounded-lg bg-white cursor-pointer"
+                    className="text-xs font-semibold h-8 px-2 border border-[var(--kz-edge)] rounded-lg bg-[var(--kz-paper)] cursor-pointer"
                   >
                     {Object.entries(APPLICATION_STATUSES).map(([k, v]) => (
                       <option key={k} value={k}>{v.label}</option>
@@ -209,9 +209,9 @@ export default function RecruiterApplicationsPage() {
       {/* Modal planification entretien */}
       <Modal open={!!scheduleFor} onClose={() => setScheduleFor(null)} title="Planifier un entretien" size="md">
         <div className="flex flex-col gap-4">
-          <div className="p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft }}>
-            <div className="text-sm font-bold text-[#1A1410]">{scheduleFor?.job?.title}</div>
-            <div className="text-xs text-[#6B5A4A]">
+          <div className="p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
+            <div className="text-sm font-bold text-[var(--kz-ink)]">{scheduleFor?.job?.title}</div>
+            <div className="text-xs text-[var(--kz-mute)]">
               Candidat : {(scheduleFor?.candidate as { full_name?: string })?.full_name}
             </div>
           </div>
@@ -256,7 +256,7 @@ export default function RecruiterApplicationsPage() {
             placeholder="Ce que le candidat doit savoir avant l'entretien..."
             onChange={e => setScheduleData(d => ({ ...d, notes: e.target.value }))} />
 
-          <div className="text-xs text-[#6B5A4A] p-2.5 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.greenSoft }}>
+          <div className="text-xs text-[var(--kz-mute)] p-2.5 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.greenSoft }}>
             Les deux parties recevront un email de confirmation avec tous les détails.
           </div>
 
@@ -302,15 +302,15 @@ function SaveToPoolModal({ app, onClose }: { app: Application | null; onClose: (
     <Modal open={!!app} onClose={handleClose} title="Sauvegarder dans le vivier" size="sm">
       {done ? (
         <div className="flex flex-col items-center gap-3 py-6 text-center">
-          <div className="w-14 h-14 rounded-full border-2 border-[#1A1410] flex items-center justify-center" style={{ background: KZ.greenSoft }}>
+          <div className="w-14 h-14 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.greenSoft }}>
             <Check size={24} color={KZ.green} />
           </div>
-          <p className="text-sm font-bold text-[#1A1410]">{candidate?.full_name} ajouté au vivier.</p>
+          <p className="text-sm font-bold text-[var(--kz-ink)]">{candidate?.full_name} ajouté au vivier.</p>
           <Button kind="primary" size="md" onClick={handleClose}>Fermer</Button>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-[#6B5A4A]">Classez <strong className="text-[#1A1410]">{candidate?.full_name}</strong> pour le retrouver facilement.</p>
+          <p className="text-sm text-[var(--kz-mute)]">Classez <strong className="text-[var(--kz-ink)]">{candidate?.full_name}</strong> pour le retrouver facilement.</p>
           <div className="grid grid-cols-2 gap-2">
             {TALENT_POOL_CATEGORIES.map((c) => (
               <button key={c.id} onClick={() => setCategory(c.id)}
@@ -353,9 +353,9 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
   return (
     <Modal open={!!app} onClose={handleClose} title="Synthèse IA de la candidature" size="lg">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft }}>
+        <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
           <Sparkles size={18} color={KZ.violet} />
-          <p className="text-sm font-semibold text-[#1A1410]">
+          <p className="text-sm font-semibold text-[var(--kz-ink)]">
             {candidate?.full_name ? `Analyse de ${candidate.full_name}` : 'KazaIA analyse cette candidature'} — {app?.job?.title}
           </p>
         </div>
@@ -363,16 +363,16 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
         {generating && (
           <div className="flex flex-col items-center gap-3 py-8">
             <InlineLoader size={48} />
-            <p className="text-sm text-[#6B5A4A]">Lecture du profil et croisement avec l&apos;offre…</p>
+            <p className="text-sm text-[var(--kz-mute)]">Lecture du profil et croisement avec l&apos;offre…</p>
           </div>
         )}
 
         {locked && (
-          <div className="p-5 rounded-xl border border-[#1A1410] flex flex-col items-center gap-3 text-center" style={{ background: KZ.orangeSoft }}>
-            <div className="w-12 h-12 rounded-full border border-[#1A1410] flex items-center justify-center" style={{ background: 'white' }}>
+          <div className="p-5 rounded-xl border border-[var(--kz-edge)] flex flex-col items-center gap-3 text-center" style={{ background: KZ.orangeSoft }}>
+            <div className="w-12 h-12 rounded-full border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: 'var(--kz-paper)' }}>
               <Lock size={20} color={KZ.orange} />
             </div>
-            <p className="text-sm font-bold text-[#1A1410]">{locked}</p>
+            <p className="text-sm font-bold text-[var(--kz-ink)]">{locked}</p>
             <Link href="/recruiter/company"><Button kind="primary" size="md">Passer à un plan supérieur</Button></Link>
           </div>
         )}
@@ -387,34 +387,34 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
             {(() => {
               const r = recoFromScore(summary.adequation)
               return (
-                <div className="p-4 rounded-xl border-2 border-[#1A1410] flex items-center gap-3"
-                  style={{ background: r.bg, boxShadow: '3px 3px 0 #1A1410' }}>
+                <div className="p-4 rounded-xl border-2 border-[var(--kz-edge)] flex items-center gap-3"
+                  style={{ background: r.bg, boxShadow: '3px 3px 0 var(--kz-shadow)' }}>
                   <Sparkles size={20} color={r.color} />
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-[#6B5A4A]">Recommandation KazaIA</p>
-                    <p className="text-lg font-extrabold text-[#1A1410]">{r.label}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--kz-mute)]">Recommandation KazaIA</p>
+                    <p className="text-lg font-extrabold text-[var(--kz-ink)]">{r.label}</p>
                   </div>
                   <span className="ml-auto text-2xl font-extrabold" style={{ color: r.color }}>{summary.adequation}%</span>
                 </div>
               )
             })()}
             {/* Adéquation */}
-            <div className="p-4 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft }}>
+            <div className="p-4 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-bold text-[#1A1410]">Taux d&apos;adéquation</span>
+                <span className="text-sm font-bold text-[var(--kz-ink)]">Taux d&apos;adéquation</span>
                 <span className="text-2xl font-extrabold" style={{ color: KZ.violet }}>{summary.adequation}%</span>
               </div>
               <Progress value={summary.adequation} color={KZ.violet} />
             </div>
 
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1">Résumé du profil</p>
-              <p className="text-sm text-[#2A2018] leading-relaxed">{summary.resume}</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1">Résumé du profil</p>
+              <p className="text-sm text-[var(--kz-text)] leading-relaxed">{summary.resume}</p>
             </div>
 
             {summary.competences_match?.length > 0 && (
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1.5">Compétences correspondantes</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1.5">Compétences correspondantes</p>
                 <div className="flex gap-2 flex-wrap">{summary.competences_match.map((c, i) => <Tag key={i}>{c}</Tag>)}</div>
               </div>
             )}
@@ -422,20 +422,20 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {summary.points_forts?.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1.5">Points forts</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1.5">Points forts</p>
                   <ul className="flex flex-col gap-1.5">
                     {summary.points_forts.map((p, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-[#2A2018]"><Check size={14} className="mt-0.5 shrink-0" color={KZ.green} />{p}</li>
+                      <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]"><Check size={14} className="mt-0.5 shrink-0" color={KZ.green} />{p}</li>
                     ))}
                   </ul>
                 </div>
               )}
               {summary.points_vigilance?.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1.5">Points de vigilance</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1.5">Points de vigilance</p>
                   <ul className="flex flex-col gap-1.5">
                     {summary.points_vigilance.map((p, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-[#2A2018]"><AlertTriangle size={14} className="mt-0.5 shrink-0" color={KZ.orange} />{p}</li>
+                      <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]"><AlertTriangle size={14} className="mt-0.5 shrink-0" color={KZ.orange} />{p}</li>
                     ))}
                   </ul>
                 </div>
@@ -444,25 +444,25 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
 
             {summary.experiences?.length > 0 && (
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1.5">Expériences pertinentes</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1.5">Expériences pertinentes</p>
                 <ul className="flex flex-col gap-1.5">
                   {summary.experiences.map((e, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-[#2A2018]">• {e}</li>
+                    <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]">• {e}</li>
                   ))}
                 </ul>
               </div>
             )}
 
-            <div className="p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.greenSoft }}>
-              <p className="text-xs font-bold uppercase tracking-wide text-[#1A1410] mb-1">Recommandation</p>
-              <p className="text-sm font-semibold text-[#2A2018]">{summary.decision}</p>
+            <div className="p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.greenSoft }}>
+              <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-ink)] mb-1">Recommandation</p>
+              <p className="text-sm font-semibold text-[var(--kz-text)]">{summary.decision}</p>
             </div>
-            <p className="text-[11px] text-[#6B5A4A] italic">Généré par KazaIA — aide à la décision, ne remplace pas votre jugement.</p>
+            <p className="text-[11px] text-[var(--kz-mute)] italic">Généré par KazaIA — aide à la décision, ne remplace pas votre jugement.</p>
           </div>
         )}
 
         {raw && !summary && !generating && (
-          <div className="p-4 rounded-xl border border-[#1A1410] text-sm text-[#2A2018] leading-relaxed whitespace-pre-wrap" style={{ background: KZ.paper }}>{raw}</div>
+          <div className="p-4 rounded-xl border border-[var(--kz-edge)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap" style={{ background: KZ.paper }}>{raw}</div>
         )}
 
         <Button kind="outline" size="md" onClick={handleClose}>Fermer</Button>

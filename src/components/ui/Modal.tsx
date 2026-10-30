@@ -33,22 +33,22 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-[#1A1410]/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-[var(--kz-ink)]/60 backdrop-blur-sm"
         onClick={onClose}
       />
       <div
         className={cn(
-          'relative w-full max-h-[90vh] flex flex-col bg-white border-[1.5px] border-[#1A1410] rounded-xl shadow-[6px_6px_0_#1A1410] animate-slide-up',
+          'relative w-full max-h-[90vh] flex flex-col bg-[var(--kz-paper)] border-[1.5px] border-[var(--kz-edge)] rounded-xl shadow-[6px_6px_0_var(--kz-shadow)] animate-slide-up',
           sizeMap[size]
         )}
       >
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8DDC9] shrink-0">
-            <h3 className="text-lg font-bold text-[#1A1410] tracking-tight">{title}</h3>
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--kz-line)] shrink-0">
+            <h3 className="text-lg font-bold text-[var(--kz-ink)] tracking-tight">{title}</h3>
             <button
               onClick={onClose}
               aria-label="Fermer"
-              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#FBEFE0] transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] transition-colors"
             >
               <X size={16} />
             </button>

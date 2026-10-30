@@ -104,7 +104,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#6D3BEB',
+  themeColor: 'var(--kz-violet)',
 }
 
 const jsonLd = {
@@ -163,7 +163,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         />
         <meta name="google-site-verification" content="MtxOnoybw_y8up6WUcvgLhMwAB2_ahK0rcpu6GqgOYw" />
       </head>
-      <body className="bg-[#FFF7EE] text-[#1A1410] antialiased min-h-screen">
+      <body className="bg-[var(--kz-cream)] text-[var(--kz-ink)] antialiased min-h-screen">
         <Providers>{children}</Providers>
         <CookieConsent />
         <TrackingScripts integrations={integrations} />

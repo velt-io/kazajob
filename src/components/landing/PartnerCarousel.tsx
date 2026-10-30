@@ -21,8 +21,8 @@ function LogoFrame({ n }: { n: number }) {
   const [loaded, setLoaded] = useState(true)
   return (
     <div
-      className="partner-frame shrink-0 w-[180px] h-[88px] rounded-2xl xs:border xs:border-[#E8DDC9] xs:bg-white flex items-center justify-center overflow-hidden"
-      style={{ boxShadow: '0px 0px 0 #E8DDC9' /* 2px 2px 0 #E8DDC9 */}}
+      className="partner-frame shrink-0 w-[180px] h-[88px] rounded-2xl xs:border xs:border-[var(--kz-line)] xs:bg-[var(--kz-paper)] flex items-center justify-center overflow-hidden"
+      style={{ boxShadow: '0px 0px 0 var(--kz-line)' /* 2px 2px 0 var(--kz-line) */}}
     >
       {loaded ? (
         // eslint-disable-next-line @next/next/no-img-element

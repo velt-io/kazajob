@@ -86,8 +86,8 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
             gami.enabled ? (
               /* ── HUD Gamification ── */
               <div
-                className="rounded-xl border-2 border-[#1A1410] overflow-hidden"
-                style={{ background: '#1A1410', boxShadow: '3px 3px 0 ' + level.color }}
+                className="rounded-xl border-2 border-[var(--kz-edge)] overflow-hidden"
+                style={{ background: 'var(--kz-ink)', boxShadow: '3px 3px 0 ' + level.color }}
               >
                 <div className="px-3 pt-3 pb-1">
                   <div className="flex items-center justify-between mb-1.5">
@@ -126,8 +126,8 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
               /* ── Footer normal ── */
               <div className="flex flex-col gap-2">
                 <div
-                  className="p-3.5 rounded-xl border border-[#1A1410] flex gap-2.5 items-center"
-                  style={{ background: KZ.violet, color: KZ.cream, boxShadow: '3px 3px 0 #1A1410' }}
+                  className="p-3.5 rounded-xl border border-[var(--kz-edge)] flex gap-2.5 items-center"
+                  style={{ background: KZ.violet, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
                 >
                   <div className="flex-1">
                     <div className="text-xs font-bold mb-0.5">Boost IA</div>
@@ -137,7 +137,7 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
                 </div>
                 <button
                   onClick={() => gami.toggle()}
-                  className="flex items-center justify-center gap-1.5 p-2 rounded-xl border border-[#1A1410] text-[11px] font-bold transition-all hover:shadow-[2px_2px_0_#1A1410]"
+                  className="flex items-center justify-center gap-1.5 p-2 rounded-xl border border-[var(--kz-edge)] text-[11px] font-bold transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
                   style={{ background: KZ.violetSoft, color: KZ.violet }}
                 >
                   <Gamepad2 size={12} /> Mode Quête

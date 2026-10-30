@@ -139,10 +139,10 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-screen flex flex-col" style={{ background: KZ.cream }}>
       {/* Header */}
-      <header className="h-16 px-6 border-b border-[#1A1410] bg-white flex items-center justify-between">
+      <header className="h-16 px-6 border-b border-[var(--kz-edge)] bg-[var(--kz-paper)] flex items-center justify-between">
         <Logo size={28} href="/" />
         <div className="flex items-center gap-3">
-          <span className="text-xs font-semibold text-[#6B5A4A]">Étape {step}/{TOTAL_STEPS}</span>
+          <span className="text-xs font-semibold text-[var(--kz-mute)]">Étape {step}/{TOTAL_STEPS}</span>
           <div className="w-32">
             <Progress value={(step / TOTAL_STEPS) * 100} color={KZ.violet} height={8} />
           </div>
@@ -158,11 +158,11 @@ export default function OnboardingPage() {
             <div className="animate-slide-up">
               <div className="text-center mb-8">
                 <Badge color="violet" size="lg" className="mb-4">Étape 1 — Ton domaine</Badge>
-                <h1 className="text-3xl lg:text-[42px] font-extrabold tracking-tight text-[#1A1410] mb-3">
+                <h1 className="text-3xl lg:text-[42px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-3">
                   Quel est ton<br />
                   <span style={{ color: KZ.orange }}>domaine de compétence</span> ?
                 </h1>
-                <p className="text-sm text-[#6B5A4A] max-w-[480px] mx-auto">
+                <p className="text-sm text-[var(--kz-mute)] max-w-[480px] mx-auto">
                   Sélectionne un ou plusieurs domaines. KazaIA va personnaliser ton profil
                   et te suggérer des offres qui correspondent vraiment.
                 </p>
@@ -178,8 +178,8 @@ export default function OnboardingPage() {
                       className="relative flex flex-col items-center gap-2.5 p-4 rounded-2xl border-[2px] transition-all duration-150 text-center"
                       style={{
                         background: isSelected ? cat.color : KZ.paper,
-                        borderColor: isSelected ? cat.accentColor : '#E8DDC9',
-                        boxShadow: isSelected ? `3px 3px 0 ${cat.accentColor}` : '2px 2px 0 #E8DDC9',
+                        borderColor: isSelected ? cat.accentColor : 'var(--kz-line)',
+                        boxShadow: isSelected ? `3px 3px 0 ${cat.accentColor}` : '2px 2px 0 var(--kz-line)',
                         transform: isSelected ? 'translate(-1px, -1px)' : 'none',
                       }}
                     >
@@ -195,20 +195,20 @@ export default function OnboardingPage() {
 
                       {/* Illustration — grand emoji stylisé */}
                       <div
-                        className="w-14 h-14 rounded-xl border border-[#E8DDC9] flex items-center justify-center text-3xl"
+                        className="w-14 h-14 rounded-xl border border-[var(--kz-line)] flex items-center justify-center text-3xl"
                         style={{ background: isSelected ? 'rgba(255,255,255,0.6)' : KZ.cream2 }}
                       >
                         {cat.emoji}
                       </div>
 
-                      <span className="text-xs font-bold text-[#1A1410] leading-tight">{cat.label}</span>
+                      <span className="text-xs font-bold text-[var(--kz-ink)] leading-tight">{cat.label}</span>
                     </button>
                   )
                 })}
               </div>
 
               {selected.length > 0 && (
-                <div className="text-center text-sm text-[#6B5A4A] mb-4">
+                <div className="text-center text-sm text-[var(--kz-mute)] mb-4">
                   <span className="font-bold" style={{ color: KZ.violet }}>{selected.length}</span> domaine{selected.length > 1 ? 's' : ''} sélectionné{selected.length > 1 ? 's' : ''}
                   {selected.length > 0 && ` · ${suggestedSkills.length} compétences suggérées`}
                 </div>
@@ -221,24 +221,24 @@ export default function OnboardingPage() {
             <div className="animate-slide-up max-w-[560px] mx-auto">
               <div className="text-center mb-6">
                 <Badge color="orange" size="lg" className="mb-4">Étape 2 — Ton avatar</Badge>
-                <h1 className="text-3xl lg:text-[38px] font-extrabold tracking-tight text-[#1A1410] mb-2">
+                <h1 className="text-3xl lg:text-[38px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-2">
                   Crée ton<br />
                   <span style={{ color: KZ.orange }}>personnage</span>
                 </h1>
-                <p className="text-sm text-[#6B5A4A] max-w-[400px] mx-auto">
+                <p className="text-sm text-[var(--kz-mute)] max-w-[400px] mx-auto">
                   Personnalise ton avatar. Il représente qui tu es — sans photo, sans discrimination.
                 </p>
               </div>
               {/* Genre */}
-              <div className="kz-card p-4 bg-white mb-3">
-                <p className="text-xs font-extrabold text-[#1A1410] uppercase tracking-widest mb-2.5">Ton genre</p>
+              <div className="kz-card p-4 bg-[var(--kz-paper)] mb-3">
+                <p className="text-xs font-extrabold text-[var(--kz-ink)] uppercase tracking-widest mb-2.5">Ton genre</p>
                 <div className="grid grid-cols-3 gap-2">
                   {CHARACTER_GENDERS.map(g => (
                     <button key={g.id} type="button" onClick={() => applyCharacter(g.id, charDomain)}
                       className="py-2.5 rounded-xl border-2 text-sm font-bold transition-all"
                       style={gender === g.id
                         ? { background: KZ.violet, color: 'white', borderColor: KZ.violet }
-                        : { background: KZ.paper, color: '#1A1410', borderColor: '#E8DDC9' }}>
+                        : { background: KZ.paper, color: 'var(--kz-ink)', borderColor: 'var(--kz-line)' }}>
                       {g.label}
                     </button>
                   ))}
@@ -246,9 +246,9 @@ export default function OnboardingPage() {
               </div>
 
               {/* Personnage métier */}
-              <div className="kz-card p-4 bg-white mb-3">
-                <p className="text-xs font-extrabold text-[#1A1410] uppercase tracking-widest mb-2.5">
-                  Ton personnage métier <span className="text-[#6B5A4A] font-semibold normal-case">— génère une tenue adaptée</span>
+              <div className="kz-card p-4 bg-[var(--kz-paper)] mb-3">
+                <p className="text-xs font-extrabold text-[var(--kz-ink)] uppercase tracking-widest mb-2.5">
+                  Ton personnage métier <span className="text-[var(--kz-mute)] font-semibold normal-case">— génère une tenue adaptée</span>
                 </p>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                   {CHARACTER_DOMAINS.map(d => (
@@ -256,15 +256,15 @@ export default function OnboardingPage() {
                       className="flex flex-col items-center gap-1 p-2 rounded-xl border-2 text-center transition-all"
                       style={charDomain === d.id
                         ? { background: KZ.orangeSoft, borderColor: KZ.orange, boxShadow: `2px 2px 0 ${KZ.orange}` }
-                        : { background: KZ.paper, borderColor: '#E8DDC9' }}>
+                        : { background: KZ.paper, borderColor: 'var(--kz-line)' }}>
                       <span className="text-xl">{d.emoji}</span>
-                      <span className="text-[10px] font-bold text-[#1A1410] leading-tight">{d.label}</span>
+                      <span className="text-[10px] font-bold text-[var(--kz-ink)] leading-tight">{d.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="kz-card p-6 bg-white">
+              <div className="kz-card p-6 bg-[var(--kz-paper)]">
                 <AvatarBuilder
                   value={avatarConfig ?? buildCharacterConfig(charDomain, gender)}
                   onChange={setAvatarConfig}
@@ -277,7 +277,7 @@ export default function OnboardingPage() {
                 <button
                   type="button"
                   onClick={() => setStep(3)}
-                  className="text-sm text-[#6B5A4A] font-semibold hover:text-[#1A1410] underline"
+                  className="text-sm text-[var(--kz-mute)] font-semibold hover:text-[var(--kz-ink)] underline"
                 >
                   Passer cette étape →
                 </button>
@@ -290,14 +290,14 @@ export default function OnboardingPage() {
             <div className="animate-slide-up max-w-[500px] mx-auto">
               <div className="text-center mb-8">
                 <Badge color="orange" size="lg" className="mb-4">Étape 2 — Tes infos</Badge>
-                <h1 className="text-3xl font-extrabold tracking-tight text-[#1A1410] mb-3">
+                <h1 className="text-3xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-3">
                   Présente-toi en<br />
                   <span style={{ color: KZ.orange }}>30 secondes</span>
                 </h1>
-                <p className="text-sm text-[#6B5A4A]">Ces infos apparaîtront sur ton profil et ton CV.</p>
+                <p className="text-sm text-[var(--kz-mute)]">Ces infos apparaîtront sur ton profil et ton CV.</p>
               </div>
 
-              <div className="kz-card p-6 bg-white flex flex-col gap-4">
+              <div className="kz-card p-6 bg-[var(--kz-paper)] flex flex-col gap-4">
                 <Input
                   label="Nom complet *"
                   value={fullName}
@@ -333,19 +333,19 @@ export default function OnboardingPage() {
             <div className="animate-slide-up max-w-[540px] mx-auto">
               <div className="text-center mb-8">
                 <Badge color="green" size="lg" className="mb-4">Étape 3 — Tes compétences</Badge>
-                <h1 className="text-3xl font-extrabold tracking-tight text-[#1A1410] mb-3">
+                <h1 className="text-3xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-3">
                   <span style={{ color: KZ.orange }}>KazaIA</span> a sélectionné<br />
                   tes compétences
                 </h1>
-                <p className="text-sm text-[#6B5A4A]">
+                <p className="text-sm text-[var(--kz-mute)]">
                   Ces compétences seront ajoutées à ton profil. Tu pourras les modifier plus tard.
                 </p>
               </div>
 
-              <div className="kz-card p-6 bg-white">
+              <div className="kz-card p-6 bg-[var(--kz-paper)]">
                 <div className="flex items-center gap-2 mb-5 p-3 rounded-xl" style={{ background: KZ.violetSoft }}>
                   <Sparkles size={16} color={KZ.violet} />
-                  <span className="text-sm font-semibold text-[#1A1410]">
+                  <span className="text-sm font-semibold text-[var(--kz-ink)]">
                     {suggestedSkills.length} compétences détectées depuis tes {selected.length} domaine{selected.length > 1 ? 's' : ''}
                   </span>
                 </div>
@@ -353,7 +353,7 @@ export default function OnboardingPage() {
                   {suggestedSkills.map((skill) => (
                     <span
                       key={skill}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold border border-[#1A1410] rounded-lg"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold border border-[var(--kz-edge)] rounded-lg"
                       style={{ background: KZ.violetSoft }}
                     >
                       <Check size={12} color={KZ.violet} />
@@ -361,15 +361,15 @@ export default function OnboardingPage() {
                     </span>
                   ))}
                 </div>
-                <p className="text-xs text-[#6B5A4A]">
+                <p className="text-xs text-[var(--kz-mute)]">
                   Tu pourras ajouter ou supprimer des compétences depuis ton profil à tout moment.
                 </p>
               </div>
 
               {/* Soft skills */}
-              <div className="kz-card p-5 bg-white mt-4">
-                <p className="text-sm font-bold text-[#1A1410] mb-1">Tes soft skills <span className="text-[#6B5A4A] font-normal text-xs">(savoir-être)</span></p>
-                <p className="text-xs text-[#6B5A4A] mb-3">Ajoutés à ton profil et ton CV.</p>
+              <div className="kz-card p-5 bg-[var(--kz-paper)] mt-4">
+                <p className="text-sm font-bold text-[var(--kz-ink)] mb-1">Tes soft skills <span className="text-[var(--kz-mute)] font-normal text-xs">(savoir-être)</span></p>
+                <p className="text-xs text-[var(--kz-mute)] mb-3">Ajoutés à ton profil et ton CV.</p>
                 <div className="flex flex-wrap gap-1.5">
                   {SOFT_SKILLS.map(s => {
                     const on = softSkills.includes(s)
@@ -377,7 +377,7 @@ export default function OnboardingPage() {
                       <button key={s} type="button" onClick={() => setSoftSkills(prev => toggleIn(prev, s))}
                         className="px-2.5 py-1 text-xs font-semibold border rounded-full transition-all"
                         style={on ? { background: KZ.violet, color: 'white', borderColor: KZ.violet }
-                                  : { background: KZ.paper, color: '#2A2018', borderColor: '#E8DDC9' }}>
+                                  : { background: KZ.paper, color: 'var(--kz-text)', borderColor: 'var(--kz-line)' }}>
                         {on && '✓ '}{s}
                       </button>
                     )
@@ -386,9 +386,9 @@ export default function OnboardingPage() {
               </div>
 
               {/* Loisirs */}
-              <div className="kz-card p-5 bg-white mt-4">
-                <p className="text-sm font-bold text-[#1A1410] mb-1">Tes loisirs <span className="text-[#6B5A4A] font-normal text-xs">(centres d&apos;intérêt)</span></p>
-                <p className="text-xs text-[#6B5A4A] mb-3">Ajoutés à ton profil et ton CV.</p>
+              <div className="kz-card p-5 bg-[var(--kz-paper)] mt-4">
+                <p className="text-sm font-bold text-[var(--kz-ink)] mb-1">Tes loisirs <span className="text-[var(--kz-mute)] font-normal text-xs">(centres d&apos;intérêt)</span></p>
+                <p className="text-xs text-[var(--kz-mute)] mb-3">Ajoutés à ton profil et ton CV.</p>
                 <div className="flex flex-wrap gap-1.5">
                   {HOBBIES.map(h => {
                     const on = hobbies.includes(h)
@@ -396,7 +396,7 @@ export default function OnboardingPage() {
                       <button key={h} type="button" onClick={() => setHobbies(prev => toggleIn(prev, h))}
                         className="px-2.5 py-1 text-xs font-semibold border rounded-full transition-all"
                         style={on ? { background: KZ.green, color: 'white', borderColor: KZ.green }
-                                  : { background: KZ.paper, color: '#2A2018', borderColor: '#E8DDC9' }}>
+                                  : { background: KZ.paper, color: 'var(--kz-text)', borderColor: 'var(--kz-line)' }}>
                         {on && '✓ '}{h}
                       </button>
                     )
@@ -409,7 +409,7 @@ export default function OnboardingPage() {
                 {selectedCategories.map(cat => (
                   <span
                     key={cat.id}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-[#1A1410] rounded-full"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border border-[var(--kz-edge)] rounded-full"
                     style={{ background: cat.color }}
                   >
                     {cat.emoji} {cat.label}
@@ -424,11 +424,11 @@ export default function OnboardingPage() {
             <div className="animate-slide-up max-w-[500px] mx-auto text-center">
               <div className="mb-8">
                 <Badge color="violet" size="lg" className="mb-4">Étape 4 — Ton CV</Badge>
-                <h1 className="text-3xl font-extrabold tracking-tight text-[#1A1410] mb-3">
+                <h1 className="text-3xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-3">
                   Génère ton CV<br />
                   <span style={{ color: KZ.orange }}>en quelques secondes</span>
                 </h1>
-                <p className="text-sm text-[#6B5A4A] max-w-[380px] mx-auto">
+                <p className="text-sm text-[var(--kz-mute)] max-w-[380px] mx-auto">
                   À partir de tes informations, nous allons créer un CV professionnel personnalisable
                   avec les couleurs et le style qui te ressemblent.
                 </p>
@@ -436,7 +436,7 @@ export default function OnboardingPage() {
 
               {/* Preview aperçu mini CV */}
               <div
-                className="kz-card p-6 bg-white mb-6 relative overflow-hidden"
+                className="kz-card p-6 bg-[var(--kz-paper)] mb-6 relative overflow-hidden"
                 style={{ transform: 'rotate(-1deg)' }}
               >
                 <div className="absolute top-0 left-0 right-0 h-16" style={{ background: selectedCategories[0]?.accentColor ?? KZ.violet }} />
@@ -444,22 +444,22 @@ export default function OnboardingPage() {
                   <div className="w-14 h-14 rounded-full border-2 border-white mx-auto mb-2 flex items-center justify-center text-xl font-extrabold" style={{ background: selectedCategories[0]?.color ?? KZ.violetSoft }}>
                     {fullName.split(' ').map(n => n[0]).join('').slice(0, 2)}
                   </div>
-                  <div className="text-base font-extrabold text-[#1A1410]">{fullName || 'Ton nom'}</div>
-                  <div className="text-xs text-[#6B5A4A] mb-3">{selectedCategories[0]?.label} · {location || 'La Réunion'}</div>
+                  <div className="text-base font-extrabold text-[var(--kz-ink)]">{fullName || 'Ton nom'}</div>
+                  <div className="text-xs text-[var(--kz-mute)] mb-3">{selectedCategories[0]?.label} · {location || 'La Réunion'}</div>
                   <div className="flex flex-wrap gap-1.5 justify-center mb-3">
                     {suggestedSkills.slice(0, 4).map(s => (
-                      <span key={s} className="text-[10px] px-2 py-0.5 rounded border border-[#E8DDC9] text-[#6B5A4A]">{s}</span>
+                      <span key={s} className="text-[10px] px-2 py-0.5 rounded border border-[var(--kz-line)] text-[var(--kz-mute)]">{s}</span>
                     ))}
                   </div>
-                  <div className="text-xs text-[#6B5A4A] line-clamp-2 max-w-[280px] mx-auto">{bio || 'Ta bio professionnelle apparaîtra ici'}</div>
+                  <div className="text-xs text-[var(--kz-mute)] line-clamp-2 max-w-[280px] mx-auto">{bio || 'Ta bio professionnelle apparaîtra ici'}</div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 p-3 rounded-xl border border-[#1A1410] text-left" style={{ background: KZ.greenSoft }}>
+              <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-edge)] text-left" style={{ background: KZ.greenSoft }}>
                 <FileText size={18} color={KZ.green} />
                 <div>
-                  <div className="text-sm font-bold text-[#1A1410]">CV Builder visuel</div>
-                  <div className="text-xs text-[#6B5A4A]">Choisis tes couleurs, ton template, ajoute tes expériences</div>
+                  <div className="text-sm font-bold text-[var(--kz-ink)]">CV Builder visuel</div>
+                  <div className="text-xs text-[var(--kz-mute)]">Choisis tes couleurs, ton template, ajoute tes expériences</div>
                 </div>
               </div>
             </div>
@@ -470,23 +470,23 @@ export default function OnboardingPage() {
             <div className="animate-slide-up max-w-[520px] mx-auto text-center">
               <div className="text-6xl mb-4">🎮</div>
               <Badge color="violet" size="lg" className="mb-4">Mode Quête activé !</Badge>
-              <h1 className="text-3xl lg:text-[38px] font-extrabold tracking-tight text-[#1A1410] mb-3">
+              <h1 className="text-3xl lg:text-[38px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-3">
                 L&apos;aventure<br />
                 <span style={{ color: KZ.violet }}>commence !</span>
               </h1>
-              <p className="text-sm text-[#6B5A4A] mb-6">
+              <p className="text-sm text-[var(--kz-mute)] mb-6">
                 Tu démarres à <strong>Niveau 1 · Débutant</strong>. Accomplis des quêtes pour gagner des XP et progresser.
               </p>
 
               {/* Level card */}
-              <div className="rounded-2xl border-2 border-[#1A1410] p-5 mb-5 text-left"
-                style={{ background: '#1A1410', boxShadow: '5px 5px 0 #6B5A4A' }}>
+              <div className="rounded-2xl border-2 border-[var(--kz-edge)] p-5 mb-5 text-left"
+                style={{ background: 'var(--kz-ink)', boxShadow: '5px 5px 0 var(--kz-mute)' }}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-3xl">🌱</span>
                     <div>
                       <div className="text-xs opacity-50 font-bold uppercase tracking-widest" style={{ color: KZ.cream }}>NIVEAU ACTUEL</div>
-                      <div className="text-base font-extrabold" style={{ color: '#6B5A4A' }}>Débutant</div>
+                      <div className="text-base font-extrabold" style={{ color: 'var(--kz-mute)' }}>Débutant</div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -495,13 +495,13 @@ export default function OnboardingPage() {
                   </div>
                 </div>
                 <div className="h-3 rounded-full border border-white/20 overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                  <div className="h-full w-0 rounded-full" style={{ background: '#6B5A4A' }} />
+                  <div className="h-full w-0 rounded-full" style={{ background: 'var(--kz-mute)' }} />
                 </div>
               </div>
 
               {/* Premières quêtes */}
-              <div className="kz-card p-4 bg-white text-left mb-6">
-                <p className="text-xs font-extrabold text-[#1A1410] uppercase tracking-widest mb-3">
+              <div className="kz-card p-4 bg-[var(--kz-paper)] text-left mb-6">
+                <p className="text-xs font-extrabold text-[var(--kz-ink)] uppercase tracking-widest mb-3">
                   Tes premières quêtes
                 </p>
                 {[
@@ -509,10 +509,10 @@ export default function OnboardingPage() {
                   { icon: '🎯', label: 'Postule à ta 1ère offre', xp: '+30 XP' },
                   { icon: '💼', label: 'Ajoute 3 compétences', xp: '+40 XP' },
                 ].map(q => (
-                  <div key={q.label} className="flex items-center gap-3 py-2 border-b border-[#E8DDC9] last:border-0">
+                  <div key={q.label} className="flex items-center gap-3 py-2 border-b border-[var(--kz-line)] last:border-0">
                     <span className="text-lg">{q.icon}</span>
-                    <span className="flex-1 text-sm font-semibold text-[#1A1410]">{q.label}</span>
-                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full border border-[#1A1410]"
+                    <span className="flex-1 text-sm font-semibold text-[var(--kz-ink)]">{q.label}</span>
+                    <span className="text-xs font-extrabold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                       style={{ background: KZ.violetSoft, color: KZ.violet }}>{q.xp}</span>
                   </div>
                 ))}
@@ -568,7 +568,7 @@ export default function OnboardingPage() {
                 onClick={() => {
                   router.push(profile?.role === 'recruiter' ? '/recruiter/dashboard' : '/candidate/dashboard')
                 }}
-                className="text-xs text-[#6B5A4A] hover:text-[#1A1410] underline"
+                className="text-xs text-[var(--kz-mute)] hover:text-[var(--kz-ink)] underline"
               >
                 Passer cette étape pour l&apos;instant
               </button>

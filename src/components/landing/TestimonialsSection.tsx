@@ -61,7 +61,7 @@ export function TestimonialsSection() {
       <div className="max-w-[1280px] mx-auto">
         <div className="text-center mb-12">
           <p className="kz-eyebrow mb-3" style={{ color: KZ.violet }}>Témoignages</p>
-          <h2 className="text-3xl lg:text-[40px] font-extrabold tracking-tight text-[#1A1410]">
+          <h2 className="text-3xl lg:text-[40px] font-extrabold tracking-tight text-[var(--kz-ink)]">
             Lé là, lé bon —<br />
             <span style={{ color: KZ.violet }}>la preuve en chiffres.</span>
           </h2>
@@ -72,8 +72,8 @@ export function TestimonialsSection() {
               { v: '4.8/5', l: 'note application' },
             ].map(s => (
               <div key={s.l} className="text-center">
-                <div className="text-3xl font-extrabold text-[#1A1410]">{s.v}</div>
-                <div className="text-xs text-[#6B5A4A] mt-0.5">{s.l}</div>
+                <div className="text-3xl font-extrabold text-[var(--kz-ink)]">{s.v}</div>
+                <div className="text-xs text-[var(--kz-mute)] mt-0.5">{s.l}</div>
               </div>
             ))}
           </div>
@@ -95,26 +95,26 @@ export function TestimonialsSection() {
                 ))}
               </div>
 
-              <p className="text-sm leading-relaxed text-[#1A1410] font-medium">
+              <p className="text-sm leading-relaxed text-[var(--kz-ink)] font-medium">
                 &laquo;&nbsp;{t.body}&nbsp;&raquo;
               </p>
 
-              <div className="flex items-center justify-between pt-3 border-t border-[#1A1410]/10">
+              <div className="flex items-center justify-between pt-3 border-t border-[var(--kz-edge)]/10">
                 <div className="flex items-center gap-3">
                   <div
-                    className="w-10 h-10 rounded-full border border-[#1A1410] flex items-center justify-center text-sm font-extrabold text-white shrink-0"
+                    className="w-10 h-10 rounded-full border border-[var(--kz-edge)] flex items-center justify-center text-sm font-extrabold text-white shrink-0"
                     style={{ background: t.avatarBg }}
                   >
                     {t.avatar}
                   </div>
                   <div>
-                    <div className="text-sm font-bold text-[#1A1410]">{t.name}</div>
-                    <div className="text-xs text-[#6B5A4A]">{t.role}</div>
-                    <div className="text-[11px] text-[#6B5A4A] opacity-70">{t.company}</div>
+                    <div className="text-sm font-bold text-[var(--kz-ink)]">{t.name}</div>
+                    <div className="text-xs text-[var(--kz-mute)]">{t.role}</div>
+                    <div className="text-[11px] text-[var(--kz-mute)] opacity-70">{t.company}</div>
                   </div>
                 </div>
                 <span
-                  className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#1A1410]"
+                  className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-[var(--kz-edge)]"
                   style={{ background: t.tagColor + '25', color: t.tagColor }}
                 >
                   {t.tag}

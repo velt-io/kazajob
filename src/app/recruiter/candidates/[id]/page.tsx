@@ -52,11 +52,11 @@ export default function CandidateDetailPage() {
   }, [id])
 
   if (loading) return <PageLoader />
-  if (!candidate) return <div className="text-center py-16 text-[#6B5A4A]">Candidat introuvable.</div>
+  if (!candidate) return <div className="text-center py-16 text-[var(--kz-mute)]">Candidat introuvable.</div>
 
   return (
     <div className="max-w-[800px] mx-auto">
-      <button onClick={() => router.back()} className="flex items-center gap-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] mb-6">
+      <button onClick={() => router.back()} className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-6">
         <ArrowLeft size={16} />
         Retour
       </button>
@@ -64,13 +64,13 @@ export default function CandidateDetailPage() {
       <div className="grid grid-cols-1 sm:grid-cols-[260px_1fr] gap-5">
         {/* Left */}
         <div className="flex flex-col gap-4">
-          <div className="kz-card p-5 bg-white text-center">
+          <div className="kz-card p-5 bg-[var(--kz-paper)] text-center">
             <div className="flex justify-center mb-3">
               <Avatar name={candidate.full_name} src={candidate.avatar_url} avatarConfig={candidate.avatar_config} size={72} color={KZ.orangeSoft} />
             </div>
-            <h2 className="text-lg font-bold text-[#1A1410]">{candidate.full_name}</h2>
+            <h2 className="text-lg font-bold text-[var(--kz-ink)]">{candidate.full_name}</h2>
             {candidate.location && (
-              <div className="flex items-center justify-center gap-1 text-sm text-[#6B5A4A] mt-1">
+              <div className="flex items-center justify-center gap-1 text-sm text-[var(--kz-mute)] mt-1">
                 <MapPin size={13} /> {candidate.location}
               </div>
             )}
@@ -80,13 +80,13 @@ export default function CandidateDetailPage() {
               if (!pitchUrl) return null
               return (
                 <div className="mt-4">
-                  <div className="text-xs font-bold text-[#6B5A4A] mb-2 flex items-center gap-1.5">
+                  <div className="text-xs font-bold text-[var(--kz-mute)] mb-2 flex items-center gap-1.5">
                     <Play size={11} /> Pitch vidéo du candidat
                   </div>
                   <video
                     src={pitchUrl}
                     controls
-                    className="w-full rounded-xl border border-[#1A1410] bg-black"
+                    className="w-full rounded-xl border border-[var(--kz-edge)] bg-black"
                     style={{ maxHeight: '200px' }}
                   />
                 </div>
@@ -108,16 +108,16 @@ export default function CandidateDetailPage() {
             </div>
           </div>
 
-          <div className="kz-card p-5 bg-white">
-            <div className="kz-eyebrow text-[#6B5A4A] mb-3">Contact</div>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <div className="kz-eyebrow text-[var(--kz-mute)] mb-3">Contact</div>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-sm text-[#1A1410]">
-                <Mail size={14} className="text-[#6B5A4A]" />
+              <div className="flex items-center gap-2 text-sm text-[var(--kz-ink)]">
+                <Mail size={14} className="text-[var(--kz-mute)]" />
                 {candidate.email}
               </div>
               {candidate.phone && (
-                <div className="flex items-center gap-2 text-sm text-[#1A1410]">
-                  <Phone size={14} className="text-[#6B5A4A]" />
+                <div className="flex items-center gap-2 text-sm text-[var(--kz-ink)]">
+                  <Phone size={14} className="text-[var(--kz-mute)]" />
                   {candidate.phone}
                 </div>
               )}
@@ -131,23 +131,23 @@ export default function CandidateDetailPage() {
           {candidate.quiz_result?.archetype && ARCHETYPES[candidate.quiz_result.archetype as ArchetypeKey] && (() => {
             const a = ARCHETYPES[candidate.quiz_result.archetype as ArchetypeKey]
             return (
-              <div className="kz-card p-5 bg-white" style={{ boxShadow: `4px 4px 0 ${a.color}` }}>
+              <div className="kz-card p-5 bg-[var(--kz-paper)]" style={{ boxShadow: `4px 4px 0 ${a.color}` }}>
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-3xl">{a.emoji}</span>
                   <div>
                     <div className="kz-eyebrow" style={{ color: a.color }}>Profil candidat</div>
-                    <div className="text-base font-extrabold text-[#1A1410]">{a.label}</div>
+                    <div className="text-base font-extrabold text-[var(--kz-ink)]">{a.label}</div>
                   </div>
                 </div>
-                <p className="text-sm text-[#2A2018] leading-relaxed">{a.recruiterHint}</p>
+                <p className="text-sm text-[var(--kz-text)] leading-relaxed">{a.recruiterHint}</p>
               </div>
             )
           })()}
 
           {candidate.bio && (
-            <div className="kz-card p-5 bg-white">
-              <h3 className="kz-h3 text-[#1A1410] mb-3">Bio</h3>
-              <p className="text-sm leading-relaxed text-[#2A2018]">{candidate.bio}</p>
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h3 className="kz-h3 text-[var(--kz-ink)] mb-3">Bio</h3>
+              <p className="text-sm leading-relaxed text-[var(--kz-text)]">{candidate.bio}</p>
             </div>
           )}
 
@@ -166,13 +166,13 @@ export default function CandidateDetailPage() {
             const reals = c.realisations ?? []
             if (!links.length && !reals.length) return null
             return (
-              <div className="kz-card p-5 bg-white">
-                <h3 className="kz-h3 text-[#1A1410] mb-3">KazaPortfolio</h3>
+              <div className="kz-card p-5 bg-[var(--kz-paper)]">
+                <h3 className="kz-h3 text-[var(--kz-ink)] mb-3">KazaPortfolio</h3>
                 {links.length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-3">
                     {links.map((l) => (
                       <a key={l.label} href={l.href} target="_blank" rel="noreferrer"
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#1A1410] text-xs font-semibold hover:shadow-[2px_2px_0_#1A1410] transition-all"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--kz-edge)] text-xs font-semibold hover:shadow-[2px_2px_0_var(--kz-shadow)] transition-all"
                         style={{ background: KZ.violetSoft, color: KZ.violet }}>
                         {l.icon}{l.label}<ExternalLink size={10} />
                       </a>
@@ -182,12 +182,12 @@ export default function CandidateDetailPage() {
                 {reals.length > 0 && (
                   <div className="flex flex-col gap-2">
                     {reals.map((r, i) => (
-                      <div key={i} className="p-3 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                      <div key={i} className="p-3 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-bold text-[#1A1410]">{r.title}</span>
+                          <span className="text-sm font-bold text-[var(--kz-ink)]">{r.title}</span>
                           {r.url && <a href={r.url} target="_blank" rel="noreferrer" className="text-xs font-semibold flex items-center gap-1" style={{ color: KZ.violet }}>Voir <ExternalLink size={10} /></a>}
                         </div>
-                        {r.description && <p className="text-xs text-[#6B5A4A] mt-0.5">{r.description}</p>}
+                        {r.description && <p className="text-xs text-[var(--kz-mute)] mt-0.5">{r.description}</p>}
                       </div>
                     ))}
                   </div>
@@ -196,33 +196,33 @@ export default function CandidateDetailPage() {
             )
           })()}
 
-          <div className="kz-card p-5 bg-white">
-            <h3 className="kz-h3 text-[#1A1410] mb-3">Stats</h3>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h3 className="kz-h3 text-[var(--kz-ink)] mb-3">Stats</h3>
             <div className="grid grid-cols-3 gap-3 mb-4">
               {[
                 { v: candidate.xp?.toLocaleString('fr-FR') ?? '—', l: 'XP total' },
                 { v: candidate.streak ?? 0, l: 'Streak jours' },
                 { v: applications.length, l: 'Candidatures' },
               ].map((s) => (
-                <div key={s.l} className="text-center p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                  <div className="text-2xl font-extrabold text-[#1A1410]">{String(s.v)}</div>
-                  <div className="text-xs text-[#6B5A4A] mt-0.5">{s.l}</div>
+                <div key={s.l} className="text-center p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                  <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{String(s.v)}</div>
+                  <div className="text-xs text-[var(--kz-mute)] mt-0.5">{s.l}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {applications.length > 0 && (
-            <div className="kz-card p-5 bg-white">
-              <h3 className="kz-h3 text-[#1A1410] mb-3">Candidatures</h3>
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h3 className="kz-h3 text-[var(--kz-ink)] mb-3">Candidatures</h3>
               <div className="flex flex-col gap-2">
                 {applications.map((app) => {
                   const statusInfo = APPLICATION_STATUSES[app.status] ?? { label: app.status, color: 'cream' }
                   return (
-                    <div key={app.id} className="flex items-center gap-3 p-3 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                    <div key={app.id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                       <div className="flex-1">
-                        <div className="text-sm font-bold text-[#1A1410]">{app.job?.title}</div>
-                        <div className="text-xs text-[#6B5A4A]">{app.job?.company?.name} · {timeAgo(app.created_at)}</div>
+                        <div className="text-sm font-bold text-[var(--kz-ink)]">{app.job?.title}</div>
+                        <div className="text-xs text-[var(--kz-mute)]">{app.job?.company?.name} · {timeAgo(app.created_at)}</div>
                       </div>
                       <Badge color={statusInfo.color as BadgeColor} size="sm">{statusInfo.label}</Badge>
                     </div>

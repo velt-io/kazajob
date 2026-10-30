@@ -64,7 +64,7 @@ export function FaqSection() {
       <div className="max-w-[800px] mx-auto">
         <div className="text-center mb-12">
           <p className="kz-eyebrow mb-3" style={{ color: KZ.violet }}>FAQ</p>
-          <h2 className="text-3xl lg:text-[40px] font-extrabold tracking-tight text-[#1A1410]">
+          <h2 className="text-3xl lg:text-[40px] font-extrabold tracking-tight text-[var(--kz-ink)]">
             Les questions qu&apos;on nous pose<br />
             <span style={{ color: KZ.violet }}>le plus souvent.</span>
           </h2>
@@ -74,35 +74,35 @@ export function FaqSection() {
           {FAQ_ITEMS.map((item, i) => (
             <div
               key={i}
-              className="rounded-2xl border border-[#1A1410] overflow-hidden transition-all"
+              className="rounded-2xl border border-[var(--kz-edge)] overflow-hidden transition-all"
               style={{
                 background: open === i ? KZ.paper : KZ.cream,
-                boxShadow: open === i ? '4px 4px 0 #1A1410' : '2px 2px 0 #E8DDC9',
+                boxShadow: open === i ? '4px 4px 0 var(--kz-shadow)' : '2px 2px 0 var(--kz-line)',
               }}
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[#FBEFE0] transition-colors"
+                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[var(--kz-cream2)] transition-colors"
               >
-                <span className="text-sm font-bold text-[#1A1410] pr-4">{item.q}</span>
+                <span className="text-sm font-bold text-[var(--kz-ink)] pr-4">{item.q}</span>
                 {open === i
-                  ? <ChevronUp size={18} className="text-[#6B5A4A] shrink-0" />
-                  : <ChevronDown size={18} className="text-[#6B5A4A] shrink-0" />
+                  ? <ChevronUp size={18} className="text-[var(--kz-mute)] shrink-0" />
+                  : <ChevronDown size={18} className="text-[var(--kz-mute)] shrink-0" />
                 }
               </button>
               {open === i && (
                 <div className="px-5 pb-5 pt-0">
-                  <div className="h-px bg-[#E8DDC9] mb-4" />
-                  <p className="text-sm text-[#2A2018] leading-relaxed">{item.a}</p>
+                  <div className="h-px bg-[var(--kz-line)] mb-4" />
+                  <p className="text-sm text-[var(--kz-text)] leading-relaxed">{item.a}</p>
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        <p className="text-center text-sm text-[#6B5A4A] mt-8">
+        <p className="text-center text-sm text-[var(--kz-mute)] mt-8">
           Tu as une autre question ?{' '}
-          <a href="mailto:hello@kazajob.re" className="font-bold hover:text-[#FF6B35] transition-colors" style={{ color: KZ.orange }}>
+          <a href="mailto:hello@kazajob.re" className="font-bold hover:text-[var(--kz-orange)] transition-colors" style={{ color: KZ.orange }}>
             Écris-nous — hello@kazajob.re
           </a>
         </p>

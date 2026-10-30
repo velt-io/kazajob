@@ -36,12 +36,12 @@ export function PricingSection() {
         {/* Header */}
         <div className="text-center mb-12">
           <p className="kz-eyebrow mb-3" style={{ color: KZ.violet }}>Tarifs recruteurs</p>
-          <h2 className="text-3xl lg:text-[44px] font-extrabold tracking-tight text-[#1A1410] mb-4">
+          <h2 className="text-3xl lg:text-[44px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-4">
             Transparent, local,<br />
             <span style={{ color: KZ.violet }}>sans mauvaise surprise.</span>
           </h2>
-          <p className="text-base text-[#6B5A4A] max-w-[520px] mx-auto">
-            Les candidats accèdent à <strong className="text-[#1A1410]">100% des fonctionnalités gratuitement</strong>, pour toujours.
+          <p className="text-base text-[var(--kz-mute)] max-w-[520px] mx-auto">
+            Les candidats accèdent à <strong className="text-[var(--kz-ink)]">100% des fonctionnalités gratuitement</strong>, pour toujours.
             {' '}{launchDays
               ? `Phase de lancement en cours — ${launchDays} jours restants · accès gratuit sans carte bancaire.`
               : 'Les recruteurs choisissent leur forfait selon leurs besoins. Essai 30 jours, carte requise à l\'activation.'
@@ -67,7 +67,7 @@ export function PricingSection() {
                 style={{
                   background: hl ? KZ.violet : 'white',
                   color: hl ? 'white' : KZ.ink,
-                  boxShadow: hl ? '6px 6px 0 #1A1410' : '3px 3px 0 #1A1410',
+                  boxShadow: hl ? '6px 6px 0 var(--kz-shadow)' : '3px 3px 0 var(--kz-shadow)',
                 }}>
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <span className="text-sm font-bold opacity-80">{plan.name}</span>
@@ -97,12 +97,12 @@ export function PricingSection() {
           })}
         </div>
 
-        <p className="text-center text-xs text-[#6B5A4A] mb-10">
+        <p className="text-center text-xs text-[var(--kz-mute)] mb-10">
           Tarifs nets · TVA non applicable, art. 293 B du CGI (micro-entreprise).
         </p>
 
         {/* Plan candidat — toujours gratuit */}
-        <div className="rounded-2xl border border-[#1A1410] overflow-hidden"
+        <div className="rounded-2xl border border-[var(--kz-edge)] overflow-hidden"
           style={{ background: KZ.ink, boxShadow: '5px 5px 0 ' + KZ.violet }}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 pt-6 pb-4 border-b border-white/10">
             <div className="flex items-center gap-3">
@@ -140,9 +140,9 @@ export function PricingSection() {
               : { label: 'Essai 30 jours', desc: 'Carte requise · débit après 30j' },
             { label: 'Support 974', desc: 'Équipe locale' },
           ].map((g) => (
-            <div key={g.label} className="text-center p-4 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-              <div className="text-sm font-bold text-[#1A1410] mb-0.5">{g.label}</div>
-              <div className="text-xs text-[#6B5A4A]">{g.desc}</div>
+            <div key={g.label} className="text-center p-4 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+              <div className="text-sm font-bold text-[var(--kz-ink)] mb-0.5">{g.label}</div>
+              <div className="text-xs text-[var(--kz-mute)]">{g.desc}</div>
             </div>
           ))}
         </div>

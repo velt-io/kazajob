@@ -41,15 +41,15 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-[420px]">
         <div className="flex justify-center mb-8"><Logo size={36} /></div>
 
-        <div className="rounded-2xl border-[1.5px] border-[#1A1410] bg-white p-6 sm:p-8" style={{ boxShadow: '6px 6px 0 #1A1410' }}>
+        <div className="rounded-2xl border-[1.5px] border-[var(--kz-edge)] bg-[var(--kz-paper)] p-6 sm:p-8" style={{ boxShadow: '6px 6px 0 var(--kz-shadow)' }}>
           {sent ? (
             <div className="text-center">
-              <span className="w-14 h-14 mx-auto mb-4 rounded-2xl border border-[#1A1410] flex items-center justify-center" style={{ background: KZ.greenSoft }}>
-                <MailCheck size={26} className="text-[#1A1410]" />
+              <span className="w-14 h-14 mx-auto mb-4 rounded-2xl border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.greenSoft }}>
+                <MailCheck size={26} className="text-[var(--kz-ink)]" />
               </span>
-              <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[#1A1410]">Vérifie ta boîte mail</h1>
-              <p className="text-sm text-[#6B5A4A] leading-relaxed mb-6">
-                Si un compte existe pour <strong className="text-[#1A1410]">{email}</strong>, tu vas recevoir un lien pour choisir un nouveau mot de passe. Il est valable 1 heure.
+              <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[var(--kz-ink)]">Vérifie ta boîte mail</h1>
+              <p className="text-sm text-[var(--kz-mute)] leading-relaxed mb-6">
+                Si un compte existe pour <strong className="text-[var(--kz-ink)]">{email}</strong>, tu vas recevoir un lien pour choisir un nouveau mot de passe. Il est valable 1 heure.
                 Pense à regarder dans tes spams.
               </p>
               <Link href="/auth/login">
@@ -58,8 +58,8 @@ export default function ForgotPasswordPage() {
             </div>
           ) : (
             <>
-              <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[#1A1410]">Mot de passe oublié ?</h1>
-              <p className="text-sm text-[#6B5A4A] mb-6">
+              <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[var(--kz-ink)]">Mot de passe oublié ?</h1>
+              <p className="text-sm text-[var(--kz-mute)] mb-6">
                 Indique l&apos;email de ton compte, on t&apos;envoie un lien pour en choisir un nouveau.
               </p>
 
@@ -77,8 +77,8 @@ export default function ForgotPasswordPage() {
           )}
         </div>
 
-        <p className="text-center text-xs text-[#6B5A4A] mt-6">
-          <Link href="/auth/login" className="hover:text-[#FF6B35] font-semibold">← Retour à la connexion</Link>
+        <p className="text-center text-xs text-[var(--kz-mute)] mt-6">
+          <Link href="/auth/login" className="hover:text-[var(--kz-orange)] font-semibold">← Retour à la connexion</Link>
         </p>
       </div>
     </div>

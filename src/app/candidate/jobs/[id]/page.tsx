@@ -45,7 +45,7 @@ export default function JobDetailPage() {
   if (loading) return <PageLoader />
   if (!job) return (
     <div className="text-center py-16">
-      <p className="text-[#6B5A4A] mb-4">Offre introuvable.</p>
+      <p className="text-[var(--kz-mute)] mb-4">Offre introuvable.</p>
       <Button kind="outline" onClick={() => router.back()}>Retour</Button>
     </div>
   )
@@ -66,7 +66,7 @@ export default function JobDetailPage() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <button onClick={() => router.back()} className="flex items-center gap-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] mb-5">
+      <button onClick={() => router.back()} className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-5">
         <ArrowLeft size={16} />Retour aux offres
       </button>
 
@@ -75,18 +75,18 @@ export default function JobDetailPage() {
         {/* Main */}
         <div className="flex flex-col gap-4">
           {/* Header offre */}
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             <div className="flex gap-4 items-start mb-4">
-              <div className="w-14 h-14 rounded-xl border border-[#1A1410] flex items-center justify-center text-lg font-extrabold text-[#1A1410] shrink-0" style={{ background: KZ.orangeSoft }}>
+              <div className="w-14 h-14 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-lg font-extrabold text-[var(--kz-ink)] shrink-0" style={{ background: KZ.orangeSoft }}>
                 {(job.company?.name ?? 'CO').slice(0, 2).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-[#6B5A4A]">{job.company?.name}</div>
-                <h1 className="text-xl lg:text-[26px] font-extrabold tracking-tight text-[#1A1410] leading-tight">{job.title}</h1>
+                <div className="text-sm font-semibold text-[var(--kz-mute)]">{job.company?.name}</div>
+                <h1 className="text-xl lg:text-[26px] font-extrabold tracking-tight text-[var(--kz-ink)] leading-tight">{job.title}</h1>
                 <div className="flex gap-3 mt-2 flex-wrap">
-                  <span className="flex items-center gap-1 text-xs text-[#2A2018]"><MapPin size={13} />{job.location}</span>
-                  <span className="flex items-center gap-1 text-xs text-[#2A2018]"><Clock size={13} />{timeAgo(job.created_at)}</span>
-                  <span className="flex items-center gap-1 text-xs text-[#2A2018]"><Briefcase size={13} />{job.job_type}</span>
+                  <span className="flex items-center gap-1 text-xs text-[var(--kz-text)]"><MapPin size={13} />{job.location}</span>
+                  <span className="flex items-center gap-1 text-xs text-[var(--kz-text)]"><Clock size={13} />{timeAgo(job.created_at)}</span>
+                  <span className="flex items-center gap-1 text-xs text-[var(--kz-text)]"><Briefcase size={13} />{job.job_type}</span>
                   {job.remote && <Badge color="green" size="sm">Remote</Badge>}
                 </div>
               </div>
@@ -100,11 +100,11 @@ export default function JobDetailPage() {
                   || profile.location.toLowerCase().includes(job.location.toLowerCase().split(',')[0])
                 : null
               return (
-                <div className="rounded-xl border border-[#1A1410] overflow-hidden" style={{ background: KZ.violetSoft }}>
+                <div className="rounded-xl border border-[var(--kz-edge)] overflow-hidden" style={{ background: KZ.violetSoft }}>
                   <div className="p-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Sparkles size={15} color={KZ.violet} />
-                      <span className="text-sm font-bold text-[#1A1410]">
+                      <span className="text-sm font-bold text-[var(--kz-ink)]">
                         Score matching IA : <span style={{ color: KZ.violet }}>{job.match_score}%</span>
                       </span>
                       <button
@@ -119,8 +119,8 @@ export default function JobDetailPage() {
                     <Progress value={job.match_score} color={KZ.violet} />
                   </div>
                   {showMatchDetail && (
-                    <div className="px-3 pb-3 flex flex-col gap-2 border-t border-[#6D3BEB]/20 pt-3">
-                      <p className="text-xs font-bold text-[#1A1410] mb-1">Détail du score :</p>
+                    <div className="px-3 pb-3 flex flex-col gap-2 border-t border-[var(--kz-violet)]/20 pt-3">
+                      <p className="text-xs font-bold text-[var(--kz-ink)] mb-1">Détail du score :</p>
                       {[
                         {
                           label: 'Compétences techniques',
@@ -147,17 +147,17 @@ export default function JobDetailPage() {
                           <span className="mt-0.5 text-base leading-none">{row.ok ? '✅' : '⚡'}</span>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-xs font-semibold text-[#1A1410]">{row.label}</span>
-                              <span className="text-[10px] text-[#6B5A4A]">({row.pct}%)</span>
+                              <span className="text-xs font-semibold text-[var(--kz-ink)]">{row.label}</span>
+                              <span className="text-[10px] text-[var(--kz-mute)]">({row.pct}%)</span>
                             </div>
-                            <p className="text-[11px] text-[#6B5A4A] mt-0.5 leading-tight">{row.tip}</p>
+                            <p className="text-[11px] text-[var(--kz-mute)] mt-0.5 leading-tight">{row.tip}</p>
                           </div>
                         </div>
                       ))}
                       {job.match_score < 80 && (
                         <a
                           href="/candidate/profile"
-                          className="mt-1 text-xs font-bold text-center py-2 rounded-lg border border-[#6D3BEB] transition-colors hover:bg-[#6D3BEB] hover:text-white"
+                          className="mt-1 text-xs font-bold text-center py-2 rounded-lg border border-[var(--kz-violet)] transition-colors hover:bg-[var(--kz-violet)] hover:text-white"
                           style={{ color: KZ.violet }}
                         >
                           Améliorer mon score → compléter mon profil
@@ -171,12 +171,12 @@ export default function JobDetailPage() {
           </div>
 
           {/* Outils KazaIA — visible partout */}
-          <div className="kz-card p-4 bg-white border-[#6D3BEB]" style={{ borderColor: KZ.violet }}>
+          <div className="kz-card p-4 bg-[var(--kz-paper)] border-[var(--kz-violet)]" style={{ borderColor: KZ.violet }}>
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center" style={{ background: KZ.violet }}>
+              <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.violet }}>
                 <Sparkles size={13} color="white" />
               </div>
-              <span className="text-sm font-bold text-[#1A1410]">KazaIA — Outils intelligents</span>
+              <span className="text-sm font-bold text-[var(--kz-ink)]">KazaIA — Outils intelligents</span>
               <Badge color="violet" size="sm">Beta</Badge>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -205,27 +205,27 @@ export default function JobDetailPage() {
           <ExplainJobSection jobId={id} />
 
           {/* CTA mobile — visible uniquement sur mobile */}
-          <div className="lg:hidden kz-card p-4 bg-white">
-            <div className="text-xl font-extrabold text-[#1A1410] mb-1">{formatSalary(job.salary_min, job.salary_max)}</div>
+          <div className="lg:hidden kz-card p-4 bg-[var(--kz-paper)]">
+            <div className="text-xl font-extrabold text-[var(--kz-ink)] mb-1">{formatSalary(job.salary_min, job.salary_max)}</div>
             {(() => {
               const sl = getSalaryLabel(job.salary_min, job.salary_max)
               return sl ? (
-                <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410] mb-2"
+                <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)] mb-2"
                   style={{ background: sl.bg, color: sl.color }}>
                   {sl.label}
                 </span>
               ) : null
             })()}
-            <div className="text-sm text-[#6B5A4A] mb-4">{job.job_type} · {job.location}</div>
+            <div className="text-sm text-[var(--kz-mute)] mb-4">{job.job_type} · {job.location}</div>
             {alreadyApplied ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl border border-[#19A974] bg-[#D6F0E0]">
+              <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
                 <Check size={16} color={KZ.green} />
-                <span className="text-sm font-bold text-[#1A1410]">Candidature envoyée !</span>
+                <span className="text-sm font-bold text-[var(--kz-ink)]">Candidature envoyée !</span>
               </div>
             ) : !job.is_active ? (
-              <div className="flex items-start gap-2 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.cream2 }}>
+              <div className="flex items-start gap-2 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.cream2 }}>
                 <Clock size={16} className="shrink-0 mt-0.5" />
-                <span className="text-sm text-[#1A1410]">
+                <span className="text-sm text-[var(--kz-ink)]">
                   <strong>Cette offre n&apos;est plus disponible.</strong>{' '}
                   <Link href="/candidate/jobs" className="font-bold underline" style={{ color: KZ.orange }}>Voir les offres en cours</Link>
                 </span>
@@ -236,26 +236,26 @@ export default function JobDetailPage() {
           </div>
 
           {/* ── Description ────────────────────────────────── */}
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: KZ.orangeSoft }}>
-                <Briefcase size={13} color="#1A1410" />
+              <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: KZ.orangeSoft }}>
+                <Briefcase size={13} color="var(--kz-ink)" />
               </div>
-              <h2 className="text-base font-bold text-[#1A1410]">Description du poste</h2>
+              <h2 className="text-base font-bold text-[var(--kz-ink)]">Description du poste</h2>
             </div>
-            <div className="text-sm leading-relaxed text-[#2A2018] whitespace-pre-line">{job.description}</div>
+            <div className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{job.description}</div>
           </div>
 
           {/* ── Missions ───────────────────────────────────── */}
           {(job as unknown as { missions?: string | null }).missions && (
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: KZ.violetSoft }}>
+                <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: KZ.violetSoft }}>
                   <ListChecks size={13} color={KZ.violet} />
                 </div>
-                <h2 className="text-base font-bold text-[#1A1410]">Missions attendues</h2>
+                <h2 className="text-base font-bold text-[var(--kz-ink)]">Missions attendues</h2>
               </div>
-              <div className="text-sm leading-relaxed text-[#2A2018] whitespace-pre-line">
+              <div className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">
                 {(job as unknown as { missions: string }).missions}
               </div>
             </div>
@@ -263,33 +263,33 @@ export default function JobDetailPage() {
 
           {/* ── Profil recherché ───────────────────────────── */}
           {job.requirements && (
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: KZ.greenSoft }}>
+                <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: KZ.greenSoft }}>
                   <GraduationCap size={13} color={KZ.green} />
                 </div>
-                <h2 className="text-base font-bold text-[#1A1410]">Profil recherché</h2>
+                <h2 className="text-base font-bold text-[var(--kz-ink)]">Profil recherché</h2>
                 {(job as unknown as { required_level?: string | null }).required_level && (
-                  <span className="ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+                  <span className="ml-auto text-[11px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                     style={{ background: KZ.cream2 }}>
                     {(job as unknown as { required_level: string }).required_level}
                   </span>
                 )}
               </div>
-              <div className="text-sm leading-relaxed text-[#2A2018] whitespace-pre-line">{job.requirements}</div>
+              <div className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{job.requirements}</div>
             </div>
           )}
 
           {/* ── Avantages ──────────────────────────────────── */}
           {(job as unknown as { benefits?: string | null }).benefits && (
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: '#FFF7C2' }}>
+                <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: '#FFF7C2' }}>
                   <Gift size={13} color="#C9A000" />
                 </div>
-                <h2 className="text-base font-bold text-[#1A1410]">Avantages & bénéfices</h2>
+                <h2 className="text-base font-bold text-[var(--kz-ink)]">Avantages & bénéfices</h2>
               </div>
-              <div className="text-sm leading-relaxed text-[#2A2018] whitespace-pre-line">
+              <div className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">
                 {(job as unknown as { benefits: string }).benefits}
               </div>
             </div>
@@ -312,27 +312,27 @@ export default function JobDetailPage() {
 
         {/* Sidebar desktop */}
         <div className="hidden lg:flex flex-col gap-4">
-          <div className="kz-card p-5 bg-white">
-            <div className="text-2xl font-extrabold tracking-tight text-[#1A1410] mb-1">{formatSalary(job.salary_min, job.salary_max)}</div>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <div className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-1">{formatSalary(job.salary_min, job.salary_max)}</div>
             {(() => {
               const sl = getSalaryLabel(job.salary_min, job.salary_max)
               return sl ? (
-                <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410] mb-2"
+                <span className="inline-block text-[11px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)] mb-2"
                   style={{ background: sl.bg, color: sl.color }}>
                   {sl.label}
                 </span>
               ) : null
             })()}
-            <div className="text-sm text-[#6B5A4A] mb-4">{job.job_type} · {job.location}</div>
+            <div className="text-sm text-[var(--kz-mute)] mb-4">{job.job_type} · {job.location}</div>
             {alreadyApplied ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl border border-[#19A974] bg-[#D6F0E0]">
+              <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
                 <Check size={16} color={KZ.green} />
-                <span className="text-sm font-bold text-[#1A1410]">Candidature envoyée !</span>
+                <span className="text-sm font-bold text-[var(--kz-ink)]">Candidature envoyée !</span>
               </div>
             ) : !job.is_active ? (
-              <div className="flex items-start gap-2 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.cream2 }}>
+              <div className="flex items-start gap-2 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.cream2 }}>
                 <Clock size={16} className="shrink-0 mt-0.5" />
-                <span className="text-sm text-[#1A1410]">
+                <span className="text-sm text-[var(--kz-ink)]">
                   <strong>Cette offre n&apos;est plus disponible.</strong>{' '}
                   <Link href="/candidate/jobs" className="font-bold underline" style={{ color: KZ.orange }}>Voir les offres en cours</Link>
                 </span>
@@ -340,19 +340,19 @@ export default function JobDetailPage() {
             ) : (
               <Button kind="primary" size="lg" full onClick={() => setApplyModal(true)}>Postuler maintenant</Button>
             )}
-            <Button kind="outline" size="md" full className="mt-2" icon={<Heart size={15} fill={isFavorite(id) ? '#FF6B35' : 'none'} color={isFavorite(id) ? '#FF6B35' : '#1A1410'} />} onClick={() => toggle(id)}>
+            <Button kind="outline" size="md" full className="mt-2" icon={<Heart size={15} fill={isFavorite(id) ? 'var(--kz-orange)' : 'none'} color={isFavorite(id) ? 'var(--kz-orange)' : 'var(--kz-ink)'} />} onClick={() => toggle(id)}>
               {isFavorite(id) ? 'Retire des favoris' : 'Sauvegarder'}
             </Button>
           </div>
-          <div className="kz-card p-5 bg-white">
-            <h3 className="text-base font-bold text-[#1A1410] mb-3">A propos</h3>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h3 className="text-base font-bold text-[var(--kz-ink)] mb-3">A propos</h3>
             <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-2 text-sm text-[#2A2018]"><Building2 size={14} className="text-[#6B5A4A]" />{job.company?.name}</div>
-              {job.company?.location && <div className="flex items-center gap-2 text-sm text-[#2A2018]"><MapPin size={14} className="text-[#6B5A4A]" />{job.company.location}</div>}
+              <div className="flex items-center gap-2 text-sm text-[var(--kz-text)]"><Building2 size={14} className="text-[var(--kz-mute)]" />{job.company?.name}</div>
+              {job.company?.location && <div className="flex items-center gap-2 text-sm text-[var(--kz-text)]"><MapPin size={14} className="text-[var(--kz-mute)]" />{job.company.location}</div>}
               {/* KazaScore recruteur */}
               {job.recruiter_id && (
-                <div className="mt-2 pt-2 border-t border-[#E8DDC9] flex items-center gap-2">
-                  <span className="text-xs text-[#6B5A4A]">Réactivité :</span>
+                <div className="mt-2 pt-2 border-t border-[var(--kz-line)] flex items-center gap-2">
+                  <span className="text-xs text-[var(--kz-mute)]">Réactivité :</span>
                   <KazaScoreMini recruiterId={job.recruiter_id} />
                 </div>
               )}
@@ -361,9 +361,9 @@ export default function JobDetailPage() {
           {/* Réputation employeur (indicateurs réels) */}
           <EmployerReputation companyId={job.company?.id} />
 
-          <div className="kz-card p-4 bg-white grid grid-cols-2 gap-3">
-            <div className="text-center"><div className="text-2xl font-extrabold text-[#1A1410]">{job.views}</div><div className="text-xs text-[#6B5A4A]">vues</div></div>
-            <div className="text-center"><div className="text-2xl font-extrabold text-[#1A1410]">{job.applications_count}</div><div className="text-xs text-[#6B5A4A]">candidatures</div></div>
+          <div className="kz-card p-4 bg-[var(--kz-paper)] grid grid-cols-2 gap-3">
+            <div className="text-center"><div className="text-2xl font-extrabold text-[var(--kz-ink)]">{job.views}</div><div className="text-xs text-[var(--kz-mute)]">vues</div></div>
+            <div className="text-center"><div className="text-2xl font-extrabold text-[var(--kz-ink)]">{job.applications_count}</div><div className="text-xs text-[var(--kz-mute)]">candidatures</div></div>
           </div>
         </div>
       </div>
@@ -372,38 +372,38 @@ export default function JobDetailPage() {
       <Modal open={applyModal} onClose={() => setApplyModal(false)} title="Postuler a cette offre">
         <div className="flex flex-col gap-4">
           <div>
-            <h3 className="font-bold text-[#1A1410]">{job.title}</h3>
-            <p className="text-sm text-[#6B5A4A]">{job.company?.name} · {job.location}</p>
+            <h3 className="font-bold text-[var(--kz-ink)]">{job.title}</h3>
+            <p className="text-sm text-[var(--kz-mute)]">{job.company?.name} · {job.location}</p>
           </div>
           {error && <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
 
           {prequalQuestions.length > 0 && (
-            <div className="flex flex-col gap-3 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft }}>
-              <p className="text-sm font-bold text-[#1A1410]">Questions du recruteur</p>
+            <div className="flex flex-col gap-3 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
+              <p className="text-sm font-bold text-[var(--kz-ink)]">Questions du recruteur</p>
               {prequalQuestions.map((q) => (
                 <div key={q.id}>
-                  <label className="block text-sm font-semibold text-[#2A2018] mb-1.5">{q.label}{q.required && ' *'}</label>
+                  <label className="block text-sm font-semibold text-[var(--kz-text)] mb-1.5">{q.label}{q.required && ' *'}</label>
                   {q.type === 'oui_non' ? (
                     <div className="flex gap-2">
                       {['Oui', 'Non'].map((opt) => (
                         <button key={opt} type="button" onClick={() => setPrequalAnswers((a) => ({ ...a, [q.id]: opt }))}
                           className="flex-1 py-2 rounded-lg border-[1.5px] text-sm font-semibold"
                           style={prequalAnswers[q.id] === opt
-                            ? { background: KZ.ink, color: KZ.cream, borderColor: KZ.ink }
-                            : { background: 'white', color: KZ.ink, borderColor: KZ.ink }}>
+                            ? { background: KZ.ink, color: KZ.cream, borderColor: 'var(--kz-edge)' }
+                            : { background: 'var(--kz-paper)', color: KZ.ink, borderColor: 'var(--kz-edge)' }}>
                           {opt}
                         </button>
                       ))}
                     </div>
                   ) : q.type === 'choix' ? (
                     <select value={prequalAnswers[q.id] ?? ''} onChange={(e) => setPrequalAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                      className="w-full px-3 py-2.5 rounded-xl border-2 border-[#1A1410] text-sm bg-white">
+                      className="w-full px-3 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm bg-[var(--kz-paper)]">
                       <option value="">Choisir…</option>
                       {(q.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}
                     </select>
                   ) : (
                     <input value={prequalAnswers[q.id] ?? ''} onChange={(e) => setPrequalAnswers((a) => ({ ...a, [q.id]: e.target.value }))}
-                      className="w-full px-3 py-2.5 rounded-xl border-2 border-[#1A1410] text-sm" placeholder="Votre réponse" />
+                      className="w-full px-3 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm" placeholder="Votre réponse" />
                   )}
                 </div>
               ))}
@@ -423,12 +423,12 @@ export default function JobDetailPage() {
             <button
               type="button"
               onClick={() => { setApplyModal(false); setCoverLetterModal(true) }}
-              className="flex items-center gap-2 text-sm font-semibold p-3 rounded-xl border border-[#1A1410] transition-all hover:shadow-[2px_2px_0_#1A1410]"
+              className="flex items-center gap-2 text-sm font-semibold p-3 rounded-xl border border-[var(--kz-edge)] transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
               style={{ background: KZ.violetSoft }}
             >
               <Sparkles size={15} color={KZ.violet} />
               <span style={{ color: KZ.violet }}>Générer avec KazaIA</span>
-              <span className="text-xs text-[#6B5A4A]">→ Lettre personnalisée en 5 secondes</span>
+              <span className="text-xs text-[var(--kz-mute)]">→ Lettre personnalisée en 5 secondes</span>
             </button>
           )}
 
@@ -477,12 +477,12 @@ function ExplainJobSection({ jobId }: { jobId: string }) {
   }
 
   return (
-    <div className="kz-card p-4 bg-white" style={{ borderColor: KZ.green }}>
+    <div className="kz-card p-4 bg-[var(--kz-paper)]" style={{ borderColor: KZ.green }}>
       <button onClick={handleClick} className="flex items-center gap-2 w-full text-left">
-        <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: KZ.green }}>
+        <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: KZ.green }}>
           <Lightbulb size={13} color="white" />
         </div>
-        <span className="text-sm font-bold text-[#1A1410]">Comprendre l&apos;offre en clair</span>
+        <span className="text-sm font-bold text-[var(--kz-ink)]">Comprendre l&apos;offre en clair</span>
         <Badge color="green" size="sm">KazaIA</Badge>
         <span className="ml-auto">{open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}</span>
       </button>
@@ -492,7 +492,7 @@ function ExplainJobSection({ jobId }: { jobId: string }) {
           {generating && (
             <div className="flex flex-col items-center gap-3 py-6">
               <InlineLoader size={40} />
-              <p className="text-sm text-[#6B5A4A]">KazaIA décrypte l&apos;offre pour toi…</p>
+              <p className="text-sm text-[var(--kz-mute)]">KazaIA décrypte l&apos;offre pour toi…</p>
             </div>
           )}
 
@@ -503,43 +503,43 @@ function ExplainJobSection({ jobId }: { jobId: string }) {
           {!generating && explain && (
             <div className="flex flex-col gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1">Synthèse</p>
-                <p className="text-sm text-[#2A2018] leading-relaxed">{explain.synthese}</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1">Synthèse</p>
+                <p className="text-sm text-[var(--kz-text)] leading-relaxed">{explain.synthese}</p>
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1.5">Les missions, simplement</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1.5">Les missions, simplement</p>
                 <ul className="flex flex-col gap-1.5">
                   {explain.missions?.map((m, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-[#2A2018]">
+                    <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]">
                       <Check size={14} className="mt-0.5 shrink-0" color={KZ.green} />{m}
                     </li>
                   ))}
                 </ul>
               </div>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1">En langage accessible</p>
-                <p className="text-sm text-[#2A2018] leading-relaxed">{explain.reformulation}</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1">En langage accessible</p>
+                <p className="text-sm text-[var(--kz-text)] leading-relaxed">{explain.reformulation}</p>
               </div>
-              <div className="p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.greenSoft }}>
-                <p className="text-xs font-bold uppercase tracking-wide text-[#1A1410] mb-1 flex items-center gap-1.5">
+              <div className="p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.greenSoft }}>
+                <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-ink)] mb-1 flex items-center gap-1.5">
                   <Wallet size={13} /> Marché salarial local (indicatif)
                 </p>
-                <p className="text-sm text-[#2A2018] leading-relaxed">{explain.salaire}</p>
+                <p className="text-sm text-[var(--kz-text)] leading-relaxed">{explain.salaire}</p>
               </div>
               {explain.competences?.length > 0 && (
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wide text-[#6B5A4A] mb-1.5">Compétences principales recherchées</p>
+                  <p className="text-xs font-bold uppercase tracking-wide text-[var(--kz-mute)] mb-1.5">Compétences principales recherchées</p>
                   <div className="flex gap-2 flex-wrap">
                     {explain.competences.map((c, i) => <Tag key={i}>{c}</Tag>)}
                   </div>
                 </div>
               )}
-              <p className="text-[11px] text-[#6B5A4A] italic">Généré par KazaIA — à titre indicatif, vérifie toujours l&apos;offre originale.</p>
+              <p className="text-[11px] text-[var(--kz-mute)] italic">Généré par KazaIA — à titre indicatif, vérifie toujours l&apos;offre originale.</p>
             </div>
           )}
 
           {!generating && !explain && raw && (
-            <div className="p-4 rounded-xl border border-[#1A1410] text-sm text-[#2A2018] leading-relaxed whitespace-pre-wrap" style={{ background: KZ.paper }}>
+            <div className="p-4 rounded-xl border border-[var(--kz-edge)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap" style={{ background: KZ.paper }}>
               {raw}
             </div>
           )}
@@ -566,9 +566,9 @@ function InterviewPrepModal({ open, onClose, jobId, jobTitle }: {
   return (
     <ModalBase open={open} onClose={onClose} title={`Préparer l'entretien — ${jobTitle}`} size="lg">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft }}>
+        <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
           <Brain size={18} color={KZ.violet} />
-          <p className="text-sm font-semibold text-[#1A1410]">
+          <p className="text-sm font-semibold text-[var(--kz-ink)]">
             KazaIA génère des questions d&apos;entretien personnalisées pour ce poste.
           </p>
         </div>
@@ -576,7 +576,7 @@ function InterviewPrepModal({ open, onClose, jobId, jobTitle }: {
         {generating && (
           <div className="flex flex-col items-center gap-3 py-8">
             <InlineLoader size={48} />
-            <p className="text-sm text-[#6B5A4A]">Analyse du poste en cours...</p>
+            <p className="text-sm text-[var(--kz-mute)]">Analyse du poste en cours...</p>
           </div>
         )}
 
@@ -586,7 +586,7 @@ function InterviewPrepModal({ open, onClose, jobId, jobTitle }: {
 
         {questions && !generating && (
           <div
-            className="p-4 rounded-xl border border-[#1A1410] text-sm text-[#2A2018] leading-relaxed whitespace-pre-wrap max-h-[400px] overflow-y-auto"
+            className="p-4 rounded-xl border border-[var(--kz-edge)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap max-h-[400px] overflow-y-auto"
             style={{ background: KZ.paper }}
           >
             {questions}

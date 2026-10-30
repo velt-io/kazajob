@@ -82,12 +82,12 @@ export default async function LandingPage() {
             <Badge color="orange" size="lg" icon={<MapPin size={12} />} className="mb-5">
               974 · La Réunion
             </Badge>
-            <h1 className="text-[48px] sm:text-[64px] lg:text-[80px] font-extrabold tracking-[-0.04em] leading-[0.92] text-[#1A1410] mb-5">
+            <h1 className="text-[48px] sm:text-[64px] lg:text-[80px] font-extrabold tracking-[-0.04em] leading-[0.92] text-[var(--kz-ink)] mb-5">
               Ton kaz<br />
               <span style={{ color: KZ.violet }}>ton job</span><br />
               ton pei.
             </h1>
-            <p className="text-base lg:text-lg leading-relaxed text-[#2A2018] max-w-[520px] mb-6">
+            <p className="text-base lg:text-lg leading-relaxed text-[var(--kz-text)] max-w-[520px] mb-6">
               La plateforme d&apos;emploi qui matche vraiment les talents réunionnais
               avec les meilleures opportunités locales. Avec un peu d&apos;IA et beaucoup de soleil.
             </p>
@@ -96,7 +96,7 @@ export default async function LandingPage() {
             <SearchBarLanding />
 
             <div className="flex gap-2 flex-wrap items-center">
-              <span className="text-xs text-[#6B5A4A]">Populaire :</span>
+              <span className="text-xs text-[var(--kz-mute)]">Populaire :</span>
               {['Developpeur', 'BTP', 'Tourisme', 'Comptable', 'Infirmier'].map((k) => (
                 <Link key={k} href={`/candidate/jobs?q=${k}`}>
                   <Tag color="cream">{k}</Tag>
@@ -109,14 +109,14 @@ export default async function LandingPage() {
             <HeroIllustrationNew />
           </div>
           {/* Illustration mobile / tablette */}
-          <div className="lg:hidden relative rounded-2xl border-[1.5px] border-[#1A1410] overflow-hidden aspect-[4/3] mt-2" style={{ boxShadow: '5px 5px 0 #1A1410' }}>
+          <div className="lg:hidden relative rounded-2xl border-[1.5px] border-[var(--kz-edge)] overflow-hidden aspect-[4/3] mt-2" style={{ boxShadow: '5px 5px 0 var(--kz-shadow)' }}>
             <Image src="/assets/img/homepage/hero.webp" alt="Deux jeunes Réunionnais devant le Piton de la Fournaise" fill sizes="100vw" className="object-cover" />
           </div>
         </div>
         <div className="my-10" />
       </section>
       {/* STATS BAND — vraies données ────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-6 lg:py-8 border-y border-[#1A1410]" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-6 lg:py-8 border-y border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-[1280px] mx-auto">
           {STATS_BAND.map((s) => (
             <div key={s.l}>
@@ -130,10 +130,10 @@ export default async function LandingPage() {
       {/* LOGOS ENTREPRISES — vraies entreprises ─────────────── */}
       {companies.length > 0 && (
         <section className="px-4 sm:px-8 lg:px-16 py-8 lg:py-10" style={{ background: KZ.cream }}>
-          <p className="kz-eyebrow text-[#6B5A4A] text-center mb-6">Ils recrutent sur Kazajob</p>
+          <p className="kz-eyebrow text-[var(--kz-mute)] text-center mb-6">Ils recrutent sur Kazajob</p>
           <div className="flex justify-center items-center gap-10 flex-wrap max-w-[1280px] mx-auto">
             {companies.map((c) => (
-              <div key={c.id} className="text-2xl font-extrabold tracking-tight opacity-40 italic text-[#1A1410]">
+              <div key={c.id} className="text-2xl font-extrabold tracking-tight opacity-40 italic text-[var(--kz-ink)]">
                 {c.name}
               </div>
             ))}
@@ -156,7 +156,7 @@ export default async function LandingPage() {
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mb-7">
             <div>
               <p className="kz-eyebrow mb-2" style={{ color: KZ.orange }}>Offres du moment</p>
-              <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410] max-w-[600px]">Des opportunités fraîches, mises à jour chaque jour.</h2>
+              <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)] max-w-[600px]">Des opportunités fraîches, mises à jour chaque jour.</h2>
             </div>
             <Link href="/candidate/jobs" className="shrink-0">
               <Button kind="outline" iconRight={<ArrowRight size={14} />}>Toutes les offres</Button>
@@ -165,9 +165,9 @@ export default async function LandingPage() {
 
           {featuredJobs.length === 0 ? (
             <div className="text-center py-16">
-              <Briefcase className="mx-auto mb-4 text-[#6B5A4A]" size={40} />
-              <p className="text-lg font-bold text-[#1A1410] mb-2">Les offres arrivent bientôt</p>
-              <p className="text-sm text-[#6B5A4A] mb-6">Crée ton profil dès maintenant : tu seras parmi les premiers à être contactés.</p>
+              <Briefcase className="mx-auto mb-4 text-[var(--kz-mute)]" size={40} />
+              <p className="text-lg font-bold text-[var(--kz-ink)] mb-2">Les offres arrivent bientôt</p>
+              <p className="text-sm text-[var(--kz-mute)] mb-6">Crée ton profil dès maintenant : tu seras parmi les premiers à être contactés.</p>
               <div className="flex gap-3 justify-center">
                 <Link href="/auth/register"><Button kind="primary">Créer un compte</Button></Link>
                 <Link href="/auth/register?role=recruiter"><Button kind="outline">Publier une offre</Button></Link>
@@ -182,7 +182,7 @@ export default async function LandingPage() {
 
                 return (
                   <Link key={job.id} href={`/candidate/jobs/${job.id}`} className="block">
-                    <div className="kz-card p-5 flex flex-col gap-3.5 relative bg-white hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_#1A1410] transition-all">
+                    <div className="kz-card p-5 flex flex-col gap-3.5 relative bg-[var(--kz-paper)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_var(--kz-shadow)] transition-all">
                       {isNew && (
                         <div className="absolute -top-3 right-4 rotate-6">
                           <Badge color="orange" size="sm">Nouveau</Badge>
@@ -195,14 +195,14 @@ export default async function LandingPage() {
                       )}
                       <div className="flex gap-3 items-start">
                         <div
-                          className="w-12 h-12 rounded-lg border border-[#1A1410] flex items-center justify-center font-bold text-[#1A1410] shrink-0"
+                          className="w-12 h-12 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center font-bold text-[var(--kz-ink)] shrink-0"
                           style={{ background: color }}
                         >
                           {(job.company?.name ?? 'CO').slice(0, 2).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-xs font-semibold text-[#6B5A4A]">{job.company?.name}</div>
-                          <div className="text-base font-bold text-[#1A1410] mt-0.5 truncate">{job.title}</div>
+                          <div className="text-xs font-semibold text-[var(--kz-mute)]">{job.company?.name}</div>
+                          <div className="text-base font-bold text-[var(--kz-ink)] mt-0.5 truncate">{job.title}</div>
                         </div>
                       </div>
                       <div className="flex gap-1.5 flex-wrap">
@@ -210,12 +210,12 @@ export default async function LandingPage() {
                         {job.remote && <Tag color="green">Remote</Tag>}
                         {jobSkills.map((s) => <Tag key={s}>{s}</Tag>)}
                       </div>
-                      <div className="flex justify-between items-center pt-2.5 border-t border-[#E8DDC9]">
+                      <div className="flex justify-between items-center pt-2.5 border-t border-[var(--kz-line)]">
                         <div>
-                          <div className="flex items-center gap-1 text-xs text-[#2A2018]">
+                          <div className="flex items-center gap-1 text-xs text-[var(--kz-text)]">
                             <MapPin size={11} />{job.location}
                           </div>
-                          <div className="text-xs font-semibold text-[#2A2018] mt-0.5">
+                          <div className="text-xs font-semibold text-[var(--kz-text)] mt-0.5">
                             {formatSalary(job.salary_min, job.salary_max)}
                           </div>
                         </div>
@@ -238,7 +238,7 @@ export default async function LandingPage() {
         <div className="max-w-[1280px] mx-auto relative z-10">
           <div className="text-center mb-10 lg:mb-14">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.orange }}>Comment ça marche</p>
-            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410] max-w-[720px] mx-auto">
+            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)] max-w-[720px] mx-auto">
               Trois étapes, zéro chichi : crée ton profil, matche, postule en 1 clic.
             </h2>
           </div>
@@ -246,16 +246,16 @@ export default async function LandingPage() {
             {HOW_STEPS.map((step) => (
               <div key={step.n} className="kz-card p-7 relative pt-10" style={{ background: step.color }}>
                 <div
-                  className="absolute -top-5 left-6 w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold border border-[#1A1410]"
-                  style={{ background: KZ.ink, color: KZ.cream, boxShadow: '3px 3px 0 #FF6B35' }}
+                  className="absolute -top-5 left-6 w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold border border-[var(--kz-edge)]"
+                  style={{ background: KZ.ink, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-orange)' }}
                 >
                   {step.n}
                 </div>
-                <div className="w-14 h-14 rounded-xl border border-[#1A1410] flex items-center justify-center mb-5 text-[#1A1410]" style={{ background: KZ.paper }}>
+                <div className="w-14 h-14 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center mb-5 text-[var(--kz-ink)]" style={{ background: KZ.paper }}>
                   {step.icon}
                 </div>
-                <h3 className="text-lg font-bold text-[#1A1410] mb-2.5">{step.title}</h3>
-                <p className="text-sm leading-relaxed text-[#2A2018]">{step.desc}</p>
+                <h3 className="text-lg font-bold text-[var(--kz-ink)] mb-2.5">{step.title}</h3>
+                <p className="text-sm leading-relaxed text-[var(--kz-text)]">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -290,14 +290,14 @@ export default async function LandingPage() {
                 <Button kind="primary" size="lg">Publier une offre — gratuit</Button>
               </Link>
               <Link href="/entreprise">
-                <Button kind="outline" size="lg" className="!text-[#FFF7EE] !border-[#FFF7EE] !bg-transparent">
+                <Button kind="outline" size="lg" className="!text-[var(--kz-cream)] !border-[var(--kz-cream)] !bg-transparent">
                   Découvrir Kazajob Entreprises
                 </Button>
               </Link>
             </div>
           </div>
-          <Link href="/entreprise" className="block relative rounded-2xl border-[1.5px] border-[#FFF7EE] overflow-hidden aspect-[16/10] rotate-[1.5deg] transition-transform hover:rotate-0"
-            style={{ boxShadow: '6px 6px 0 #FF6B35' }}>
+          <Link href="/entreprise" className="block relative rounded-2xl border-[1.5px] border-[var(--kz-cream)] overflow-hidden aspect-[16/10] rotate-[1.5deg] transition-transform hover:rotate-0"
+            style={{ boxShadow: '6px 6px 0 var(--kz-orange)' }}>
             <Image src="/assets/img/scenes/recrutement.webp" alt="Une recruteuse réunionnaise rencontre un candidat" fill sizes="(min-width: 1024px) 480px, 100vw" className="object-cover" />
           </Link>
         </div>

@@ -38,10 +38,10 @@ export default function AdminTrafficPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div>
           <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Analytics</p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">Trafic du site</h1>
-          <p className="text-sm text-[#6B5A4A] mt-1">Pages vues anonymes (sans cookie). Pour le détail (sources, pays, visiteurs uniques) : dashboard Vercel.</p>
+          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Trafic du site</h1>
+          <p className="text-sm text-[var(--kz-mute)] mt-1">Pages vues anonymes (sans cookie). Pour le détail (sources, pays, visiteurs uniques) : dashboard Vercel.</p>
         </div>
-        <div className="inline-flex items-center gap-0.5 p-0.5 rounded-full border border-[#1A1410] shrink-0" style={{ background: KZ.paper }}>
+        <div className="inline-flex items-center gap-0.5 p-0.5 rounded-full border border-[var(--kz-edge)] shrink-0" style={{ background: KZ.paper }}>
           {PERIODS.map((p) => (
             <button key={p} onClick={() => setDays(p)}
               className="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
@@ -67,32 +67,32 @@ export default function AdminTrafficPage() {
           </div>
 
           {/* Vues par jour */}
-          <div className="kz-card p-5 bg-white mb-5">
-            <h2 className="text-base font-bold text-[#1A1410] mb-4">Vues par jour</h2>
+          <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+            <h2 className="text-base font-bold text-[var(--kz-ink)] mb-4">Vues par jour</h2>
             <div className="flex items-end gap-1.5 h-40 overflow-x-auto">
               {data.daily.map((d) => (
                 <div key={d.day} className="flex-1 min-w-[8px] flex flex-col items-center gap-1 group" title={`${d.day} — ${d.views} vues`}>
-                  <div className="w-full rounded-t border border-[#1A1410]" style={{ height: `${Math.max(3, (d.views / maxDay) * 130)}px`, background: KZ.violetSoft }} />
+                  <div className="w-full rounded-t border border-[var(--kz-edge)]" style={{ height: `${Math.max(3, (d.views / maxDay) * 130)}px`, background: KZ.violetSoft }} />
                 </div>
               ))}
             </div>
-            <div className="flex justify-between text-[10px] text-[#6B5A4A] mt-2">
+            <div className="flex justify-between text-[10px] text-[var(--kz-mute)] mt-2">
               <span>{data.daily[0]?.day}</span>
               <span>{data.daily[data.daily.length - 1]?.day}</span>
             </div>
           </div>
 
           {/* Pages les plus consultées */}
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-base font-bold text-[#1A1410] mb-4">Pages les plus consultées</h2>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-base font-bold text-[var(--kz-ink)] mb-4">Pages les plus consultées</h2>
             <div className="flex flex-col gap-2.5">
               {data.top.map((t) => (
                 <div key={t.path} className="flex items-center gap-3">
-                  <code className="text-xs text-[#1A1410] w-48 sm:w-64 shrink-0 truncate">{t.path}</code>
-                  <div className="flex-1 h-2.5 rounded-full bg-[#F2E4D0] overflow-hidden">
+                  <code className="text-xs text-[var(--kz-ink)] w-48 sm:w-64 shrink-0 truncate">{t.path}</code>
+                  <div className="flex-1 h-2.5 rounded-full bg-[var(--kz-beige)] overflow-hidden">
                     <div className="h-full rounded-full" style={{ width: `${(t.views / maxTop) * 100}%`, background: KZ.violet }} />
                   </div>
-                  <span className="text-xs font-bold text-[#1A1410] w-12 text-right">{t.views.toLocaleString('fr-FR')}</span>
+                  <span className="text-xs font-bold text-[var(--kz-ink)] w-12 text-right">{t.views.toLocaleString('fr-FR')}</span>
                 </div>
               ))}
             </div>

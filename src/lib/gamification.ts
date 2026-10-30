@@ -11,11 +11,11 @@ export interface GamificationLevel {
 }
 
 export const LEVELS: GamificationLevel[] = [
-  { level: 1, title: 'Débutant',    minXp: 0,     maxXp: 999,   color: '#6B5A4A', bg: '#FBEFE0', emoji: '🌱' },
-  { level: 2, title: 'Candidat',    minXp: 1000,  maxXp: 2499,  color: '#FF6B35', bg: '#FFE0CF', emoji: '⚡' },
-  { level: 3, title: 'Explorateur', minXp: 2500,  maxXp: 4999,  color: '#6D3BEB', bg: '#E5DCFF', emoji: '🔮' },
-  { level: 4, title: 'Chasseur',    minXp: 5000,  maxXp: 9999,  color: '#19A974', bg: '#D6F0E0', emoji: '🎯' },
-  { level: 5, title: 'Expert 974',  minXp: 10000, maxXp: 99999, color: '#FFC93C', bg: '#FFF1C2', emoji: '👑' },
+  { level: 1, title: 'Débutant',    minXp: 0,     maxXp: 999,   color: 'var(--kz-mute)', bg: 'var(--kz-cream2)', emoji: '🌱' },
+  { level: 2, title: 'Candidat',    minXp: 1000,  maxXp: 2499,  color: 'var(--kz-orange)', bg: 'var(--kz-orange-soft)', emoji: '⚡' },
+  { level: 3, title: 'Explorateur', minXp: 2500,  maxXp: 4999,  color: 'var(--kz-violet)', bg: 'var(--kz-violet-soft)', emoji: '🔮' },
+  { level: 4, title: 'Chasseur',    minXp: 5000,  maxXp: 9999,  color: 'var(--kz-green)', bg: 'var(--kz-green-soft)', emoji: '🎯' },
+  { level: 5, title: 'Expert 974',  minXp: 10000, maxXp: 99999, color: 'var(--kz-yellow)', bg: 'var(--kz-yellow-soft)', emoji: '👑' },
 ]
 
 export function getLevel(xp: number): GamificationLevel {
@@ -71,7 +71,7 @@ export function computeQuests(
       progress: Math.min(score, 100),
       category: 'profile',
       iconName: 'User',
-      accentColor: '#FF6B35',
+      accentColor: 'var(--kz-orange)',
     },
     {
       id: 'upload_cv',
@@ -82,7 +82,7 @@ export function computeQuests(
       progress: (profile.cv_url || profile.cv_data) ? 100 : 0,
       category: 'profile',
       iconName: 'FileText',
-      accentColor: '#FF6B35',
+      accentColor: 'var(--kz-orange)',
     },
     {
       id: 'add_skills',
@@ -93,7 +93,7 @@ export function computeQuests(
       progress: Math.min(Math.round((skillsCount / 3) * 100), 100),
       category: 'profile',
       iconName: 'Zap',
-      accentColor: '#FF6B35',
+      accentColor: 'var(--kz-orange)',
     },
     {
       id: 'video_pitch',
@@ -104,7 +104,7 @@ export function computeQuests(
       progress: profile.video_pitch_url ? 100 : 0,
       category: 'profile',
       iconName: 'Video',
-      accentColor: '#6D3BEB',
+      accentColor: 'var(--kz-violet)',
     },
     {
       id: 'first_apply',
@@ -115,7 +115,7 @@ export function computeQuests(
       progress: applicationsCount >= 1 ? 100 : 0,
       category: 'job',
       iconName: 'Send',
-      accentColor: '#6D3BEB',
+      accentColor: 'var(--kz-violet)',
     },
     {
       id: 'apply_3',
@@ -126,7 +126,7 @@ export function computeQuests(
       progress: Math.min(Math.round((applicationsCount / 3) * 100), 100),
       category: 'job',
       iconName: 'Target',
-      accentColor: '#6D3BEB',
+      accentColor: 'var(--kz-violet)',
     },
     {
       id: 'save_favorite',
@@ -137,7 +137,7 @@ export function computeQuests(
       progress: favoritesCount >= 1 ? 100 : 0,
       category: 'job',
       iconName: 'Heart',
-      accentColor: '#19A974',
+      accentColor: 'var(--kz-green)',
     },
     {
       id: 'streak_3',
@@ -148,7 +148,7 @@ export function computeQuests(
       progress: Math.min(Math.round(((profile.streak ?? 0) / 3) * 100), 100),
       category: 'daily',
       iconName: 'Flame',
-      accentColor: '#FFC93C',
+      accentColor: 'var(--kz-yellow)',
     },
     {
       id: 'boost_profile',
@@ -159,7 +159,7 @@ export function computeQuests(
       progress: (profile.boosted_until && new Date(profile.boosted_until) > new Date()) ? 100 : 0,
       category: 'daily',
       iconName: 'TrendingUp',
-      accentColor: '#FFC93C',
+      accentColor: 'var(--kz-yellow)',
     },
   ]
 }

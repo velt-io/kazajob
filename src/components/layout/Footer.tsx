@@ -43,20 +43,20 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="bg-[#1A1410] text-[#FFF7EE] pt-10 lg:pt-12 pb-6 lg:pb-8 px-4 sm:px-8 lg:px-16">
+    <footer className="bg-[var(--kz-ink)] text-[var(--kz-cream)] pt-10 lg:pt-12 pb-6 lg:pb-8 px-4 sm:px-8 lg:px-16">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 mb-8">
         {/* Logo + description */}
         <div className="col-span-2 sm:col-span-3 lg:col-span-1">
-          <Logo size={28} mono color="#FFF7EE" accentColor="#FF6B35" href="/" />
+          <Logo size={28} mono color="var(--kz-cream)" accentColor="var(--kz-orange)" href="/" />
           <p className="text-sm opacity-70 mt-3 max-w-[280px] leading-relaxed">
             La plateforme d&apos;emploi nouvelle generation pour La Reunion.
-            Fait avec <span className="text-[#FF6B35]">amour</span> a Saint-Denis.
+            Fait avec <span className="text-[var(--kz-orange)]">amour</span> a Saint-Denis.
           </p>
         </div>
 
         {FOOTER_LINKS.map((col) => (
           <div key={col.title}>
-            <div className="text-xs font-bold text-[#FF6B35] mb-3 uppercase tracking-widest">
+            <div className="text-xs font-bold text-[var(--kz-orange)] mb-3 uppercase tracking-widest">
               {col.title}
             </div>
             <ul className="flex flex-col gap-2">
@@ -64,7 +64,7 @@ export function Footer() {
                 <li key={l.label}>
                   <Link
                     href={l.href}
-                    className="text-sm opacity-75 hover:opacity-100 hover:text-[#FF6B35] transition-colors"
+                    className="text-sm opacity-75 hover:opacity-100 hover:text-[var(--kz-orange)] transition-colors"
                   >
                     {l.label}
                   </Link>

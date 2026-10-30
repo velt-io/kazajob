@@ -154,32 +154,32 @@ export default function AdminTrackingPage() {
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#1A1410] flex items-center gap-2"><Radio size={22} color={KZ.violet} /> Tracking & Ads</h1>
-          <p className="text-sm text-[#6B5A4A] mt-1">Scripts et pixels publicitaires — gérés sans déploiement, respectent le consentement cookies.</p>
+          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)] flex items-center gap-2"><Radio size={22} color={KZ.violet} /> Tracking & Ads</h1>
+          <p className="text-sm text-[var(--kz-mute)] mt-1">Scripts et pixels publicitaires — gérés sans déploiement, respectent le consentement cookies.</p>
         </div>
         <Button kind="primary" size="md" icon={<Plus size={14} />} onClick={openCreate}>Ajouter une intégration</Button>
       </div>
 
       {loading ? (
         <div className="flex flex-col gap-2">
-          {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-lg bg-[#FBEFE0] animate-pulse" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}
         </div>
       ) : integrations.length === 0 ? (
-        <div className="text-sm text-[#6B5A4A] py-10 text-center border border-dashed border-[#E8DDC9] rounded-xl">
+        <div className="text-sm text-[var(--kz-mute)] py-10 text-center border border-dashed border-[var(--kz-line)] rounded-xl">
           Aucune intégration configurée.
         </div>
       ) : (
         <div className="flex flex-col gap-3">
           {integrations.map(i => (
-            <div key={i.id} className="kz-card p-4 bg-white flex items-center justify-between gap-3 flex-wrap">
+            <div key={i.id} className="kz-card p-4 bg-[var(--kz-paper)] flex items-center justify-between gap-3 flex-wrap">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <span className="font-bold text-[#1A1410]">{i.name}</span>
+                  <span className="font-bold text-[var(--kz-ink)]">{i.name}</span>
                   <Badge color={i.is_active ? 'green' : 'cream'} size="sm">{i.is_active ? 'Actif' : 'Inactif'}</Badge>
                   <Badge color="violet" size="sm">{PROVIDER_OPTIONS.find(p => p.value === i.provider)?.label ?? i.provider}</Badge>
                   <Badge color="blue" size="sm">{i.consent_category}</Badge>
                 </div>
-                {i.description && <p className="text-xs text-[#6B5A4A]">{i.description}</p>}
+                {i.description && <p className="text-xs text-[var(--kz-mute)]">{i.description}</p>}
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <Button kind="ghost" size="sm" icon={<History size={13} />} onClick={() => openHistory(i.id)} />
@@ -187,7 +187,7 @@ export default function AdminTrackingPage() {
                   {i.is_active ? 'Désactiver' : 'Activer'}
                 </Button>
                 <Button kind="ghost" size="sm" onClick={() => openEdit(i)}>Modifier</Button>
-                <button onClick={() => handleDelete(i)} className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-400 hover:text-red-500 transition-colors">
+                <button onClick={() => handleDelete(i)} className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 transition-colors">
                   <Trash2 size={13} />
                 </button>
               </div>
@@ -212,14 +212,14 @@ export default function AdminTrackingPage() {
             <>
               <div className="p-3 rounded-lg border flex items-start gap-2" style={{ borderColor: '#E54E4E', background: '#FFEAEA' }}>
                 <AlertTriangle size={15} color="#E54E4E" className="shrink-0 mt-0.5" />
-                <p className="text-xs text-[#1A1410]">
+                <p className="text-xs text-[var(--kz-ink)]">
                   Un script personnalisé s&apos;exécute directement dans le navigateur des visiteurs. Toute erreur ou code malveillant
                   affecte immédiatement le site en production. Réservé aux cas où aucun fournisseur structuré ne convient.
                 </p>
               </div>
               <Textarea label="Code du script" value={form.customCode} onChange={e => setForm(f => ({ ...f, customCode: e.target.value }))} rows={6}
                 placeholder="<script>...</script> ou JS brut" />
-              <label className="flex items-center gap-2 text-xs font-semibold text-[#1A1410] cursor-pointer">
+              <label className="flex items-center gap-2 text-xs font-semibold text-[var(--kz-ink)] cursor-pointer">
                 <input type="checkbox" checked={confirmCustom} onChange={e => setConfirmCustom(e.target.checked)} />
                 Je confirme avoir vérifié ce script et j&apos;assume le risque de son exécution en production.
               </label>
@@ -232,7 +232,7 @@ export default function AdminTrackingPage() {
             <Select label="Catégorie de consentement" options={CONSENT_OPTIONS} value={form.consentCategory} onChange={e => setForm(f => ({ ...f, consentCategory: e.target.value }))} />
           </div>
 
-          <label className="flex items-center gap-2 text-sm font-semibold text-[#1A1410] cursor-pointer">
+          <label className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-ink)] cursor-pointer">
             <input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} />
             Activer immédiatement
           </label>
@@ -250,12 +250,12 @@ export default function AdminTrackingPage() {
       <Modal open={!!historyId} onClose={() => setHistoryId(null)} title="Historique des versions">
         <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto">
           {versions.length === 0 ? (
-            <p className="text-sm text-[#6B5A4A]">Aucune version enregistrée.</p>
+            <p className="text-sm text-[var(--kz-mute)]">Aucune version enregistrée.</p>
           ) : versions.map(v => (
-            <div key={v.id} className="p-3 rounded-lg border border-[#E8DDC9] flex items-center justify-between gap-3">
+            <div key={v.id} className="p-3 rounded-lg border border-[var(--kz-line)] flex items-center justify-between gap-3">
               <div>
-                <span className="text-sm font-semibold text-[#1A1410]">Version {v.version}</span>
-                <p className="text-xs text-[#6B5A4A]">{new Date(v.created_at).toLocaleString('fr-FR')}</p>
+                <span className="text-sm font-semibold text-[var(--kz-ink)]">Version {v.version}</span>
+                <p className="text-xs text-[var(--kz-mute)]">{new Date(v.created_at).toLocaleString('fr-FR')}</p>
               </div>
               <Button kind="outline" size="sm" onClick={() => handleRollback(v.id)}>Restaurer</Button>
             </div>

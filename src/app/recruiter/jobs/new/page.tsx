@@ -29,21 +29,21 @@ export default function NewJobPage() {
   return (
     <CompanyRequired action="publier une offre d'emploi">
     <div className="max-w-[760px] mx-auto">
-      <Link href="/recruiter/jobs" className="flex items-center gap-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] mb-6">
+      <Link href="/recruiter/jobs" className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-6">
         <ArrowLeft size={16} />
         Retour aux offres
       </Link>
 
-      <h1 className="kz-h2 text-[#1A1410] mb-6">Publier une nouvelle offre</h1>
+      <h1 className="kz-h2 text-[var(--kz-ink)] mb-6">Publier une nouvelle offre</h1>
 
       {blocked && billing ? (
-        <div className="kz-card p-8 bg-white text-center">
+        <div className="kz-card p-8 bg-[var(--kz-paper)] text-center">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
             style={{ background: KZ.orangeSoft }}>
             <Lock size={24} color={KZ.orange} />
           </div>
-          <h2 className="text-lg font-extrabold text-[#1A1410] mb-2">Publication temporairement bloquée</h2>
-          <p className="text-sm text-[#6B5A4A] leading-relaxed max-w-md mx-auto mb-6">
+          <h2 className="text-lg font-extrabold text-[var(--kz-ink)] mb-2">Publication temporairement bloquée</h2>
+          <p className="text-sm text-[var(--kz-mute)] leading-relaxed max-w-md mx-auto mb-6">
             {billing.maxJobs !== -1 ? (
               <>
                 Votre entreprise utilise <strong>{billing.activeJobs}</strong> annonces actives.
@@ -69,14 +69,14 @@ export default function NewJobPage() {
           </div>
         </div>
       ) : (
-        <div className="kz-card p-6 bg-white">
+        <div className="kz-card p-6 bg-[var(--kz-paper)]">
           {profile && !loadingBilling && (
             <JobForm
               recruiterId={profile.id}
               companyId={profile.company_id ?? undefined}
             />
           )}
-          {loadingBilling && <div className="h-32 animate-pulse rounded-xl bg-[#FBEFE0]" />}
+          {loadingBilling && <div className="h-32 animate-pulse rounded-xl bg-[var(--kz-cream2)]" />}
         </div>
       )}
     </div>

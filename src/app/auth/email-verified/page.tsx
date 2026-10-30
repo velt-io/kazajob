@@ -16,15 +16,15 @@ export default async function EmailVerifiedPage(
     <div className="min-h-screen flex items-center justify-center px-5 py-10" style={{ background: KZ.cream }}>
       <div className="w-full max-w-[420px]">
         <div className="flex justify-center mb-8"><Logo size={36} /></div>
-        <div className="rounded-2xl border-[1.5px] border-[#1A1410] bg-white p-6 sm:p-8 text-center" style={{ boxShadow: '6px 6px 0 #1A1410' }}>
-          <span className="w-14 h-14 mx-auto mb-4 rounded-2xl border border-[#1A1410] flex items-center justify-center"
+        <div className="rounded-2xl border-[1.5px] border-[var(--kz-edge)] bg-[var(--kz-paper)] p-6 sm:p-8 text-center" style={{ boxShadow: '6px 6px 0 var(--kz-shadow)' }}>
+          <span className="w-14 h-14 mx-auto mb-4 rounded-2xl border border-[var(--kz-edge)] flex items-center justify-center"
             style={{ background: ok ? KZ.greenSoft : KZ.orangeSoft }}>
-            {ok ? <MailCheck size={26} className="text-[#1A1410]" /> : <MailX size={26} className="text-[#1A1410]" />}
+            {ok ? <MailCheck size={26} className="text-[var(--kz-ink)]" /> : <MailX size={26} className="text-[var(--kz-ink)]" />}
           </span>
-          <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[#1A1410]">
+          <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[var(--kz-ink)]">
             {ok ? 'Adresse confirmée' : 'Lien invalide ou expiré'}
           </h1>
-          <p className="text-sm text-[#6B5A4A] leading-relaxed mb-6">
+          <p className="text-sm text-[var(--kz-mute)] leading-relaxed mb-6">
             {ok
               ? 'Merci ! Ton compte Kazajob est maintenant entièrement activé.'
               : 'Connecte-toi puis clique sur « Renvoyer le lien » dans le bandeau en haut de ton espace pour recevoir un nouveau lien.'}

@@ -32,7 +32,7 @@ function ProgressBar({ step }: { step: number }) {
         <div key={s.n} className="flex items-center gap-2 flex-1">
           <div className="flex items-center gap-2 shrink-0">
             <div
-              className="w-8 h-8 rounded-full border-2 border-[#1A1410] flex items-center justify-center text-xs font-extrabold transition-all"
+              className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center text-xs font-extrabold transition-all"
               style={{
                 background: step >= s.n ? KZ.violet : step === s.n - 1 ? KZ.cream2 : KZ.cream2,
                 color: step >= s.n ? 'white' : KZ.mute,
@@ -249,19 +249,19 @@ export default function CompanySetupPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Configuration</p>
-          <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[#1A1410]">
+          <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[var(--kz-ink)]">
             Votre espace entreprise
           </h1>
         </div>
 
         <ProgressBar step={currentStep} />
 
-        <div className="kz-card p-6 bg-white">
+        <div className="kz-card p-6 bg-[var(--kz-paper)]">
           {/* ── ÉTAPE 1 : Recherche ──────────────────────────────────── */}
           {mode === 'search' && (
             <div>
-              <h2 className="text-lg font-bold text-[#1A1410] mb-1">Votre entreprise existe-t-elle déjà ?</h2>
-              <p className="text-sm text-[#6B5A4A] mb-5">Recherchez pour rejoindre une équipe existante ou créez votre espace.</p>
+              <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Votre entreprise existe-t-elle déjà ?</h2>
+              <p className="text-sm text-[var(--kz-mute)] mb-5">Recherchez pour rejoindre une équipe existante ou créez votre espace.</p>
 
               <Input
                 label=""
@@ -271,7 +271,7 @@ export default function CompanySetupPage() {
                 icon={<Search size={15} />}
               />
 
-              {searching && <p className="text-xs text-[#6B5A4A] mt-2">Recherche...</p>}
+              {searching && <p className="text-xs text-[var(--kz-mute)] mt-2">Recherche...</p>}
 
               {results.length > 0 && (
                 <div className="mt-3 flex flex-col gap-2">
@@ -279,29 +279,29 @@ export default function CompanySetupPage() {
                     <button
                       key={c.id}
                       onClick={() => { setSelectedCompany(c); setMode('join'); setStep(2) }}
-                      className="flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all hover:border-[#6D3BEB]"
+                      className="flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all hover:border-[var(--kz-violet)]"
                       style={{ borderColor: KZ.line, background: KZ.cream2 }}
                     >
-                      <div className="w-10 h-10 rounded-lg border border-[#1A1410] flex items-center justify-center text-sm font-bold shrink-0"
+                      <div className="w-10 h-10 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center text-sm font-bold shrink-0"
                         style={{ background: KZ.orangeSoft }}>
                         {c.logo_url
                           ? <img src={c.logo_url} alt="" className="w-full h-full object-cover rounded-lg" />
                           : c.name.slice(0, 2).toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-[#1A1410] flex items-center gap-1.5">
+                        <div className="text-sm font-bold text-[var(--kz-ink)] flex items-center gap-1.5">
                           {c.name}
                           {c.is_verified && <Check size={12} color={KZ.green} />}
                         </div>
-                        <div className="text-xs text-[#6B5A4A]">{c.location} · {c.sector}</div>
+                        <div className="text-xs text-[var(--kz-mute)]">{c.location} · {c.sector}</div>
                       </div>
-                      <ChevronRight size={16} className="text-[#6B5A4A] shrink-0" />
+                      <ChevronRight size={16} className="text-[var(--kz-mute)] shrink-0" />
                     </button>
                   ))}
                 </div>
               )}
 
-              <div className="mt-5 pt-5 border-t border-[#E8DDC9] flex flex-col gap-2">
+              <div className="mt-5 pt-5 border-t border-[var(--kz-line)] flex flex-col gap-2">
                 <Button
                   kind="primary" size="lg" full icon={<Building2 size={15} />}
                   onClick={() => { setMode('create'); setStep(2) }}
@@ -309,7 +309,7 @@ export default function CompanySetupPage() {
                   Créer mon entreprise
                 </Button>
                 {query.length >= 2 && results.length === 0 && !searching && (
-                  <p className="text-xs text-center text-[#6B5A4A]">
+                  <p className="text-xs text-center text-[var(--kz-mute)]">
                     Aucun résultat pour &quot;{query}&quot; — créez votre entreprise ci-dessus.
                   </p>
                 )}
@@ -323,8 +323,8 @@ export default function CompanySetupPage() {
               {joinSent ? (
                 <div className="text-center py-6">
                   <div className="text-5xl mb-4">📬</div>
-                  <h2 className="text-lg font-bold text-[#1A1410] mb-2">Demande envoyée !</h2>
-                  <p className="text-sm text-[#6B5A4A] mb-6">
+                  <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-2">Demande envoyée !</h2>
+                  <p className="text-sm text-[var(--kz-mute)] mb-6">
                     L&apos;administrateur de <strong>{selectedCompany.name}</strong> recevra votre demande.
                     Vous serez notifié par email lors de l&apos;approbation.
                   </p>
@@ -334,18 +334,18 @@ export default function CompanySetupPage() {
                 </div>
               ) : (
                 <div>
-                  <h2 className="text-lg font-bold text-[#1A1410] mb-1">Rejoindre l&apos;équipe</h2>
-                  <p className="text-sm text-[#6B5A4A] mb-5">
+                  <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Rejoindre l&apos;équipe</h2>
+                  <p className="text-sm text-[var(--kz-mute)] mb-5">
                     Vous demandez à rejoindre <strong>{selectedCompany.name}</strong>.
                   </p>
-                  <div className="flex items-center gap-3 p-3 rounded-xl border border-[#E8DDC9] mb-5" style={{ background: KZ.cream2 }}>
-                    <div className="w-12 h-12 rounded-lg border border-[#1A1410] flex items-center justify-center text-sm font-bold"
+                  <div className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-line)] mb-5" style={{ background: KZ.cream2 }}>
+                    <div className="w-12 h-12 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center text-sm font-bold"
                       style={{ background: KZ.orangeSoft }}>
                       {selectedCompany.name.slice(0, 2).toUpperCase()}
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-[#1A1410]">{selectedCompany.name}</div>
-                      <div className="text-xs text-[#6B5A4A]">{selectedCompany.location}</div>
+                      <div className="text-sm font-bold text-[var(--kz-ink)]">{selectedCompany.name}</div>
+                      <div className="text-xs text-[var(--kz-mute)]">{selectedCompany.location}</div>
                     </div>
                   </div>
                   <Textarea
@@ -370,12 +370,12 @@ export default function CompanySetupPage() {
           {/* ── ÉTAPE 2b : Créer ─────────────────────────────────────── */}
           {mode === 'create' && (
             <div>
-              <h2 className="text-lg font-bold text-[#1A1410] mb-1">Créer votre entreprise</h2>
-              <p className="text-sm text-[#6B5A4A] mb-5">Ces informations seront visibles par les candidats.</p>
+              <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Créer votre entreprise</h2>
+              <p className="text-sm text-[var(--kz-mute)] mb-5">Ces informations seront visibles par les candidats.</p>
 
               {/* Logo */}
               <div className="flex items-center gap-4 mb-5">
-                <div className="w-16 h-16 rounded-xl border-2 border-dashed border-[#1A1410] flex items-center justify-center overflow-hidden"
+                <div className="w-16 h-16 rounded-xl border-2 border-dashed border-[var(--kz-edge)] flex items-center justify-center overflow-hidden"
                   style={{ background: KZ.cream2 }}>
                   {logoPreview
                     ? <img src={logoPreview} alt="" className="w-full h-full object-cover" />
@@ -383,10 +383,10 @@ export default function CompanySetupPage() {
                 </div>
                 <div>
                   <label className="cursor-pointer">
-                    <span className="text-sm font-bold text-[#1A1410] underline">Ajouter un logo</span>
+                    <span className="text-sm font-bold text-[var(--kz-ink)] underline">Ajouter un logo</span>
                     <input type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
                   </label>
-                  <p className="text-xs text-[#6B5A4A]">PNG, JPG ou SVG · max 2 Mo</p>
+                  <p className="text-xs text-[var(--kz-mute)]">PNG, JPG ou SVG · max 2 Mo</p>
                 </div>
               </div>
 
@@ -409,16 +409,16 @@ export default function CompanySetupPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Secteur</label>
-                    <select className="w-full px-3 py-2.5 rounded-xl border-2 border-[#1A1410] text-sm bg-white focus:outline-none"
+                    <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Secteur</label>
+                    <select className="w-full px-3 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm bg-[var(--kz-paper)] focus:outline-none"
                       value={form.sector} onChange={e => setForm(f => ({ ...f, sector: e.target.value }))}>
                       <option value="">Choisir...</option>
                       {JOB_SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Taille</label>
-                    <select className="w-full px-3 py-2.5 rounded-xl border-2 border-[#1A1410] text-sm bg-white focus:outline-none"
+                    <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Taille</label>
+                    <select className="w-full px-3 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm bg-[var(--kz-paper)] focus:outline-none"
                       value={form.size} onChange={e => setForm(f => ({ ...f, size: e.target.value }))}>
                       {COMPANY_SIZES.map(s => <option key={s} value={s}>{s} employés</option>)}
                     </select>
@@ -451,8 +451,8 @@ export default function CompanySetupPage() {
           {/* ── ÉTAPE 3 : Plan ───────────────────────────────────────── */}
           {mode === 'plan' && (
             <div>
-              <h2 className="text-lg font-bold text-[#1A1410] mb-1">Choisissez votre forfait</h2>
-              <p className="text-sm text-[#6B5A4A] mb-5">
+              <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Choisissez votre forfait</h2>
+              <p className="text-sm text-[var(--kz-mute)] mb-5">
                 {launchAvailable
                   ? `Démarrez gratuitement avec ${launchElig?.campaignName ?? "notre offre de lancement"}, ou choisissez un forfait payant pour démarrer immédiatement.`
                   : "30 jours d’essai · Carte bancaire requise · 1er débit à la fin de l’essai · Annulable avant la fin."}
@@ -465,22 +465,22 @@ export default function CompanySetupPage() {
                   className="w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all mb-3"
                   style={{ borderColor: launchSelected ? KZ.violet : KZ.line, background: launchSelected ? KZ.violetSoft : KZ.cream2 }}
                 >
-                  <div className="w-8 h-8 rounded-full border-2 border-[#1A1410] flex items-center justify-center shrink-0"
+                  <div className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
                     style={{ background: launchSelected ? KZ.violet : 'white' }}>
                     {launchSelected && <Check size={14} color="white" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#1A1410]">{launchElig?.campaignName ?? 'Offre de lancement'}</span>
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]" style={{ background: KZ.yellowSoft }}>
+                      <span className="text-sm font-bold text-[var(--kz-ink)]">{launchElig?.campaignName ?? 'Offre de lancement'}</span>
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.yellowSoft }}>
                         Gratuit
                       </span>
                     </div>
-                    <div className="text-xs text-[#6B5A4A]">Accès gratuit temporaire · sans carte bancaire</div>
+                    <div className="text-xs text-[var(--kz-mute)]">Accès gratuit temporaire · sans carte bancaire</div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-lg font-extrabold text-[#1A1410]">0€</div>
-                    {launchElig?.expiresAt && <div className="text-[10px] text-[#6B5A4A]">jusqu&apos;au {fmtDate(launchElig.expiresAt)}</div>}
+                    <div className="text-lg font-extrabold text-[var(--kz-ink)]">0€</div>
+                    {launchElig?.expiresAt && <div className="text-[10px] text-[var(--kz-mute)]">jusqu&apos;au {fmtDate(launchElig.expiresAt)}</div>}
                   </div>
                 </button>
               )}
@@ -491,22 +491,22 @@ export default function CompanySetupPage() {
                   {/* 4 cards squelettes */}
                   <div className="flex flex-col gap-3 mb-4">
                     {[0, 1, 2, 3].map((i) => (
-                      <div key={i} className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-[#E8DDC9] bg-[#F5EFE4] animate-pulse">
-                        <div className="w-8 h-8 rounded-full bg-[#E8DDC9] shrink-0" />
+                      <div key={i} className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-[var(--kz-line)] bg-[#F5EFE4] animate-pulse">
+                        <div className="w-8 h-8 rounded-full bg-[var(--kz-line)] shrink-0" />
                         <div className="flex-1 space-y-2">
-                          <div className="h-3 bg-[#E8DDC9] rounded w-2/5" />
-                          <div className="h-2.5 bg-[#E8DDC9] rounded w-3/5" />
+                          <div className="h-3 bg-[var(--kz-line)] rounded w-2/5" />
+                          <div className="h-2.5 bg-[var(--kz-line)] rounded w-3/5" />
                         </div>
                         <div className="text-right space-y-1">
-                          <div className="h-4 bg-[#E8DDC9] rounded w-12" />
-                          <div className="h-2 bg-[#E8DDC9] rounded w-8 ml-auto" />
+                          <div className="h-4 bg-[var(--kz-line)] rounded w-12" />
+                          <div className="h-2 bg-[var(--kz-line)] rounded w-8 ml-auto" />
                         </div>
                       </div>
                     ))}
                   </div>
                   {/* Message informatif */}
-                  <div className="p-4 rounded-xl border border-[#E8DDC9] bg-[#FDFAF5] text-sm text-[#6B5A4A] leading-relaxed">
-                    <p className="font-bold text-[#1A1410] mb-1">Les offres payantes arrivent le 6 octobre 2026</p>
+                  <div className="p-4 rounded-xl border border-[var(--kz-line)] bg-[#FDFAF5] text-sm text-[var(--kz-mute)] leading-relaxed">
+                    <p className="font-bold text-[var(--kz-ink)] mb-1">Les offres payantes arrivent le 6 octobre 2026</p>
                     <p className="mb-2">
                       À partir de cette date, vous pourrez choisir un forfait payant adapté à vos besoins.
                       Pas de prélèvement automatique. Pas d&apos;enregistrement de carte bancaire pour le moment.
@@ -532,25 +532,25 @@ export default function CompanySetupPage() {
                           background: isSelected ? KZ.violetSoft : KZ.cream2,
                         }}
                       >
-                        <div className="w-8 h-8 rounded-full border-2 border-[#1A1410] flex items-center justify-center shrink-0"
+                        <div className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
                           style={{ background: isSelected ? KZ.violet : 'white' }}>
                           {isSelected && <Check size={14} color="white" />}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-[#1A1410]">{plan.name}</span>
-                            {plan.highlight && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]"
+                            <span className="text-sm font-bold text-[var(--kz-ink)]">{plan.name}</span>
+                            {plan.highlight && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]"
                               style={{ background: KZ.yellowSoft }}>Populaire</span>}
                           </div>
-                          <div className="text-xs text-[#6B5A4A]">
+                          <div className="text-xs text-[var(--kz-mute)]">
                             {plan.maxMembers} recruteur{plan.maxMembers > 1 ? 's' : ''} ·
                             {plan.maxJobs === -1 ? ' offres illimitées' : ` ${plan.maxJobs} offres`}
                             {MULTIDIFFUSION_ENABLED && ` · ${plan.partners.length > 0 ? `${plan.partners.length} plateforme(s)` : 'Kazajob uniquement'}`}
                           </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <div className="text-lg font-extrabold text-[#1A1410]">{euros}€</div>
-                          <div className="text-[10px] text-[#6B5A4A]">/mois</div>
+                          <div className="text-lg font-extrabold text-[var(--kz-ink)]">{euros}€</div>
+                          <div className="text-[10px] text-[var(--kz-mute)]">/mois</div>
                         </div>
                       </button>
                     )
@@ -566,21 +566,21 @@ export default function CompanySetupPage() {
                 /* ── Écran d'information obligatoire avant activation KazaLaunch ── */
                 <div>
                   <div className="kz-card p-4 mb-4" style={{ background: KZ.violetSoft }}>
-                    <h3 className="font-extrabold text-[#1A1410] mb-2">Votre accès gratuit avec {launchElig?.campaignName ?? 'l’offre de lancement'}</h3>
-                    <ul className="text-sm text-[#1A1410] space-y-1 mb-3">
+                    <h3 className="font-extrabold text-[var(--kz-ink)] mb-2">Votre accès gratuit avec {launchElig?.campaignName ?? 'l’offre de lancement'}</h3>
+                    <ul className="text-sm text-[var(--kz-ink)] space-y-1 mb-3">
                       <li>• 0 € pendant toute la durée de l&apos;accès</li>
                       <li>• Aucune carte bancaire demandée</li>
                       <li>• Aucun prélèvement automatique</li>
                       <li>• Offre utilisable une seule fois par entreprise</li>
                       {launchElig?.expiresAt && <li>• Fin estimée le <b>{fmtDate(launchElig.expiresAt)}</b></li>}
                     </ul>
-                    <p className="text-xs text-[#6B5A4A] leading-relaxed">
+                    <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
                       À partir de cette date, la publication et la réactivation d&apos;offres seront bloquées
                       jusqu&apos;au choix d&apos;un forfait payant. Vos candidatures et vos données resteront
                       accessibles. Aucun abonnement payant ne sera créé automatiquement.
                     </p>
                   </div>
-                  <label className="flex items-start gap-2 mb-4 cursor-pointer text-sm text-[#1A1410]">
+                  <label className="flex items-start gap-2 mb-4 cursor-pointer text-sm text-[var(--kz-ink)]">
                     <input type="checkbox" checked={launchConfirmed} onChange={(e) => setLaunchConfirmed(e.target.checked)}
                       className="mt-0.5 w-4 h-4 shrink-0" />
                     <span>J&apos;ai compris que cet accès gratuit est temporaire, qu&apos;il ne peut être activé
@@ -596,7 +596,7 @@ export default function CompanySetupPage() {
                 /* ── Forfait payant : code promo + checkout Stripe ── */
                 <div>
                   <div className="mb-3">
-                    <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Code promo (optionnel)</label>
+                    <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Code promo (optionnel)</label>
                     <div className="flex gap-2">
                       <Input className="flex-1" value={promoCode} placeholder="Ex : RENTREE25"
                         onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoMsg(null) }} />
@@ -610,7 +610,7 @@ export default function CompanySetupPage() {
                     icon={<ArrowRight size={15} />}>
                     Continuer vers le paiement sécurisé
                   </Button>
-                  <p className="text-xs text-center text-[#6B5A4A] mt-3">
+                  <p className="text-xs text-center text-[var(--kz-mute)] mt-3">
                     Paiement sécurisé par Stripe. Aucun débit pendant les 30 jours d&apos;essai.
                   </p>
                 </div>
@@ -621,12 +621,12 @@ export default function CompanySetupPage() {
           {/* ── ÉTAPE 4 : Succès ─────────────────────────────────────── */}
           {mode === 'done' && (
             <div className="text-center py-6">
-              <div className="w-20 h-20 rounded-full border-2 border-[#1A1410] flex items-center justify-center mx-auto mb-5"
+              <div className="w-20 h-20 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center mx-auto mb-5"
               style={{ background: KZ.greenSoft }}>
               <Check size={36} color={KZ.green} />
             </div>
-              <h2 className="text-xl font-extrabold text-[#1A1410] mb-2">Votre espace est prêt !</h2>
-              <p className="text-sm text-[#6B5A4A] mb-6 leading-relaxed">
+              <h2 className="text-xl font-extrabold text-[var(--kz-ink)] mb-2">Votre espace est prêt !</h2>
+              <p className="text-sm text-[var(--kz-mute)] mb-6 leading-relaxed">
                 Votre entreprise est configurée. Vous pouvez maintenant publier des offres,
                 inviter vos collègues recruteurs et accéder à vos analytics.
               </p>

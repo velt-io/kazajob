@@ -28,7 +28,7 @@ export function JobCard({ job, isFavorite, onToggleFavorite, showMatch = true, c
 
   return (
     <div
-      className="kz-card p-5 bg-white flex flex-col gap-3.5 relative group hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_#1A1410] transition-all duration-100"
+      className="kz-card p-5 bg-[var(--kz-paper)] flex flex-col gap-3.5 relative group hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_var(--kz-shadow)] transition-all duration-100"
       style={isBoosted ? { borderColor: KZ.orange, boxShadow: '4px 4px 0 ' + KZ.orange } : undefined}
     >
       {isBoosted && (
@@ -44,23 +44,23 @@ export function JobCard({ job, isFavorite, onToggleFavorite, showMatch = true, c
 
       <div className="flex gap-3 items-start">
         <div
-          className="w-12 h-12 rounded-lg border border-[#1A1410] flex items-center justify-center font-bold text-[#1A1410] shrink-0 text-base"
+          className="w-12 h-12 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center font-bold text-[var(--kz-ink)] shrink-0 text-base"
           style={{ background: color }}
         >
           {companyInitials}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-xs font-semibold text-[#6B5A4A]">{job.company?.name}</div>
-          <div className="text-base font-bold text-[#1A1410] mt-0.5 leading-snug truncate">
+          <div className="text-xs font-semibold text-[var(--kz-mute)]">{job.company?.name}</div>
+          <div className="text-base font-bold text-[var(--kz-ink)] mt-0.5 leading-snug truncate">
             {job.title}
           </div>
         </div>
         {onToggleFavorite && (
           <button
             onClick={(e) => { e.preventDefault(); onToggleFavorite(job.id) }}
-            className="shrink-0 mt-0.5 text-[#6B5A4A] hover:text-[#FF6B35] transition-colors"
+            className="shrink-0 mt-0.5 text-[var(--kz-mute)] hover:text-[var(--kz-orange)] transition-colors"
           >
-            <Heart size={18} fill={isFavorite ? '#FF6B35' : 'none'} color={isFavorite ? '#FF6B35' : 'currentColor'} />
+            <Heart size={18} fill={isFavorite ? 'var(--kz-orange)' : 'none'} color={isFavorite ? 'var(--kz-orange)' : 'currentColor'} />
           </button>
         )}
       </div>
@@ -75,13 +75,13 @@ export function JobCard({ job, isFavorite, onToggleFavorite, showMatch = true, c
         </div>
       )}
 
-      <div className="flex justify-between items-center pt-2.5 border-t border-[#E8DDC9]">
+      <div className="flex justify-between items-center pt-2.5 border-t border-[var(--kz-line)]">
         <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-1 text-xs text-[#2A2018]">
+          <div className="flex items-center gap-1 text-xs text-[var(--kz-text)]">
             <MapPin size={11} />
             {job.location}
           </div>
-          <div className="text-xs font-semibold text-[#2A2018]">
+          <div className="text-xs font-semibold text-[var(--kz-text)]">
             {formatSalary(job.salary_min, job.salary_max)}
           </div>
         </div>
@@ -91,7 +91,7 @@ export function JobCard({ job, isFavorite, onToggleFavorite, showMatch = true, c
           </Badge>
         )}
         {!showMatch && (
-          <span className="text-[10px] text-[#6B5A4A]">{timeAgo(job.created_at)}</span>
+          <span className="text-[10px] text-[var(--kz-mute)]">{timeAgo(job.created_at)}</span>
         )}
       </div>
 

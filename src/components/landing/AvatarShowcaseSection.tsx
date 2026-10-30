@@ -23,7 +23,7 @@ const POINTS = [
 
 export function AvatarShowcaseSection() {
   return (
-    <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-20 border-t border-[#1A1410] relative overflow-hidden" style={{ background: KZ.violet }}>
+    <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-20 border-t border-[var(--kz-edge)] relative overflow-hidden" style={{ background: KZ.violet }}>
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center">
         <div>
           <p className="kz-eyebrow mb-2" style={{ color: KZ.yellow }}>Ton perso Kazajob</p>
@@ -39,7 +39,7 @@ export function AvatarShowcaseSection() {
           <div className="flex flex-col gap-3 mb-8">
             {POINTS.map(({ icon: Icon, color, title, desc }) => (
               <div key={title} className="flex gap-3 items-start">
-                <span className="w-9 h-9 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0 text-[#1A1410]" style={{ background: color }}>
+                <span className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0 text-[var(--kz-ink)]" style={{ background: color }}>
                   <Icon size={17} />
                 </span>
                 <div>
@@ -58,11 +58,11 @@ export function AvatarShowcaseSection() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 lg:gap-4">
           {CAST.map((p, i) => (
             <div key={p.name}
-              className="kz-card p-4 flex flex-col items-center text-center bg-white transition-transform hover:-translate-y-1"
+              className="kz-card p-4 flex flex-col items-center text-center bg-[var(--kz-paper)] transition-transform hover:-translate-y-1"
               style={{ transform: `rotate(${[-2, 1.5, -1, 2, -1.5, 1][i]}deg)` }}>
               <Avatar name={p.name} avatarConfig={p.config} size={88} color={p.bg} />
-              <div className="text-xs font-extrabold text-[#1A1410] mt-3 leading-tight">{p.name}</div>
-              <div className="text-[10px] font-semibold text-[#6B5A4A] uppercase tracking-wider mt-0.5">{p.job}</div>
+              <div className="text-xs font-extrabold text-[var(--kz-ink)] mt-3 leading-tight">{p.name}</div>
+              <div className="text-[10px] font-semibold text-[var(--kz-mute)] uppercase tracking-wider mt-0.5">{p.job}</div>
             </div>
           ))}
         </div>

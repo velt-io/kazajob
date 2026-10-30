@@ -25,13 +25,13 @@ export function AccountActions() {
   }
 
   return (
-    <div className="kz-card bg-white overflow-hidden">
-      <div className="px-6 py-4 border-b border-[#E8DDC9] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-        <ShieldCheck size={16} className="text-[#6B5A4A]" />
-        <span className="text-sm font-bold text-[#1A1410]">Mes données &amp; confidentialité</span>
+    <div className="kz-card bg-[var(--kz-paper)] overflow-hidden">
+      <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
+        <ShieldCheck size={16} className="text-[var(--kz-mute)]" />
+        <span className="text-sm font-bold text-[var(--kz-ink)]">Mes données &amp; confidentialité</span>
       </div>
       <div className="p-6">
-        <p className="text-sm text-[#6B5A4A] mb-4 leading-relaxed">
+        <p className="text-sm text-[var(--kz-mute)] mb-4 leading-relaxed">
           Conformément au RGPD, tu peux télécharger l&apos;ensemble de tes données ou supprimer
           définitivement ton compte à tout moment.
         </p>

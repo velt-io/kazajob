@@ -94,8 +94,8 @@ export function StageForm({ job, companyId, onSuccess }: StageFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {/* Informations principales */}
-      <div className="kz-card p-5 bg-white">
-        <h2 className="text-sm font-extrabold text-[#1A1410] mb-4">Informations principales</h2>
+      <div className="kz-card p-5 bg-[var(--kz-paper)]">
+        <h2 className="text-sm font-extrabold text-[var(--kz-ink)] mb-4">Informations principales</h2>
         <div className="flex flex-col gap-4">
           <Input
             label="Titre du stage"
@@ -113,7 +113,7 @@ export function StageForm({ job, companyId, onSuccess }: StageFormProps) {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Select label="Niveau d'études" options={LEVEL_OPTIONS}
               value={level} onChange={(e) => setLevel(e.target.value)} />
-            <label className="flex items-center gap-2 text-sm font-medium text-[#2A2018] cursor-pointer mt-5">
+            <label className="flex items-center gap-2 text-sm font-medium text-[var(--kz-text)] cursor-pointer mt-5">
               <input type="checkbox" checked={remote} onChange={(e) => setRemote(e.target.checked)} className="w-4 h-4" />
               Télétravail possible
             </label>
@@ -131,8 +131,8 @@ export function StageForm({ job, companyId, onSuccess }: StageFormProps) {
       </div>
 
       {/* Conditions du stage */}
-      <div className="kz-card p-5 bg-white">
-        <h2 className="text-sm font-extrabold text-[#1A1410] mb-4">Conditions du stage</h2>
+      <div className="kz-card p-5 bg-[var(--kz-paper)]">
+        <h2 className="text-sm font-extrabold text-[var(--kz-ink)] mb-4">Conditions du stage</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Select label="Durée" options={DURATION_OPTIONS}
             value={duration} onChange={(e) => setDuration(e.target.value)} />
@@ -151,7 +151,7 @@ export function StageForm({ job, companyId, onSuccess }: StageFormProps) {
               placeholder="Ex : 590€/mois" />
           )}
         </div>
-        <label className="flex items-center gap-2 text-sm font-medium text-[#2A2018] cursor-pointer mt-4">
+        <label className="flex items-center gap-2 text-sm font-medium text-[var(--kz-text)] cursor-pointer mt-4">
           <input type="checkbox" checked={agreementRequired} onChange={(e) => setAgreementRequired(e.target.checked)} className="w-4 h-4" />
           Convention de stage obligatoire
         </label>

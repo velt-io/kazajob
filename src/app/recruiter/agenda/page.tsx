@@ -57,12 +57,12 @@ export default function RecruiterAgendaPage() {
     <div className="max-w-[900px] mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl border border-[#1A1410] flex items-center justify-center" style={{ background: KZ.violet }}>
+          <div className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.violet }}>
             <Calendar size={20} color="white" />
           </div>
           <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-[#1A1410]">Agenda entretiens</h1>
-            <p className="text-sm text-[#6B5A4A]">{upcoming.length} entretien(s) à venir</p>
+            <h1 className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)]">Agenda entretiens</h1>
+            <p className="text-sm text-[var(--kz-mute)]">{upcoming.length} entretien(s) à venir</p>
           </div>
         </div>
         <Badge color="violet" size="md">Planifiez depuis une candidature</Badge>
@@ -81,9 +81,9 @@ export default function RecruiterAgendaPage() {
             .map(([date, ivs]) => (
               <div key={date}>
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="h-px flex-1 bg-[#E8DDC9]" />
-                  <span className="text-xs font-bold text-[#6B5A4A] px-2 capitalize">{date}</span>
-                  <div className="h-px flex-1 bg-[#E8DDC9]" />
+                  <div className="h-px flex-1 bg-[var(--kz-line)]" />
+                  <span className="text-xs font-bold text-[var(--kz-mute)] px-2 capitalize">{date}</span>
+                  <div className="h-px flex-1 bg-[var(--kz-line)]" />
                 </div>
 
                 {ivs.filter(iv => iv.status !== 'cancelled').map((iv) => {
@@ -93,12 +93,12 @@ export default function RecruiterAgendaPage() {
                   const candidate = iv.candidate
 
                   return (
-                    <div key={iv.id} className="kz-card p-5 bg-white mb-3"
+                    <div key={iv.id} className="kz-card p-5 bg-[var(--kz-paper)] mb-3"
                       style={isToday ? { borderColor: KZ.orange, boxShadow: `4px 4px 0 ${KZ.orange}` } : {}}>
 
                       <div className="flex items-start gap-4">
                         {/* Heure */}
-                        <div className="w-14 h-14 rounded-xl border border-[#1A1410] flex flex-col items-center justify-center shrink-0 text-white font-extrabold"
+                        <div className="w-14 h-14 rounded-xl border border-[var(--kz-edge)] flex flex-col items-center justify-center shrink-0 text-white font-extrabold"
                           style={{ background: isToday ? KZ.orange : KZ.violet }}>
                           <div className="text-xl leading-none">{d.getHours().toString().padStart(2,'0')}:{d.getMinutes().toString().padStart(2,'0')}</div>
                           <div className="text-[10px] opacity-80">{iv.duration_min}min</div>
@@ -107,7 +107,7 @@ export default function RecruiterAgendaPage() {
                         {/* Infos */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className="text-base font-bold text-[#1A1410]">{iv.job?.title ?? 'Entretien'}</span>
+                            <span className="text-base font-bold text-[var(--kz-ink)]">{iv.job?.title ?? 'Entretien'}</span>
                             <Badge color={STATUS_COLOR[iv.status] ?? 'cream'} size="sm">
                               {iv.status === 'pending' ? 'En attente' : iv.status === 'confirmed' ? 'Confirmé' : iv.status === 'done' ? 'Terminé' : 'Annulé'}
                             </Badge>
@@ -118,12 +118,12 @@ export default function RecruiterAgendaPage() {
                           {candidate && (
                             <div className="flex items-center gap-2 mb-2">
                               <Avatar name={candidate.full_name} src={candidate.avatar_url} avatarConfig={candidate.avatar_config} size={24} color={KZ.orangeSoft} />
-                              <span className="text-sm font-semibold text-[#1A1410]">{candidate.full_name}</span>
-                              <span className="text-xs text-[#6B5A4A]">{candidate.email}</span>
+                              <span className="text-sm font-semibold text-[var(--kz-ink)]">{candidate.full_name}</span>
+                              <span className="text-xs text-[var(--kz-mute)]">{candidate.email}</span>
                             </div>
                           )}
 
-                          <div className="flex items-center gap-1.5 text-xs text-[#6B5A4A]">
+                          <div className="flex items-center gap-1.5 text-xs text-[var(--kz-mute)]">
                             {iv.type === 'video' && <Video size={13} />}
                             {iv.type === 'phone' && <Phone size={13} />}
                             {iv.type === 'onsite' && <MapPin size={13} />}
@@ -132,7 +132,7 @@ export default function RecruiterAgendaPage() {
                           </div>
 
                           {iv.visio_link && (
-                            <div className="mt-1 text-xs text-[#6B5A4A] flex items-center gap-1.5">
+                            <div className="mt-1 text-xs text-[var(--kz-mute)] flex items-center gap-1.5">
                               <ExternalLink size={11} />
                               <a href={iv.visio_link} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: KZ.violet }}>
                                 {iv.visio_link}
@@ -141,7 +141,7 @@ export default function RecruiterAgendaPage() {
                           )}
 
                           {iv.notes && (
-                            <div className="mt-2 text-xs text-[#6B5A4A] p-2.5 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                            <div className="mt-2 text-xs text-[var(--kz-mute)] p-2.5 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                               {iv.notes}
                             </div>
                           )}
@@ -149,7 +149,7 @@ export default function RecruiterAgendaPage() {
                       </div>
 
                       {/* Actions recruteur */}
-                      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-[#E8DDC9]">
+                      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-[var(--kz-line)]">
                         {iv.visio_link && iv.type === 'video' && !isPast && (
                           <a href={iv.visio_link} target="_blank" rel="noreferrer">
                             <Button kind="violet" size="sm" icon={<Video size={14} />}>Rejoindre</Button>

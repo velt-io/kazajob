@@ -164,7 +164,7 @@ export default function CompanyTeamPage() {
       <div className="flex items-start justify-between gap-3 mb-6">
         <div>
           <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Mon entreprise</p>
-          <h1 className="text-2xl font-extrabold text-[#1A1410]">Gestion de l&apos;équipe</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Gestion de l&apos;équipe</h1>
         </div>
         {myMembership && !isOwner && (
           <Button kind="outline" size="sm" icon={<LogOut size={14} />} onClick={handleLeave}>Quitter</Button>
@@ -173,8 +173,8 @@ export default function CompanyTeamPage() {
 
       {/* Demandes en attente */}
       {requests.length > 0 && (
-        <div className="kz-card p-5 bg-white mb-5">
-          <h2 className="text-sm font-bold text-[#1A1410] mb-3 flex items-center gap-2">
+        <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+          <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2">
             <UserPlus size={15} color={KZ.orange} />
             Demandes d&apos;adhésion ({requests.length})
           </h2>
@@ -182,18 +182,18 @@ export default function CompanyTeamPage() {
             {requests.map(req => {
               const p = req.profile as { full_name: string; email: string } | undefined
               return (
-                <div key={req.id} className="flex items-center gap-3 p-3 rounded-xl border border-[#E8DDC9]"
+                <div key={req.id} className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-line)]"
                   style={{ background: KZ.yellowSoft }}>
                   <Avatar name={p?.full_name ?? '?'} size={36} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-[#1A1410]">{p?.full_name ?? '—'}</div>
-                    <div className="text-xs text-[#6B5A4A]">{p?.email}</div>
-                    {req.message && <p className="text-xs text-[#2A2018] mt-1 italic">&quot;{req.message}&quot;</p>}
+                    <div className="text-sm font-bold text-[var(--kz-ink)]">{p?.full_name ?? '—'}</div>
+                    <div className="text-xs text-[var(--kz-mute)]">{p?.email}</div>
+                    {req.message && <p className="text-xs text-[var(--kz-text)] mt-1 italic">&quot;{req.message}&quot;</p>}
                   </div>
                   {isOwnerOrAdmin && (
                     <div className="flex gap-1.5 shrink-0">
                       <button onClick={() => handleRequest(req, true)} disabled={processingId === req.id}
-                        className="w-8 h-8 rounded-lg border border-[#19A974] flex items-center justify-center hover:bg-[#D6F0E0]">
+                        className="w-8 h-8 rounded-lg border border-[var(--kz-green)] flex items-center justify-center hover:bg-[var(--kz-green-soft)]">
                         <Check size={15} color={KZ.green} />
                       </button>
                       <button onClick={() => handleRequest(req, false)} disabled={processingId === req.id}
@@ -211,11 +211,11 @@ export default function CompanyTeamPage() {
 
       {/* Inviter un recruteur */}
       {isOwnerOrAdmin && (
-        <div className="kz-card p-5 bg-white mb-5">
-          <h2 className="text-sm font-bold text-[#1A1410] mb-1 flex items-center gap-2">
+        <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+          <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-1 flex items-center gap-2">
             <Link2 size={15} color={KZ.violet} /> Inviter un recruteur
           </h2>
-          <p className="text-xs text-[#6B5A4A] mb-3">
+          <p className="text-xs text-[var(--kz-mute)] mb-3">
             Générez un lien d&apos;invitation (valable 7 jours). Avec un e-mail, l&apos;invitation est aussi envoyée directement.
           </p>
           <div className="flex flex-col sm:flex-row gap-2">
@@ -236,8 +236,8 @@ export default function CompanyTeamPage() {
           </div>
 
           {inviteLink && (
-            <div className="mt-3 flex items-center gap-2 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft }}>
-              <code className="flex-1 min-w-0 text-[11px] text-[#1A1410] truncate">{inviteLink}</code>
+            <div className="mt-3 flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
+              <code className="flex-1 min-w-0 text-[11px] text-[var(--kz-ink)] truncate">{inviteLink}</code>
               <button onClick={copyLink} className="flex items-center gap-1 text-xs font-bold shrink-0" style={{ color: KZ.violet }}>
                 {copied ? <Check size={13} /> : <Copy size={13} />}{copied ? 'Copié' : 'Copier'}
               </button>
@@ -247,15 +247,15 @@ export default function CompanyTeamPage() {
           {/* Invitations en attente */}
           {invitations.length > 0 && (
             <div className="mt-4 flex flex-col gap-2">
-              <p className="text-xs font-bold text-[#6B5A4A]">Invitations en attente ({invitations.length})</p>
+              <p className="text-xs font-bold text-[var(--kz-mute)]">Invitations en attente ({invitations.length})</p>
               {invitations.map(inv => (
-                <div key={inv.id} className="flex items-center gap-3 p-2.5 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                <div key={inv.id} className="flex items-center gap-3 p-2.5 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                   <div className="flex-1 min-w-0">
-                    <div className="text-xs font-bold text-[#1A1410] truncate">{inv.email ?? 'Lien d\'invitation'}</div>
-                    <div className="text-[10px] text-[#6B5A4A]">Rôle : {inv.role === 'admin' ? 'Admin' : 'Recruteur'}</div>
+                    <div className="text-xs font-bold text-[var(--kz-ink)] truncate">{inv.email ?? 'Lien d\'invitation'}</div>
+                    <div className="text-[10px] text-[var(--kz-mute)]">Rôle : {inv.role === 'admin' ? 'Admin' : 'Recruteur'}</div>
                   </div>
                   <button onClick={() => handleRevoke(inv.id)} disabled={processingId === inv.id}
-                    className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-400 hover:text-red-500 transition-colors" title="Révoquer">
+                    className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 transition-colors" title="Révoquer">
                     <Trash2 size={13} />
                   </button>
                 </div>
@@ -266,29 +266,29 @@ export default function CompanyTeamPage() {
       )}
 
       {/* Membres actifs */}
-      <div className="kz-card bg-white overflow-hidden">
-        <div className="p-4 border-b border-[#E8DDC9] flex justify-between items-center">
-          <h2 className="text-sm font-bold text-[#1A1410]">Membres ({members.length})</h2>
+      <div className="kz-card bg-[var(--kz-paper)] overflow-hidden">
+        <div className="p-4 border-b border-[var(--kz-line)] flex justify-between items-center">
+          <h2 className="text-sm font-bold text-[var(--kz-ink)]">Membres ({members.length})</h2>
         </div>
         {loading ? (
           <div className="p-4 flex flex-col gap-2">
-            {[1, 2].map(i => <div key={i} className="h-14 rounded-xl bg-[#FBEFE0] animate-pulse" />)}
+            {[1, 2].map(i => <div key={i} className="h-14 rounded-xl bg-[var(--kz-cream2)] animate-pulse" />)}
           </div>
         ) : (
-          <div className="divide-y divide-[#E8DDC9]">
+          <div className="divide-y divide-[var(--kz-line)]">
             {members.map(m => {
               const p = m.profile as { full_name: string; email: string; avatar_url?: string | null; avatar_config?: Record<string, unknown> | null } | undefined
               const isSelf = m.recruiter_id === profile?.id
               const memberIsOwner = m.role === 'owner'
               return (
-                <div key={m.id} className="flex items-center gap-3 p-4 hover:bg-[#FBEFE0] transition-colors">
+                <div key={m.id} className="flex items-center gap-3 p-4 hover:bg-[var(--kz-cream2)] transition-colors">
                   <Avatar name={p?.full_name ?? '?'} src={p?.avatar_url ?? null} avatarConfig={p?.avatar_config} size={36} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[#1A1410]">{p?.full_name ?? '—'}</span>
+                      <span className="text-sm font-bold text-[var(--kz-ink)]">{p?.full_name ?? '—'}</span>
                       {isSelf && <Badge color="cream" size="sm">Vous</Badge>}
                     </div>
-                    <div className="text-xs text-[#6B5A4A]">{p?.email}</div>
+                    <div className="text-xs text-[var(--kz-mute)]">{p?.email}</div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <Badge color={ROLE_BADGE[m.role] ?? 'cream'} size="sm">
@@ -299,7 +299,7 @@ export default function CompanyTeamPage() {
                       <button
                         onClick={() => handleTransfer(m.id, p?.full_name ?? 'ce membre')}
                         disabled={processingId === m.id}
-                        className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-[#FF6B35] text-xs transition-colors"
+                        className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-orange)] text-xs transition-colors"
                         title="Transférer la propriété"
                       >
                         <Crown size={12} />
@@ -310,7 +310,7 @@ export default function CompanyTeamPage() {
                         <button
                           onClick={() => handleChangeRole(m.id, m.role === 'admin' ? 'member' : 'admin')}
                           disabled={processingId === m.id}
-                          className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-[#6D3BEB] text-xs transition-colors"
+                          className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-violet)] text-xs transition-colors"
                           title={m.role === 'admin' ? 'Rétrograder' : 'Promouvoir admin'}
                         >
                           <Shield size={12} />
@@ -318,7 +318,7 @@ export default function CompanyTeamPage() {
                         <button
                           onClick={() => handleRemoveMember(m.id)}
                           disabled={processingId === m.id}
-                          className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-400 hover:text-red-500 text-xs transition-colors"
+                          className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 text-xs transition-colors"
                           title="Retirer"
                         >
                           <X size={12} />

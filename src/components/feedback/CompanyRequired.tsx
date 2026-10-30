@@ -26,23 +26,23 @@ export function CompanyRequired({ children, action = 'effectuer cette action' }:
     <div className="max-w-[520px] mx-auto py-12 px-4">
       <div
         className="kz-card p-8 text-center"
-        style={{ background: KZ.paper, boxShadow: '5px 5px 0 #1A1410' }}
+        style={{ background: KZ.paper, boxShadow: '5px 5px 0 var(--kz-shadow)' }}
       >
         {/* Icône */}
         <div
-          className="w-20 h-20 rounded-2xl border-2 border-[#1A1410] flex items-center justify-center mx-auto mb-5"
+          className="w-20 h-20 rounded-2xl border-2 border-[var(--kz-edge)] flex items-center justify-center mx-auto mb-5"
           style={{ background: KZ.orangeSoft }}
         >
           <Building2 size={36} color={KZ.orange} />
         </div>
 
         {/* Titre */}
-        <h2 className="text-xl font-extrabold text-[#1A1410] mb-2 tracking-tight">
+        <h2 className="text-xl font-extrabold text-[var(--kz-ink)] mb-2 tracking-tight">
           Entreprise requise
         </h2>
 
         {/* Message */}
-        <p className="text-sm text-[#6B5A4A] leading-relaxed mb-6">
+        <p className="text-sm text-[var(--kz-mute)] leading-relaxed mb-6">
           Vous devez <strong>configurer ou rejoindre une entreprise</strong> avant de pouvoir {action}.
           <br /><br />
           Cela ne prend que quelques minutes.
@@ -70,7 +70,7 @@ export function CompanyRequired({ children, action = 'effectuer cette action' }:
         </div>
 
         {/* Note attente */}
-        <p className="text-xs text-[#6B5A4A] mt-5 leading-relaxed">
+        <p className="text-xs text-[var(--kz-mute)] mt-5 leading-relaxed">
           Si vous avez déjà envoyé une demande pour rejoindre une équipe,
           attendez l&apos;approbation du responsable.
         </p>

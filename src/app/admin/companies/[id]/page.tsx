@@ -68,7 +68,7 @@ export default function AdminCompanyDetailPage() {
     setSaving(false)
   }
 
-  if (loading) return <div className="h-48 rounded-2xl bg-[#FBEFE0] animate-pulse max-w-[800px] mx-auto" />
+  if (loading) return <div className="h-48 rounded-2xl bg-[var(--kz-cream2)] animate-pulse max-w-[800px] mx-auto" />
 
   const style = summary ? SEVERITY_STYLE[summary.message.severity] ?? SEVERITY_STYLE.info : SEVERITY_STYLE.info
 
@@ -76,50 +76,50 @@ export default function AdminCompanyDetailPage() {
     <div className="max-w-[800px] mx-auto space-y-6">
       <div className="flex items-center gap-3">
         <Link href="/admin/companies">
-          <button className="p-1.5 rounded-lg border border-[#E8DDC9] text-[#6B5A4A] hover:text-[#1A1410]">
+          <button className="p-1.5 rounded-lg border border-[var(--kz-line)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]">
             <ArrowLeft size={16} />
           </button>
         </Link>
-        <h1 className="text-xl font-extrabold text-[#1A1410]">Fiche entreprise — Abonnement &amp; Usage</h1>
+        <h1 className="text-xl font-extrabold text-[var(--kz-ink)]">Fiche entreprise — Abonnement &amp; Usage</h1>
       </div>
 
       {summary && (
         <>
           {/* ── Carte statut ── */}
-          <div className="kz-card p-4 bg-white">
-            <h2 className="text-sm font-extrabold text-[#1A1410] mb-3 uppercase tracking-wide">Statut facturation</h2>
+          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+            <h2 className="text-sm font-extrabold text-[var(--kz-ink)] mb-3 uppercase tracking-wide">Statut facturation</h2>
             <div className="rounded-xl border p-3 flex items-start gap-3 mb-4"
               style={{ background: style.bg, borderColor: style.border }}>
               {style.icon}
               <div>
-                <p className="text-sm font-bold text-[#1A1410]">{summary.message.title}</p>
-                <p className="text-xs text-[#6B5A4A] mt-0.5">{summary.message.description}</p>
+                <p className="text-sm font-bold text-[var(--kz-ink)]">{summary.message.title}</p>
+                <p className="text-xs text-[var(--kz-mute)] mt-0.5">{summary.message.description}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-              <div className="rounded-lg border border-[#E8DDC9] p-2">
-                <div className="text-[#6B5A4A]">Source</div>
-                <div className="font-bold text-[#1A1410] capitalize">{summary.source.replace('_', ' ')}</div>
+              <div className="rounded-lg border border-[var(--kz-line)] p-2">
+                <div className="text-[var(--kz-mute)]">Source</div>
+                <div className="font-bold text-[var(--kz-ink)] capitalize">{summary.source.replace('_', ' ')}</div>
               </div>
-              <div className="rounded-lg border border-[#E8DDC9] p-2">
-                <div className="text-[#6B5A4A]">Statut abonnement</div>
-                <div className="font-bold text-[#1A1410]">{summary.subscriptionStatus ?? '—'}</div>
+              <div className="rounded-lg border border-[var(--kz-line)] p-2">
+                <div className="text-[var(--kz-mute)]">Statut abonnement</div>
+                <div className="font-bold text-[var(--kz-ink)]">{summary.subscriptionStatus ?? '—'}</div>
               </div>
-              <div className="rounded-lg border border-[#E8DDC9] p-2">
-                <div className="text-[#6B5A4A]">Forfait actuel</div>
-                <div className="font-bold text-[#1A1410]">{summary.planName ?? (summary.campaignName ? `Campagne : ${summary.campaignName}` : 'Aucun')}</div>
+              <div className="rounded-lg border border-[var(--kz-line)] p-2">
+                <div className="text-[var(--kz-mute)]">Forfait actuel</div>
+                <div className="font-bold text-[var(--kz-ink)]">{summary.planName ?? (summary.campaignName ? `Campagne : ${summary.campaignName}` : 'Aucun')}</div>
               </div>
-              <div className="rounded-lg border border-[#E8DDC9] p-2">
-                <div className="text-[#6B5A4A]">Annonces actives</div>
-                <div className="font-bold text-[#1A1410]">{summary.activeJobs}</div>
+              <div className="rounded-lg border border-[var(--kz-line)] p-2">
+                <div className="text-[var(--kz-mute)]">Annonces actives</div>
+                <div className="font-bold text-[var(--kz-ink)]">{summary.activeJobs}</div>
               </div>
-              <div className="rounded-lg border border-[#E8DDC9] p-2">
-                <div className="text-[#6B5A4A]">Limite effective</div>
-                <div className="font-bold text-[#1A1410]">{summary.maxJobs === -1 ? 'Illimité' : summary.maxJobs}</div>
+              <div className="rounded-lg border border-[var(--kz-line)] p-2">
+                <div className="text-[var(--kz-mute)]">Limite effective</div>
+                <div className="font-bold text-[var(--kz-ink)]">{summary.maxJobs === -1 ? 'Illimité' : summary.maxJobs}</div>
               </div>
-              <div className="rounded-lg border border-[#E8DDC9] p-2">
-                <div className="text-[#6B5A4A]">Dépassement</div>
+              <div className="rounded-lg border border-[var(--kz-line)] p-2">
+                <div className="text-[var(--kz-mute)]">Dépassement</div>
                 <div className="font-bold" style={{ color: summary.isOverLimit ? KZ.orange : KZ.green }}>
                   {summary.isOverLimit ? 'Oui ⚠️' : 'Non ✅'}
                 </div>
@@ -128,48 +128,48 @@ export default function AdminCompanyDetailPage() {
           </div>
 
           {/* ── Dérogation admin ── */}
-          <div className="kz-card p-4 bg-white">
-            <h2 className="text-sm font-extrabold text-[#1A1410] mb-3 uppercase tracking-wide">Dérogation admin</h2>
+          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+            <h2 className="text-sm font-extrabold text-[var(--kz-ink)] mb-3 uppercase tracking-wide">Dérogation admin</h2>
 
             <div className="flex items-center gap-3 mb-4">
               <button type="button" onClick={() => setOverrideEnabled(!overrideEnabled)}
-                className="relative inline-flex h-6 w-11 items-center rounded-full border border-[#1A1410] transition-colors"
+                className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors"
                 style={{ background: overrideEnabled ? KZ.green : KZ.beige }}>
-                <span className="inline-block h-4 w-4 rounded-full bg-white border border-[#1A1410] transition-transform"
+                <span className="inline-block h-4 w-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
                   style={{ transform: overrideEnabled ? 'translateX(22px)' : 'translateX(2px)' }} />
               </button>
-              <span className="text-sm font-medium text-[#1A1410]">
+              <span className="text-sm font-medium text-[var(--kz-ink)]">
                 {overrideEnabled ? 'Dérogation activée' : 'Dérogation désactivée'}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-              <label className="text-xs text-[#6B5A4A]">
+              <label className="text-xs text-[var(--kz-mute)]">
                 Quota max (vide = illimité)
                 <input type="number" value={overrideMax} onChange={e => setOverrideMax(e.target.value)}
                   placeholder="ex : 15"
-                  className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                  className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
               </label>
-              <label className="text-xs text-[#6B5A4A]">
+              <label className="text-xs text-[var(--kz-mute)]">
                 Valide jusqu'au (vide = sans limite)
                 <input type="date" value={overrideUntil} onChange={e => setOverrideUntil(e.target.value)}
-                  className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                  className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
               </label>
-              <label className="text-xs text-[#6B5A4A]">
+              <label className="text-xs text-[var(--kz-mute)]">
                 Raison (note interne)
                 <input type="text" value={overrideReason} onChange={e => setOverrideReason(e.target.value)}
                   placeholder="ex : partenaire lancement"
-                  className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                  className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
               </label>
             </div>
 
-            {error && <p className="text-xs text-[#E54E1A] mb-2">{error}</p>}
+            {error && <p className="text-xs text-[var(--kz-orange-deep)] mb-2">{error}</p>}
 
             <Button kind="primary" size="sm" onClick={saveOverride} disabled={saving}>
               {saving ? 'Enregistrement…' : 'Enregistrer la dérogation'}
             </Button>
 
-            <p className="text-[10px] text-[#6B5A4A] mt-2">
+            <p className="text-[10px] text-[var(--kz-mute)] mt-2">
               La dérogation prend le dessus sur le forfait payant et la campagne. Auditée.
             </p>
           </div>
@@ -177,7 +177,7 @@ export default function AdminCompanyDetailPage() {
       )}
 
       <div className="text-center">
-        <Link href="/admin/companies" className="text-xs text-[#6D3BEB] hover:underline">
+        <Link href="/admin/companies" className="text-xs text-[var(--kz-violet)] hover:underline">
           ← Retour à la liste des entreprises
         </Link>
       </div>

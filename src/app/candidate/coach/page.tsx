@@ -18,12 +18,12 @@ export default function KazaCoachPage() {
     <div className="max-w-[760px] mx-auto">
       <div className="mb-6">
         <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Assistant candidat</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">KazaCoach</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">Ton coach emploi IA : il analyse ton profil et te donne un plan d&apos;action concret pour le marché 974.</p>
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">KazaCoach</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">Ton coach emploi IA : il analyse ton profil et te donne un plan d&apos;action concret pour le marché 974.</p>
       </div>
 
-      <div className="kz-card p-5 bg-white mb-5">
-        <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Métier visé (optionnel)</label>
+      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+        <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Métier visé (optionnel)</label>
         <div className="flex flex-col sm:flex-row gap-2.5">
           <Input className="flex-1" value={targetRole} onChange={(e) => setTargetRole(e.target.value)}
             placeholder="Ex : Développeur web, Aide-soignant, Commercial…" icon={<Target size={15} />} />
@@ -37,7 +37,7 @@ export default function KazaCoachPage() {
       {generating && (
         <div className="flex flex-col items-center gap-3 py-10">
           <InlineLoader size={48} />
-          <p className="text-sm text-[#6B5A4A]">KazaCoach analyse ton profil…</p>
+          <p className="text-sm text-[var(--kz-mute)]">KazaCoach analyse ton profil…</p>
         </div>
       )}
 
@@ -46,19 +46,19 @@ export default function KazaCoachPage() {
       {coach && !generating && (
         <div className="flex flex-col gap-4">
           {/* Compatibilité */}
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-[#1A1410]">Force de ton profil (974)</span>
+              <span className="text-sm font-bold text-[var(--kz-ink)]">Force de ton profil (974)</span>
               <span className="text-2xl font-extrabold" style={{ color: KZ.violet }}>{coach.compatibilite}%</span>
             </div>
             <Progress value={coach.compatibilite} color={KZ.violet} />
           </div>
 
           {coach.competences_manquantes?.length > 0 && (
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-3">
                 <GraduationCap size={16} color={KZ.orange} />
-                <h2 className="text-base font-bold text-[#1A1410]">Compétences à acquérir</h2>
+                <h2 className="text-base font-bold text-[var(--kz-ink)]">Compétences à acquérir</h2>
               </div>
               <div className="flex gap-2 flex-wrap">
                 {coach.competences_manquantes.map((c, i) => <Tag key={i}>{c}</Tag>)}
@@ -67,49 +67,49 @@ export default function KazaCoachPage() {
           )}
 
           {coach.experience_recommandee && (
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp size={16} color={KZ.green} />
-                <h2 className="text-base font-bold text-[#1A1410]">Expérience recommandée</h2>
+                <h2 className="text-base font-bold text-[var(--kz-ink)]">Expérience recommandée</h2>
               </div>
-              <p className="text-sm text-[#2A2018] leading-relaxed">{coach.experience_recommandee}</p>
+              <p className="text-sm text-[var(--kz-text)] leading-relaxed">{coach.experience_recommandee}</p>
             </div>
           )}
 
           {coach.conseils?.length > 0 && (
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-3">
                 <Lightbulb size={16} color={KZ.violet} />
-                <h2 className="text-base font-bold text-[#1A1410]">Conseils de candidature</h2>
+                <h2 className="text-base font-bold text-[var(--kz-ink)]">Conseils de candidature</h2>
               </div>
               <ul className="flex flex-col gap-2">
                 {coach.conseils.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-[#2A2018]"><Check size={14} className="mt-0.5 shrink-0" color={KZ.green} />{c}</li>
+                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]"><Check size={14} className="mt-0.5 shrink-0" color={KZ.green} />{c}</li>
                 ))}
               </ul>
             </div>
           )}
 
           {coach.ameliorations?.length > 0 && (
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles size={16} color={KZ.orange} />
-                <h2 className="text-base font-bold text-[#1A1410]">Pistes d&apos;amélioration</h2>
+                <h2 className="text-base font-bold text-[var(--kz-ink)]">Pistes d&apos;amélioration</h2>
               </div>
               <ul className="flex flex-col gap-2">
                 {coach.ameliorations.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-[#2A2018]">• {c}</li>
+                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]">• {c}</li>
                 ))}
               </ul>
             </div>
           )}
 
-          <p className="text-[11px] text-[#6B5A4A] italic text-center">Généré par KazaCoach — à titre indicatif. Complète ton profil pour des conseils plus précis.</p>
+          <p className="text-[11px] text-[var(--kz-mute)] italic text-center">Généré par KazaCoach — à titre indicatif. Complète ton profil pour des conseils plus précis.</p>
         </div>
       )}
 
       {raw && !coach && !generating && (
-        <div className="kz-card p-5 bg-white text-sm text-[#2A2018] leading-relaxed whitespace-pre-wrap">{raw}</div>
+        <div className="kz-card p-5 bg-[var(--kz-paper)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap">{raw}</div>
       )}
     </div>
   )

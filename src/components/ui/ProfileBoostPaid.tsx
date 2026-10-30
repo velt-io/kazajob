@@ -45,16 +45,16 @@ export function ProfileBoostPaid({ boostedUntil }: { boostedUntil?: string | nul
 
       <Modal open={open} onClose={() => setOpen(false)} title="Mettre mon profil en avant" size="md">
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.orangeSoft }}>
+          <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.orangeSoft }}>
             <Rocket size={18} color={KZ.orange} />
-            <p className="text-sm font-semibold text-[#1A1410]">
+            <p className="text-sm font-semibold text-[var(--kz-ink)]">
               Remonte en priorité dans les recherches recruteurs + badge « Profil mis en avant ».
             </p>
           </div>
 
           {isActive && boostedUntil && (
-            <p className="text-xs text-[#6B5A4A]">
-              Déjà mis en avant jusqu&apos;au <strong className="text-[#1A1410]">{new Date(boostedUntil).toLocaleDateString('fr-FR')}</strong> — un achat prolonge la durée.
+            <p className="text-xs text-[var(--kz-mute)]">
+              Déjà mis en avant jusqu&apos;au <strong className="text-[var(--kz-ink)]">{new Date(boostedUntil).toLocaleDateString('fr-FR')}</strong> — un achat prolonge la durée.
             </p>
           )}
 
@@ -65,15 +65,15 @@ export function ProfileBoostPaid({ boostedUntil }: { boostedUntil?: string | nul
                 <button key={opt.days} onClick={() => setDays(opt.days)}
                   className="flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all"
                   style={{ borderColor: selected ? KZ.orange : KZ.line, background: selected ? KZ.orangeSoft : 'white' }}>
-                  <div className="w-7 h-7 rounded-full border-2 border-[#1A1410] flex items-center justify-center shrink-0"
+                  <div className="w-7 h-7 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
                     style={{ background: selected ? KZ.orange : 'white' }}>
                     {selected && <Rocket size={12} color="white" />}
                   </div>
                   <div className="flex-1">
-                    <span className="text-sm font-bold text-[#1A1410]">{opt.label}</span>
-                    {opt.tag && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]" style={{ background: KZ.yellowSoft }}>{opt.tag}</span>}
+                    <span className="text-sm font-bold text-[var(--kz-ink)]">{opt.label}</span>
+                    {opt.tag && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.yellowSoft }}>{opt.tag}</span>}
                   </div>
-                  <span className="text-lg font-extrabold text-[#1A1410]">{Math.floor(opt.priceCts / 100)}€</span>
+                  <span className="text-lg font-extrabold text-[var(--kz-ink)]">{Math.floor(opt.priceCts / 100)}€</span>
                 </button>
               )
             })}
@@ -84,7 +84,7 @@ export function ProfileBoostPaid({ boostedUntil }: { boostedUntil?: string | nul
           <Button kind="primary" size="lg" full loading={loading} icon={<Rocket size={15} />} onClick={handleBoost}>
             Payer et activer
           </Button>
-          <p className="text-[11px] text-center text-[#6B5A4A]">Paiement unique sécurisé par Stripe. Sans abonnement.</p>
+          <p className="text-[11px] text-center text-[var(--kz-mute)]">Paiement unique sécurisé par Stripe. Sans abonnement.</p>
         </div>
       </Modal>
     </>

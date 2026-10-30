@@ -45,9 +45,9 @@ export function EmployerReputation({ companyId }: { companyId?: string | null })
   ].filter(Boolean) as { icon: React.ReactNode; label: string; value: string }[]
 
   return (
-    <div className="kz-card p-5 bg-white">
+    <div className="kz-card p-5 bg-[var(--kz-paper)]">
       <div className="flex items-center gap-2 mb-3">
-        <h3 className="text-base font-bold text-[#1A1410]">Réputation employeur</h3>
+        <h3 className="text-base font-bold text-[var(--kz-ink)]">Réputation employeur</h3>
         {rep.isVerified && (
           <Badge color="green" size="sm"><span className="flex items-center gap-1"><ShieldCheck size={11} />Vérifiée</span></Badge>
         )}
@@ -55,13 +55,13 @@ export function EmployerReputation({ companyId }: { companyId?: string | null })
       <div className="flex flex-col gap-2">
         {rows.map((r) => (
           <div key={r.label} className="flex items-center gap-2 text-sm">
-            <span className="text-[#6B5A4A]">{r.icon}</span>
-            <span className="text-[#6B5A4A] flex-1">{r.label}</span>
-            <span className="font-bold text-[#1A1410]">{r.value}</span>
+            <span className="text-[var(--kz-mute)]">{r.icon}</span>
+            <span className="text-[var(--kz-mute)] flex-1">{r.label}</span>
+            <span className="font-bold text-[var(--kz-ink)]">{r.value}</span>
           </div>
         ))}
       </div>
-      <p className="text-[11px] text-[#6B5A4A] italic mt-3">Indicateurs calculés sur l&apos;activité réelle de l&apos;entreprise sur Kazajob.</p>
+      <p className="text-[11px] text-[var(--kz-mute)] italic mt-3">Indicateurs calculés sur l&apos;activité réelle de l&apos;entreprise sur Kazajob.</p>
     </div>
   )
 }

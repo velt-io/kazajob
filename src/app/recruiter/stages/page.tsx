@@ -56,8 +56,8 @@ export default function RecruiterStagesPage() {
     <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-xl font-extrabold text-[#1A1410]">Mes stages</h1>
-          <p className="text-sm text-[#6B5A4A] mt-0.5">{stages.length} offre{stages.length !== 1 ? 's' : ''} de stage</p>
+          <h1 className="text-xl font-extrabold text-[var(--kz-ink)]">Mes stages</h1>
+          <p className="text-sm text-[var(--kz-mute)] mt-0.5">{stages.length} offre{stages.length !== 1 ? 's' : ''} de stage</p>
         </div>
         <Link href="/recruiter/stages/new">
           <Button kind="primary" size="md" icon={<Plus size={15} />}>Publier un stage</Button>
@@ -78,12 +78,12 @@ export default function RecruiterStagesPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {stages.map((stage) => (
-            <div key={stage.id} className="kz-card p-4 bg-white">
+            <div key={stage.id} className="kz-card p-4 bg-[var(--kz-paper)]">
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+                      className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                       style={{ background: KZ.violetSoft, color: KZ.violet }}
                     >
                       Stage
@@ -97,12 +97,12 @@ export default function RecruiterStagesPage() {
                   </div>
                   <Link
                     href={`/stages/${stage.id}`}
-                    className="text-base font-bold text-[#1A1410] hover:text-[#FF6B35] transition-colors"
+                    className="text-base font-bold text-[var(--kz-ink)] hover:text-[var(--kz-orange)] transition-colors"
                     target="_blank"
                   >
                     {stage.title}
                   </Link>
-                  <div className="text-xs text-[#6B5A4A] mt-0.5 flex flex-wrap gap-3">
+                  <div className="text-xs text-[var(--kz-mute)] mt-0.5 flex flex-wrap gap-3">
                     <span>{stage.location}</span>
                     {stage.internship_duration && (
                       <span>{stage.internship_duration}</span>
@@ -118,21 +118,21 @@ export default function RecruiterStagesPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => toggleActive(stage)}
-                    className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-[#1A1410] transition-all"
+                    className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-all"
                     title={stage.is_active ? 'Mettre en pause' : 'Activer'}
                   >
                     {stage.is_active
                       ? <ToggleRight size={16} color={KZ.green} />
-                      : <ToggleLeft size={16} color="#6B5A4A" />}
+                      : <ToggleLeft size={16} color="var(--kz-mute)" />}
                   </button>
                   <Link href={`/recruiter/jobs/${stage.id}/edit`}>
-                    <button className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-[#1A1410] transition-all">
-                      <Edit size={15} color="#6B5A4A" />
+                    <button className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-all">
+                      <Edit size={15} color="var(--kz-mute)" />
                     </button>
                   </Link>
                   <button
                     onClick={() => deleteStage(stage.id)}
-                    className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-300 transition-all"
+                    className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-300 transition-all"
                   >
                     <Trash2 size={15} color="#E54E4E" />
                   </button>

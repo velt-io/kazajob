@@ -25,7 +25,7 @@ function MessageBubble({ msg, userName, userAvatarConfig }: { msg: ChatMessage; 
       {isAssistant && (
         <div className="shrink-0 mt-0.5">
           <div
-            className="w-8 h-8 rounded-xl border border-[#1A1410] flex items-center justify-center"
+            className="w-8 h-8 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center"
             style={{ background: KZ.violet }}
           >
             <Sparkles size={14} color="white" />
@@ -34,22 +34,22 @@ function MessageBubble({ msg, userName, userAvatarConfig }: { msg: ChatMessage; 
       )}
 
       <div
-        className={`max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-2xl border border-[#1A1410] text-sm leading-relaxed`}
+        className={`max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-2xl border border-[var(--kz-edge)] text-sm leading-relaxed`}
         style={{
           background:  isAssistant ? KZ.paper : KZ.violet,
           color:       isAssistant ? KZ.ink   : 'white',
-          boxShadow:   isAssistant ? '3px 3px 0 #E8DDC9' : '3px 3px 0 #1A1410',
+          boxShadow:   isAssistant ? '3px 3px 0 var(--kz-line)' : '3px 3px 0 var(--kz-shadow)',
           borderRadius: isAssistant ? '4px 18px 18px 18px' : '18px 4px 18px 18px',
         }}
       >
         {msg.loading ? (
           <div className="flex items-center gap-1.5">
-            <span className="text-[#6B5A4A] text-xs">KazaIA réfléchit</span>
+            <span className="text-[var(--kz-mute)] text-xs">KazaIA réfléchit</span>
             <span className="flex gap-1">
               {[0, 1, 2].map(i => (
                 <span
                   key={i}
-                  className="w-1.5 h-1.5 rounded-full bg-[#6D3BEB] animate-bounce"
+                  className="w-1.5 h-1.5 rounded-full bg-[var(--kz-violet)] animate-bounce"
                   style={{ animationDelay: `${i * 0.15}s` }}
                 />
               ))}
@@ -102,20 +102,20 @@ export default function KazaIAPage() {
       <div className="flex items-center justify-between mb-4 shrink-0">
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-xl border border-[#1A1410] flex items-center justify-center"
-            style={{ background: KZ.violet, boxShadow: '3px 3px 0 #1A1410' }}
+            className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center"
+            style={{ background: KZ.violet, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
           >
             <Sparkles size={20} color="white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-extrabold tracking-tight text-[#1A1410]">KazaIA</h1>
+              <h1 className="text-xl font-extrabold tracking-tight text-[var(--kz-ink)]">KazaIA</h1>
               <Badge color="violet" size="sm">Beta</Badge>
-              <span className="text-[10px] text-[#6B5A4A] font-semibold">
+              <span className="text-[10px] text-[var(--kz-mute)] font-semibold">
                 propulsé par Groq · GPT-OSS
               </span>
             </div>
-            <p className="text-xs text-[#6B5A4A]">Ton assistant emploi intelligent pour le 974</p>
+            <p className="text-xs text-[var(--kz-mute)]">Ton assistant emploi intelligent pour le 974</p>
           </div>
         </div>
         {messages.length > 0 && (
@@ -127,8 +127,8 @@ export default function KazaIAPage() {
 
       {/* Zone de chat */}
       <div
-        className="flex-1 rounded-2xl border border-[#1A1410] overflow-hidden flex flex-col min-h-0"
-        style={{ boxShadow: '4px 4px 0 #1A1410', background: KZ.cream2 }}
+        className="flex-1 rounded-2xl border border-[var(--kz-edge)] overflow-hidden flex flex-col min-h-0"
+        style={{ boxShadow: '4px 4px 0 var(--kz-shadow)', background: KZ.cream2 }}
       >
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-5 flex flex-col gap-4">
@@ -136,16 +136,16 @@ export default function KazaIAPage() {
             /* Écran d'accueil */
             <div className="flex flex-col items-center justify-center h-full gap-6 text-center py-8">
               <div
-                className="w-20 h-20 rounded-2xl border border-[#1A1410] flex items-center justify-center animate-float"
-                style={{ background: KZ.violet, boxShadow: '5px 5px 0 #1A1410' }}
+                className="w-20 h-20 rounded-2xl border border-[var(--kz-edge)] flex items-center justify-center animate-float"
+                style={{ background: KZ.violet, boxShadow: '5px 5px 0 var(--kz-shadow)' }}
               >
                 <Sparkles size={36} color="white" />
               </div>
               <div>
-                <h2 className="text-2xl font-extrabold text-[#1A1410] mb-2">
+                <h2 className="text-2xl font-extrabold text-[var(--kz-ink)] mb-2">
                   Bonzour ! Moi c&apos;est KazaIA.
                 </h2>
-                <p className="text-sm text-[#6B5A4A] max-w-[420px] leading-relaxed">
+                <p className="text-sm text-[var(--kz-mute)] max-w-[420px] leading-relaxed">
                   Ton assistant emploi pour La Réunion. Je peux t&apos;aider à rédiger une lettre de motivation,
                   préparer un entretien, comprendre le marché de l&apos;emploi en 974 et bien plus.
                 </p>
@@ -157,11 +157,11 @@ export default function KazaIAPage() {
                   <button
                     key={i}
                     onClick={() => handleSuggestion(s.text)}
-                    className="flex items-center gap-2.5 p-3 text-left text-sm font-semibold rounded-xl border border-[#1A1410] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0_#1A1410]"
-                    style={{ background: KZ.paper, boxShadow: '2px 2px 0 #1A1410' }}
+                    className="flex items-center gap-2.5 p-3 text-left text-sm font-semibold rounded-xl border border-[var(--kz-edge)] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0_var(--kz-shadow)]"
+                    style={{ background: KZ.paper, boxShadow: '2px 2px 0 var(--kz-shadow)' }}
                   >
-                    <span className="text-[#6D3BEB]">{s.icon}</span>
-                    <span className="text-[#1A1410]">{s.text}</span>
+                    <span className="text-[var(--kz-violet)]">{s.icon}</span>
+                    <span className="text-[var(--kz-ink)]">{s.text}</span>
                   </button>
                 ))}
               </div>
@@ -177,7 +177,7 @@ export default function KazaIAPage() {
         </div>
 
         {/* Input */}
-        <div className="border-t border-[#E8DDC9] bg-white p-3">
+        <div className="border-t border-[var(--kz-line)] bg-[var(--kz-paper)] p-3">
           <form onSubmit={handleSubmit} className="flex gap-2 items-end">
             <textarea
               ref={inputRef}
@@ -186,7 +186,7 @@ export default function KazaIAPage() {
               onKeyDown={handleKeyDown}
               placeholder="Pose ta question à KazaIA... (Entrée pour envoyer)"
               rows={1}
-              className="flex-1 resize-none bg-[#FFF7EE] border border-[#1A1410] rounded-xl px-4 py-2.5 text-sm text-[#1A1410] placeholder:text-[#6B5A4A] outline-none focus:border-[#6D3BEB] transition-colors"
+              className="flex-1 resize-none bg-[var(--kz-cream)] border border-[var(--kz-edge)] rounded-xl px-4 py-2.5 text-sm text-[var(--kz-ink)] placeholder:text-[var(--kz-mute)] outline-none focus:border-[var(--kz-violet)] transition-colors"
               style={{ minHeight: '44px', maxHeight: '120px' }}
               onInput={(e) => {
                 const el = e.target as HTMLTextAreaElement
@@ -210,7 +210,7 @@ export default function KazaIAPage() {
               </Button>
             )}
           </form>
-          <p className="text-[10px] text-[#6B5A4A] text-center mt-2">
+          <p className="text-[10px] text-[var(--kz-mute)] text-center mt-2">
             KazaIA peut faire des erreurs. Vérifie les informations importantes.
             Propulsé par <span className="font-semibold">Groq</span> · Passera sur <span className="font-semibold">Claude</span> bientôt.
           </p>

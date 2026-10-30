@@ -45,8 +45,8 @@ export function ChatAssistantDrawer() {
       {/* ── Bouton flottant ─────────────────────────────────────── */}
       <button
         onClick={() => setOpen(true)}
-        className={`fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full border-2 border-[#1A1410] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ${open ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-        style={{ background: KZ.violet, boxShadow: '4px 4px 0 #1A1410' }}
+        className={`fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ${open ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        style={{ background: KZ.violet, boxShadow: '4px 4px 0 var(--kz-shadow)' }}
         title="KazaIA — Assistant carrière"
         aria-label="Ouvrir KazaIA"
       >
@@ -70,7 +70,7 @@ export function ChatAssistantDrawer() {
           h-[88vh] sm:h-[620px] sm:bottom-6 sm:right-6
           rounded-t-2xl sm:rounded-2xl
           overflow-hidden
-          border-2 border-[#1A1410] shadow-[6px_6px_0_#1A1410]
+          border-2 border-[var(--kz-edge)] shadow-[6px_6px_0_var(--kz-shadow)]
           ${open ? 'translate-y-0 opacity-100' : 'translate-y-[110%] opacity-0 pointer-events-none'}`}
         style={{ background: KZ.paper }}
       >
@@ -110,13 +110,13 @@ export function ChatAssistantDrawer() {
               {/* Message de bienvenue */}
               <div className="flex items-start gap-3">
                 <div
-                  className="w-7 h-7 rounded-full border border-[#1A1410] flex items-center justify-center shrink-0 mt-0.5"
+                  className="w-7 h-7 rounded-full border border-[var(--kz-edge)] flex items-center justify-center shrink-0 mt-0.5"
                   style={{ background: KZ.violetSoft }}
                 >
                   <Bot size={13} color={KZ.violet} />
                 </div>
                 <div
-                  className="flex-1 p-3 rounded-xl rounded-tl-none text-sm text-[#1A1410] border border-[#E8DDC9] leading-relaxed"
+                  className="flex-1 p-3 rounded-xl rounded-tl-none text-sm text-[var(--kz-ink)] border border-[var(--kz-line)] leading-relaxed"
                   style={{ background: KZ.cream2 }}
                 >
                   👋 Bonjour ! Je suis <strong>KazaIA</strong>, votre assistant emploi pour <strong>La Réunion</strong>.<br /><br />
@@ -126,13 +126,13 @@ export function ChatAssistantDrawer() {
 
               {/* Suggestions rapides */}
               <div className="ml-10">
-                <p className="text-xs text-[#6B5A4A] mb-2 font-semibold">Questions fréquentes :</p>
+                <p className="text-xs text-[var(--kz-mute)] mb-2 font-semibold">Questions fréquentes :</p>
                 <div className="flex flex-col gap-1.5">
                   {QUICK_PROMPTS.map(p => (
                     <button
                       key={p}
                       onClick={() => handleQuickPrompt(p)}
-                      className="text-left text-xs px-3 py-2.5 rounded-xl border border-[#E8DDC9] hover:border-[#6D3BEB] hover:bg-[#E5DCFF] transition-all text-[#2A2018] font-medium"
+                      className="text-left text-xs px-3 py-2.5 rounded-xl border border-[var(--kz-line)] hover:border-[var(--kz-violet)] hover:bg-[var(--kz-violet-soft)] transition-all text-[var(--kz-text)] font-medium"
                     >
                       {p}
                     </button>
@@ -149,7 +149,7 @@ export function ChatAssistantDrawer() {
               >
                 {msg.role === 'assistant' && (
                   <div
-                    className="w-7 h-7 rounded-full border border-[#1A1410] flex items-center justify-center shrink-0 mt-0.5"
+                    className="w-7 h-7 rounded-full border border-[var(--kz-edge)] flex items-center justify-center shrink-0 mt-0.5"
                     style={{ background: KZ.violetSoft }}
                   >
                     <Bot size={13} color={KZ.violet} />
@@ -159,14 +159,14 @@ export function ChatAssistantDrawer() {
                   className={`max-w-[85%] p-3 rounded-xl text-sm leading-relaxed whitespace-pre-wrap ${
                     msg.role === 'user'
                       ? 'rounded-tr-none text-white'
-                      : 'rounded-tl-none text-[#1A1410] border border-[#E8DDC9]'
+                      : 'rounded-tl-none text-[var(--kz-ink)] border border-[var(--kz-line)]'
                   }`}
                   style={{ background: msg.role === 'user' ? KZ.violet : KZ.cream2 }}
                 >
                   {msg.loading ? (
                     <div className="flex items-center gap-2">
                       <InlineLoader size={20} />
-                      <span className="text-xs text-[#6B5A4A]">En train de répondre...</span>
+                      <span className="text-xs text-[var(--kz-mute)]">En train de répondre...</span>
                     </div>
                   ) : msg.content}
                 </div>
@@ -177,7 +177,7 @@ export function ChatAssistantDrawer() {
         </div>
 
         {/* Zone de saisie */}
-        <div className="px-4 pb-4 pt-3 border-t border-[#E8DDC9] shrink-0" style={{ background: KZ.cream }}>
+        <div className="px-4 pb-4 pt-3 border-t border-[var(--kz-line)] shrink-0" style={{ background: KZ.cream }}>
           <div className="flex gap-2 items-center">
             <input
               ref={inputRef}
@@ -191,14 +191,14 @@ export function ChatAssistantDrawer() {
                 }
               }}
               placeholder="Posez votre question..."
-              className="flex-1 px-4 py-2.5 rounded-xl border-2 border-[#1A1410] text-sm focus:outline-none focus:border-[#6D3BEB] transition-colors"
+              className="flex-1 px-4 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm focus:outline-none focus:border-[var(--kz-violet)] transition-colors"
               style={{ background: KZ.paper }}
               disabled={streaming}
             />
             {streaming ? (
               <button
                 onClick={stopStream}
-                className="w-10 h-10 rounded-xl border-2 border-[#1A1410] flex items-center justify-center shrink-0 transition-colors hover:bg-[#FFE0CF]"
+                className="w-10 h-10 rounded-xl border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0 transition-colors hover:bg-[var(--kz-orange-soft)]"
                 style={{ background: KZ.orangeSoft }}
                 title="Arrêter"
               >
@@ -208,7 +208,7 @@ export function ChatAssistantDrawer() {
               <button
                 onClick={handleSend}
                 disabled={!input.trim()}
-                className="w-10 h-10 rounded-xl border-2 border-[#1A1410] flex items-center justify-center shrink-0 disabled:opacity-40 transition-all hover:scale-105 active:scale-95"
+                className="w-10 h-10 rounded-xl border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0 disabled:opacity-40 transition-all hover:scale-105 active:scale-95"
                 style={{ background: KZ.violet }}
                 title="Envoyer (Entrée)"
               >
@@ -216,7 +216,7 @@ export function ChatAssistantDrawer() {
               </button>
             )}
           </div>
-          <p className="text-[10px] text-[#6B5A4A] mt-2 text-center">
+          <p className="text-[10px] text-[var(--kz-mute)] mt-2 text-center">
             IA générative · Peut faire des erreurs · Basé sur GPT-OSS
           </p>
         </div>

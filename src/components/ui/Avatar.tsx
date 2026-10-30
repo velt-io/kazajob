@@ -16,7 +16,7 @@ interface AvatarProps {
 }
 
 // Priorité d'affichage : avatar personnalisé (DiceBear) > photo > initiales.
-export function Avatar({ name, src, avatarConfig, size = 40, color = '#FFE0CF', badge, className }: AvatarProps) {
+export function Avatar({ name, src, avatarConfig, size = 40, color = 'var(--kz-orange-soft)', badge, className }: AvatarProps) {
   const init = initials(name)
   const px   = `${size}px`
 
@@ -33,7 +33,7 @@ export function Avatar({ name, src, avatarConfig, size = 40, color = '#FFE0CF', 
       style={{ width: px, height: px }}
     >
       <div
-        className="w-full h-full rounded-full border-[1.5px] border-[#1A1410] flex items-center justify-center font-bold overflow-hidden"
+        className="w-full h-full rounded-full border-[1.5px] border-[var(--kz-edge)] flex items-center justify-center font-bold overflow-hidden"
         style={{ background: color, fontSize: size * 0.36 }}
       >
         {svg ? (
@@ -46,13 +46,13 @@ export function Avatar({ name, src, avatarConfig, size = 40, color = '#FFE0CF', 
         ) : src ? (
           <img src={src} alt={name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
         ) : (
-          <span className="text-[#1A1410]">{init}</span>
+          <span className="text-[var(--kz-ink)]">{init}</span>
         )}
       </div>
       {badge && (
         <span
           className="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white"
-          style={{ background: '#19A974' }}
+          style={{ background: 'var(--kz-green)' }}
         />
       )}
     </div>

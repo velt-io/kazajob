@@ -36,13 +36,13 @@ export function KazaBoostButton({ xp, boostedUntil, onBoost }: KazaBoostButtonPr
     })
     return (
       <div
-        className="flex items-center gap-3 p-3 rounded-xl border border-[#1A1410]"
+        className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-edge)]"
         style={{ background: KZ.yellowSoft }}
       >
         <Zap size={18} color={KZ.yellow} fill={KZ.yellow} className="shrink-0" />
         <div className="min-w-0">
-          <div className="text-xs font-bold text-[#1A1410]">⚡ Profil boosté !</div>
-          <div className="flex items-center gap-1 text-[11px] text-[#6B5A4A] mt-0.5">
+          <div className="text-xs font-bold text-[var(--kz-ink)]">⚡ Profil boosté !</div>
+          <div className="flex items-center gap-1 text-[11px] text-[var(--kz-mute)] mt-0.5">
             <Clock size={10} />
             <span>Prioritaire jusqu&apos;au {until}</span>
           </div>
@@ -66,7 +66,7 @@ export function KazaBoostButton({ xp, boostedUntil, onBoost }: KazaBoostButtonPr
       </Button>
       {error && <p className="text-xs text-red-500 text-center">{error}</p>}
       {xp < KAZA_BOOST_COST_XP && !isActive && (
-        <p className="text-[11px] text-[#6B5A4A] text-center">
+        <p className="text-[11px] text-[var(--kz-mute)] text-center">
           Il vous faut encore{' '}
           <span className="font-bold" style={{ color: KZ.orange }}>{KAZA_BOOST_COST_XP - xp} XP</span>
           {' '}pour booster votre profil

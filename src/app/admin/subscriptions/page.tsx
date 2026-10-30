@@ -69,8 +69,8 @@ export default function AdminSubscriptionsPage() {
   return (
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[#1A1410]">Abonnements</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">Gestion des forfaits entreprises</p>
+        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Abonnements</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">Gestion des forfaits entreprises</p>
       </div>
 
       {/* KPIs */}
@@ -81,44 +81,44 @@ export default function AdminSubscriptionsPage() {
           { label: 'Abonnés actifs', value: actives, icon: <Users size={16} />, color: KZ.violetSoft },
           { label: 'Résiliés', value: cancelled, icon: <Users size={16} />, color: KZ.orangeSoft },
         ].map(k => (
-          <div key={k.label} className="kz-card p-4 bg-white text-center" style={{ background: k.color }}>
+          <div key={k.label} className="kz-card p-4 bg-[var(--kz-paper)] text-center" style={{ background: k.color }}>
             <div className="flex justify-center mb-1">{k.icon}</div>
-            <div className="text-2xl font-extrabold text-[#1A1410]">{k.value}</div>
-            <div className="text-xs text-[#6B5A4A] font-semibold mt-0.5">{k.label}</div>
+            <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{k.value}</div>
+            <div className="text-xs text-[var(--kz-mute)] font-semibold mt-0.5">{k.label}</div>
           </div>
         ))}
       </div>
 
       {/* Table */}
-      <div className="kz-card bg-white overflow-x-auto">
+      <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
         <table className="w-full text-sm min-w-[700px]">
           <thead>
-            <tr className="border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-              <th className="text-left p-3 font-bold text-[#1A1410]">Entreprise</th>
-              <th className="text-left p-3 font-bold text-[#1A1410]">Forfait</th>
-              <th className="text-center p-3 font-bold text-[#1A1410]">Statut</th>
-              <th className="text-center p-3 font-bold text-[#1A1410]">Sièges</th>
-              <th className="text-left p-3 font-bold text-[#1A1410]">Échéance</th>
-              <th className="text-left p-3 font-bold text-[#1A1410]">Actions</th>
+            <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Entreprise</th>
+              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Forfait</th>
+              <th className="text-center p-3 font-bold text-[var(--kz-ink)]">Statut</th>
+              <th className="text-center p-3 font-bold text-[var(--kz-ink)]">Sièges</th>
+              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Échéance</th>
+              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="p-4 text-center text-[#6B5A4A]">Chargement...</td></tr>
+              <tr><td colSpan={6} className="p-4 text-center text-[var(--kz-mute)]">Chargement...</td></tr>
             ) : subs.length === 0 ? (
-              <tr><td colSpan={6} className="p-8 text-center text-[#6B5A4A]">Aucun abonnement.</td></tr>
+              <tr><td colSpan={6} className="p-8 text-center text-[var(--kz-mute)]">Aucun abonnement.</td></tr>
             ) : subs.map(sub => {
               const plan = SUBSCRIPTION_PLANS.find(p => p.id === sub.plan_id)
               const co = sub.company
               const expiry = sub.status === 'trial' ? sub.trial_ends_at : sub.current_period_end
               return (
-                <tr key={sub.id} className="border-b border-[#E8DDC9] last:border-0 hover:bg-[#FBEFE0] transition-colors">
+                <tr key={sub.id} className="border-b border-[var(--kz-line)] last:border-0 hover:bg-[var(--kz-cream2)] transition-colors">
                   <td className="p-3">
-                    <div className="font-semibold text-[#1A1410]">{co?.name ?? '—'}</div>
+                    <div className="font-semibold text-[var(--kz-ink)]">{co?.name ?? '—'}</div>
                   </td>
                   <td className="p-3">
                     <select
-                      className="text-xs px-2 py-1 rounded-lg border border-[#E8DDC9] bg-white focus:outline-none"
+                      className="text-xs px-2 py-1 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] focus:outline-none"
                       value={sub.plan_id}
                       onChange={e => handleChangePlan(sub.id, e.target.value)}
                     >
@@ -132,15 +132,15 @@ export default function AdminSubscriptionsPage() {
                       {sub.status === 'trial' ? 'Essai' : sub.status === 'active' ? 'Actif' : sub.status === 'cancelled' ? 'Résilié' : 'Expiré'}
                     </Badge>
                   </td>
-                  <td className="p-3 text-center text-xs font-bold text-[#1A1410]">
+                  <td className="p-3 text-center text-xs font-bold text-[var(--kz-ink)]">
                     {sub.seats_used}/{plan?.maxMembers ?? '?'}
                   </td>
-                  <td className="p-3 text-xs text-[#6B5A4A]">
+                  <td className="p-3 text-xs text-[var(--kz-mute)]">
                     {expiry ? new Date(expiry).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: '2-digit' }) : '—'}
                   </td>
                   <td className="p-3">
                     <select
-                      className="text-xs px-2 py-1 rounded-lg border border-[#E8DDC9] bg-white focus:outline-none"
+                      className="text-xs px-2 py-1 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] focus:outline-none"
                       value={sub.status}
                       onChange={e => handleChangeStatus(sub.id, e.target.value)}
                     >

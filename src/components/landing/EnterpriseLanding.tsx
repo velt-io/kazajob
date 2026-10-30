@@ -35,7 +35,7 @@ function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTIO
       style={{
         background: isHighlight ? KZ.violet : 'white',
         color: isHighlight ? 'white' : KZ.ink,
-        boxShadow: isHighlight ? '6px 6px 0 #1A1410' : '3px 3px 0 #1A1410',
+        boxShadow: isHighlight ? '6px 6px 0 var(--kz-shadow)' : '3px 3px 0 var(--kz-shadow)',
         transform: isHighlight ? 'scale(1.03)' : 'none',
       }}
     >
@@ -129,12 +129,12 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
         <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-14 items-center">
           <div>
             <Badge color="violet" size="lg" className="mb-5">Kazajob Entreprises · 974</Badge>
-            <h1 className="text-[40px] sm:text-[56px] lg:text-[66px] font-extrabold tracking-[-0.04em] leading-[0.95] text-[#1A1410] mb-5">
+            <h1 className="text-[40px] sm:text-[56px] lg:text-[66px] font-extrabold tracking-[-0.04em] leading-[0.95] text-[var(--kz-ink)] mb-5">
               Recrutez les<br />
               <span style={{ color: KZ.violet }}>meilleurs talents</span><br />
               de La Réunion.
             </h1>
-            <p className="text-base lg:text-lg leading-relaxed text-[#2A2018] mb-7 max-w-[520px]">
+            <p className="text-base lg:text-lg leading-relaxed text-[var(--kz-text)] mb-7 max-w-[520px]">
               Publiez vos offres, recevez des candidats locaux triés par l&apos;IA et gérez tout votre recrutement
               au même endroit. Simple, rapide, pensé pour les entreprises du 974.
             </p>
@@ -146,14 +146,14 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
                 <Button kind="outline" size="lg">Voir les tarifs</Button>
               </a>
             </div>
-            <p className="text-xs text-[#6B5A4A] mb-6">
+            <p className="text-xs text-[var(--kz-mute)] mb-6">
               {launchDays
                 ? `Offre de lancement · encore ${launchDays} jours · sans carte bancaire`
                 : 'Carte requise · 1er débit après 30 jours · annulable à tout moment'}
             </p>
             <div className="flex flex-wrap gap-2">
               {TRUST.map((t) => (
-                <span key={t.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#1A1410] bg-white text-xs font-bold text-[#1A1410]">
+                <span key={t.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--kz-edge)] bg-[var(--kz-paper)] text-xs font-bold text-[var(--kz-ink)]">
                   <span style={{ color: KZ.violet }}>{t.icon}</span>{t.label}
                 </span>
               ))}
@@ -162,33 +162,33 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
 
           {/* Illustration + cartes flottantes */}
           <div className="relative">
-            <div className="relative rounded-2xl border-[1.5px] border-[#1A1410] overflow-hidden aspect-[16/10]" style={{ boxShadow: '8px 8px 0 #1A1410' }}>
+            <div className="relative rounded-2xl border-[1.5px] border-[var(--kz-edge)] overflow-hidden aspect-[16/10]" style={{ boxShadow: '8px 8px 0 var(--kz-shadow)' }}>
               <Image
                 src="/assets/img/scenes/recrutement.webp"
                 alt="Une recruteuse réunionnaise rencontre un candidat sur la route du littoral"
                 fill priority sizes="(min-width: 1024px) 640px, 100vw" className="object-cover"
               />
             </div>
-            <div className="absolute -bottom-6 left-2 sm:left-6 w-[230px] p-3 rounded-xl border-[1.5px] border-[#1A1410] bg-white rotate-[-3deg]"
-              style={{ boxShadow: '4px 4px 0 #1A1410' }}>
+            <div className="absolute -bottom-6 left-2 sm:left-6 w-[230px] p-3 rounded-xl border-[1.5px] border-[var(--kz-edge)] bg-[var(--kz-paper)] rotate-[-3deg]"
+              style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
               <div className="text-[10px] font-extrabold uppercase tracking-widest mb-2" style={{ color: KZ.violet }}>Nouvelle candidature</div>
               <div className="flex items-center gap-2.5">
                 <Avatar name="Maëva L." avatarConfig={HERO_CANDIDATE} size={38} color={KZ.orangeSoft} />
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-bold text-[#1A1410] truncate">Maëva L.</div>
-                  <div className="text-[11px] text-[#6B5A4A] truncate">Réceptionniste · Saint-Paul</div>
+                  <div className="text-sm font-bold text-[var(--kz-ink)] truncate">Maëva L.</div>
+                  <div className="text-[11px] text-[var(--kz-mute)] truncate">Réceptionniste · Saint-Paul</div>
                 </div>
                 <span className="text-sm font-extrabold" style={{ color: KZ.green }}>92%</span>
               </div>
             </div>
             {launchDays ? (
-              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[#1A1410] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
-                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 #1A1410', color: KZ.ink }}>
+              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[var(--kz-edge)] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
+                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', color: KZ.ink }}>
                 <Gift size={14} /> Gratuit pendant le lancement
               </div>
             ) : (
-              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[#1A1410] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
-                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 #1A1410', color: KZ.ink }}>
+              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[var(--kz-edge)] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
+                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', color: KZ.ink }}>
                 <Sparkles size={14} /> Tri des CV par IA
               </div>
             )}
@@ -198,8 +198,8 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
 
       {/* PARTENAIRES (multidiffusion — masqué tant que OFF) ───── */}
       {MULTIDIFFUSION_ENABLED && (
-        <section className="px-4 sm:px-8 lg:px-16 py-10 border-y border-[#1A1410]" style={{ background: KZ.cream2 }}>
-          <p className="text-center text-xs font-bold text-[#6B5A4A] uppercase tracking-widest mb-6">
+        <section className="px-4 sm:px-8 lg:px-16 py-10 border-y border-[var(--kz-edge)]" style={{ background: KZ.cream2 }}>
+          <p className="text-center text-xs font-bold text-[var(--kz-mute)] uppercase tracking-widest mb-6">
             Multi-diffusion automatique vers
           </p>
           <div className="max-w-[1100px] mx-auto">
@@ -215,23 +215,23 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       <ProductPreviewSection />
 
       {/* VALEUR AJOUTÉE ─────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410]" style={{ background: KZ.cream }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[var(--kz-edge)]" style={{ background: KZ.cream }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-12">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Pourquoi Kazajob Pro</p>
-            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410]">
+            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)]">
               Une plateforme RH pensée pour La Réunion.
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {VALUE_PROPS.map(p => (
-              <div key={p.title} className="kz-card p-6 bg-white">
-                <div className="w-12 h-12 rounded-xl border border-[#1A1410] flex items-center justify-center mb-4 text-[#1A1410]"
+              <div key={p.title} className="kz-card p-6 bg-[var(--kz-paper)]">
+                <div className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center mb-4 text-[var(--kz-ink)]"
                   style={{ background: p.color }}>
                   {p.icon}
                 </div>
-                <h3 className="text-base font-bold text-[#1A1410] mb-2">{p.title}</h3>
-                <p className="text-sm text-[#6B5A4A] leading-relaxed">{p.desc}</p>
+                <h3 className="text-base font-bold text-[var(--kz-ink)] mb-2">{p.title}</h3>
+                <p className="text-sm text-[var(--kz-mute)] leading-relaxed">{p.desc}</p>
               </div>
             ))}
             {/* Carte CTA */}
@@ -252,11 +252,11 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       </section>
 
       {/* COMMENT ÇA MARCHE — recruteur ─────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410]" style={{ background: KZ.cream2 }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[var(--kz-edge)]" style={{ background: KZ.cream2 }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-12">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Processus de recrutement</p>
-            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410]">
+            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)]">
               Recruter sur Kazajob, c&apos;est simple.
             </h2>
           </div>
@@ -267,17 +267,17 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
               { n: '3', color: KZ.greenSoft, icon: <Users size={26} />, title: 'Recevez les candidatures', desc: 'KazaIA trie et classe les dossiers. Pipeline intégré. Messagerie directe avec les candidats.' },
               { n: '4', color: KZ.orangeSoft, icon: <HeartHandshake size={26} />, title: 'Recrutez & mesurez', desc: 'Suivi du temps de réponse (KazaScore), analytics de conversion, historique complet.' },
             ].map((step) => (
-              <div key={step.n} className="kz-card p-6 relative pt-10 bg-white">
-                <div className="absolute -top-5 left-6 w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold border border-[#1A1410]"
-                  style={{ background: KZ.ink, color: KZ.cream, boxShadow: '3px 3px 0 #FF6B35' }}>
+              <div key={step.n} className="kz-card p-6 relative pt-10 bg-[var(--kz-paper)]">
+                <div className="absolute -top-5 left-6 w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold border border-[var(--kz-edge)]"
+                  style={{ background: KZ.ink, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-orange)' }}>
                   {step.n}
                 </div>
-                <div className="w-12 h-12 rounded-xl border border-[#1A1410] flex items-center justify-center mb-4 text-[#1A1410]"
+                <div className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center mb-4 text-[var(--kz-ink)]"
                   style={{ background: step.color }}>
                   {step.icon}
                 </div>
-                <h3 className="text-base font-bold text-[#1A1410] mb-2">{step.title}</h3>
-                <p className="text-sm text-[#6B5A4A] leading-relaxed">{step.desc}</p>
+                <h3 className="text-base font-bold text-[var(--kz-ink)] mb-2">{step.title}</h3>
+                <p className="text-sm text-[var(--kz-mute)] leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -307,7 +307,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       <QualityModerationSection />
 
       {/* GARANTIES ──────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[#1A1410]" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-10">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.orange }}>Nos engagements</p>
@@ -344,15 +344,15 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       <EnterpriseComparisonSection />
 
       {/* PRICING ─────────────────────────────────────────────── */}
-      <section id="tarifs-pro" className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410] scroll-mt-20"
+      <section id="tarifs-pro" className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[var(--kz-edge)] scroll-mt-20"
         style={{ background: KZ.cream2 }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-12">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Tarifs</p>
-            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410]">
+            <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)]">
               Un forfait pour chaque taille d&apos;entreprise.
             </h2>
-            <p className="text-sm text-[#6B5A4A] mt-2">
+            <p className="text-sm text-[var(--kz-mute)] mt-2">
               {launchDays
                 ? `Phase de lancement · ${launchDays} jours restants · accès gratuit sans carte bancaire`
                 : "30 jours d'essai sur tous les plans · Carte requise · 1er débit après l'essai"}
@@ -363,7 +363,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
               <PriceCard key={plan.id} plan={plan} isHighlight={plan.highlight} launchDays={launchDays} />
             ))}
           </div>
-          <p className="text-center text-xs text-[#6B5A4A] mt-6">
+          <p className="text-center text-xs text-[var(--kz-mute)] mt-6">
             Tarifs nets · TVA non applicable, art. 293 B du CGI (micro-entreprise) · Paiement mensuel
           </p>
         </div>
@@ -373,11 +373,11 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       <RiskReversalSection launchDays={launchDays} />
 
       {/* FAQ RECRUTEUR ──────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[#1A1410]" style={{ background: KZ.cream }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[var(--kz-edge)]" style={{ background: KZ.cream }}>
         <div className="max-w-[860px] mx-auto">
           <div className="text-center mb-10">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Questions fréquentes</p>
-            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">
+            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
               Vous avez des questions. On a les réponses.
             </h2>
           </div>
@@ -390,18 +390,18 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
               { q: 'Les données de mes candidats sont-elles sécurisées ?', a: 'Absolument. Les données sont hébergées en Europe, chiffrées en transit (HTTPS/TLS) et au repos. Kazajob est conforme RGPD. Les candidats peuvent exercer leur droit à l\'effacement à tout moment.' },
               { q: 'Je suis une grande structure ou un cabinet RH, est-ce adapté ?', a: `Oui. Le forfait ${topPlan.name} accueille jusqu'à ${topPlan.maxMembers} recruteurs avec des offres illimitées. Pour un besoin spécifique, écrivez-nous : on construit la solution avec vous.` },
             ].map((item) => (
-              <details key={item.q} className="kz-card bg-white group [&_summary::-webkit-details-marker]:hidden">
+              <details key={item.q} className="kz-card bg-[var(--kz-paper)] group [&_summary::-webkit-details-marker]:hidden">
                 <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
-                  <h3 className="text-sm font-bold text-[#1A1410]">{item.q}</h3>
-                  <span className="w-7 h-7 rounded-full border border-[#1A1410] flex items-center justify-center shrink-0 text-lg leading-none transition-transform group-open:rotate-45" style={{ background: KZ.violetSoft }}>+</span>
+                  <h3 className="text-sm font-bold text-[var(--kz-ink)]">{item.q}</h3>
+                  <span className="w-7 h-7 rounded-full border border-[var(--kz-edge)] flex items-center justify-center shrink-0 text-lg leading-none transition-transform group-open:rotate-45" style={{ background: KZ.violetSoft }}>+</span>
                 </summary>
-                <p className="text-sm text-[#6B5A4A] leading-relaxed px-5 pb-5 -mt-1">{item.a}</p>
+                <p className="text-sm text-[var(--kz-mute)] leading-relaxed px-5 pb-5 -mt-1">{item.a}</p>
               </details>
             ))}
           </div>
           <div className="text-center mt-8">
-            <p className="text-sm text-[#6B5A4A]">Une autre question ?{' '}
-              <a href="mailto:contact@kazajob.re" className="font-bold text-[#1A1410] hover:underline">contact@kazajob.re</a>
+            <p className="text-sm text-[var(--kz-mute)]">Une autre question ?{' '}
+              <a href="mailto:contact@kazajob.re" className="font-bold text-[var(--kz-ink)] hover:underline">contact@kazajob.re</a>
             </p>
           </div>
         </div>

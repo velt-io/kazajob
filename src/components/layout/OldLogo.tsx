@@ -10,9 +10,9 @@ interface LogoProps {
   className?: string
 }
 
-export function Logo({ size = 32, mono, color, accentColor = '#FF6B35', href = '/', className }: LogoProps) {
-  const inkColor = mono ? (color ?? '#FFF7EE') : '#1A1410'
-  const orange = mono ? accentColor : '#FF6B35'
+export function Logo({ size = 32, mono, color, accentColor = 'var(--kz-orange)', href = '/', className }: LogoProps) {
+  const inkColor = mono ? (color ?? 'var(--kz-cream)') : 'var(--kz-ink)'
+  const orange = mono ? accentColor : 'var(--kz-orange)'
   const iconSize = Math.round(size * 1.1)
 
   const content = (

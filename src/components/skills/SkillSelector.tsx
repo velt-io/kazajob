@@ -91,21 +91,21 @@ export function SkillSelector({ selected, onAdd, onRemove, allowCreate = true, p
         />
 
         {open && query.trim().length >= 2 && (
-          <div className="absolute top-full left-0 right-0 z-20 bg-white border border-[#1A1410] rounded-lg shadow-[3px_3px_0_#1A1410] mt-1 max-h-56 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 z-20 bg-[var(--kz-paper)] border border-[var(--kz-edge)] rounded-lg shadow-[3px_3px_0_var(--kz-shadow)] mt-1 max-h-56 overflow-y-auto">
             {results.map((s) => (
               <button key={s.id} type="button" onClick={() => selectSkill(s)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-[#FBEFE0] text-sm">
-                <span className="font-semibold text-[#1A1410]">{s.name}</span>
-                {s.category && <span className="text-xs text-[#6B5A4A]">{s.category}</span>}
+                className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-[var(--kz-cream2)] text-sm">
+                <span className="font-semibold text-[var(--kz-ink)]">{s.name}</span>
+                {s.category && <span className="text-xs text-[var(--kz-mute)]">{s.category}</span>}
               </button>
             ))}
 
             {suggestions.length > 0 && (
-              <div className="p-2 border-t border-[#E8DDC9]">
-                <p className="text-xs text-[#6B5A4A] mb-1.5">Compétence(s) proche(s) existante(s) :</p>
+              <div className="p-2 border-t border-[var(--kz-line)]">
+                <p className="text-xs text-[var(--kz-mute)] mb-1.5">Compétence(s) proche(s) existante(s) :</p>
                 {suggestions.map((s) => (
                   <button key={s.id} type="button" onClick={() => selectSkill(s)}
-                    className="w-full text-left px-2 py-1.5 rounded-md hover:bg-[#FBEFE0] text-sm font-semibold text-[#1A1410]">
+                    className="w-full text-left px-2 py-1.5 rounded-md hover:bg-[var(--kz-cream2)] text-sm font-semibold text-[var(--kz-ink)]">
                     Utiliser « {s.name} »
                   </button>
                 ))}
@@ -114,7 +114,7 @@ export function SkillSelector({ selected, onAdd, onRemove, allowCreate = true, p
 
             {allowCreate && noExactResult && (
               <button type="button" onClick={handlePropose} disabled={proposing}
-                className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-[#FBEFE0] text-sm font-semibold border-t border-[#E8DDC9]"
+                className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-[var(--kz-cream2)] text-sm font-semibold border-t border-[var(--kz-line)]"
                 style={{ color: KZ.violet }}>
                 <Plus size={14} />
                 {proposing ? 'Envoi...' : `Proposer « ${query.trim()} »`}
@@ -122,7 +122,7 @@ export function SkillSelector({ selected, onAdd, onRemove, allowCreate = true, p
             )}
 
             {!allowCreate && noExactResult && (
-              <p className="px-3 py-2.5 text-xs text-[#6B5A4A]">Aucune compétence trouvée.</p>
+              <p className="px-3 py-2.5 text-xs text-[var(--kz-mute)]">Aucune compétence trouvée.</p>
             )}
           </div>
         )}
@@ -133,10 +133,10 @@ export function SkillSelector({ selected, onAdd, onRemove, allowCreate = true, p
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {selected.map((s) => (
-            <span key={s.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold border border-[#1A1410] rounded-md" style={{ background: s.status === 'pending' ? KZ.yellowSoft : KZ.violetSoft }}>
+            <span key={s.id} className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold border border-[var(--kz-edge)] rounded-md" style={{ background: s.status === 'pending' ? KZ.yellowSoft : KZ.violetSoft }}>
               {s.name}
               {s.status === 'pending' && <span className="text-[10px] opacity-70">(en attente)</span>}
-              <button type="button" onClick={() => onRemove(s.id)} className="text-[#6B5A4A] hover:text-red-600"><X size={10} /></button>
+              <button type="button" onClick={() => onRemove(s.id)} className="text-[var(--kz-mute)] hover:text-red-600"><X size={10} /></button>
             </span>
           ))}
         </div>

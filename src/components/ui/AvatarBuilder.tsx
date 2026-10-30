@@ -59,13 +59,13 @@ function ColorSwatch({ hex, label, selected, onClick }: { hex: string; label: st
       aria-label={label}
       aria-pressed={selected}
       title={label}
-      className="w-9 h-9 rounded-full border-[1.5px] border-[#1A1410] transition-transform hover:scale-110 active:scale-95 flex items-center justify-center"
+      className="w-9 h-9 rounded-full border-[1.5px] border-[var(--kz-edge)] transition-transform hover:scale-110 active:scale-95 flex items-center justify-center"
       style={{
         background: '#' + hex,
-        boxShadow: selected ? '0 0 0 2px white, 0 0 0 4px #FF6B35' : 'none',
+        boxShadow: selected ? '0 0 0 2px white, 0 0 0 4px var(--kz-orange)' : 'none',
       }}
     >
-      {selected && <Check size={14} color={['ffffff', 'ffffb1', 'e8e1e1', 'fae3d0', 'ffdeb5', 'a7ffc4'].includes(hex) ? '#1A1410' : '#fff'} strokeWidth={3} />}
+      {selected && <Check size={14} color={['ffffff', 'ffffb1', 'e8e1e1', 'fae3d0', 'ffdeb5', 'a7ffc4'].includes(hex) ? 'var(--kz-ink)' : '#fff'} strokeWidth={3} />}
     </button>
   )
 }
@@ -85,15 +85,15 @@ const ThumbOption = memo(function ThumbOption({
       aria-label={option.label}
       className="group flex flex-col items-center gap-1 p-1.5 rounded-xl border-[1.5px] transition-all hover:-translate-y-0.5 active:translate-y-0"
       style={{
-        borderColor: selected ? '#1A1410' : '#E8DDC9',
+        borderColor: selected ? 'var(--kz-ink)' : 'var(--kz-line)',
         background: selected ? KZ.orangeSoft : KZ.paper,
-        boxShadow: selected ? '2px 2px 0 #1A1410' : 'none',
+        boxShadow: selected ? '2px 2px 0 var(--kz-shadow)' : 'none',
       }}
     >
       <span aria-hidden className="w-14 h-14 rounded-full overflow-hidden" style={{ background: KZ.cream2 }}>
         <Svg svg={svg} className="w-full h-full" />
       </span>
-      <span className="text-[10px] font-bold text-[#1A1410] leading-tight text-center line-clamp-1 max-w-[64px]">
+      <span className="text-[10px] font-bold text-[var(--kz-ink)] leading-tight text-center line-clamp-1 max-w-[64px]">
         {option.label}
       </span>
     </button>
@@ -134,8 +134,8 @@ export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel
         <div
           role="img"
           aria-label="Aperçu de ton avatar"
-          className="rounded-full border-[3px] border-[#1A1410] overflow-hidden"
-          style={{ width: 150, height: 150, background: KZ.cream2, boxShadow: '5px 5px 0 #1A1410' }}
+          className="rounded-full border-[3px] border-[var(--kz-edge)] overflow-hidden"
+          style={{ width: 150, height: 150, background: KZ.cream2, boxShadow: '5px 5px 0 var(--kz-shadow)' }}
         >
           <Svg svg={previewSvg} className="w-full h-full" />
         </div>
@@ -143,8 +143,8 @@ export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel
           <button
             type="button"
             onClick={() => update(randomAvatarConfig())}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border-[1.5px] border-[#1A1410] text-xs font-bold transition-shadow hover:shadow-[2px_2px_0_#1A1410]"
-            style={{ background: KZ.yellowSoft, color: '#1A1410' }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border-[1.5px] border-[var(--kz-edge)] text-xs font-bold transition-shadow hover:shadow-[2px_2px_0_var(--kz-shadow)]"
+            style={{ background: KZ.yellowSoft, color: 'var(--kz-ink)' }}
           >
             <Shuffle size={13} /> Aléatoire
           </button>
@@ -153,8 +153,8 @@ export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel
             onClick={() => update(DEFAULT_AVATAR_CONFIG)}
             aria-label="Réinitialiser"
             title="Réinitialiser"
-            className="flex items-center px-2.5 py-1.5 rounded-full border-[1.5px] border-[#1A1410] transition-shadow hover:shadow-[2px_2px_0_#1A1410]"
-            style={{ background: KZ.paper, color: '#1A1410' }}
+            className="flex items-center px-2.5 py-1.5 rounded-full border-[1.5px] border-[var(--kz-edge)] transition-shadow hover:shadow-[2px_2px_0_var(--kz-shadow)]"
+            style={{ background: KZ.paper, color: 'var(--kz-ink)' }}
           >
             <RotateCcw size={13} />
           </button>
@@ -163,7 +163,7 @@ export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel
 
       <div className="min-w-0">
         {/* Onglets */}
-        <div role="tablist" className="flex gap-1 p-1 rounded-full border-[1.5px] border-[#1A1410] mb-4 overflow-x-auto" style={{ background: KZ.cream2 }}>
+        <div role="tablist" className="flex gap-1 p-1 rounded-full border-[1.5px] border-[var(--kz-edge)] mb-4 overflow-x-auto" style={{ background: KZ.cream2 }}>
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -174,7 +174,7 @@ export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel
               className="flex-1 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-colors"
               style={t.id === tab
                 ? { background: KZ.ink, color: KZ.cream }
-                : { color: '#6B5A4A' }}
+                : { color: 'var(--kz-mute)' }}
             >
               {t.label}
             </button>
@@ -184,7 +184,7 @@ export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel
         <div className="flex flex-col gap-5">
           {activeTab.sections.map((section) => (
             <div key={section.key}>
-              <p className="text-[11px] font-extrabold text-[#1A1410] uppercase tracking-widest mb-2">
+              <p className="text-[11px] font-extrabold text-[var(--kz-ink)] uppercase tracking-widest mb-2">
                 {section.label}
               </p>
               {section.type === 'color' ? (

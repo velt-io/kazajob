@@ -21,7 +21,7 @@ import { KazaPortfolioSection } from '@/components/profile/KazaPortfolioSection'
 // Import dynamique ssr:false pour éviter les erreurs MediaRecorder en prod
 const VideoPitchRecorder = dynamic(
   () => import('@/components/ui/VideoPitchRecorder').then(m => ({ default: m.VideoPitchRecorder })),
-  { ssr: false, loading: () => <div className="h-24 rounded-xl bg-[#FBEFE0] animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-24 rounded-xl bg-[var(--kz-cream2)] animate-pulse" /> }
 )
 import { useAuth } from '@/features/auth/useAuth'
 import { useApplications } from '@/features/applications/useApplications'
@@ -179,7 +179,7 @@ export default function CandidateProfilePage() {
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">Mon profil</h1>
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Mon profil</h1>
         {!editing ? (
           <Button kind="outline" size="md" icon={<Edit3 size={15} />} onClick={() => setEditing(true)}>Modifier</Button>
         ) : (
@@ -206,7 +206,7 @@ export default function CandidateProfilePage() {
         {/* Colonne gauche */}
         <div className="flex flex-col gap-4">
           {/* Avatar avec upload */}
-          <div className="kz-card p-5 bg-white text-center">
+          <div className="kz-card p-5 bg-[var(--kz-paper)] text-center">
             <div className="flex justify-center mb-4 relative">
               <div className="relative">
                 <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={96} color={KZ.orangeSoft} badge />
@@ -227,26 +227,26 @@ export default function CandidateProfilePage() {
               </Button>
             </div>
             {uploadingAvatar && (
-              <p className="text-xs text-[#6B5A4A] mb-2">Upload de la photo...</p>
+              <p className="text-xs text-[var(--kz-mute)] mb-2">Upload de la photo...</p>
             )}
-            <div className="text-base font-bold text-[#1A1410]">{profile?.full_name}</div>
-            <div className="text-xs text-[#6B5A4A] mt-0.5 mb-4">{profile?.location ?? 'La Reunion'}</div>
+            <div className="text-base font-bold text-[var(--kz-ink)]">{profile?.full_name}</div>
+            <div className="text-xs text-[var(--kz-mute)] mt-0.5 mb-4">{profile?.location ?? 'La Reunion'}</div>
             <Progress value={profileScore} color={KZ.orange} label="Profil complete" />
-            <p className="text-[11px] text-[#6B5A4A] mt-2 flex items-center justify-center gap-1">
+            <p className="text-[11px] text-[var(--kz-mute)] mt-2 flex items-center justify-center gap-1">
               <Camera size={11} /> Clique sur l&apos;avatar pour utiliser une photo
             </p>
           </div>
 
           {/* CV */}
-          <div className="kz-card p-5 bg-white">
-            <h3 className="text-sm font-bold text-[#1A1410] mb-3">Mon CV</h3>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Mon CV</h3>
 
             {/* CV Builder (cv_data) */}
             {hasCvBuilder && (
               <div className="flex flex-col gap-2 mb-3">
-                <div className="flex items-center gap-2.5 p-3 rounded-lg border border-[#6D3BEB] bg-[#E5DCFF]">
+                <div className="flex items-center gap-2.5 p-3 rounded-lg border border-[var(--kz-violet)] bg-[var(--kz-violet-soft)]">
                   <Check size={16} color={KZ.violet} />
-                  <span className="text-sm font-semibold text-[#1A1410] flex-1">CV Builder — créé</span>
+                  <span className="text-sm font-semibold text-[var(--kz-ink)] flex-1">CV Builder — créé</span>
                 </div>
                 <div className="flex gap-2">
                   <Link href="/onboarding/cv-builder" className="flex-1">
@@ -261,9 +261,9 @@ export default function CandidateProfilePage() {
             {/* CV uploadé (cv_url) */}
             {hasCv ? (
               <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-2.5 p-3 rounded-lg border border-[#19A974] bg-[#D6F0E0]">
+                <div className="flex items-center gap-2.5 p-3 rounded-lg border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
                   <Check size={16} color={KZ.green} />
-                  <span className="text-sm font-semibold text-[#1A1410] flex-1 min-w-0 truncate">
+                  <span className="text-sm font-semibold text-[var(--kz-ink)] flex-1 min-w-0 truncate">
                     {cvFileName ?? 'CV uploadé'}
                   </span>
                 </div>
@@ -283,7 +283,7 @@ export default function CandidateProfilePage() {
                     Créer mon CV avec le Builder
                   </Button>
                 </Link>
-                <div className="text-center text-xs text-[#6B5A4A] py-1">ou</div>
+                <div className="text-center text-xs text-[var(--kz-mute)] py-1">ou</div>
                 <FileUpload
                   accept=".pdf,.doc,.docx"
                   maxSizeMb={10}
@@ -312,8 +312,8 @@ export default function CandidateProfilePage() {
           </div>
 
           {/* Badges */}
-          <div className="kz-card p-5 bg-white">
-            <h3 className="text-sm font-bold text-[#1A1410] mb-3">Badges obtenus</h3>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Badges obtenus</h3>
             <div className="flex flex-wrap gap-2">
               {(profile?.streak ?? 0) > 0  && <Badge color="orange" size="md">Streak {profile!.streak}j</Badge>}
               {(profile?.xp ?? 0) >= 1000   && <Badge color="violet" size="md">Niveau {Math.floor((profile!.xp) / 1000) + 1}</Badge>}
@@ -322,21 +322,21 @@ export default function CandidateProfilePage() {
               {!!profile?.video_pitch_url && <Badge color="orange" size="md">Pitch video</Badge>}
               {applications.length >= 5      && <Badge color="yellow" size="md">{applications.length} candidatures</Badge>}
               {(profile?.streak ?? 0) === 0 && (profile?.xp ?? 0) === 0 && !hasCv && (
-                <p className="text-xs text-[#6B5A4A]">Complete ton profil pour obtenir des badges.</p>
+                <p className="text-xs text-[var(--kz-mute)]">Complete ton profil pour obtenir des badges.</p>
               )}
             </div>
           </div>
 
           {/* Video Pitch */}
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             <div className="flex items-center gap-2 mb-3">
-              <h3 className="text-sm font-bold text-[#1A1410]">Pitch vidéo</h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+              <h3 className="text-sm font-bold text-[var(--kz-ink)]">Pitch vidéo</h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                 style={{ background: KZ.orangeSoft, color: KZ.ink }}>
                 60s max
               </span>
             </div>
-            <p className="text-xs text-[#6B5A4A] mb-3 leading-relaxed">
+            <p className="text-xs text-[var(--kz-mute)] mb-3 leading-relaxed">
               Présente-toi en 60 secondes. Les recruteurs peuvent voir ton pitch directement sur ton profil — un vrai avantage pour te démarquer !
             </p>
             <VideoPitchRecorder
@@ -350,15 +350,15 @@ export default function CandidateProfilePage() {
           <KazaPortfolioSection profile={profile as unknown as Record<string, unknown> | null} onSaved={refetch} />
 
           {/* KazaBoost */}
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-sm font-bold text-[#1A1410]">KazaBoost</h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
-                style={{ background: KZ.yellowSoft, color: '#1A1410' }}>
+              <h3 className="text-sm font-bold text-[var(--kz-ink)]">KazaBoost</h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
+                style={{ background: KZ.yellowSoft, color: 'var(--kz-ink)' }}>
                 48h
               </span>
             </div>
-            <p className="text-xs text-[#6B5A4A] mb-3 leading-relaxed">
+            <p className="text-xs text-[var(--kz-mute)] mb-3 leading-relaxed">
               Boostez votre profil et apparaissez en priorité dans les recherches recruteurs pendant 48h.
             </p>
             {profile && (
@@ -371,8 +371,8 @@ export default function CandidateProfilePage() {
             )}
 
             {/* Boost premium payant (durée longue) */}
-            <div className="mt-3 pt-3 border-t border-[#E8DDC9]">
-              <p className="text-[11px] text-[#6B5A4A] mb-2 leading-relaxed">
+            <div className="mt-3 pt-3 border-t border-[var(--kz-line)]">
+              <p className="text-[11px] text-[var(--kz-mute)] mb-2 leading-relaxed">
                 Pas assez d&apos;XP ou besoin de plus longtemps ? Optez pour le boost premium (7 à 30 jours).
               </p>
               {profile && <ProfileBoostPaid boostedUntil={profile.boosted_until ?? null} />}
@@ -383,8 +383,8 @@ export default function CandidateProfilePage() {
         {/* Colonne droite */}
         <div className="flex flex-col gap-4">
           {/* Infos personnelles */}
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-lg font-bold text-[#1A1410] mb-4">Informations personnelles</h2>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-4">Informations personnelles</h2>
             {editing ? (
               <div className="flex flex-col gap-4">
                 <Input label="Nom complet" value={fullName} onChange={(e) => setFullName(e.target.value)} />
@@ -397,25 +397,25 @@ export default function CandidateProfilePage() {
             ) : (
               <div className="flex flex-col gap-4">
                 <div>
-                  <div className="text-xs text-[#6B5A4A] mb-0.5">Nom complet</div>
-                  <div className="text-sm font-semibold text-[#1A1410]">{profile?.full_name || '—'}</div>
+                  <div className="text-xs text-[var(--kz-mute)] mb-0.5">Nom complet</div>
+                  <div className="text-sm font-semibold text-[var(--kz-ink)]">{profile?.full_name || '—'}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-[#6B5A4A] mb-0.5">Email</div>
-                  <div className="flex items-center gap-2 text-sm text-[#1A1410]"><Mail size={13} />{profile?.email}</div>
+                  <div className="text-xs text-[var(--kz-mute)] mb-0.5">Email</div>
+                  <div className="flex items-center gap-2 text-sm text-[var(--kz-ink)]"><Mail size={13} />{profile?.email}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-[#6B5A4A] mb-0.5">Bio</div>
-                  <div className="text-sm text-[#2A2018]">{profile?.bio || <span className="text-[#6B5A4A] italic">Aucune bio — clique sur Modifier</span>}</div>
+                  <div className="text-xs text-[var(--kz-mute)] mb-0.5">Bio</div>
+                  <div className="text-sm text-[var(--kz-text)]">{profile?.bio || <span className="text-[var(--kz-mute)] italic">Aucune bio — clique sur Modifier</span>}</div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-xs text-[#6B5A4A] mb-0.5">Localisation</div>
-                    <div className="flex items-center gap-1 text-sm text-[#1A1410]"><MapPin size={13} />{profile?.location || '—'}</div>
+                    <div className="text-xs text-[var(--kz-mute)] mb-0.5">Localisation</div>
+                    <div className="flex items-center gap-1 text-sm text-[var(--kz-ink)]"><MapPin size={13} />{profile?.location || '—'}</div>
                   </div>
                   <div>
-                    <div className="text-xs text-[#6B5A4A] mb-0.5">Telephone</div>
-                    <div className="flex items-center gap-1 text-sm text-[#1A1410]"><Phone size={13} />{profile?.phone || '—'}</div>
+                    <div className="text-xs text-[var(--kz-mute)] mb-0.5">Telephone</div>
+                    <div className="flex items-center gap-1 text-sm text-[var(--kz-ink)]"><Phone size={13} />{profile?.phone || '—'}</div>
                   </div>
                 </div>
               </div>
@@ -423,15 +423,15 @@ export default function CandidateProfilePage() {
           </div>
 
           {/* Compétences */}
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-lg font-bold text-[#1A1410] mb-4">Competences</h2>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-4">Competences</h2>
             <SkillSelector selected={skills} onAdd={addSkill} onRemove={removeSkill} placeholder="Rechercher React, Python, Figma..." />
           </div>
 
           {/* Soft skills */}
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-lg font-bold text-[#1A1410] mb-1">Soft skills</h2>
-            <p className="text-xs text-[#6B5A4A] mb-4">Savoir-être — visible sur ton CV.</p>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Soft skills</h2>
+            <p className="text-xs text-[var(--kz-mute)] mb-4">Savoir-être — visible sur ton CV.</p>
             {editing ? (
               <div className="flex flex-wrap gap-1.5">
                 {SOFT_SKILLS.map(s => {
@@ -441,29 +441,29 @@ export default function CandidateProfilePage() {
                       onClick={() => setSoftSkills(prev => on ? prev.filter(x => x !== s) : [...prev, s])}
                       className="px-2.5 py-1 text-xs font-semibold border rounded-full transition-all"
                       style={on ? { background: KZ.violet, color: 'white', borderColor: KZ.violet }
-                                : { background: KZ.paper, color: '#2A2018', borderColor: '#E8DDC9' }}>
+                                : { background: KZ.paper, color: 'var(--kz-text)', borderColor: 'var(--kz-line)' }}>
                       {on && '✓ '}{s}
                     </button>
                   )
                 })}
               </div>
             ) : softSkills.length === 0 ? (
-              <div className="text-sm text-[#6B5A4A] py-4 text-center border border-dashed border-[#E8DDC9] rounded-lg">
+              <div className="text-sm text-[var(--kz-mute)] py-4 text-center border border-dashed border-[var(--kz-line)] rounded-lg">
                 Aucun soft skill — clique sur &quot;Modifier&quot;.
               </div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {softSkills.map(s => (
-                  <span key={s} className="px-2.5 py-1 text-xs font-semibold border border-[#1A1410] rounded-md" style={{ background: KZ.violetSoft }}>{s}</span>
+                  <span key={s} className="px-2.5 py-1 text-xs font-semibold border border-[var(--kz-edge)] rounded-md" style={{ background: KZ.violetSoft }}>{s}</span>
                 ))}
               </div>
             )}
           </div>
 
           {/* Loisirs */}
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-lg font-bold text-[#1A1410] mb-1">Loisirs</h2>
-            <p className="text-xs text-[#6B5A4A] mb-4">Centres d&apos;intérêt — visible sur ton CV.</p>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Loisirs</h2>
+            <p className="text-xs text-[var(--kz-mute)] mb-4">Centres d&apos;intérêt — visible sur ton CV.</p>
             {editing ? (
               <div className="flex flex-wrap gap-1.5">
                 {HOBBIES.map(h => {
@@ -473,37 +473,37 @@ export default function CandidateProfilePage() {
                       onClick={() => setHobbies(prev => on ? prev.filter(x => x !== h) : [...prev, h])}
                       className="px-2.5 py-1 text-xs font-semibold border rounded-full transition-all"
                       style={on ? { background: KZ.green, color: 'white', borderColor: KZ.green }
-                                : { background: KZ.paper, color: '#2A2018', borderColor: '#E8DDC9' }}>
+                                : { background: KZ.paper, color: 'var(--kz-text)', borderColor: 'var(--kz-line)' }}>
                       {on && '✓ '}{h}
                     </button>
                   )
                 })}
               </div>
             ) : hobbies.length === 0 ? (
-              <div className="text-sm text-[#6B5A4A] py-4 text-center border border-dashed border-[#E8DDC9] rounded-lg">
+              <div className="text-sm text-[var(--kz-mute)] py-4 text-center border border-dashed border-[var(--kz-line)] rounded-lg">
                 Aucun loisir — clique sur &quot;Modifier&quot;.
               </div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {hobbies.map(h => (
-                  <span key={h} className="px-2.5 py-1 text-xs font-semibold border border-[#1A1410] rounded-md" style={{ background: KZ.greenSoft }}>{h}</span>
+                  <span key={h} className="px-2.5 py-1 text-xs font-semibold border border-[var(--kz-edge)] rounded-md" style={{ background: KZ.greenSoft }}>{h}</span>
                 ))}
               </div>
             )}
           </div>
 
           {/* Statistiques */}
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-lg font-bold text-[#1A1410] mb-4">Statistiques</h2>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-4">Statistiques</h2>
             <div className="grid grid-cols-3 gap-3">
               {[
                 { v: (profile?.xp ?? 0).toLocaleString('fr-FR'), l: 'XP total' },
                 { v: profile?.streak ?? 0, l: 'Jours streak' },
                 { v: applications.length, l: 'Candidatures' },
               ].map((s) => (
-                <div key={s.l} className="text-center p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                  <div className="text-2xl font-extrabold text-[#1A1410]">{String(s.v)}</div>
-                  <div className="text-xs text-[#6B5A4A] mt-0.5">{s.l}</div>
+                <div key={s.l} className="text-center p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                  <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{String(s.v)}</div>
+                  <div className="text-xs text-[var(--kz-mute)] mt-0.5">{s.l}</div>
                 </div>
               ))}
             </div>

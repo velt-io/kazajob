@@ -12,11 +12,11 @@ export default function NewTrainingPage() {
     <CompanyRequired action="publier une offre de formation">
     <div className="max-w-[760px] mx-auto">
       <Link href="/recruiter/training"
-        className="flex items-center gap-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] mb-6">
+        className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-6">
         <ArrowLeft size={16} /> Retour aux formations
       </Link>
-      <h1 className="kz-h2 text-[#1A1410] mb-6">Publier une offre de formation</h1>
-      <div className="kz-card p-6 bg-white">
+      <h1 className="kz-h2 text-[var(--kz-ink)] mb-6">Publier une offre de formation</h1>
+      <div className="kz-card p-6 bg-[var(--kz-paper)]">
         {profile && (
           <TrainingForm
             recruiterId={profile.id}

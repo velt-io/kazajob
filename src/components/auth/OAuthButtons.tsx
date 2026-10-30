@@ -39,8 +39,8 @@ export function OAuthButtons({ role }: { role?: 'candidate' | 'recruiter' }) {
 
   return (
     <>
-      <div className="flex items-center gap-3 my-5 text-xs text-[#6B5A4A]">
-        <div className="flex-1 h-px bg-[#E8DDC9]" />ou<div className="flex-1 h-px bg-[#E8DDC9]" />
+      <div className="flex items-center gap-3 my-5 text-xs text-[var(--kz-mute)]">
+        <div className="flex-1 h-px bg-[var(--kz-line)]" />ou<div className="flex-1 h-px bg-[var(--kz-line)]" />
       </div>
       <div className="flex flex-col gap-2.5">
         {enabled.google && (

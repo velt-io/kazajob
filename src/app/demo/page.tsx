@@ -65,18 +65,18 @@ export default function DemoPage() {
 
       <div className="max-w-[900px] mx-auto px-4 sm:px-8 lg:px-16 py-10">
         {done ? (
-          <div className="kz-card p-10 bg-white text-center" style={{ boxShadow: '5px 5px 0 ' + KZ.violet }}>
-            <div className="w-16 h-16 rounded-full border-2 border-[#1A1410] flex items-center justify-center mx-auto mb-4" style={{ background: KZ.greenSoft }}>
+          <div className="kz-card p-10 bg-[var(--kz-paper)] text-center" style={{ boxShadow: '5px 5px 0 ' + KZ.violet }}>
+            <div className="w-16 h-16 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center mx-auto mb-4" style={{ background: KZ.greenSoft }}>
               <Check size={30} color={KZ.green} />
             </div>
-            <h2 className="text-xl font-extrabold text-[#1A1410] mb-2">Demande envoyée !</h2>
-            <p className="text-sm text-[#6B5A4A]">Vous allez recevoir un email de confirmation. À très vite !</p>
+            <h2 className="text-xl font-extrabold text-[var(--kz-ink)] mb-2">Demande envoyée !</h2>
+            <p className="text-sm text-[var(--kz-mute)]">Vous allez recevoir un email de confirmation. À très vite !</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6">
             {/* Formulaire */}
-            <div className="kz-card p-6 bg-white">
-              <h2 className="text-lg font-extrabold text-[#1A1410] mb-4">Vos coordonnées</h2>
+            <div className="kz-card p-6 bg-[var(--kz-paper)]">
+              <h2 className="text-lg font-extrabold text-[var(--kz-ink)] mb-4">Vos coordonnées</h2>
               <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <Input label="Nom complet *" value={form.name} onChange={(e) => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Marie Hoarau" />
@@ -90,16 +90,16 @@ export default function DemoPage() {
 
                 {/* Créneaux */}
                 <div>
-                  <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Choisir un créneau</label>
+                  <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Choisir un créneau</label>
                   {slots.length === 0 ? (
-                    <p className="text-xs text-[#6B5A4A] p-3 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                    <p className="text-xs text-[var(--kz-mute)] p-3 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                       Aucun créneau ouvert pour l&apos;instant — envoyez votre demande, nous vous recontactons pour fixer un rendez-vous.
                     </p>
                   ) : (
                     <div className="flex flex-col gap-3 max-h-[260px] overflow-y-auto pr-1">
                       {Object.entries(byDay).map(([day, list]) => (
                         <div key={day}>
-                          <div className="text-xs font-bold text-[#6B5A4A] capitalize mb-1.5">{day}</div>
+                          <div className="text-xs font-bold text-[var(--kz-mute)] capitalize mb-1.5">{day}</div>
                           <div className="flex flex-wrap gap-2">
                             {list.map((s) => {
                               const time = new Date(s.starts_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
@@ -129,11 +129,11 @@ export default function DemoPage() {
             {/* Atouts */}
             <div className="flex flex-col gap-3">
               {ATOUTS.map((a) => (
-                <div key={a.t} className="kz-card p-4 bg-white flex gap-3 items-start">
-                  <div className="w-9 h-9 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: KZ.violetSoft, color: KZ.violet }}>{a.icon}</div>
+                <div key={a.t} className="kz-card p-4 bg-[var(--kz-paper)] flex gap-3 items-start">
+                  <div className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: KZ.violetSoft, color: KZ.violet }}>{a.icon}</div>
                   <div>
-                    <div className="text-sm font-bold text-[#1A1410]" dangerouslySetInnerHTML={{ __html: a.t }} />
-                    <div className="text-xs text-[#6B5A4A]" dangerouslySetInnerHTML={{ __html: a.d }} />
+                    <div className="text-sm font-bold text-[var(--kz-ink)]" dangerouslySetInnerHTML={{ __html: a.t }} />
+                    <div className="text-xs text-[var(--kz-mute)]" dangerouslySetInnerHTML={{ __html: a.d }} />
                   </div>
                 </div>
               ))}

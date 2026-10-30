@@ -22,26 +22,26 @@ export function SearchBarLanding() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center p-2 mb-4 rounded-xl border-[1.5px] border-[#1A1410]"
-      style={{ background: KZ.paper, boxShadow: '5px 5px 0 #1A1410' }}
+      className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center p-2 mb-4 rounded-xl border-[1.5px] border-[var(--kz-edge)]"
+      style={{ background: KZ.paper, boxShadow: '5px 5px 0 var(--kz-shadow)' }}
     >
       <div className="flex-1 flex items-center gap-2 px-3 py-2 sm:py-1">
-        <Search size={18} className="text-[#6B5A4A] shrink-0" />
+        <Search size={18} className="text-[var(--kz-mute)] shrink-0" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Métier, mot-clé, compétence..."
-          className="flex-1 bg-transparent text-sm outline-none placeholder:text-[#6B5A4A] text-[#1A1410]"
+          className="flex-1 bg-transparent text-sm outline-none placeholder:text-[var(--kz-mute)] text-[var(--kz-ink)]"
         />
       </div>
-      <div className="hidden sm:block w-px h-7 bg-[#E8DDC9] self-center" />
+      <div className="hidden sm:block w-px h-7 bg-[var(--kz-line)] self-center" />
       <div className="flex items-center gap-2 px-3 py-2 sm:py-1">
-        <MapPin size={18} className="text-[#6B5A4A] shrink-0" />
+        <MapPin size={18} className="text-[var(--kz-mute)] shrink-0" />
         <select
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="flex-1 bg-transparent text-sm outline-none text-[#2A2018] cursor-pointer appearance-none"
+          className="flex-1 bg-transparent text-sm outline-none text-[var(--kz-text)] cursor-pointer appearance-none"
           style={{ minWidth: 130 }}
         >
           <option value="">Toute la Réunion</option>

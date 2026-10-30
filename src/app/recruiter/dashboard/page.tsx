@@ -66,7 +66,7 @@ export default function RecruiterDashboard() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div>
           <p className="kz-eyebrow mb-1.5" style={{ color: KZ.violet }}>Bonjour {profile?.full_name?.split(' ')[0]} · <span className="capitalize">{today}</span></p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">
+          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
             {stats.totalApplications > 0 ? <><span style={{ color: KZ.violet }}>{stats.totalApplications}</span> candidature{stats.totalApplications > 1 ? 's' : ''} recues.</> : <>Publiez votre <span style={{ color: KZ.violet }}>premiere offre</span>.</>}
           </h1>
         </div>
@@ -85,19 +85,19 @@ export default function RecruiterDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5">
         {/* Pipeline */}
         <div className="flex flex-col gap-5">
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-base font-bold text-[#1A1410] mb-4">Pipeline de recrutement</h2>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-base font-bold text-[var(--kz-ink)] mb-4">Pipeline de recrutement</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
               {PIPELINE.map((s) => (
-                <div key={s.label} className="text-center p-3 rounded-xl border border-[#1A1410]" style={{ background: s.color }}>
-                  <div className="text-2xl font-extrabold text-[#1A1410]">{s.count}</div>
-                  <div className="text-xs font-semibold text-[#6B5A4A] mt-0.5">{s.label}</div>
+                <div key={s.label} className="text-center p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: s.color }}>
+                  <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{s.count}</div>
+                  <div className="text-xs font-semibold text-[var(--kz-mute)] mt-0.5">{s.label}</div>
                 </div>
               ))}
             </div>
-            <h3 className="text-sm font-bold text-[#1A1410] mb-2.5">Candidatures recentes</h3>
+            <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-2.5">Candidatures recentes</h3>
             {loading ? (
-              <div className="flex flex-col gap-2">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-12 rounded-xl bg-[#FBEFE0] animate-pulse" />)}</div>
+              <div className="flex flex-col gap-2">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-12 rounded-xl bg-[var(--kz-cream2)] animate-pulse" />)}</div>
             ) : recentApps.length === 0 ? (
               <EmptyState title="Aucune candidature" icon={<Users size={20} />} />
             ) : (
@@ -107,14 +107,14 @@ export default function RecruiterDashboard() {
                   const candidate = app.candidate as { full_name?: string } | undefined
                   const initials = candidate?.full_name?.split(' ').map((n: string) => n[0]).join('') ?? '?'
                   return (
-                    <div key={app.id} className="flex items-center gap-3 p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                      <div className="w-8 h-8 rounded-full border border-[#1A1410] flex items-center justify-center text-xs font-bold shrink-0" style={{ background: KZ.orangeSoft }}>{initials}</div>
+                    <div key={app.id} className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                      <div className="w-8 h-8 rounded-full border border-[var(--kz-edge)] flex items-center justify-center text-xs font-bold shrink-0" style={{ background: KZ.orangeSoft }}>{initials}</div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-[#1A1410] truncate">{candidate?.full_name ?? 'Candidat'}</div>
-                        <div className="text-xs text-[#6B5A4A] truncate">{app.job?.title ?? '—'} · {timeAgo(app.created_at)}</div>
+                        <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{candidate?.full_name ?? 'Candidat'}</div>
+                        <div className="text-xs text-[var(--kz-mute)] truncate">{app.job?.title ?? '—'} · {timeAgo(app.created_at)}</div>
                       </div>
                       <Badge color={statusInfo.color as BadgeColor} size="sm">{statusInfo.label}</Badge>
-                      <Link href="/recruiter/applications"><button className="text-[#6B5A4A] hover:text-[#1A1410] shrink-0"><ArrowRight size={13} /></button></Link>
+                      <Link href="/recruiter/applications"><button className="text-[var(--kz-mute)] hover:text-[var(--kz-ink)] shrink-0"><ArrowRight size={13} /></button></Link>
                     </div>
                   )
                 })}
@@ -125,23 +125,23 @@ export default function RecruiterDashboard() {
 
         {/* Colonne droite */}
         <div className="flex flex-col gap-4">
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-base font-bold text-[#1A1410]">Offres actives</h3>
+              <h3 className="text-base font-bold text-[var(--kz-ink)]">Offres actives</h3>
               <Link href="/recruiter/jobs"><Button kind="soft" size="sm">Gerer</Button></Link>
             </div>
-            {loading ? <div className="h-24 rounded-lg bg-[#FBEFE0] animate-pulse" /> :
+            {loading ? <div className="h-24 rounded-lg bg-[var(--kz-cream2)] animate-pulse" /> :
               activeJobs.length === 0 ? (
-                <div className="text-xs text-[#6B5A4A] py-3 text-center">
-                  Aucune offre. <Link href="/recruiter/jobs/new" className="font-bold text-[#FF6B35]">Creer →</Link>
+                <div className="text-xs text-[var(--kz-mute)] py-3 text-center">
+                  Aucune offre. <Link href="/recruiter/jobs/new" className="font-bold text-[var(--kz-orange)]">Creer →</Link>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
                   {activeJobs.slice(0, 4).map((job) => (
-                    <div key={job.id} className="flex items-center gap-3 p-3 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                    <div key={job.id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-[#1A1410] truncate">{job.title}</div>
-                        <div className="text-xs text-[#6B5A4A]">{job.applications_count} cand.</div>
+                        <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{job.title}</div>
+                        <div className="text-xs text-[var(--kz-mute)]">{job.applications_count} cand.</div>
                       </div>
                       <Badge color="green" size="sm">Active</Badge>
                     </div>
@@ -150,24 +150,24 @@ export default function RecruiterDashboard() {
               )}
           </div>
 
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-base font-bold text-[#1A1410]">Messages</h3>
+              <h3 className="text-base font-bold text-[var(--kz-ink)]">Messages</h3>
               <Link href="/recruiter/messages"><Button kind="soft" size="sm">Tout voir</Button></Link>
             </div>
             {conversations.length === 0 ? (
-              <div className="text-xs text-[#6B5A4A] py-3 text-center">Aucun message.</div>
+              <div className="text-xs text-[var(--kz-mute)] py-3 text-center">Aucun message.</div>
             ) : (
               <div className="flex flex-col gap-2">
                 {conversations.slice(0, 3).map((conv) => {
                   const candidate = conv.candidate as { full_name?: string } | undefined
                   const initials = candidate?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) ?? '?'
                   return (
-                    <div key={conv.id} className="flex items-center gap-3 p-3 rounded-lg border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                      <div className="w-7 h-7 rounded-full border border-[#1A1410] flex items-center justify-center text-xs font-bold shrink-0" style={{ background: KZ.paper }}>{initials}</div>
+                    <div key={conv.id} className="flex items-center gap-3 p-3 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                      <div className="w-7 h-7 rounded-full border border-[var(--kz-edge)] flex items-center justify-center text-xs font-bold shrink-0" style={{ background: KZ.paper }}>{initials}</div>
                       <div className="flex-1 min-w-0">
-                        <div className="text-xs font-bold text-[#1A1410] truncate">{candidate?.full_name}</div>
-                        <div className="text-[11px] text-[#6B5A4A]">{timeAgo(conv.last_message_at)}</div>
+                        <div className="text-xs font-bold text-[var(--kz-ink)] truncate">{candidate?.full_name}</div>
+                        <div className="text-[11px] text-[var(--kz-mute)]">{timeAgo(conv.last_message_at)}</div>
                       </div>
                     </div>
                   )
@@ -179,9 +179,9 @@ export default function RecruiterDashboard() {
           {/* KazaScore */}
           {profile?.id && <KazaScoreCard recruiterId={profile.id} />}
 
-          <div className="p-4 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft, boxShadow: '3px 3px 0 #1A1410' }}>
+          <div className="p-4 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft, boxShadow: '3px 3px 0 var(--kz-shadow)' }}>
             <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Conseil</p>
-            <p className="text-sm font-semibold text-[#1A1410]">
+            <p className="text-sm font-semibold text-[var(--kz-ink)]">
               {stats.activeJobs === 0 ? "Publiez votre premiere offre pour commencer a recevoir des candidatures." :
                stats.totalApplications === 0 ? "Vos offres sont en ligne. Partagez-les pour attirer des candidats." :
                `${pipelineCounts.pending} candidature(s) en attente de traitement.`}

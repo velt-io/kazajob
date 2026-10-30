@@ -42,28 +42,28 @@ export function SectorsSection({ variant }: { variant: 'candidat' | 'entreprise'
   const accent = variant === 'candidat' ? KZ.orange : KZ.violet
 
   return (
-    <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-20 border-t border-[#1A1410]" style={{ background: KZ.cream }}>
+    <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-20 border-t border-[var(--kz-edge)]" style={{ background: KZ.cream }}>
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
         <div className="relative order-2 lg:order-1">
-          <div className="relative rounded-2xl border-[1.5px] border-[#1A1410] overflow-hidden aspect-[16/10]"
-            style={{ boxShadow: '6px 6px 0 #1A1410' }}>
+          <div className="relative rounded-2xl border-[1.5px] border-[var(--kz-edge)] overflow-hidden aspect-[16/10]"
+            style={{ boxShadow: '6px 6px 0 var(--kz-shadow)' }}>
             <Image src={c.image} alt={c.alt} fill sizes="(min-width: 1024px) 600px, 100vw" className="object-cover" />
           </div>
-          <div className="absolute -bottom-4 -right-2 sm:right-6 px-4 py-2.5 rounded-xl border-[1.5px] border-[#1A1410] text-sm font-extrabold rotate-[-3deg]"
-            style={{ background: KZ.yellow, boxShadow: '3px 3px 0 #1A1410', color: KZ.ink }}>
+          <div className="absolute -bottom-4 -right-2 sm:right-6 px-4 py-2.5 rounded-xl border-[1.5px] border-[var(--kz-edge)] text-sm font-extrabold rotate-[-3deg]"
+            style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', color: KZ.ink }}>
             {SECTORS.length} secteurs · 24 communes
           </div>
         </div>
 
         <div className="order-1 lg:order-2">
           <p className="kz-eyebrow mb-2" style={{ color: accent }}>{c.eyebrow}</p>
-          <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight leading-tight text-[#1A1410] mb-4">{c.title}</h2>
-          <p className="text-sm lg:text-base leading-relaxed text-[#2A2018] mb-6 max-w-[540px]">{c.text}</p>
+          <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight leading-tight text-[var(--kz-ink)] mb-4">{c.title}</h2>
+          <p className="text-sm lg:text-base leading-relaxed text-[var(--kz-text)] mb-6 max-w-[540px]">{c.text}</p>
 
           <div className="flex flex-wrap gap-2 mb-7">
             {SECTORS.map(({ sector, icon: Icon, color }) => {
               const chip = (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#1A1410] text-xs font-bold text-[#1A1410] transition-transform hover:-translate-y-0.5"
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--kz-edge)] text-xs font-bold text-[var(--kz-ink)] transition-transform hover:-translate-y-0.5"
                   style={{ background: color }}>
                   <Icon size={13} /> {sector}
                 </span>

@@ -72,10 +72,10 @@ export default function CandidateEventsPage() {
     <div className="max-w-[800px] mx-auto">
       <div className="mb-6">
         <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Événements</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
           KazaEvents <span style={{ color: KZ.violet }}>974</span>
         </h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">
+        <p className="text-sm text-[var(--kz-mute)] mt-1">
           Job dating en ligne, webinaires, ateliers — rencontrez les recruteurs de La Réunion.
         </p>
       </div>
@@ -83,7 +83,7 @@ export default function CandidateEventsPage() {
       {loading ? (
         <div className="flex flex-col gap-3">
           {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 rounded-2xl border border-[#E8DDC9] bg-[#FBEFE0] animate-pulse" />
+            <div key={i} className="h-32 rounded-2xl border border-[var(--kz-line)] bg-[var(--kz-cream2)] animate-pulse" />
           ))}
         </div>
       ) : events.length === 0 ? (
@@ -104,18 +104,18 @@ export default function CandidateEventsPage() {
             return (
               <div
                 key={evt.id}
-                className="kz-card p-5 bg-white flex flex-col sm:flex-row gap-4"
-                style={live ? { borderColor: KZ.green, boxShadow: `0 0 0 2px ${KZ.green}30` } : {}}
+                className="kz-card p-5 bg-[var(--kz-paper)] flex flex-col sm:flex-row gap-4"
+                style={live ? { borderColor: KZ.green, boxShadow: `0 0 0 2px color-mix(in srgb, ${KZ.green} 19%, transparent)` } : {}}
               >
                 {/* Date bloc */}
                 <div
-                  className="w-16 h-16 rounded-xl border border-[#1A1410] flex flex-col items-center justify-center shrink-0 self-start"
+                  className="w-16 h-16 rounded-xl border border-[var(--kz-edge)] flex flex-col items-center justify-center shrink-0 self-start"
                   style={{ background: typeInfo.bg }}
                 >
-                  <div className="text-xl font-extrabold text-[#1A1410] leading-none">
+                  <div className="text-xl font-extrabold text-[var(--kz-ink)] leading-none">
                     {eventDate.getDate()}
                   </div>
-                  <div className="text-[10px] font-bold uppercase text-[#6B5A4A]">
+                  <div className="text-[10px] font-bold uppercase text-[var(--kz-mute)]">
                     {eventDate.toLocaleDateString('fr-FR', { month: 'short' })}
                   </div>
                 </div>
@@ -124,13 +124,13 @@ export default function CandidateEventsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start gap-2 flex-wrap mb-2">
                     <span
-                      className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+                      className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                       style={{ background: typeInfo.bg, color: typeInfo.color }}
                     >
                       <span className="flex items-center gap-1">{EVENT_ICONS[evt.type]}{typeInfo.label}</span>
                     </span>
                     {live && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#19A974] bg-[#D6F0E0] text-[#19A974] animate-pulse">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-green)] bg-[var(--kz-green-soft)] text-[var(--kz-green)] animate-pulse">
                         🔴 En direct
                       </span>
                     )}
@@ -139,12 +139,12 @@ export default function CandidateEventsPage() {
                     )}
                   </div>
 
-                  <h3 className="text-base font-bold text-[#1A1410] mb-1">{evt.title}</h3>
+                  <h3 className="text-base font-bold text-[var(--kz-ink)] mb-1">{evt.title}</h3>
                   {evt.description && (
-                    <p className="text-sm text-[#6B5A4A] mb-2 line-clamp-2">{evt.description}</p>
+                    <p className="text-sm text-[var(--kz-mute)] mb-2 line-clamp-2">{evt.description}</p>
                   )}
 
-                  <div className="flex gap-4 flex-wrap text-xs text-[#6B5A4A]">
+                  <div className="flex gap-4 flex-wrap text-xs text-[var(--kz-mute)]">
                     <span className="flex items-center gap-1">
                       <Clock size={12} />
                       {eventDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
@@ -156,7 +156,7 @@ export default function CandidateEventsPage() {
                     <span className="flex items-center gap-1">
                       <Users size={12} />
                       {isFull ? (
-                        <span className="text-[#FF6B35] font-semibold">Complet</span>
+                        <span className="text-[var(--kz-orange)] font-semibold">Complet</span>
                       ) : (
                         <span><strong>{spotsLeft}</strong> places restantes</span>
                       )}
@@ -188,7 +188,7 @@ export default function CandidateEventsPage() {
                     </Button>
                   )}
                   {evt.is_registered && !live && (
-                    <p className="text-[11px] text-[#6B5A4A] text-right">
+                    <p className="text-[11px] text-[var(--kz-mute)] text-right">
                       Lien disponible le jour J
                     </p>
                   )}

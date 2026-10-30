@@ -8,18 +8,18 @@ interface ProgressProps {
   className?: string
 }
 
-export function Progress({ value, color = '#FF6B35', height = 12, label, className }: ProgressProps) {
+export function Progress({ value, color = 'var(--kz-orange)', height = 12, label, className }: ProgressProps) {
   const clamped = Math.max(0, Math.min(100, value))
   return (
     <div className={cn('w-full', className)}>
       {label && (
-        <div className="flex justify-between text-xs font-semibold text-[#2A2018] mb-1">
+        <div className="flex justify-between text-xs font-semibold text-[var(--kz-text)] mb-1">
           <span>{label}</span>
           <span>{clamped}%</span>
         </div>
       )}
       <div
-        className="w-full bg-[#FBEFE0] border border-[#1A1410] rounded-full overflow-hidden"
+        className="w-full bg-[var(--kz-cream2)] border border-[var(--kz-edge)] rounded-full overflow-hidden"
         style={{ height }}
       >
         <div
@@ -27,7 +27,7 @@ export function Progress({ value, color = '#FF6B35', height = 12, label, classNa
           style={{
             width: `${clamped}%`,
             background: color,
-            borderRight: clamped < 100 ? '1.5px solid #1A1410' : 'none',
+            borderRight: clamped < 100 ? '1.5px solid var(--kz-edge)' : 'none',
           }}
         />
       </div>

@@ -65,7 +65,7 @@ export function FileUpload({
     return (
       <div className={cn('relative group cursor-pointer', className)} onClick={() => inputRef.current?.click()}>
         <input ref={inputRef} type="file" accept={accept} className="hidden" onChange={handleChange} />
-        <div className="absolute inset-0 rounded-full bg-[#1A1410]/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <div className="absolute inset-0 rounded-full bg-[var(--kz-ink)]/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           {uploading ? (
             <InlineLoader size={24} />
           ) : (
@@ -79,7 +79,7 @@ export function FileUpload({
 
   return (
     <div className={className}>
-      {label && <div className="text-xs font-semibold text-[#2A2018] mb-1.5">{label}</div>}
+      {label && <div className="text-xs font-semibold text-[var(--kz-text)] mb-1.5">{label}</div>}
 
       <div
         onClick={() => !uploading && inputRef.current?.click()}
@@ -88,9 +88,9 @@ export function FileUpload({
         onDrop={handleDrop}
         className={cn(
           'relative border-[1.5px] border-dashed rounded-xl p-6 text-center cursor-pointer transition-all',
-          dragging ? 'border-[#FF6B35] bg-[#FFE0CF]' : 'border-[#1A1410] hover:border-[#FF6B35] hover:bg-[#FFF7EE]',
+          dragging ? 'border-[var(--kz-orange)] bg-[var(--kz-orange-soft)]' : 'border-[var(--kz-edge)] hover:border-[var(--kz-orange)] hover:bg-[var(--kz-cream)]',
           uploading && 'pointer-events-none opacity-80',
-          done && 'border-solid border-[#19A974] bg-[#D6F0E0]'
+          done && 'border-solid border-[var(--kz-green)] bg-[var(--kz-green-soft)]'
         )}
       >
         <input ref={inputRef} type="file" accept={accept} className="hidden" onChange={handleChange} />
@@ -98,38 +98,38 @@ export function FileUpload({
         {uploading ? (
           <div className="flex flex-col items-center gap-3">
             <InlineLoader size={40} />
-            <div className="text-sm font-semibold text-[#1A1410]">Upload en cours...</div>
+            <div className="text-sm font-semibold text-[var(--kz-ink)]">Upload en cours...</div>
             {progress !== undefined && (
-              <div className="w-full max-w-[200px] h-2 bg-[#E8DDC9] rounded-full overflow-hidden border border-[#1A1410]">
-                <div className="h-full bg-[#FF6B35] transition-all" style={{ width: `${progress}%` }} />
+              <div className="w-full max-w-[200px] h-2 bg-[var(--kz-line)] rounded-full overflow-hidden border border-[var(--kz-edge)]">
+                <div className="h-full bg-[var(--kz-orange)] transition-all" style={{ width: `${progress}%` }} />
               </div>
             )}
           </div>
         ) : done ? (
           <div className="flex flex-col items-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-[#19A974] border border-[#1A1410] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-[var(--kz-green)] border border-[var(--kz-edge)] flex items-center justify-center">
               <Check size={20} className="text-white" />
             </div>
-            <div className="text-sm font-bold text-[#1A1410]">
+            <div className="text-sm font-bold text-[var(--kz-ink)]">
               {currentFileName ?? 'Fichier uploade avec succes'}
             </div>
             <button
               type="button"
               onClick={(e) => { e.stopPropagation(); setDone(false); if (inputRef.current) inputRef.current.value = '' }}
-              className="text-xs text-[#6B5A4A] hover:text-red-600 flex items-center gap-1"
+              className="text-xs text-[var(--kz-mute)] hover:text-red-600 flex items-center gap-1"
             >
               <X size={11} /> Changer de fichier
             </button>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2.5">
-            <div className="w-10 h-10 rounded-xl bg-[#FBEFE0] border border-[#1A1410] flex items-center justify-center">
-              <Upload size={20} className="text-[#1A1410]" />
+            <div className="w-10 h-10 rounded-xl bg-[var(--kz-cream2)] border border-[var(--kz-edge)] flex items-center justify-center">
+              <Upload size={20} className="text-[var(--kz-ink)]" />
             </div>
-            <div className="text-sm font-bold text-[#1A1410]">
+            <div className="text-sm font-bold text-[var(--kz-ink)]">
               Glisse ton fichier ici ou <span style={{ color: KZ.orange }}>parcourir</span>
             </div>
-            {hint && <div className="text-xs text-[#6B5A4A]">{hint}</div>}
+            {hint && <div className="text-xs text-[var(--kz-mute)]">{hint}</div>}
           </div>
         )}
       </div>

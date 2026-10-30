@@ -144,10 +144,10 @@ function JobsContent() {
   return (
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-5">
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410] mb-1">
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-1">
           Offres d&apos;emploi
         </h1>
-        <p className="text-sm text-[#6B5A4A]">
+        <p className="text-sm text-[var(--kz-mute)]">
           {loading ? '…' : `${count} offre${count !== 1 ? 's' : ''}`} · La Réunion 974
         </p>
       </div>
@@ -178,7 +178,7 @@ function JobsContent() {
           {activeChips.length > 0 && (
             <span
               className="ml-1 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0"
-              style={{ background: '#FF6B35', color: 'white' }}
+              style={{ background: 'var(--kz-orange)', color: 'white' }}
             >
               {activeChips.length}
             </span>
@@ -189,7 +189,7 @@ function JobsContent() {
       {/* ── Sélecteur de rayon (affiché dès qu'une ville est choisie) ── */}
       {cityInput && (
         <div className="flex items-center gap-2 mb-2 flex-wrap">
-          <span className="flex items-center gap-1 text-xs font-semibold text-[#6B5A4A]">
+          <span className="flex items-center gap-1 text-xs font-semibold text-[var(--kz-mute)]">
             <MapPin size={12} /> Rayon :
           </span>
           {RADIUS_OPTIONS.map((opt) => (
@@ -197,11 +197,11 @@ function JobsContent() {
               key={opt.value}
               type="button"
               onClick={() => setRadius(radius === opt.value ? null : opt.value)}
-              className="px-3 py-1 text-xs font-semibold rounded-full border border-[#1A1410] transition-all"
+              className="px-3 py-1 text-xs font-semibold rounded-full border border-[var(--kz-edge)] transition-all"
               style={
                 radius === opt.value
-                  ? { background: '#1A1410', color: '#FFF7EE' }
-                  : { background: 'white', color: '#1A1410' }
+                  ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)' }
+                  : { background: 'var(--kz-paper)', color: 'var(--kz-ink)' }
               }
             >
               {opt.label}
@@ -212,7 +212,7 @@ function JobsContent() {
 
       {/* ── Filtres avancés ── */}
       {showFilters && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 p-4 mb-2 rounded-xl border border-[#1A1410] bg-white">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 p-4 mb-2 rounded-xl border border-[var(--kz-edge)] bg-[var(--kz-paper)]">
           <Select
             label="Contrat"
             options={TYPE_OPTIONS}
@@ -250,17 +250,17 @@ function JobsContent() {
             onChange={(e) => updateFilters({ sort: (e.target.value as JobFilters['sort']) || 'newest' })}
           />
           <div className="col-span-2 sm:col-span-3 lg:col-span-6 flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-[#2A2018]">Mode de travail</label>
+            <label className="text-xs font-semibold text-[var(--kz-text)]">Mode de travail</label>
             <div className="flex gap-2">
               {([{ v: undefined, l: 'Tous' }, { v: true, l: 'Remote' }] as const).map(({ v, l }) => (
                 <button
                   key={l}
                   type="button"
                   onClick={() => updateFilters({ remote: v })}
-                  className="px-4 py-2 text-sm font-semibold border-[1.5px] rounded-lg border-[#1A1410] transition-all"
+                  className="px-4 py-2 text-sm font-semibold border-[1.5px] rounded-lg border-[var(--kz-edge)] transition-all"
                   style={{
-                    background: filters.remote === v ? '#1A1410' : 'white',
-                    color: filters.remote === v ? '#FFF7EE' : '#1A1410',
+                    background: filters.remote === v ? 'var(--kz-ink)' : 'white',
+                    color: filters.remote === v ? 'var(--kz-cream)' : 'var(--kz-ink)',
                   }}
                 >
                   {l}
@@ -295,7 +295,7 @@ function JobsContent() {
           })}
           <button
             onClick={clearAll}
-            className="text-xs font-semibold underline text-[#6B5A4A] hover:text-[#1A1410]"
+            className="text-xs font-semibold underline text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
           >
             Tout effacer
           </button>
@@ -330,7 +330,7 @@ function JobsContent() {
           >
             Précédent
           </Button>
-          <span className="flex items-center px-4 text-sm font-semibold text-[#1A1410]">
+          <span className="flex items-center px-4 text-sm font-semibold text-[var(--kz-ink)]">
             {filters.page ?? 1} / {Math.ceil(count / (filters.limit ?? 12))}
           </span>
           <Button

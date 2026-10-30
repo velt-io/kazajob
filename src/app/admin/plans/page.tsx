@@ -29,9 +29,9 @@ const TOGGLES: { key: keyof PlanRow; label: string; help: string }[] = [
 function Toggle({ on, onClick, disabled }: { on: boolean; onClick: () => void; disabled?: boolean }) {
   return (
     <button type="button" onClick={onClick} disabled={disabled}
-      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[#1A1410] transition-colors disabled:opacity-40"
+      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors disabled:opacity-40"
       style={{ background: on ? KZ.green : KZ.beige }} aria-pressed={on}>
-      <span className="inline-block h-4 w-4 rounded-full bg-white border border-[#1A1410] transition-transform"
+      <span className="inline-block h-4 w-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
         style={{ transform: on ? 'translateX(22px)' : 'translateX(2px)' }} />
     </button>
   )
@@ -48,9 +48,9 @@ function InlineField({ label, value, type = 'text', suffix, onSave }: InlineFiel
   const cancel = () => { setDraft(String(value)); setEditing(false) }
   if (!editing) {
     return (
-      <span className="flex items-center gap-1 text-xs text-[#1A1410]">
+      <span className="flex items-center gap-1 text-xs text-[var(--kz-ink)]">
         <span className="font-medium">{value}{suffix}</span>
-        <button onClick={() => setEditing(true)} className="text-[#6D3BEB] hover:underline ml-1" title={`Modifier ${label}`}>
+        <button onClick={() => setEditing(true)} className="text-[var(--kz-violet)] hover:underline ml-1" title={`Modifier ${label}`}>
           <Edit2 size={11} />
         </button>
       </span>
@@ -59,10 +59,10 @@ function InlineField({ label, value, type = 'text', suffix, onSave }: InlineFiel
   return (
     <span className="flex items-center gap-1">
       <input autoFocus type={type} value={draft} onChange={e => setDraft(e.target.value)}
-        className="w-24 text-xs px-1.5 py-0.5 border border-[#6D3BEB] rounded focus:outline-none" />
-      {suffix && <span className="text-xs text-[#6B5A4A]">{suffix}</span>}
-      <button onClick={commit} className="text-[#19A974]"><Check size={12} /></button>
-      <button onClick={cancel} className="text-[#FF6B35]"><X size={12} /></button>
+        className="w-24 text-xs px-1.5 py-0.5 border border-[var(--kz-violet)] rounded focus:outline-none" />
+      {suffix && <span className="text-xs text-[var(--kz-mute)]">{suffix}</span>}
+      <button onClick={commit} className="text-[var(--kz-green)]"><Check size={12} /></button>
+      <button onClick={cancel} className="text-[var(--kz-orange)]"><X size={12} /></button>
     </span>
   )
 }
@@ -126,32 +126,32 @@ export default function AdminPlansPage() {
   return (
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[#1A1410]">Monétisation · Forfaits</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">
+        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Monétisation · Forfaits</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">
           Activez, masquez, planifiez ou modifiez les forfaits. Les modifications sont auditées.
         </p>
       </div>
 
       {loading ? (
-        <div className="kz-card p-8 text-center text-[#6B5A4A] bg-white">Chargement…</div>
+        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Chargement…</div>
       ) : !data ? (
-        <div className="kz-card p-8 text-center text-[#6B5A4A] bg-white">Accès refusé ou erreur.</div>
+        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Accès refusé ou erreur.</div>
       ) : (
         <div className="space-y-3">
           {data.plans.map((plan) => (
-            <div key={plan.id} className="kz-card bg-white overflow-hidden">
+            <div key={plan.id} className="kz-card bg-[var(--kz-paper)] overflow-hidden">
               {/* En-tête */}
               <div className="p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                   <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-extrabold text-[#1A1410]">{plan.name}</span>
+                      <span className="font-extrabold text-[var(--kz-ink)]">{plan.name}</span>
                       {plan.is_featured && <Badge color="violet" size="sm">Mis en avant</Badge>}
                       {!plan.is_active && <Badge color="cream" size="sm">Désactivé</Badge>}
                       {plan.company_count !== undefined && (
                         <Badge color="cream" size="sm">{plan.company_count} entreprise(s)</Badge>
                       )}
-                      {saving === plan.id && <span className="text-xs text-[#6D3BEB]">enregistrement…</span>}
+                      {saving === plan.id && <span className="text-xs text-[var(--kz-violet)]">enregistrement…</span>}
                     </div>
                     <div className="flex items-center gap-3 flex-wrap">
                       <InlineField label="Prix" value={Math.round(plan.price_cts / 100)} type="number" suffix="€/mois"
@@ -164,15 +164,15 @@ export default function AdminPlansPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <button onClick={() => duplicate(plan.id)} title="Dupliquer"
-                      className="p-1.5 rounded-lg border border-[#E8DDC9] text-[#6B5A4A] hover:border-[#6D3BEB] hover:text-[#6D3BEB]">
+                      className="p-1.5 rounded-lg border border-[var(--kz-line)] text-[var(--kz-mute)] hover:border-[var(--kz-violet)] hover:text-[var(--kz-violet)]">
                       <Copy size={14} />
                     </button>
                     <button onClick={() => archive(plan)} title="Archiver"
-                      className="p-1.5 rounded-lg border border-[#E8DDC9] text-[#6B5A4A] hover:border-[#FF6B35] hover:text-[#FF6B35]">
+                      className="p-1.5 rounded-lg border border-[var(--kz-line)] text-[var(--kz-mute)] hover:border-[var(--kz-orange)] hover:text-[var(--kz-orange)]">
                       <Archive size={14} />
                     </button>
                     <button onClick={() => setExpanded(expanded === plan.id ? null : plan.id)}
-                      className="p-1.5 rounded-lg border border-[#E8DDC9] text-[#6B5A4A]">
+                      className="p-1.5 rounded-lg border border-[var(--kz-line)] text-[var(--kz-mute)]">
                       {expanded === plan.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                     </button>
                   </div>
@@ -181,10 +181,10 @@ export default function AdminPlansPage() {
                 {/* Toggles */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {TOGGLES.map((t) => (
-                    <div key={t.key} className="flex items-center justify-between gap-2 p-2 rounded-lg border border-[#E8DDC9]">
+                    <div key={t.key} className="flex items-center justify-between gap-2 p-2 rounded-lg border border-[var(--kz-line)]">
                       <div>
-                        <div className="text-xs font-bold text-[#1A1410]">{t.label}</div>
-                        <div className="text-[10px] text-[#6B5A4A] leading-tight">{t.help}</div>
+                        <div className="text-xs font-bold text-[var(--kz-ink)]">{t.label}</div>
+                        <div className="text-[10px] text-[var(--kz-mute)] leading-tight">{t.help}</div>
                       </div>
                       <Toggle on={Boolean(plan[t.key])} onClick={() => toggle(plan, t.key)} />
                     </div>
@@ -194,37 +194,37 @@ export default function AdminPlansPage() {
 
               {/* Panneau étendu */}
               {expanded === plan.id && (
-                <div className="border-t border-[#E8DDC9] p-4 bg-[#FBEFE0] space-y-4">
+                <div className="border-t border-[var(--kz-line)] p-4 bg-[var(--kz-cream2)] space-y-4">
                   {/* Dates de disponibilité */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <label className="text-xs text-[#6B5A4A]">Disponible à partir du
+                    <label className="text-xs text-[var(--kz-mute)]">Disponible à partir du
                       <input type="date" defaultValue={plan.starts_at ? plan.starts_at.slice(0, 10) : ''}
                         onChange={e => setDate(plan, 'starts_at', e.target.value)}
-                        className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                        className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                     </label>
-                    <label className="text-xs text-[#6B5A4A]">Disponible jusqu'au
+                    <label className="text-xs text-[var(--kz-mute)]">Disponible jusqu'au
                       <input type="date" defaultValue={plan.ends_at ? plan.ends_at.slice(0, 10) : ''}
                         onChange={e => setDate(plan, 'ends_at', e.target.value)}
-                        className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                        className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                     </label>
                   </div>
 
                   {/* Stripe */}
                   <div>
-                    <p className="text-xs font-bold text-[#6B5A4A] mb-2 uppercase tracking-wide">Stripe (optionnel)</p>
+                    <p className="text-xs font-bold text-[var(--kz-mute)] mb-2 uppercase tracking-wide">Stripe (optionnel)</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <label className="text-xs text-[#6B5A4A]">Product ID
+                      <label className="text-xs text-[var(--kz-mute)]">Product ID
                         <input type="text" defaultValue={plan.stripe_product_id ?? ''}
                           onBlur={e => patch(plan.id, { stripeProductId: e.target.value || null }, { stripe_product_id: e.target.value || null })}
-                          className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410] font-mono text-xs" />
+                          className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)] font-mono text-xs" />
                       </label>
-                      <label className="text-xs text-[#6B5A4A]">Price ID
+                      <label className="text-xs text-[var(--kz-mute)]">Price ID
                         <input type="text" defaultValue={plan.stripe_price_id ?? ''}
                           onBlur={e => patch(plan.id, { stripePriceId: e.target.value || null }, { stripe_price_id: e.target.value || null })}
-                          className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410] font-mono text-xs" />
+                          className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)] font-mono text-xs" />
                       </label>
                     </div>
-                    <p className="text-[10px] text-[#6B5A4A] mt-1">
+                    <p className="text-[10px] text-[var(--kz-mute)] mt-1">
                       {plan.stripe_product_id && plan.stripe_price_id
                         ? '✅ Stripe configuré'
                         : '⚠️ Stripe non configuré — le checkout ne sera pas disponible pour ce forfait.'}
@@ -233,16 +233,16 @@ export default function AdminPlansPage() {
 
                   {/* Ordre + Slug */}
                   <div className="flex items-center gap-4 flex-wrap">
-                    <label className="text-xs text-[#6B5A4A]">Ordre d'affichage
+                    <label className="text-xs text-[var(--kz-mute)]">Ordre d'affichage
                       <input type="number" defaultValue={plan.sort_order}
                         onBlur={e => patch(plan.id, { sortOrder: parseInt(e.target.value, 10) }, { sort_order: parseInt(e.target.value, 10) })}
-                        className="mt-1 w-20 px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                        className="mt-1 w-20 px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                     </label>
-                    <div className="text-xs text-[#6B5A4A]">
-                      Slug : <code className="bg-white px-1.5 py-0.5 rounded border border-[#E8DDC9] font-mono">{plan.id}</code>
+                    <div className="text-xs text-[var(--kz-mute)]">
+                      Slug : <code className="bg-[var(--kz-paper)] px-1.5 py-0.5 rounded border border-[var(--kz-line)] font-mono">{plan.id}</code>
                     </div>
                     {plan.updated_at && (
-                      <div className="text-xs text-[#6B5A4A]">
+                      <div className="text-xs text-[var(--kz-mute)]">
                         Modifié le {new Date(plan.updated_at).toLocaleDateString('fr-FR')}
                       </div>
                     )}

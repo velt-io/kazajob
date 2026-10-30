@@ -152,8 +152,8 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
 
       {admin && (
         <div className="rounded-xl border-2 p-4" style={{ borderColor: KZ.violet, background: KZ.violetSoft }}>
-          <h3 className="text-sm font-bold text-[#1A1410] mb-1">Annonce administrateur (externe)</h3>
-          <p className="text-xs text-[#6B5A4A] mb-3">Formation publiée par Kazajob sans compte recruteur. Les candidatures sont envoyées par email au contact ci-dessous.</p>
+          <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-1">Annonce administrateur (externe)</h3>
+          <p className="text-xs text-[var(--kz-mute)] mb-3">Formation publiée par Kazajob sans compte recruteur. Les candidatures sont envoyées par email au contact ci-dessous.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input label="Organisme affiché" value={externalCompany} onChange={(e) => setExternalCompany(e.target.value)} placeholder="Nom de l'organisme" />
             <Input label="Email de contact (candidatures)" type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="contact@organisme.re" />
@@ -163,12 +163,12 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
 
       {/* ── Image ────────────────────────────────────────────── */}
       <div>
-        <label className="block text-sm font-bold text-[#1A1410] mb-2">
-          Image de l&apos;offre <span className="text-[#6B5A4A] font-normal text-xs">(obligatoire — visuel, logo OF, etc.)</span>
+        <label className="block text-sm font-bold text-[var(--kz-ink)] mb-2">
+          Image de l&apos;offre <span className="text-[var(--kz-mute)] font-normal text-xs">(obligatoire — visuel, logo OF, etc.)</span>
         </label>
         <label className="cursor-pointer">
           <div
-            className="relative rounded-2xl border-2 border-dashed border-[#1A1410] overflow-hidden flex items-center justify-center"
+            className="relative rounded-2xl border-2 border-dashed border-[var(--kz-edge)] overflow-hidden flex items-center justify-center"
             style={{ height: 180, background: KZ.cream2 }}
           >
             {imagePreview || imageUrl ? (
@@ -177,15 +177,15 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
                 <button
                   type="button"
                   onClick={e => { e.preventDefault(); setImageUrl(null); setImagePreview(null) }}
-                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-white border border-[#1A1410] flex items-center justify-center"
+                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] flex items-center justify-center"
                 >
                   <X size={13} />
                 </button>
               </>
             ) : (
-              <div className="flex flex-col items-center gap-2 text-[#6B5A4A]">
+              <div className="flex flex-col items-center gap-2 text-[var(--kz-mute)]">
                 {imageUploading ? (
-                  <div className="animate-spin w-6 h-6 border-2 border-[#1A1410] border-t-transparent rounded-full" />
+                  <div className="animate-spin w-6 h-6 border-2 border-[var(--kz-edge)] border-t-transparent rounded-full" />
                 ) : (
                   <>
                     <Upload size={28} />
@@ -211,8 +211,8 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
           required
         />
         {!hfOk && (
-          <div className="mt-1.5 flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#FFC93C]"
-            style={{ background: '#FFF1C2', color: '#1A1410' }}>
+          <div className="mt-1.5 flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--kz-yellow)]"
+            style={{ background: 'var(--kz-yellow-soft)', color: 'var(--kz-ink)' }}>
             ⚠️ La mention <strong>(H/F)</strong> est obligatoire dans le titre.
           </div>
         )}
@@ -282,14 +282,14 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
           />
         </div>
         <div>
-          <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Format</label>
+          <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Format</label>
           <div className="flex gap-2 h-[42px]">
             {[{ v: false, l: 'Présentiel' }, { v: true, l: 'Distanciel' }].map(({ v, l }) => (
               <button key={l} type="button" onClick={() => setRemote(v)}
                 className="flex-1 rounded-xl border-2 text-sm font-semibold transition-all"
                 style={remote === v
-                  ? { background: '#1A1410', color: KZ.cream, borderColor: '#1A1410' }
-                  : { background: 'white', color: '#1A1410', borderColor: '#1A1410' }}>
+                  ? { background: 'var(--kz-ink)', color: KZ.cream, borderColor: 'var(--kz-edge)' }
+                  : { background: 'var(--kz-paper)', color: 'var(--kz-ink)', borderColor: 'var(--kz-edge)' }}>
                 {l}
               </button>
             ))}
@@ -337,14 +337,14 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
       {/* ── Financement ───────────────────────────────────── */}
       <div>
         <div className="flex items-center gap-3 mb-3">
-          <label className="text-sm font-bold text-[#1A1410]">Financement disponible</label>
+          <label className="text-sm font-bold text-[var(--kz-ink)]">Financement disponible</label>
           <button
             type="button"
             onClick={() => setIsFinanced(v => !v)}
-            className="relative inline-flex h-6 w-11 items-center rounded-full border border-[#1A1410] transition-colors shrink-0"
+            className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors shrink-0"
             style={{ background: isFinanced ? KZ.green : KZ.cream2 }}
           >
-            <span className="inline-block w-4 h-4 rounded-full bg-white border border-[#1A1410] transition-transform"
+            <span className="inline-block w-4 h-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
               style={{ transform: isFinanced ? 'translateX(22px)' : 'translateX(2px)' }} />
           </button>
         </div>
@@ -356,9 +356,9 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
                 onClick={() => toggleFinancing(opt)}
                 className="px-3 py-1.5 rounded-full border-2 text-xs font-bold transition-all"
                 style={{
-                  borderColor: financing.includes(opt) ? KZ.green : '#E8DDC9',
+                  borderColor: financing.includes(opt) ? KZ.green : 'var(--kz-line)',
                   background: financing.includes(opt) ? KZ.greenSoft : KZ.cream2,
-                  color: financing.includes(opt) ? KZ.green : '#2A2018',
+                  color: financing.includes(opt) ? KZ.green : 'var(--kz-text)',
                 }}
               >
                 {financing.includes(opt) && '✓ '}{opt}
@@ -370,17 +370,17 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
 
       {/* ── Session IC ────────────────────────────────────── */}
       <div>
-        <label className="block text-sm font-bold text-[#1A1410] mb-1.5">
+        <label className="block text-sm font-bold text-[var(--kz-ink)] mb-1.5">
           Session d&apos;Information Collective (IC)
-          <span className="text-[#6B5A4A] font-normal text-xs ml-2">optionnel — lier à un KazaEvent IC</span>
+          <span className="text-[var(--kz-mute)] font-normal text-xs ml-2">optionnel — lier à un KazaEvent IC</span>
         </label>
         {events.length === 0 ? (
-          <div className="text-xs text-[#6B5A4A] p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+          <div className="text-xs text-[var(--kz-mute)] p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
             Aucune session IC planifiée. Créez d&apos;abord un event de type &quot;Info Collective&quot; dans KazaEvents.
           </div>
         ) : (
           <select
-            className="w-full px-3 py-2.5 rounded-xl border-2 border-[#1A1410] text-sm bg-white focus:outline-none"
+            className="w-full px-3 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm bg-[var(--kz-paper)] focus:outline-none"
             value={infoSessionId}
             onChange={e => setInfoSessionId(e.target.value)}
           >

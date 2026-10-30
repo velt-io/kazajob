@@ -82,20 +82,20 @@ export default function AdminNotificationsPage() {
   return (
     <div className="max-w-[800px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[#1A1410]">Notifications</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">Envoyer une notification push à vos utilisateurs</p>
+        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Notifications</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">Envoyer une notification push à vos utilisateurs</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
         {/* Formulaire */}
-        <div className="kz-card p-5 bg-white flex flex-col gap-4">
-          <h2 className="text-sm font-bold text-[#1A1410] flex items-center gap-2">
+        <div className="kz-card p-5 bg-[var(--kz-paper)] flex flex-col gap-4">
+          <h2 className="text-sm font-bold text-[var(--kz-ink)] flex items-center gap-2">
             <Bell size={16} color={KZ.violet} /> Nouvelle notification
           </h2>
 
           {/* Cible */}
           <div>
-            <label className="block text-sm font-semibold text-[#1A1410] mb-2">Destinataires</label>
+            <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-2">Destinataires</label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {TARGET_OPTIONS.map(opt => (
                 <button
@@ -108,12 +108,12 @@ export default function AdminNotificationsPage() {
                     background: target === opt.value ? KZ.violetSoft : KZ.cream2,
                   }}
                 >
-                  <div className="text-xs font-bold text-[#1A1410]">{opt.label}</div>
-                  <div className="text-[11px] text-[#6B5A4A]">{opt.desc}</div>
+                  <div className="text-xs font-bold text-[var(--kz-ink)]">{opt.label}</div>
+                  <div className="text-[11px] text-[var(--kz-mute)]">{opt.desc}</div>
                 </button>
               ))}
             </div>
-            <p className="text-xs text-[#6B5A4A] mt-2 flex items-center gap-1">
+            <p className="text-xs text-[var(--kz-mute)] mt-2 flex items-center gap-1">
               <Users size={12} />
               <strong>{recipientCount}</strong> destinataire{recipientCount > 1 ? 's' : ''}
             </p>
@@ -144,9 +144,9 @@ export default function AdminNotificationsPage() {
           />
 
           {sent && (
-            <div className="flex items-center gap-2 p-3 rounded-xl border border-[#19A974] bg-[#D6F0E0]">
+            <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
               <CheckCircle size={16} color={KZ.green} />
-              <span className="text-sm font-bold text-[#1A1410]">Notification envoyée !</span>
+              <span className="text-sm font-bold text-[var(--kz-ink)]">Notification envoyée !</span>
             </div>
           )}
 
@@ -164,25 +164,25 @@ export default function AdminNotificationsPage() {
         </div>
 
         {/* Historique de session */}
-        <div className="kz-card p-5 bg-white">
-          <h2 className="text-sm font-bold text-[#1A1410] mb-4">Historique (session)</h2>
+        <div className="kz-card p-5 bg-[var(--kz-paper)]">
+          <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Historique (session)</h2>
           {history.length === 0 ? (
             <div className="text-center py-8">
               <Bell size={24} className="mx-auto mb-2 opacity-30" />
-              <p className="text-xs text-[#6B5A4A]">Aucune notification envoyée</p>
+              <p className="text-xs text-[var(--kz-mute)]">Aucune notification envoyée</p>
             </div>
           ) : (
             <div className="flex flex-col gap-3">
               {history.map(h => (
-                <div key={h.id} className="p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                <div key={h.id} className="p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                   <div className="flex items-start justify-between gap-2 mb-1">
-                    <span className="text-xs font-bold text-[#1A1410] truncate">{h.title}</span>
+                    <span className="text-xs font-bold text-[var(--kz-ink)] truncate">{h.title}</span>
                     <Badge color={h.target === 'all' ? 'violet' : h.target === 'candidate' ? 'orange' : 'green'} size="sm">
                       {h.target === 'all' ? 'Tous' : h.target === 'candidate' ? 'Candidats' : 'Recruteurs'}
                     </Badge>
                   </div>
-                  <p className="text-[11px] text-[#6B5A4A] line-clamp-2">{h.message}</p>
-                  <div className="flex items-center gap-3 mt-2 text-[10px] text-[#6B5A4A]">
+                  <p className="text-[11px] text-[var(--kz-mute)] line-clamp-2">{h.message}</p>
+                  <div className="flex items-center gap-3 mt-2 text-[10px] text-[var(--kz-mute)]">
                     <span className="flex items-center gap-1"><User size={10} />{h.recipients} destinataires</span>
                     <span>{new Date(h.sent_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>

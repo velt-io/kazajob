@@ -24,11 +24,11 @@ function QuizBanner() {
   return (
     <Link href="/candidate/quiz" className="block mb-5">
       <div className="kz-card p-4 flex items-center gap-4 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
-        style={{ background: KZ.violetSoft, boxShadow: '4px 4px 0 #1A1410' }}>
+        style={{ background: KZ.violetSoft, boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
         <div className="text-3xl shrink-0">🎮</div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-extrabold text-[#1A1410]">Découvre ton profil en 2 min</div>
-          <div className="text-xs text-[#6B5A4A]">Un mini-quiz ludique — les recruteurs verront ton style de travail.</div>
+          <div className="text-sm font-extrabold text-[var(--kz-ink)]">Découvre ton profil en 2 min</div>
+          <div className="text-xs text-[var(--kz-mute)]">Un mini-quiz ludique — les recruteurs verront ton style de travail.</div>
         </div>
         <ArrowRight size={18} className="shrink-0" style={{ color: KZ.violet }} />
       </div>
@@ -87,7 +87,7 @@ export default function CandidateDashboard() {
           <p className="kz-eyebrow mb-1.5" style={{ color: KZ.orange }}>
             Bonzour {profile?.full_name?.split(' ')[0] ?? 'toi'} · <span className="capitalize">{today}</span>
           </p>
-          <h1 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[#1A1410]">
+          <h1 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)]">
             {recommendedJobs.length > 0
               ? <>{recommendedJobs.length} offre{recommendedJobs.length > 1 ? 's' : ''} <span style={{ color: KZ.orange }}>matchent</span> ton profil.</>
               : <>Bienvenue sur <span style={{ color: KZ.orange }}>Kazajob</span> !</>
@@ -97,7 +97,7 @@ export default function CandidateDashboard() {
         <div className="flex gap-2 items-center shrink-0">
           <button
             onClick={() => gami.toggle()}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[#1A1410] text-xs font-bold transition-all hover:shadow-[2px_2px_0_#1A1410]"
+            className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[var(--kz-edge)] text-xs font-bold transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
             style={{ background: KZ.violetSoft, color: KZ.violet }}
             title="Activer le mode Quête"
           >
@@ -122,11 +122,11 @@ export default function CandidateDashboard() {
         {/* Colonne principale */}
         <div className="flex flex-col gap-5">
           {/* Profil */}
-          <div className="kz-card p-4 md:p-5 bg-white flex gap-4 items-center">
+          <div className="kz-card p-4 md:p-5 bg-[var(--kz-paper)] flex gap-4 items-center">
             <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={64} color={KZ.orangeSoft} badge />
             <div className="flex-1 min-w-0">
-              <div className="text-base font-bold text-[#1A1410] truncate">{profile?.full_name}</div>
-              <div className="text-xs text-[#6B5A4A] mb-2 truncate">
+              <div className="text-base font-bold text-[var(--kz-ink)] truncate">{profile?.full_name}</div>
+              <div className="text-xs text-[var(--kz-mute)] mb-2 truncate">
                 {profile?.bio ? profile.bio.slice(0, 50) + '…' : 'Complete ton profil'}
                 {profile?.location ? ` · ${profile.location}` : ''}
               </div>
@@ -140,14 +140,14 @@ export default function CandidateDashboard() {
           {/* Offres recommandées */}
           <div>
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-base font-bold flex items-center gap-2 text-[#1A1410]">
+              <h3 className="text-base font-bold flex items-center gap-2 text-[var(--kz-ink)]">
                 <Sparkles size={18} color={KZ.violet} />Offres pour toi
               </h3>
               <Link href="/candidate/jobs" className="text-sm font-bold" style={{ color: KZ.orange }}>Tout voir →</Link>
             </div>
             {jobsLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="kz-card h-32 bg-[#FBEFE0] animate-pulse" />)}
+                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="kz-card h-32 bg-[var(--kz-cream2)] animate-pulse" />)}
               </div>
             ) : recommendedJobs.length === 0 ? (
               <EmptyState title="Aucune offre disponible" icon={<Briefcase size={24} />} />
@@ -161,20 +161,20 @@ export default function CandidateDashboard() {
           </div>
 
           {/* Candidatures */}
-          <div className="kz-card p-4 md:p-5 bg-white">
+          <div className="kz-card p-4 md:p-5 bg-[var(--kz-paper)]">
             <div className="flex justify-between items-center mb-3">
-              <h3 className="text-base font-bold text-[#1A1410]">Mes candidatures</h3>
+              <h3 className="text-base font-bold text-[var(--kz-ink)]">Mes candidatures</h3>
               {applications.length > 0 && <Badge color="orange" size="sm">{applications.length}</Badge>}
             </div>
             {appsLoading ? (
-              <div className="flex flex-col gap-2">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-12 rounded-lg bg-[#FBEFE0] animate-pulse" />)}</div>
+              <div className="flex flex-col gap-2">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-12 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}</div>
             ) : applications.length === 0 ? (
               <EmptyState title="Aucune candidature" icon={<Briefcase size={20} />} action={<Link href="/candidate/jobs"><Button kind="soft" size="sm">Voir les offres</Button></Link>} />
             ) : (
               <>
                 {applications.slice(0, 4).map((app) => <ApplicationCard key={app.id} application={app} showActions />)}
                 {applications.length > 4 && (
-                  <div className="mt-3 pt-3 border-t border-[#E8DDC9]">
+                  <div className="mt-3 pt-3 border-t border-[var(--kz-line)]">
                     <Link href="/candidate/applications"><Button kind="soft" size="sm" full>Voir tout</Button></Link>
                   </div>
                 )}
@@ -186,37 +186,37 @@ export default function CandidateDashboard() {
         {/* Colonne droite — masquée partiellement sur mobile */}
         <div className="flex flex-col gap-4">
           {/* Streak */}
-          <div className="p-4 rounded-xl border border-[#1A1410] relative overflow-hidden" style={{ background: KZ.orange, boxShadow: '4px 4px 0 #1A1410' }}>
+          <div className="p-4 rounded-xl border border-[var(--kz-edge)] relative overflow-hidden" style={{ background: KZ.orange, boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
             <div className="absolute -top-3 -right-3"><Soleil size={70} /></div>
             <Flame size={28} color={KZ.ink} />
-            <div className="mt-1 text-4xl font-extrabold leading-none text-[#1A1410]">
+            <div className="mt-1 text-4xl font-extrabold leading-none text-[var(--kz-ink)]">
               {profile?.streak ?? 0}<span className="text-base opacity-70">j</span>
             </div>
-            <div className="text-sm font-semibold mt-1 text-[#1A1410]">Streak actif</div>
-            <div className="text-xs mt-1 opacity-85 text-[#1A1410]">
+            <div className="text-sm font-semibold mt-1 text-[var(--kz-ink)]">Streak actif</div>
+            <div className="text-xs mt-1 opacity-85 text-[var(--kz-ink)]">
               {(profile?.streak ?? 0) > 0 ? `${profile!.streak} jours — continue !` : 'Connecte-toi chaque jour.'}
             </div>
           </div>
 
           {/* XP */}
-          <div className="kz-card p-4 bg-white">
-            <div className="kz-eyebrow text-[#6B5A4A] mb-1.5">Experience totale</div>
-            <div className="text-2xl font-extrabold tracking-tight text-[#1A1410] mb-2">
+          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+            <div className="kz-eyebrow text-[var(--kz-mute)] mb-1.5">Experience totale</div>
+            <div className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-2">
               {(profile?.xp ?? 0).toLocaleString('fr-FR')} xp
             </div>
             <Progress value={((profile?.xp ?? 0) % 1000) / 10} color={KZ.orange} label={`Niveau ${Math.floor((profile?.xp ?? 0) / 1000) + 1}`} />
           </div>
 
           {/* Stats */}
-          <div className="kz-card p-4 bg-white">
-            <h4 className="text-sm font-bold text-[#1A1410] mb-3">Ton activite</h4>
+          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+            <h4 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Ton activite</h4>
             {[
               { label: 'Candidatures', value: applications.length, color: KZ.orange },
               { label: 'Entretiens',   value: interviewApps,       color: KZ.green },
               { label: 'Favoris',      value: favorites.length,    color: KZ.violet },
             ].map((s) => (
-              <div key={s.label} className="flex justify-between items-center py-2 border-b border-[#E8DDC9] last:border-0">
-                <span className="text-xs text-[#6B5A4A]">{s.label}</span>
+              <div key={s.label} className="flex justify-between items-center py-2 border-b border-[var(--kz-line)] last:border-0">
+                <span className="text-xs text-[var(--kz-mute)]">{s.label}</span>
                 <span className="text-sm font-bold" style={{ color: s.color }}>{s.value}</span>
               </div>
             ))}

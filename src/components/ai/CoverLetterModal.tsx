@@ -50,13 +50,13 @@ export function CoverLetterModal({
     <Modal open={open} onClose={handleClose} title="Générer une lettre de motivation" size="lg">
       <div className="flex flex-col gap-5">
         {/* En-tête */}
-        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-[#1A1410]" style={{ background: KZ.violetSoft }}>
-          <div className="w-9 h-9 rounded-xl border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: KZ.violet }}>
+        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
+          <div className="w-9 h-9 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: KZ.violet }}>
             <Sparkles size={17} color="white" />
           </div>
           <div>
-            <div className="text-sm font-bold text-[#1A1410]">KazaIA génère ta lettre en quelques secondes</div>
-            <div className="text-xs text-[#6B5A4A]">{jobTitle} · {companyName}</div>
+            <div className="text-sm font-bold text-[var(--kz-ink)]">KazaIA génère ta lettre en quelques secondes</div>
+            <div className="text-xs text-[var(--kz-mute)]">{jobTitle} · {companyName}</div>
           </div>
           <Badge color="violet" size="sm" className="ml-auto shrink-0">IA</Badge>
         </div>
@@ -64,7 +64,7 @@ export function CoverLetterModal({
         {/* Choix du ton */}
         {!letter && (
           <div>
-            <div className="text-xs font-semibold text-[#2A2018] mb-2">Ton de la lettre</div>
+            <div className="text-xs font-semibold text-[var(--kz-text)] mb-2">Ton de la lettre</div>
             <div className="grid grid-cols-3 gap-2">
               {TONE_OPTIONS.map((t) => (
                 <button
@@ -73,12 +73,12 @@ export function CoverLetterModal({
                   onClick={() => setTone(t.value)}
                   className="flex flex-col items-center gap-1 p-3 rounded-xl border-[1.5px] text-center transition-all"
                   style={tone === t.value
-                    ? { borderColor: KZ.violet, background: KZ.violetSoft, boxShadow: '2px 2px 0 #6D3BEB' }
+                    ? { borderColor: KZ.violet, background: KZ.violetSoft, boxShadow: '2px 2px 0 var(--kz-violet)' }
                     : { borderColor: KZ.line, background: KZ.paper }
                   }
                 >
-                  <span className="text-sm font-bold text-[#1A1410]">{t.label}</span>
-                  <span className="text-[11px] text-[#6B5A4A]">{t.desc}</span>
+                  <span className="text-sm font-bold text-[var(--kz-ink)]">{t.label}</span>
+                  <span className="text-[11px] text-[var(--kz-mute)]">{t.desc}</span>
                 </button>
               ))}
             </div>
@@ -96,18 +96,18 @@ export function CoverLetterModal({
 
         {generating && (
           <div className="flex flex-col items-center gap-4 py-8">
-            <div className="w-12 h-12 rounded-xl border border-[#1A1410] flex items-center justify-center" style={{ background: KZ.violet }}>
+            <div className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.violet }}>
               <Sparkles size={22} color="white" className="animate-pulse" />
             </div>
             <div className="text-center">
-              <div className="text-sm font-bold text-[#1A1410] mb-1">KazaIA rédige ta lettre...</div>
-              <div className="text-xs text-[#6B5A4A]">Analyse du profil et de l&apos;offre en cours</div>
+              <div className="text-sm font-bold text-[var(--kz-ink)] mb-1">KazaIA rédige ta lettre...</div>
+              <div className="text-xs text-[var(--kz-mute)]">Analyse du profil et de l&apos;offre en cours</div>
             </div>
             <div className="flex gap-1.5">
               {[0, 1, 2, 3].map(i => (
                 <div
                   key={i}
-                  className="w-2 h-2 rounded-full bg-[#6D3BEB] animate-bounce"
+                  className="w-2 h-2 rounded-full bg-[var(--kz-violet)] animate-bounce"
                   style={{ animationDelay: `${i * 0.15}s` }}
                 />
               ))}
@@ -118,14 +118,14 @@ export function CoverLetterModal({
         {letter && !generating && (
           <div>
             <div className="flex justify-between items-center mb-2">
-              <div className="text-xs font-semibold text-[#2A2018]">Lettre générée</div>
+              <div className="text-xs font-semibold text-[var(--kz-text)]">Lettre générée</div>
               <div className="flex gap-1.5">
                 <Badge color="violet" size="sm">Groq · GPT-OSS</Badge>
               </div>
             </div>
             <div
-              className="p-4 rounded-xl border border-[#1A1410] text-sm text-[#2A2018] leading-relaxed whitespace-pre-wrap max-h-72 overflow-y-auto"
-              style={{ background: KZ.paper, boxShadow: '2px 2px 0 #E8DDC9' }}
+              className="p-4 rounded-xl border border-[var(--kz-edge)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap max-h-72 overflow-y-auto"
+              style={{ background: KZ.paper, boxShadow: '2px 2px 0 var(--kz-line)' }}
             >
               {letter}
             </div>
@@ -174,7 +174,7 @@ export function CoverLetterModal({
         </div>
 
         {!letter && !generating && (
-          <p className="text-[11px] text-[#6B5A4A] text-center">
+          <p className="text-[11px] text-[var(--kz-mute)] text-center">
             La lettre est générée à partir de ton profil et de l&apos;offre.
             Tu peux la modifier avant d&apos;envoyer ta candidature.
           </p>

@@ -101,13 +101,13 @@ export default function AdminPromosPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6">
         <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Marketing</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">Codes promo</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">Réductions sur les abonnements recruteur, synchronisées avec Stripe.</p>
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Codes promo</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">Réductions sur les abonnements recruteur, synchronisées avec Stripe.</p>
       </div>
 
       {/* Création */}
-      <div className="kz-card p-5 bg-white mb-6">
-        <h2 className="text-base font-bold text-[#1A1410] mb-3 flex items-center gap-2"><Plus size={16} />Nouveau code</h2>
+      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-6">
+        <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2"><Plus size={16} />Nouveau code</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <Input label="Code *" value={form.code} onChange={(e) => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} placeholder="RENTREE25" icon={<Ticket size={15} />} />
           <Select label="Type" options={[{ value: 'percent', label: 'Pourcentage (%)' }, { value: 'amount', label: 'Montant (€)' }]} value={form.discountType} onChange={(e) => setForm(f => ({ ...f, discountType: e.target.value }))} />
@@ -125,8 +125,8 @@ export default function AdminPromosPage() {
               <Input label="Fin" type="date" value={form.endDate} onChange={(e) => setForm(f => ({ ...f, endDate: e.target.value }))} />
             </>
           )}
-          <label className="flex items-center gap-2 self-end pb-2.5 cursor-pointer text-sm font-semibold text-[#1A1410]">
-            <input type="checkbox" checked={form.customDates} onChange={(e) => setForm(f => ({ ...f, customDates: e.target.checked }))} className="w-4 h-4 accent-[#6D3BEB]" />
+          <label className="flex items-center gap-2 self-end pb-2.5 cursor-pointer text-sm font-semibold text-[var(--kz-ink)]">
+            <input type="checkbox" checked={form.customDates} onChange={(e) => setForm(f => ({ ...f, customDates: e.target.checked }))} className="w-4 h-4 accent-[var(--kz-violet)]" />
             Définir des dates précises
           </label>
           <Input label="Max utilisations" type="number" value={form.maxRedemptions} onChange={(e) => setForm(f => ({ ...f, maxRedemptions: e.target.value }))} placeholder="illimité" />
@@ -145,14 +145,14 @@ export default function AdminPromosPage() {
             const st = statusOf(p)
             const val = p.discountType === 'percent' ? `-${p.discountValue}%` : `-${Math.round(p.discountValue / 100)} €`
             return (
-              <div key={p.id} className="kz-card p-4 bg-white flex flex-col sm:flex-row sm:items-center gap-3">
+              <div key={p.id} className="kz-card p-4 bg-[var(--kz-paper)] flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <code className="text-sm font-extrabold text-[#1A1410]">{p.code}</code>
+                    <code className="text-sm font-extrabold text-[var(--kz-ink)]">{p.code}</code>
                     <Badge color="violet" size="sm">{val}</Badge>
                     <Badge color={st.color} size="sm">{st.label}</Badge>
                   </div>
-                  <div className="text-xs text-[#6B5A4A]">
+                  <div className="text-xs text-[var(--kz-mute)]">
                     {DUR[p.durationType]}{p.durationType === 'repeating' ? ` (${p.durationMonths})` : ''} ·
                     {p.startDate
                       ? ` du ${new Date(p.startDate).toLocaleDateString('fr-FR')}${p.endDate ? ` au ${new Date(p.endDate).toLocaleDateString('fr-FR')}` : ''}`
@@ -165,10 +165,10 @@ export default function AdminPromosPage() {
                   <Button kind="soft" size="sm" icon={<CalendarClock size={13} />} onClick={() => extend(p)}>Prolonger</Button>
                   <Button kind="soft" size="sm" icon={<Zap size={13} />} onClick={() => patch(p.id, { applyActive: true })}>Appliquer aux actifs</Button>
                   <button onClick={() => patch(p.id, { active: !p.active })} title={p.active ? 'Désactiver' : 'Activer'}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#FBEFE0]" style={{ color: p.active ? KZ.green : KZ.mute }}>
+                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)]" style={{ color: p.active ? KZ.green : KZ.mute }}>
                     <Power size={15} />
                   </button>
-                  <button onClick={() => remove(p.id)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#6B5A4A] hover:text-red-600"><Trash2 size={15} /></button>
+                  <button onClick={() => remove(p.id)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600"><Trash2 size={15} /></button>
                 </div>
               </div>
             )

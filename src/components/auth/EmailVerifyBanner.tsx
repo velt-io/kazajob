@@ -24,15 +24,15 @@ export function EmailVerifyBanner({ email, detail }: { email: string; detail?: s
   }
 
   return (
-    <div className="px-4 py-2.5 border-b border-[#1A1410] flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm"
+    <div className="px-4 py-2.5 border-b border-[var(--kz-edge)] flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm"
       style={{ background: KZ.yellowSoft }} role="status">
-      <MailWarning size={16} className="shrink-0 text-[#1A1410]" />
-      <span className="flex-1 min-w-[200px] text-[#1A1410]">
+      <MailWarning size={16} className="shrink-0 text-[var(--kz-ink)]" />
+      <span className="flex-1 min-w-[200px] text-[var(--kz-ink)]">
         Confirme ton adresse <strong className="break-all">{email}</strong> via le lien reçu par email.
         {detail && <> {detail}</>}
       </span>
       {state === 'sent' ? (
-        <span className="flex items-center gap-1 text-xs font-bold text-[#1A1410]"><Check size={14} color={KZ.green} />Email renvoyé</span>
+        <span className="flex items-center gap-1 text-xs font-bold text-[var(--kz-ink)]"><Check size={14} color={KZ.green} />Email renvoyé</span>
       ) : (
         <button onClick={resend} disabled={state === 'sending'}
           className="text-xs font-bold underline whitespace-nowrap disabled:opacity-60" style={{ color: KZ.ink }}>

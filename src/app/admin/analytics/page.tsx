@@ -13,7 +13,7 @@ function Bar({ value, max, color }: { value: number; max: number; color: string 
   const pct = max > 0 ? Math.round((value / max) * 100) : 0
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-6 rounded-lg overflow-hidden border border-[#1A1410]" style={{ background: KZ.cream2 }}>
+      <div className="flex-1 h-6 rounded-lg overflow-hidden border border-[var(--kz-edge)]" style={{ background: KZ.cream2 }}>
         <div
           className="h-full rounded-lg transition-all duration-500 flex items-center px-2"
           style={{ width: `${Math.max(pct, 4)}%`, background: color }}
@@ -21,7 +21,7 @@ function Bar({ value, max, color }: { value: number; max: number; color: string 
           {pct > 15 && <span className="text-[10px] font-bold text-white">{value}</span>}
         </div>
       </div>
-      {pct <= 15 && <span className="text-xs font-bold text-[#1A1410] w-6 text-right">{value}</span>}
+      {pct <= 15 && <span className="text-xs font-bold text-[var(--kz-ink)] w-6 text-right">{value}</span>}
     </div>
   )
 }
@@ -117,8 +117,8 @@ export default function AdminAnalyticsPage() {
     <div className="max-w-[1100px] mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#1A1410]">Analytics & Rapports</h1>
-          <p className="text-sm text-[#6B5A4A] mt-1">Données des 8 dernières semaines</p>
+          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Analytics & Rapports</h1>
+          <p className="text-sm text-[var(--kz-mute)] mt-1">Données des 8 dernières semaines</p>
         </div>
         <Button kind="outline" size="md" icon={<Download size={15} />} onClick={exportCSV}>
           Exporter CSV
@@ -133,16 +133,16 @@ export default function AdminAnalyticsPage() {
           { label: 'Candidatures total',  value: totals.apps,  icon: <FileText size={16} />, color: KZ.yellowSoft },
           { label: 'Entreprises total',   value: totals.companies, icon: <TrendingUp size={16} />, color: KZ.greenSoft },
         ].map(k => (
-          <div key={k.label} className="kz-card p-4 bg-white text-center" style={{ background: k.color }}>
+          <div key={k.label} className="kz-card p-4 bg-[var(--kz-paper)] text-center" style={{ background: k.color }}>
             <div className="flex items-center justify-center mb-1">{k.icon}</div>
-            <div className="text-2xl font-extrabold text-[#1A1410]">{k.value.toLocaleString('fr-FR')}</div>
-            <div className="text-[11px] text-[#6B5A4A] font-semibold mt-0.5">{k.label}</div>
+            <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{k.value.toLocaleString('fr-FR')}</div>
+            <div className="text-[11px] text-[var(--kz-mute)] font-semibold mt-0.5">{k.label}</div>
           </div>
         ))}
       </div>
 
       {loading ? (
-        <div className="h-64 rounded-2xl bg-[#FBEFE0] animate-pulse" />
+        <div className="h-64 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5">
           {/* Graphiques semaine par semaine */}
@@ -152,12 +152,12 @@ export default function AdminAnalyticsPage() {
               { label: 'Nouvelles offres / semaine',       key: 'jobs',  color: KZ.orange, max: maxJobs },
               { label: 'Candidatures / semaine',           key: 'apps',  color: KZ.green,  max: maxApps },
             ].map(({ label, key, color, max }) => (
-              <div key={key} className="kz-card p-5 bg-white">
-                <h2 className="text-sm font-bold text-[#1A1410] mb-4">{label}</h2>
+              <div key={key} className="kz-card p-5 bg-[var(--kz-paper)]">
+                <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">{label}</h2>
                 <div className="flex flex-col gap-2">
                   {weeks.map(w => (
                     <div key={w.label} className="grid grid-cols-[68px_1fr] gap-2 items-center">
-                      <span className="text-[11px] text-[#6B5A4A] text-right font-medium">{w.label}</span>
+                      <span className="text-[11px] text-[var(--kz-mute)] text-right font-medium">{w.label}</span>
                       <Bar value={(w as unknown as Record<string, number>)[key] ?? 0} max={max} color={color} />
                     </div>
                   ))}
@@ -168,28 +168,28 @@ export default function AdminAnalyticsPage() {
 
           {/* Top villes + secteurs */}
           <div className="flex flex-col gap-4">
-            <div className="kz-card p-5 bg-white">
-              <h2 className="text-sm font-bold text-[#1A1410] mb-4">Top villes (offres)</h2>
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Top villes (offres)</h2>
               <div className="flex flex-col gap-2.5">
                 {topCities.length === 0 ? (
-                  <p className="text-xs text-[#6B5A4A]">Pas de données.</p>
+                  <p className="text-xs text-[var(--kz-mute)]">Pas de données.</p>
                 ) : topCities.map(({ city, count }) => (
                   <div key={city} className="grid grid-cols-[90px_1fr] gap-2 items-center">
-                    <span className="text-[11px] text-[#6B5A4A] truncate font-medium">{city}</span>
+                    <span className="text-[11px] text-[var(--kz-mute)] truncate font-medium">{city}</span>
                     <Bar value={count} max={maxCities} color={KZ.blue} />
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="kz-card p-5 bg-white">
-              <h2 className="text-sm font-bold text-[#1A1410] mb-4">Top secteurs (offres)</h2>
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Top secteurs (offres)</h2>
               <div className="flex flex-col gap-2.5">
                 {topSectors.length === 0 ? (
-                  <p className="text-xs text-[#6B5A4A]">Pas de données.</p>
+                  <p className="text-xs text-[var(--kz-mute)]">Pas de données.</p>
                 ) : topSectors.map(({ sector, count }) => (
                   <div key={sector} className="grid grid-cols-[110px_1fr] gap-2 items-center">
-                    <span className="text-[11px] text-[#6B5A4A] truncate font-medium">{sector}</span>
+                    <span className="text-[11px] text-[var(--kz-mute)] truncate font-medium">{sector}</span>
                     <Bar value={count} max={maxSec} color={KZ.green} />
                   </div>
                 ))}

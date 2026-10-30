@@ -46,7 +46,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col md:grid md:grid-cols-2" style={{ background: KZ.cream }}>
       {/* Panneau gauche — visuel (caché sur très petit mobile) */}
-      <div className="hidden md:block relative overflow-hidden border-r border-[#1A1410]">
+      <div className="hidden md:block relative overflow-hidden border-r border-[var(--kz-edge)]">
         {/* Image de fond en niveaux de gris */}
         <img
           src="/assets/img/logimage.webp"
@@ -61,12 +61,12 @@ export default function LoginPage() {
           style={{ background: 'linear-gradient(135deg, rgba(109,59,235,0.72) 0%, rgba(109,59,235,0.55) 100%)' }}
         />
         <div className="relative z-10 h-full p-8 flex flex-col">
-          <Logo size={32} mono color="#FFF7EE" accentColor="#FF6B35" href="/" />
-          <div className="absolute top-16 right-8 opacity-70"><Soleil size={80} color="#FFC93C" stroke="#FFF7EE" /></div>
-          <div className="absolute top-[200px] left-8 opacity-50"><Nuage width={80} height={40} color="rgba(255,247,238,0.3)" stroke="#FFF7EE" /></div>
-          <div className="absolute bottom-[200px] right-12 opacity-60"><Hibiscus size={56} color="#FF6B35" stroke="#FFF7EE" /></div>
-          <div className="absolute bottom-8 left-[-10px] opacity-80"><Palme size={130} color="#19A974" stroke="#FFF7EE" /></div>
-          <div className="absolute bottom-20 right-[-20px] opacity-70"><Palme size={110} color="#19A974" stroke="#FFF7EE" rotate={20} /></div>
+          <Logo size={32} mono color="var(--kz-cream)" accentColor="var(--kz-orange)" href="/" />
+          <div className="absolute top-16 right-8 opacity-70"><Soleil size={80} color="var(--kz-yellow)" stroke="var(--kz-cream)" /></div>
+          <div className="absolute top-[200px] left-8 opacity-50"><Nuage width={80} height={40} color="rgba(255,247,238,0.3)" stroke="var(--kz-cream)" /></div>
+          <div className="absolute bottom-[200px] right-12 opacity-60"><Hibiscus size={56} color="var(--kz-orange)" stroke="var(--kz-cream)" /></div>
+          <div className="absolute bottom-8 left-[-10px] opacity-80"><Palme size={130} color="var(--kz-green)" stroke="var(--kz-cream)" /></div>
+          <div className="absolute bottom-20 right-[-20px] opacity-70"><Palme size={110} color="var(--kz-green)" stroke="var(--kz-cream)" rotate={20} /></div>
           <div className="absolute bottom-0 left-0 right-0"><Vague width={520} height={24} color="rgba(255,247,238,0.4)" /></div>
           <div className="mt-auto pb-4">
             <p className="kz-eyebrow mb-3" style={{ color: KZ.orange }}>Connexion</p>
@@ -87,8 +87,8 @@ export default function LoginPage() {
           <Logo size={36} />
         </div>
 
-        <h2 className="text-2xl lg:text-[28px] font-extrabold tracking-tight mb-2 text-[#1A1410]">Connecte-toi</h2>
-        <p className="text-sm text-[#6B5A4A] mb-7">
+        <h2 className="text-2xl lg:text-[28px] font-extrabold tracking-tight mb-2 text-[var(--kz-ink)]">Connecte-toi</h2>
+        <p className="text-sm text-[var(--kz-mute)] mb-7">
           Pas encore inscrit ?{' '}
           <Link href="/auth/register" className="font-bold" style={{ color: KZ.orange }}>Créer un compte</Link>
         </p>
@@ -107,7 +107,7 @@ export default function LoginPage() {
             placeholder="••••••••"
             icon={<Lock size={16} />}
             suffix={
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#6B5A4A] hover:text-[#1A1410]">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[var(--kz-mute)] hover:text-[var(--kz-ink)]">
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             }
@@ -123,8 +123,8 @@ export default function LoginPage() {
 
         <OAuthButtons />
 
-        <p className="text-center text-xs text-[#6B5A4A] mt-6">
-          <Link href="/" className="hover:text-[#FF6B35] font-semibold">← Retour à l&apos;accueil</Link>
+        <p className="text-center text-xs text-[var(--kz-mute)] mt-6">
+          <Link href="/" className="hover:text-[var(--kz-orange)] font-semibold">← Retour à l&apos;accueil</Link>
         </p>
       </div>
     </div>

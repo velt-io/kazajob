@@ -43,10 +43,10 @@ export default function CandidateTrainingPage() {
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6">
         <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Formations</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
           Offres de <span style={{ color: KZ.violet }}>formation</span>
         </h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">
+        <p className="text-sm text-[var(--kz-mute)] mt-1">
           {offers.length} formation{offers.length > 1 ? 's' : ''} disponible{offers.length > 1 ? 's' : ''} à La Réunion 974
         </p>
       </div>
@@ -67,7 +67,7 @@ export default function CandidateTrainingPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filtered.map(offer => (
             <Link key={offer.id} href={`/candidate/training/${offer.id}`} className="block">
-              <div className="kz-card bg-white hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_#1A1410] transition-all overflow-hidden flex flex-col">
+              <div className="kz-card bg-[var(--kz-paper)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_var(--kz-shadow)] transition-all overflow-hidden flex flex-col">
                 {/* Image */}
                 <div className="h-36 relative overflow-hidden" style={{ background: KZ.violetSoft }}>
                   {offer.image_url ? (
@@ -80,7 +80,7 @@ export default function CandidateTrainingPage() {
                   {/* Session IC badge */}
                   {offer.info_session && (
                     <div className="absolute top-2 right-2">
-                      <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border border-[#1A1410] bg-[#D6F0E0]"
+                      <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border border-[var(--kz-edge)] bg-[var(--kz-green-soft)]"
                         style={{ color: KZ.green }}>
                         <CalendarCheck size={10} /> Session IC
                       </span>
@@ -90,10 +90,10 @@ export default function CandidateTrainingPage() {
 
                 <div className="p-4 flex flex-col gap-2 flex-1">
                   {/* Centre de formation */}
-                  <div className="text-xs font-semibold text-[#6B5A4A]">{offer.company?.name ?? 'Organisme de formation'}</div>
+                  <div className="text-xs font-semibold text-[var(--kz-mute)]">{offer.company?.name ?? 'Organisme de formation'}</div>
 
                   {/* Titre */}
-                  <h3 className="text-sm font-extrabold text-[#1A1410] leading-tight line-clamp-2">{offer.title}</h3>
+                  <h3 className="text-sm font-extrabold text-[var(--kz-ink)] leading-tight line-clamp-2">{offer.title}</h3>
 
                   {/* Badges */}
                   <div className="flex flex-wrap gap-1.5">
@@ -105,15 +105,15 @@ export default function CandidateTrainingPage() {
                   </div>
 
                   {/* Infos */}
-                  <div className="flex flex-col gap-1 mt-auto pt-2 border-t border-[#E8DDC9]">
-                    <div className="flex items-center gap-1.5 text-xs text-[#6B5A4A]">
+                  <div className="flex flex-col gap-1 mt-auto pt-2 border-t border-[var(--kz-line)]">
+                    <div className="flex items-center gap-1.5 text-xs text-[var(--kz-mute)]">
                       <Clock size={11} /> {offer.duration_value} {offer.duration_unit}
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-[#6B5A4A]">
+                    <div className="flex items-center gap-1.5 text-xs text-[var(--kz-mute)]">
                       <MapPin size={11} /> {offer.location}
                     </div>
                     {offer.financing_options.length > 0 && (
-                      <div className="flex items-center gap-1.5 text-xs text-[#6B5A4A]">
+                      <div className="flex items-center gap-1.5 text-xs text-[var(--kz-mute)]">
                         <Euro size={11} /> {offer.financing_options.slice(0,2).join(' · ')}
                         {offer.financing_options.length > 2 && ` +${offer.financing_options.length - 2}`}
                       </div>

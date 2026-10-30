@@ -42,11 +42,11 @@ function ResetPasswordForm() {
   if (done) {
     return (
       <div className="text-center">
-        <span className="w-14 h-14 mx-auto mb-4 rounded-2xl border border-[#1A1410] flex items-center justify-center" style={{ background: KZ.greenSoft }}>
-          <ShieldCheck size={26} className="text-[#1A1410]" />
+        <span className="w-14 h-14 mx-auto mb-4 rounded-2xl border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.greenSoft }}>
+          <ShieldCheck size={26} className="text-[var(--kz-ink)]" />
         </span>
-        <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[#1A1410]">Mot de passe modifié</h1>
-        <p className="text-sm text-[#6B5A4A] leading-relaxed mb-6">Tu peux maintenant te connecter avec ton nouveau mot de passe.</p>
+        <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[var(--kz-ink)]">Mot de passe modifié</h1>
+        <p className="text-sm text-[var(--kz-mute)] leading-relaxed mb-6">Tu peux maintenant te connecter avec ton nouveau mot de passe.</p>
         <Link href="/auth/login">
           <Button kind="primary" size="lg" full iconRight={<ArrowRight size={16} />}>Me connecter</Button>
         </Link>
@@ -55,7 +55,7 @@ function ResetPasswordForm() {
   }
 
   const toggle = (
-    <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#6B5A4A] hover:text-[#1A1410]"
+    <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
       aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}>
       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
     </button>
@@ -63,8 +63,8 @@ function ResetPasswordForm() {
 
   return (
     <>
-      <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[#1A1410]">Nouveau mot de passe</h1>
-      <p className="text-sm text-[#6B5A4A] mb-6">Choisis un mot de passe d&apos;au moins 8 caractères.</p>
+      <h1 className="text-2xl font-extrabold tracking-tight mb-2 text-[var(--kz-ink)]">Nouveau mot de passe</h1>
+      <p className="text-sm text-[var(--kz-mute)] mb-6">Choisis un mot de passe d&apos;au moins 8 caractères.</p>
 
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
@@ -95,11 +95,11 @@ export default function ResetPasswordPage() {
     <div className="min-h-screen flex items-center justify-center px-5 py-10" style={{ background: KZ.cream }}>
       <div className="w-full max-w-[420px]">
         <div className="flex justify-center mb-8"><Logo size={36} /></div>
-        <div className="rounded-2xl border-[1.5px] border-[#1A1410] bg-white p-6 sm:p-8" style={{ boxShadow: '6px 6px 0 #1A1410' }}>
+        <div className="rounded-2xl border-[1.5px] border-[var(--kz-edge)] bg-[var(--kz-paper)] p-6 sm:p-8" style={{ boxShadow: '6px 6px 0 var(--kz-shadow)' }}>
           <Suspense><ResetPasswordForm /></Suspense>
         </div>
-        <p className="text-center text-xs text-[#6B5A4A] mt-6">
-          <Link href="/auth/login" className="hover:text-[#FF6B35] font-semibold">← Retour à la connexion</Link>
+        <p className="text-center text-xs text-[var(--kz-mute)] mt-6">
+          <Link href="/auth/login" className="hover:text-[var(--kz-orange)] font-semibold">← Retour à la connexion</Link>
         </p>
       </div>
     </div>

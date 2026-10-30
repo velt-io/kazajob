@@ -22,7 +22,7 @@ import { KZ, INTERNSHIP_LEVELS } from '@/lib/constants'
 
 function StageInfoPill({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-xs font-medium text-[#2A2018]">
+    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-xs font-medium text-[var(--kz-text)]">
       {icon}
       {label}
     </div>
@@ -46,7 +46,7 @@ export default function StageDetailPage() {
   if (loading) return <PageLoader />
   if (!job) return (
     <div className="text-center py-16">
-      <p className="text-[#6B5A4A] mb-4">Offre introuvable.</p>
+      <p className="text-[var(--kz-mute)] mb-4">Offre introuvable.</p>
       <Button kind="outline" onClick={() => router.back()}>Retour</Button>
     </div>
   )
@@ -68,7 +68,7 @@ export default function StageDetailPage() {
       <div className="max-w-[900px] mx-auto px-4 py-8">
         <button
           onClick={() => router.back()}
-          className="flex items-center gap-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] mb-5"
+          className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-5"
         >
           <ArrowLeft size={16} />Retour aux stages
         </button>
@@ -77,35 +77,35 @@ export default function StageDetailPage() {
           {/* Colonne principale */}
           <div className="flex flex-col gap-4">
             {/* Header */}
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <div className="flex gap-4 items-start mb-4">
                 <div
-                  className="w-14 h-14 rounded-xl border border-[#1A1410] flex items-center justify-center text-lg font-extrabold text-[#1A1410] shrink-0"
+                  className="w-14 h-14 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-lg font-extrabold text-[var(--kz-ink)] shrink-0"
                   style={{ background: KZ.violetSoft }}
                 >
                   {(job.company?.name ?? 'CO').slice(0, 2).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-[#6B5A4A]">
+                  <div className="text-sm font-semibold text-[var(--kz-mute)]">
                     {(job.company as { name?: string } | null)?.name}
                   </div>
-                  <h1 className="text-xl lg:text-[26px] font-extrabold tracking-tight text-[#1A1410] leading-tight">
+                  <h1 className="text-xl lg:text-[26px] font-extrabold tracking-tight text-[var(--kz-ink)] leading-tight">
                     {job.title}
                   </h1>
                   <div className="flex gap-2 mt-2 flex-wrap">
                     <span
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+                      className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                       style={{ background: KZ.violetSoft, color: KZ.violet }}
                     >
                       Stage
                     </span>
                     {job.internship_paid === true && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]" style={{ background: KZ.greenSoft }}>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.greenSoft }}>
                         Gratifié
                       </span>
                     )}
                     {job.internship_paid === false && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#E8DDC9]" style={{ color: '#6B5A4A' }}>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-line)]" style={{ color: 'var(--kz-mute)' }}>
                         Non gratifié
                       </span>
                     )}
@@ -136,16 +136,16 @@ export default function StageDetailPage() {
             </div>
 
             {/* Description */}
-            <div className="kz-card p-5 bg-white">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
               <button
                 className="flex items-center justify-between w-full text-left"
                 onClick={() => setShowDesc(!showDesc)}
               >
-                <h2 className="text-base font-extrabold text-[#1A1410]">Description du stage</h2>
+                <h2 className="text-base font-extrabold text-[var(--kz-ink)]">Description du stage</h2>
                 {showDesc ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
               </button>
               {showDesc && (
-                <p className="text-sm text-[#2A2018] leading-relaxed mt-3 whitespace-pre-line">
+                <p className="text-sm text-[var(--kz-text)] leading-relaxed mt-3 whitespace-pre-line">
                   {job.description}
                 </p>
               )}
@@ -153,25 +153,25 @@ export default function StageDetailPage() {
 
             {/* Missions */}
             {job.missions && (
-              <div className="kz-card p-5 bg-white">
-                <h2 className="text-base font-extrabold text-[#1A1410] mb-3">Missions</h2>
-                <p className="text-sm text-[#2A2018] leading-relaxed whitespace-pre-line">{job.missions}</p>
+              <div className="kz-card p-5 bg-[var(--kz-paper)]">
+                <h2 className="text-base font-extrabold text-[var(--kz-ink)] mb-3">Missions</h2>
+                <p className="text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-line">{job.missions}</p>
               </div>
             )}
 
             {/* Profil recherché */}
             {job.requirements && (
-              <div className="kz-card p-5 bg-white">
-                <h2 className="text-base font-extrabold text-[#1A1410] mb-3">Profil recherché</h2>
-                <p className="text-sm text-[#2A2018] leading-relaxed whitespace-pre-line">{job.requirements}</p>
+              <div className="kz-card p-5 bg-[var(--kz-paper)]">
+                <h2 className="text-base font-extrabold text-[var(--kz-ink)] mb-3">Profil recherché</h2>
+                <p className="text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-line">{job.requirements}</p>
               </div>
             )}
           </div>
 
           {/* Colonne action */}
           <div className="flex flex-col gap-3">
-            <div className="kz-card p-4 bg-white sticky top-4">
-              <p className="text-xs text-[#6B5A4A] mb-3">Publié {timeAgo(job.created_at)}</p>
+            <div className="kz-card p-4 bg-[var(--kz-paper)] sticky top-4">
+              <p className="text-xs text-[var(--kz-mute)] mb-3">Publié {timeAgo(job.created_at)}</p>
               {alreadyApplied ? (
                 <div
                   className="flex items-center gap-2 p-3 rounded-lg text-sm font-semibold"
@@ -189,22 +189,22 @@ export default function StageDetailPage() {
               )}
               <button
                 onClick={() => toggle(job.id)}
-                className="mt-2 w-full flex items-center justify-center gap-2 py-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] transition-colors"
+                className="mt-2 w-full flex items-center justify-center gap-2 py-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] transition-colors"
               >
-                <Heart size={14} fill={isFavorite(job.id) ? '#FF6B35' : 'none'} stroke="#6B5A4A" />
+                <Heart size={14} fill={isFavorite(job.id) ? 'var(--kz-orange)' : 'none'} stroke="var(--kz-mute)" />
                 {isFavorite(job.id) ? 'Sauvegardé' : 'Sauvegarder'}
               </button>
             </div>
 
             {/* Avantages */}
             {job.benefits && (
-              <div className="kz-card p-4 bg-white">
-                <h3 className="text-sm font-extrabold text-[#1A1410] mb-2">Avantages</h3>
-                <p className="text-xs text-[#2A2018] leading-relaxed whitespace-pre-line">{job.benefits}</p>
+              <div className="kz-card p-4 bg-[var(--kz-paper)]">
+                <h3 className="text-sm font-extrabold text-[var(--kz-ink)] mb-2">Avantages</h3>
+                <p className="text-xs text-[var(--kz-text)] leading-relaxed whitespace-pre-line">{job.benefits}</p>
               </div>
             )}
 
-            <Link href="/stages" className="text-xs text-center font-semibold text-[#6B5A4A] hover:text-[#1A1410] underline">
+            <Link href="/stages" className="text-xs text-center font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] underline">
               ← Voir tous les stages
             </Link>
           </div>
@@ -214,7 +214,7 @@ export default function StageDetailPage() {
       {/* Modal candidature */}
       <Modal open={applyModal} onClose={() => setApplyModal(false)} title="Candidater à ce stage">
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-[#6B5A4A]">
+          <p className="text-sm text-[var(--kz-mute)]">
             Votre CV et profil Kazajob seront transmis à l&apos;entreprise.
           </p>
           <Textarea

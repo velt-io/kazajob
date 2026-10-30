@@ -80,8 +80,8 @@ export default function CompanyPage() {
     return (
       <div className="max-w-[600px] mx-auto text-center py-20">
         <Building2 size={48} className="mx-auto mb-4 opacity-30" />
-        <h2 className="text-xl font-bold text-[#1A1410] mb-2">Aucune entreprise configurée</h2>
-        <p className="text-sm text-[#6B5A4A] mb-5">Configurez votre espace entreprise pour commencer à recruter.</p>
+        <h2 className="text-xl font-bold text-[var(--kz-ink)] mb-2">Aucune entreprise configurée</h2>
+        <p className="text-sm text-[var(--kz-mute)] mb-5">Configurez votre espace entreprise pour commencer à recruter.</p>
         <Link href="/recruiter/company-setup">
           <Button kind="primary" size="lg" icon={<ArrowRight size={15} />}>Configurer mon entreprise</Button>
         </Link>
@@ -89,7 +89,7 @@ export default function CompanyPage() {
     )
   }
 
-  if (loading) return <div className="h-64 rounded-2xl bg-[#FBEFE0] animate-pulse" />
+  if (loading) return <div className="h-64 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />
 
   const isOwner = company?.owner_id === profile?.id
 
@@ -142,7 +142,7 @@ export default function CompanyPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Mon entreprise</p>
-          <h1 className="text-2xl font-extrabold text-[#1A1410]">{company?.name}</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">{company?.name}</h1>
         </div>
         <Link href="/recruiter/company/team">
           <Button kind="outline" size="md" icon={<Users size={14} />}>Gérer l&apos;équipe</Button>
@@ -153,13 +153,13 @@ export default function CompanyPage() {
       {billingBanner === 'success' && (
         <div className="kz-card p-4 mb-5 flex items-center gap-3" style={{ background: KZ.greenSoft }}>
           <Check size={18} color={KZ.green} />
-          <p className="text-sm font-semibold text-[#1A1410]">
+          <p className="text-sm font-semibold text-[var(--kz-ink)]">
             Moyen de paiement enregistré. Votre abonnement s&apos;activera automatiquement à la fin de l&apos;essai.
           </p>
         </div>
       )}
       {billingBanner === 'cancel' && (
-        <div className="kz-card p-4 mb-5 text-sm text-[#6B5A4A]" style={{ background: KZ.cream2 }}>
+        <div className="kz-card p-4 mb-5 text-sm text-[var(--kz-mute)]" style={{ background: KZ.cream2 }}>
           Paiement annulé — votre essai continue normalement.
         </div>
       )}
@@ -171,16 +171,16 @@ export default function CompanyPage() {
         const maxLabel = billingSummary.maxJobs === -1 ? '∞' : String(billingSummary.maxJobs)
         const pct = billingSummary.maxJobs === -1 ? 0 : Math.min(100, Math.round((billingSummary.activeJobs / billingSummary.maxJobs) * 100))
         return (
-          <div className="kz-card p-5 mb-5 bg-white">
-            <p className="text-xs font-extrabold uppercase tracking-wide text-[#6B5A4A] mb-3">Mon abonnement</p>
+          <div className="kz-card p-5 mb-5 bg-[var(--kz-paper)]">
+            <p className="text-xs font-extrabold uppercase tracking-wide text-[var(--kz-mute)] mb-3">Mon abonnement</p>
 
             {/* Carte statut */}
             <div className="rounded-xl border p-3 flex items-start gap-3 mb-4"
               style={{ background: sc.bg, borderColor: sc.text }}>
               <span style={{ color: sc.text }}>{icon}</span>
               <div className="flex-1">
-                <p className="text-sm font-bold text-[#1A1410]">{billingSummary.message.title}</p>
-                <p className="text-xs text-[#6B5A4A] mt-0.5">{billingSummary.message.description}</p>
+                <p className="text-sm font-bold text-[var(--kz-ink)]">{billingSummary.message.title}</p>
+                <p className="text-xs text-[var(--kz-mute)] mt-0.5">{billingSummary.message.description}</p>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {billingSummary.message.primaryActionLabel && (
                     <Link href={billingSummary.message.primaryActionHref ?? '#'}>
@@ -198,7 +198,7 @@ export default function CompanyPage() {
 
             {/* Barre d'usage */}
             <div className="mb-3">
-              <div className="flex justify-between text-xs text-[#6B5A4A] mb-1">
+              <div className="flex justify-between text-xs text-[var(--kz-mute)] mb-1">
                 <span>Annonces actives</span>
                 <span className="font-bold" style={{ color: billingSummary.isOverLimit ? KZ.orange : KZ.ink }}>
                   {billingSummary.activeJobs} / {maxLabel}
@@ -213,7 +213,7 @@ export default function CompanyPage() {
             </div>
 
             {/* Bloc garanties */}
-            <p className="text-[11px] text-[#6B5A4A] leading-relaxed border-t border-[#E8DDC9] pt-3">
+            <p className="text-[11px] text-[var(--kz-mute)] leading-relaxed border-t border-[var(--kz-line)] pt-3">
               Vos annonces déjà publiées restent visibles jusqu&apos;à leur expiration.
               Aucune annonce ne sera supprimée automatiquement.
             </p>
@@ -230,7 +230,7 @@ export default function CompanyPage() {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <Star size={15} color={isTrialing ? KZ.yellow : KZ.green} fill={isTrialing ? KZ.yellow : KZ.green} />
-              <span className="text-sm font-bold text-[#1A1410]">
+              <span className="text-sm font-bold text-[var(--kz-ink)]">
                 Forfait {plan.name}
                 {isTrialing && ` — Essai gratuit (${trialDaysLeft}j restants)`}
               </span>
@@ -238,7 +238,7 @@ export default function CompanyPage() {
                 {isTrialing ? 'Essai' : 'Actif'}
               </Badge>
             </div>
-            <div className="text-xs text-[#6B5A4A]">
+            <div className="text-xs text-[var(--kz-mute)]">
               {memberCount}/{plan.maxMembers} recruteur{plan.maxMembers > 1 ? 's' : ''} ·
               {jobCount} offre{jobCount > 1 ? 's' : ''} active{jobCount > 1 ? 's' : ''} ·
               {plan.maxJobs === -1 ? ' illimitées' : ` ${plan.maxJobs} max`}
@@ -260,7 +260,7 @@ export default function CompanyPage() {
               )}
               {sub?.status !== 'cancelled' && (
                 <button onClick={() => { setActionError(''); setCancelModal(true) }}
-                  className="text-xs font-semibold text-[#6B5A4A] hover:text-red-600 flex items-center gap-1 justify-center">
+                  className="text-xs font-semibold text-[var(--kz-mute)] hover:text-red-600 flex items-center gap-1 justify-center">
                   <XCircle size={12} />Résilier
                 </button>
               )}
@@ -278,17 +278,17 @@ export default function CompanyPage() {
             ? { v: plan?.partners.length ?? 0, l: 'Partenaires', color: KZ.blueSoft }
             : { v: billingSummary?.maxJobs === -1 ? '∞' : (billingSummary?.maxJobs ?? 0), l: 'Offres max', color: KZ.blueSoft },
         ].map(s => (
-          <div key={s.l} className="kz-card p-4 text-center bg-white" style={{ background: s.color }}>
-            <div className="text-2xl font-extrabold text-[#1A1410]">{s.v}</div>
-            <div className="text-xs text-[#6B5A4A] font-semibold mt-0.5">{s.l}</div>
+          <div key={s.l} className="kz-card p-4 text-center bg-[var(--kz-paper)]" style={{ background: s.color }}>
+            <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{s.v}</div>
+            <div className="text-xs text-[var(--kz-mute)] font-semibold mt-0.5">{s.l}</div>
           </div>
         ))}
       </div>
 
       {/* Infos entreprise */}
-      <div className="kz-card p-5 bg-white mb-5">
+      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
         <div className="flex items-start gap-4 mb-4">
-          <div className="w-16 h-16 rounded-xl border border-[#1A1410] flex items-center justify-center text-lg font-extrabold shrink-0"
+          <div className="w-16 h-16 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-lg font-extrabold shrink-0"
             style={{ background: KZ.orangeSoft }}>
             {company?.logo_url
               ? <img src={company.logo_url} alt="" className="w-full h-full object-cover rounded-xl" />
@@ -296,28 +296,28 @@ export default function CompanyPage() {
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h2 className="text-base font-bold text-[#1A1410]">{company?.name}</h2>
+              <h2 className="text-base font-bold text-[var(--kz-ink)]">{company?.name}</h2>
               {company?.is_verified && <Badge color="green" size="sm">✓ Vérifié</Badge>}
             </div>
-            {company?.legal_name && <p className="text-xs text-[#6B5A4A]">{company.legal_name}</p>}
-            {company?.siret && <p className="text-xs text-[#6B5A4A]">SIRET : {company.siret}</p>}
+            {company?.legal_name && <p className="text-xs text-[var(--kz-mute)]">{company.legal_name}</p>}
+            {company?.siret && <p className="text-xs text-[var(--kz-mute)]">SIRET : {company.siret}</p>}
           </div>
           <Button kind="soft" size="sm" icon={<Edit3 size={13} />}>Modifier</Button>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
           {company?.sector && (
-            <div><span className="text-xs text-[#6B5A4A]">Secteur</span><div className="font-semibold text-[#1A1410]">{company.sector}</div></div>
+            <div><span className="text-xs text-[var(--kz-mute)]">Secteur</span><div className="font-semibold text-[var(--kz-ink)]">{company.sector}</div></div>
           )}
           {company?.size && (
-            <div><span className="text-xs text-[#6B5A4A]">Taille</span><div className="font-semibold text-[#1A1410]">{company.size} employés</div></div>
+            <div><span className="text-xs text-[var(--kz-mute)]">Taille</span><div className="font-semibold text-[var(--kz-ink)]">{company.size} employés</div></div>
           )}
           {company?.location && (
-            <div><span className="text-xs text-[#6B5A4A]">Localisation</span><div className="font-semibold text-[#1A1410]">{company.location}</div></div>
+            <div><span className="text-xs text-[var(--kz-mute)]">Localisation</span><div className="font-semibold text-[var(--kz-ink)]">{company.location}</div></div>
           )}
           {company?.website && (
             <div>
-              <span className="text-xs text-[#6B5A4A]">Site web</span>
+              <span className="text-xs text-[var(--kz-mute)]">Site web</span>
               <a href={company.website} target="_blank" rel="noreferrer"
                 className="font-semibold flex items-center gap-1" style={{ color: KZ.violet }}>
                 <Globe size={12} />{company.website.replace('https://', '')}
@@ -327,7 +327,7 @@ export default function CompanyPage() {
         </div>
 
         {company?.description && (
-          <p className="text-sm text-[#6B5A4A] leading-relaxed mt-3 pt-3 border-t border-[#E8DDC9]">
+          <p className="text-sm text-[var(--kz-mute)] leading-relaxed mt-3 pt-3 border-t border-[var(--kz-line)]">
             {company.description}
           </p>
         )}
@@ -335,23 +335,23 @@ export default function CompanyPage() {
 
       {/* Canaux de diffusion inclus au forfait (multidiffusion — masqué tant que OFF) */}
       {MULTIDIFFUSION_ENABLED && plan && plan.partners.length > 0 && (
-        <div className="kz-card p-5 bg-white">
+        <div className="kz-card p-5 bg-[var(--kz-paper)]">
           <div className="flex items-center gap-2 mb-3">
-            <h3 className="text-sm font-bold text-[#1A1410]">Canaux de diffusion inclus</h3>
+            <h3 className="text-sm font-bold text-[var(--kz-ink)]">Canaux de diffusion inclus</h3>
             <Badge color="violet" size="sm">Bientôt</Badge>
           </div>
           <div className="flex flex-wrap gap-2">
             {plan.partners.map(p => {
               const partner = PARTNERS[p]
               return partner ? (
-                <div key={p} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#1A1410] text-xs font-bold"
+                <div key={p} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--kz-edge)] text-xs font-bold"
                   style={{ background: KZ.violetSoft }}>
                   <span className="flex items-center gap-1">{PARTNER_ICONS[partner.icon]}{partner.name}</span>
                 </div>
               ) : null
             })}
           </div>
-          <p className="text-xs text-[#6B5A4A] mt-2">
+          <p className="text-xs text-[var(--kz-mute)] mt-2">
             Ces canaux sont inclus dans votre forfait. La diffusion automatique vers ces plateformes
             sera activée prochainement (voir la roadmap).
           </p>
@@ -361,7 +361,7 @@ export default function CompanyPage() {
       {/* Modal — Changer de forfait */}
       <Modal open={planModal} onClose={() => !actionLoading && setPlanModal(false)} title="Changer de forfait" size="md">
         <div className="flex flex-col gap-3">
-          <p className="text-sm text-[#6B5A4A]">
+          <p className="text-sm text-[var(--kz-mute)]">
             Choisissez votre nouveau forfait. Le changement est immédiat
             {sub?.stripe_subscription_id ? ' et ajusté au prorata sur votre prochaine facture.' : ' (votre essai se poursuit).'}
           </p>
@@ -373,14 +373,14 @@ export default function CompanyPage() {
                 style={{ borderColor: isCurrent ? KZ.violet : KZ.line, background: isCurrent ? KZ.violetSoft : 'white' }}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#1A1410]">{p.name}</span>
+                    <span className="text-sm font-bold text-[var(--kz-ink)]">{p.name}</span>
                     {isCurrent && <Badge color="violet" size="sm">Actuel</Badge>}
                   </div>
-                  <div className="text-xs text-[#6B5A4A]">
+                  <div className="text-xs text-[var(--kz-mute)]">
                     {p.maxMembers} recruteur{p.maxMembers > 1 ? 's' : ''} · {p.maxJobs === -1 ? 'offres illimitées' : `${p.maxJobs} offres`}
                   </div>
                 </div>
-                <span className="text-base font-extrabold text-[#1A1410]">{Math.floor(p.priceCts / 100)}€</span>
+                <span className="text-base font-extrabold text-[var(--kz-ink)]">{Math.floor(p.priceCts / 100)}€</span>
                 <Button kind={isCurrent ? 'soft' : 'primary'} size="sm" disabled={isCurrent || actionLoading}
                   loading={actionLoading} onClick={() => changePlan(p.id)}>
                   {isCurrent ? 'Actuel' : 'Choisir'}
@@ -395,7 +395,7 @@ export default function CompanyPage() {
       {/* Modal — Résilier */}
       <Modal open={cancelModal} onClose={() => !actionLoading && setCancelModal(false)} title="Résilier l'abonnement" size="sm">
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-[#2A2018] leading-relaxed">
+          <p className="text-sm text-[var(--kz-text)] leading-relaxed">
             {sub?.stripe_subscription_id
               ? 'Votre abonnement sera résilié à la fin de la période en cours. Vous gardez l\'accès jusqu\'à cette date, sans nouveau prélèvement.'
               : 'Votre essai sera arrêté immédiatement et l\'accès recruteur sera suspendu. Vous pourrez réactiver un forfait à tout moment.'}

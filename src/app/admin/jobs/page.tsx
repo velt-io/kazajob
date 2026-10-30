@@ -55,8 +55,8 @@ export default function AdminJobsPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="kz-h2 text-[#1A1410] mb-1">Gestion des offres</h1>
-          <p className="text-sm text-[#6B5A4A]">{jobs.length} offre(s) au total</p>
+          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Gestion des offres</h1>
+          <p className="text-sm text-[var(--kz-mute)]">{jobs.length} offre(s) au total</p>
         </div>
         <div className="flex gap-2">
           <Link href="/admin/jobs/new"><Button kind="primary" size="md" icon={<Plus size={15} />}>Annonce emploi</Button></Link>
@@ -67,35 +67,35 @@ export default function AdminJobsPage() {
       {loading ? <PageLoader /> : jobs.length === 0 ? (
         <EmptyState title="Aucune offre" icon={<Briefcase size={28} />} />
       ) : (
-        <div className="kz-card bg-white overflow-x-auto">
+        <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
           <table className="w-full min-w-[700px]">
             <thead>
-              <tr className="border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+              <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                 {['Titre', 'Entreprise', 'Lieu', 'Salaire', 'Statut', 'Publie', 'Actions'].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold text-[#6B5A4A] uppercase tracking-widest">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold text-[var(--kz-mute)] uppercase tracking-widest">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {jobs.map((job) => (
-                <tr key={job.id} className="border-b border-[#E8DDC9] last:border-0 hover:bg-[#FBEFE0] transition-colors">
-                  <td className="px-4 py-3 text-sm font-semibold text-[#1A1410] max-w-[200px] truncate">{job.title}</td>
-                  <td className="px-4 py-3 text-sm text-[#6B5A4A]">{job.company?.name ?? '—'}</td>
-                  <td className="px-4 py-3 text-sm text-[#6B5A4A]">{job.location}</td>
-                  <td className="px-4 py-3 text-sm text-[#6B5A4A]">{formatSalary(job.salary_min, job.salary_max)}</td>
+                <tr key={job.id} className="border-b border-[var(--kz-line)] last:border-0 hover:bg-[var(--kz-cream2)] transition-colors">
+                  <td className="px-4 py-3 text-sm font-semibold text-[var(--kz-ink)] max-w-[200px] truncate">{job.title}</td>
+                  <td className="px-4 py-3 text-sm text-[var(--kz-mute)]">{job.company?.name ?? '—'}</td>
+                  <td className="px-4 py-3 text-sm text-[var(--kz-mute)]">{job.location}</td>
+                  <td className="px-4 py-3 text-sm text-[var(--kz-mute)]">{formatSalary(job.salary_min, job.salary_max)}</td>
                   <td className="px-4 py-3">
                     <Badge color={JOB_STATUS_META[resolveJobStatus(job)].color} size="sm">
                       {JOB_STATUS_META[resolveJobStatus(job)].label}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-xs text-[#6B5A4A]">{timeAgo(job.created_at)}</td>
+                  <td className="px-4 py-3 text-xs text-[var(--kz-mute)]">{timeAgo(job.created_at)}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1.5">
-                      <button onClick={() => toggleActive(job)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FBEFE0] text-[#6B5A4A] hover:text-[#1A1410]"
+                      <button onClick={() => toggleActive(job)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
                         title={job.is_active ? 'Suspendre' : 'Publier / rétablir'} aria-label={job.is_active ? 'Suspendre' : 'Publier / rétablir'}>
                         {job.is_active ? <EyeOff size={14} /> : <Eye size={14} />}
                       </button>
-                      <button onClick={() => deleteJob(job.id)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#6B5A4A] hover:text-red-600">
+                      <button onClick={() => deleteJob(job.id)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600">
                         <Trash2 size={14} />
                       </button>
                     </div>

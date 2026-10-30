@@ -50,8 +50,8 @@ export default function TalentPoolPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6">
         <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Recrutement</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">Vivier de talents</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">{entries.length} profil(s) sauvegardé(s)</p>
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Vivier de talents</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">{entries.length} profil(s) sauvegardé(s)</p>
       </div>
 
       {loading ? <PageLoader /> : entries.length === 0 ? (
@@ -69,24 +69,24 @@ export default function TalentPoolPage() {
               <div key={cat.id}>
                 <div className="flex items-center gap-2 mb-3">
                   <Badge color={cat.color as BadgeColor} size="md">{cat.label}</Badge>
-                  <span className="text-xs text-[#6B5A4A]">{list.length}</span>
+                  <span className="text-xs text-[var(--kz-mute)]">{list.length}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {list.map((e) => {
                     const c = e.candidate
                     return (
-                      <div key={e.id} className="kz-card p-4 bg-white flex items-start gap-3">
+                      <div key={e.id} className="kz-card p-4 bg-[var(--kz-paper)] flex items-start gap-3">
                         <Avatar name={c.full_name ?? 'CA'} src={c.avatar_url} avatarConfig={c.avatar_config} size={44} color={KZ.orangeSoft} />
                         <div className="flex-1 min-w-0">
-                          <Link href={`/recruiter/candidates/${c.id}`} className="text-sm font-bold text-[#1A1410] hover:underline">{c.full_name}</Link>
-                          {c.location && <div className="text-xs text-[#6B5A4A] flex items-center gap-1 mt-0.5"><MapPin size={11} />{c.location}</div>}
-                          {e.note && <p className="text-xs text-[#6B5A4A] mt-1 line-clamp-2 italic">« {e.note} »</p>}
+                          <Link href={`/recruiter/candidates/${c.id}`} className="text-sm font-bold text-[var(--kz-ink)] hover:underline">{c.full_name}</Link>
+                          {c.location && <div className="text-xs text-[var(--kz-mute)] flex items-center gap-1 mt-0.5"><MapPin size={11} />{c.location}</div>}
+                          {e.note && <p className="text-xs text-[var(--kz-mute)] mt-1 line-clamp-2 italic">« {e.note} »</p>}
                           <select value={e.category} onChange={(ev) => changeCategory(c.id, ev.target.value)}
-                            className="mt-2 text-xs font-semibold h-8 px-2 border border-[#1A1410] rounded-lg bg-white cursor-pointer">
+                            className="mt-2 text-xs font-semibold h-8 px-2 border border-[var(--kz-edge)] rounded-lg bg-[var(--kz-paper)] cursor-pointer">
                             {TALENT_POOL_CATEGORIES.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
                           </select>
                         </div>
-                        <button onClick={() => remove(c.id)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#6B5A4A] hover:text-red-600 shrink-0">
+                        <button onClick={() => remove(c.id)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600 shrink-0">
                           <Trash2 size={15} />
                         </button>
                       </div>

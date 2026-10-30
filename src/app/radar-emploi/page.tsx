@@ -61,72 +61,72 @@ export default async function RadarEmploiPage() {
 
       <div className="max-w-[1100px] mx-auto px-4 sm:px-8 lg:px-16 py-12">
         {radar.totalActive === 0 ? (
-          <div className="kz-card p-10 bg-white text-center">
+          <div className="kz-card p-10 bg-[var(--kz-paper)] text-center">
             <Activity size={36} className="mx-auto mb-3 opacity-30" />
-            <h2 className="text-lg font-bold text-[#1A1410] mb-1">Le radar se met en route</h2>
-            <p className="text-sm text-[#6B5A4A]">Les tendances apparaîtront ici dès que des offres seront publiées sur Kazajob.</p>
+            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Le radar se met en route</h2>
+            <p className="text-sm text-[var(--kz-mute)]">Les tendances apparaîtront ici dès que des offres seront publiées sur Kazajob.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Métiers qui recrutent */}
-            <div className="kz-card p-6 bg-white">
+            <div className="kz-card p-6 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-4">
                 <Briefcase size={18} color={KZ.violet} />
-                <h2 className="text-lg font-extrabold text-[#1A1410]">Métiers qui recrutent</h2>
+                <h2 className="text-lg font-extrabold text-[var(--kz-ink)]">Métiers qui recrutent</h2>
               </div>
               <div className="flex flex-col gap-2.5">
                 {radar.roles.map((r) => (
                   <div key={r.label} className="flex items-center gap-3">
-                    <span className="text-sm text-[#1A1410] w-40 sm:w-52 shrink-0 truncate">{r.label}</span>
-                    <div className="flex-1 h-2.5 rounded-full bg-[#F2E4D0] overflow-hidden">
+                    <span className="text-sm text-[var(--kz-ink)] w-40 sm:w-52 shrink-0 truncate">{r.label}</span>
+                    <div className="flex-1 h-2.5 rounded-full bg-[var(--kz-beige)] overflow-hidden">
                       <div className="h-full rounded-full" style={{ width: `${(r.count / maxRole) * 100}%`, background: KZ.violet }} />
                     </div>
-                    <span className="text-xs font-bold text-[#1A1410] w-8 text-right">{r.count}</span>
+                    <span className="text-xs font-bold text-[var(--kz-ink)] w-8 text-right">{r.count}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Zones dynamiques */}
-            <div className="kz-card p-6 bg-white">
+            <div className="kz-card p-6 bg-[var(--kz-paper)]">
               <div className="flex items-center gap-2 mb-4">
                 <MapPin size={18} color={KZ.orange} />
-                <h2 className="text-lg font-extrabold text-[#1A1410]">Zones géographiques dynamiques</h2>
+                <h2 className="text-lg font-extrabold text-[var(--kz-ink)]">Zones géographiques dynamiques</h2>
               </div>
               <div className="flex flex-col gap-2.5">
                 {radar.locations.map((l) => (
                   <div key={l.label} className="flex items-center gap-3">
-                    <span className="text-sm text-[#1A1410] w-40 sm:w-52 shrink-0 truncate">{l.label}</span>
-                    <div className="flex-1 h-2.5 rounded-full bg-[#F2E4D0] overflow-hidden">
+                    <span className="text-sm text-[var(--kz-ink)] w-40 sm:w-52 shrink-0 truncate">{l.label}</span>
+                    <div className="flex-1 h-2.5 rounded-full bg-[var(--kz-beige)] overflow-hidden">
                       <div className="h-full rounded-full" style={{ width: `${(l.count / maxLoc) * 100}%`, background: KZ.orange }} />
                     </div>
-                    <span className="text-xs font-bold text-[#1A1410] w-8 text-right">{l.count}</span>
+                    <span className="text-xs font-bold text-[var(--kz-ink)] w-8 text-right">{l.count}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Secteurs en tension + salaires */}
-            <div className="kz-card p-6 bg-white lg:col-span-2">
+            <div className="kz-card p-6 bg-[var(--kz-paper)] lg:col-span-2">
               <div className="flex items-center gap-2 mb-4">
                 <Layers size={18} color={KZ.green} />
-                <h2 className="text-lg font-extrabold text-[#1A1410]">Secteurs en tension & salaires indicatifs</h2>
+                <h2 className="text-lg font-extrabold text-[var(--kz-ink)]">Secteurs en tension & salaires indicatifs</h2>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {radar.sectors.map((s) => {
                   const sal = fmtSalary(s.avgMin, s.avgMax)
                   return (
-                    <div key={s.sector} className="rounded-xl border border-[#1A1410] p-3 flex items-center gap-3" style={{ background: KZ.cream2 }}>
+                    <div key={s.sector} className="rounded-xl border border-[var(--kz-edge)] p-3 flex items-center gap-3" style={{ background: KZ.cream2 }}>
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-[#1A1410] truncate">{s.sector}</div>
-                        <div className="text-xs text-[#6B5A4A]">{sal ? `Salaire moyen : ${sal}` : 'Salaire non communiqué'}</div>
+                        <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{s.sector}</div>
+                        <div className="text-xs text-[var(--kz-mute)]">{sal ? `Salaire moyen : ${sal}` : 'Salaire non communiqué'}</div>
                       </div>
                       <Badge color="green" size="sm">{s.count} offre{s.count > 1 ? 's' : ''}</Badge>
                     </div>
                   )
                 })}
               </div>
-              <p className="text-[11px] text-[#6B5A4A] italic mt-3">
+              <p className="text-[11px] text-[var(--kz-mute)] italic mt-3">
                 Salaires moyens calculés sur les offres avec rémunération renseignée. Indicatif.
               </p>
             </div>
@@ -134,13 +134,13 @@ export default async function RadarEmploiPage() {
         )}
 
         {/* CTA */}
-        <div className="mt-10 rounded-2xl border border-[#1A1410] p-6 sm:p-8 text-center" style={{ background: KZ.violetSoft, boxShadow: '5px 5px 0 #1A1410' }}>
+        <div className="mt-10 rounded-2xl border border-[var(--kz-edge)] p-6 sm:p-8 text-center" style={{ background: KZ.violetSoft, boxShadow: '5px 5px 0 var(--kz-shadow)' }}>
           <TrendingUp size={28} className="mx-auto mb-2" color={KZ.violet} />
-          <h2 className="text-xl font-extrabold text-[#1A1410] mb-2">Trouvez votre prochain job péi</h2>
-          <p className="text-sm text-[#6B5A4A] mb-4 max-w-[460px] mx-auto">Des centaines d&apos;opportunités locales, le matching IA et KazaCoach pour booster vos chances.</p>
+          <h2 className="text-xl font-extrabold text-[var(--kz-ink)] mb-2">Trouvez votre prochain job péi</h2>
+          <p className="text-sm text-[var(--kz-mute)] mb-4 max-w-[460px] mx-auto">Des centaines d&apos;opportunités locales, le matching IA et KazaCoach pour booster vos chances.</p>
           <Link href="/candidate/jobs">
-            <span className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-[#1A1410] font-bold text-sm"
-              style={{ background: KZ.orange, color: KZ.ink, boxShadow: '3px 3px 0 #1A1410' }}>
+            <span className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-[var(--kz-edge)] font-bold text-sm"
+              style={{ background: KZ.orange, color: KZ.ink, boxShadow: '3px 3px 0 var(--kz-shadow)' }}>
               Voir les offres <ArrowRight size={15} />
             </span>
           </Link>

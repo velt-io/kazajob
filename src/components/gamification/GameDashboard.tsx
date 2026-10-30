@@ -33,10 +33,10 @@ function QuestCard({ quest }: { quest: Quest }) {
 
   return (
     <div
-      className="relative rounded-2xl border-2 border-[#1A1410] overflow-hidden transition-all"
+      className="relative rounded-2xl border-2 border-[var(--kz-edge)] overflow-hidden transition-all"
       style={{
-        background: done ? '#1A1410' : KZ.paper,
-        boxShadow: done ? 'none' : '4px 4px 0 #1A1410',
+        background: done ? 'var(--kz-ink)' : KZ.paper,
+        boxShadow: done ? 'none' : '4px 4px 0 var(--kz-shadow)',
       }}
     >
       {/* Accent top bar */}
@@ -47,27 +47,27 @@ function QuestCard({ quest }: { quest: Quest }) {
         <div className="flex items-start justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
             <div
-              className="w-8 h-8 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0"
-              style={{ background: done ? quest.accentColor + '30' : quest.accentColor, color: done ? quest.accentColor : '#1A1410' }}
+              className="w-8 h-8 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
+              style={{ background: done ? quest.accentColor + '30' : quest.accentColor, color: done ? quest.accentColor : 'var(--kz-ink)' }}
             >
               {ICON_MAP[quest.iconName]}
             </div>
             <div>
-              <div className="text-xs font-extrabold leading-tight" style={{ color: done ? 'rgba(255,247,238,0.9)' : '#1A1410' }}>
+              <div className="text-xs font-extrabold leading-tight" style={{ color: done ? 'rgba(255,247,238,0.9)' : 'var(--kz-ink)' }}>
                 {quest.title}
               </div>
             </div>
           </div>
           <div
-            className="shrink-0 text-[10px] font-extrabold px-2 py-1 rounded-full border border-[#1A1410]"
-            style={{ background: quest.accentColor, color: '#1A1410' }}
+            className="shrink-0 text-[10px] font-extrabold px-2 py-1 rounded-full border border-[var(--kz-edge)]"
+            style={{ background: quest.accentColor, color: 'var(--kz-ink)' }}
           >
             +{quest.xpReward} XP
           </div>
         </div>
 
         {/* Description */}
-        <p className="text-[11px] mb-3 leading-relaxed" style={{ color: done ? 'rgba(255,247,238,0.55)' : '#6B5A4A' }}>
+        <p className="text-[11px] mb-3 leading-relaxed" style={{ color: done ? 'rgba(255,247,238,0.55)' : 'var(--kz-mute)' }}>
           {quest.desc}
         </p>
 
@@ -80,10 +80,10 @@ function QuestCard({ quest }: { quest: Quest }) {
         ) : (
           <div>
             <div className="flex justify-between mb-1">
-              <span className="text-[10px] font-bold" style={{ color: '#6B5A4A' }}>Progression</span>
+              <span className="text-[10px] font-bold" style={{ color: 'var(--kz-mute)' }}>Progression</span>
               <span className="text-[10px] font-extrabold" style={{ color: quest.accentColor }}>{quest.progress}%</span>
             </div>
-            <div className="h-2.5 rounded-full border border-[#1A1410] overflow-hidden" style={{ background: KZ.cream2 }}>
+            <div className="h-2.5 rounded-full border border-[var(--kz-edge)] overflow-hidden" style={{ background: KZ.cream2 }}>
               <div
                 className="h-full rounded-full transition-all duration-700"
                 style={{ width: `${Math.max(quest.progress, 2)}%`, background: quest.accentColor }}
@@ -103,8 +103,8 @@ function XpBar({ xp, xpProgress, level, nextLevel }: {
 }) {
   return (
     <div
-      className="rounded-2xl border-2 border-[#1A1410] p-4 mb-5"
-      style={{ background: '#1A1410', boxShadow: '5px 5px 0 ' + level.color }}
+      className="rounded-2xl border-2 border-[var(--kz-edge)] p-4 mb-5"
+      style={{ background: 'var(--kz-ink)', boxShadow: '5px 5px 0 ' + level.color }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ function XpBar({ xp, xpProgress, level, nextLevel }: {
         </div>
         <div
           className="absolute inset-y-0 flex items-center justify-center text-[10px] font-extrabold w-full"
-          style={{ color: xpProgress > 50 ? '#1A1410' : KZ.cream }}
+          style={{ color: xpProgress > 50 ? 'var(--kz-ink)' : KZ.cream }}
         >
           {xpProgress}% vers {nextLevel.title}
         </div>
@@ -147,8 +147,8 @@ function XpBar({ xp, xpProgress, level, nextLevel }: {
 function LevelPill({ level, xp }: { level: { level: number; title: string; color: string; emoji: string }; xp: number }) {
   return (
     <div
-      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-[#1A1410] text-sm font-extrabold"
-      style={{ background: level.color, color: '#1A1410', boxShadow: '2px 2px 0 #1A1410' }}
+      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-2 border-[var(--kz-edge)] text-sm font-extrabold"
+      style={{ background: level.color, color: 'var(--kz-ink)', boxShadow: '2px 2px 0 var(--kz-shadow)' }}
     >
       <span>{level.emoji}</span>
       <span>Niv.{level.level} {level.title}</span>
@@ -184,7 +184,7 @@ export function GameDashboard({
           <p className="kz-eyebrow mb-1" style={{ color: gami.level.color }}>
             Mode Quête · <span className="capitalize">{today}</span>
           </p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">
+          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
             Salut {firstName} <span style={{ color: gami.level.color }}>{gami.level.emoji}</span>
           </h1>
           <div className="mt-2">
@@ -208,12 +208,12 @@ export function GameDashboard({
           { icon: <Heart  size={18} />, label: 'Favoris', value: favoritesCount, color: KZ.violet,    bg: KZ.violetSoft },
         ].map(s => (
           <div key={s.label}
-            className="rounded-2xl border-2 border-[#1A1410] p-4 text-center"
-            style={{ background: s.bg, boxShadow: '3px 3px 0 #1A1410' }}
+            className="rounded-2xl border-2 border-[var(--kz-edge)] p-4 text-center"
+            style={{ background: s.bg, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
           >
             <div className="flex justify-center mb-1" style={{ color: s.color }}>{s.icon}</div>
-            <div className="text-xl font-extrabold text-[#1A1410]">{s.value}</div>
-            <div className="text-[10px] font-bold text-[#6B5A4A] uppercase tracking-wider mt-0.5">{s.label}</div>
+            <div className="text-xl font-extrabold text-[var(--kz-ink)]">{s.value}</div>
+            <div className="text-[10px] font-bold text-[var(--kz-mute)] uppercase tracking-wider mt-0.5">{s.label}</div>
           </div>
         ))}
       </div>
@@ -228,7 +228,7 @@ export function GameDashboard({
           {gami.activeQuests.length > 0 && (
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h2 className="text-base font-extrabold text-[#1A1410] flex items-center gap-2">
+                <h2 className="text-base font-extrabold text-[var(--kz-ink)] flex items-center gap-2">
                   <Sparkles size={17} color={KZ.violet} />
                   Quêtes actives
                   <Badge color="violet" size="sm">{gami.activeQuests.length}</Badge>
@@ -243,7 +243,7 @@ export function GameDashboard({
           {/* Offres recommandées */}
           <div>
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-extrabold text-[#1A1410] flex items-center gap-2">
+              <h2 className="text-base font-extrabold text-[var(--kz-ink)] flex items-center gap-2">
                 <Target size={17} color={KZ.orange} />
                 Missions disponibles
               </h2>
@@ -251,7 +251,7 @@ export function GameDashboard({
             </div>
             {jobsLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {[1,2,3,4].map(i => <div key={i} className="h-32 rounded-2xl bg-[#FBEFE0] animate-pulse" />)}
+                {[1,2,3,4].map(i => <div key={i} className="h-32 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />)}
               </div>
             ) : recommendedJobs.length === 0 ? (
               <EmptyState title="Aucune mission disponible" icon={<Briefcase size={24} />} />
@@ -265,19 +265,19 @@ export function GameDashboard({
           {/* Candidatures */}
           {applications.length > 0 && (
             <div
-              className="rounded-2xl border-2 border-[#1A1410] overflow-hidden"
-              style={{ boxShadow: '4px 4px 0 #1A1410' }}
+              className="rounded-2xl border-2 border-[var(--kz-edge)] overflow-hidden"
+              style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}
             >
-              <div className="px-5 py-3 flex justify-between items-center" style={{ background: '#1A1410' }}>
+              <div className="px-5 py-3 flex justify-between items-center" style={{ background: 'var(--kz-ink)' }}>
                 <h3 className="text-sm font-extrabold flex items-center gap-2" style={{ color: KZ.cream }}>
                   <Send size={15} color={KZ.orange} />
                   Candidatures en cours
                 </h3>
                 <Badge color="orange" size="sm">{applications.length}</Badge>
               </div>
-              <div className="bg-white p-3 flex flex-col gap-2">
+              <div className="bg-[var(--kz-paper)] p-3 flex flex-col gap-2">
                 {appsLoading ? (
-                  [1,2].map(i => <div key={i} className="h-12 rounded-lg bg-[#FBEFE0] animate-pulse" />)
+                  [1,2].map(i => <div key={i} className="h-12 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)
                 ) : (
                   applications.slice(0, 3).map(app => <ApplicationCard key={app.id} application={app} />)
                 )}
@@ -296,8 +296,8 @@ export function GameDashboard({
 
           {/* Profil héros */}
           <div
-            className="rounded-2xl border-2 border-[#1A1410] overflow-hidden"
-            style={{ background: '#1A1410', boxShadow: '4px 4px 0 ' + gami.level.color }}
+            className="rounded-2xl border-2 border-[var(--kz-edge)] overflow-hidden"
+            style={{ background: 'var(--kz-ink)', boxShadow: '4px 4px 0 ' + gami.level.color }}
           >
             <div className="p-5">
               <div className="flex items-center gap-3 mb-4">
@@ -305,8 +305,8 @@ export function GameDashboard({
                   <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={56} color={gami.level.bg} />
                   {/* Level ring */}
                   <div
-                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-[#1A1410] flex items-center justify-center text-[10px] font-extrabold"
-                    style={{ background: gami.level.color, color: '#1A1410' }}
+                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center text-[10px] font-extrabold"
+                    style={{ background: gami.level.color, color: 'var(--kz-ink)' }}
                   >
                     {gami.level.level}
                   </div>
@@ -328,24 +328,24 @@ export function GameDashboard({
 
           {/* Quêtes accomplies */}
           {gami.doneQuests.length > 0 && (
-            <div className="kz-card p-4 bg-white">
-              <h3 className="text-sm font-extrabold text-[#1A1410] mb-3 flex items-center gap-2">
+            <div className="kz-card p-4 bg-[var(--kz-paper)]">
+              <h3 className="text-sm font-extrabold text-[var(--kz-ink)] mb-3 flex items-center gap-2">
                 <CheckCircle2 size={15} color={KZ.green} />
                 Quêtes accomplies ({gami.doneQuests.length})
               </h3>
               <div className="flex flex-col gap-2">
                 {gami.doneQuests.map(q => (
                   <div key={q.id}
-                    className="flex items-center gap-3 p-2.5 rounded-xl border border-[#E8DDC9]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl border border-[var(--kz-line)]"
                     style={{ background: KZ.cream2 }}
                   >
                     <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: q.accentColor + '20', color: q.accentColor }}>
                       {ICON_MAP[q.iconName]}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs font-bold text-[#1A1410] truncate">{q.title}</div>
+                      <div className="text-xs font-bold text-[var(--kz-ink)] truncate">{q.title}</div>
                     </div>
-                    <div className="text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-[#1A1410]"
+                    <div className="text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
                       style={{ background: KZ.greenSoft, color: KZ.green }}>
                       +{q.xpReward} XP
                     </div>
@@ -358,39 +358,39 @@ export function GameDashboard({
           {/* Quêtes verrouillées */}
           {gami.doneQuests.length === gami.quests.length && (
             <div
-              className="rounded-2xl border-2 border-[#1A1410] p-5 text-center"
-              style={{ background: KZ.yellowSoft, boxShadow: '3px 3px 0 #1A1410' }}
+              className="rounded-2xl border-2 border-[var(--kz-edge)] p-5 text-center"
+              style={{ background: KZ.yellowSoft, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
             >
               <Crown size={32} color={KZ.yellow} className="mx-auto mb-2" />
-              <div className="text-sm font-extrabold text-[#1A1410]">Toutes les quêtes accomplies !</div>
-              <div className="text-xs text-[#6B5A4A] mt-1">Tu es un vrai Expert 974.</div>
+              <div className="text-sm font-extrabold text-[var(--kz-ink)]">Toutes les quêtes accomplies !</div>
+              <div className="text-xs text-[var(--kz-mute)] mt-1">Tu es un vrai Expert 974.</div>
             </div>
           )}
 
           {/* Prochaines récompenses */}
           <div
-            className="rounded-2xl border-2 border-[#1A1410] p-4"
-            style={{ background: KZ.violetSoft, boxShadow: '3px 3px 0 #1A1410' }}
+            className="rounded-2xl border-2 border-[var(--kz-edge)] p-4"
+            style={{ background: KZ.violetSoft, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
           >
             <p className="text-xs font-extrabold uppercase tracking-widest mb-3" style={{ color: KZ.violet }}>
               Prochaine récompense
             </p>
             {gami.activeQuests[0] ? (
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl border border-[#1A1410] flex items-center justify-center"
+                <div className="w-9 h-9 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center"
                   style={{ background: gami.activeQuests[0].accentColor + '30', color: gami.activeQuests[0].accentColor }}>
                   {ICON_MAP[gami.activeQuests[0].iconName]}
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-bold text-[#1A1410]">{gami.activeQuests[0].title}</div>
-                  <div className="text-xs text-[#6B5A4A]">+{gami.activeQuests[0].xpReward} XP</div>
+                  <div className="text-sm font-bold text-[var(--kz-ink)]">{gami.activeQuests[0].title}</div>
+                  <div className="text-xs text-[var(--kz-mute)]">+{gami.activeQuests[0].xpReward} XP</div>
                 </div>
                 <div className="text-lg font-extrabold" style={{ color: KZ.violet }}>
                   {gami.activeQuests[0].progress}%
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-[#6B5A4A]">Tout accompli — tu es une légende.</p>
+              <p className="text-sm text-[var(--kz-mute)]">Tout accompli — tu es une légende.</p>
             )}
           </div>
         </div>

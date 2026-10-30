@@ -13,9 +13,9 @@ const RANGE     = SCALE_MAX - SCALE_MIN
 
 const ZONES = [
   { to: 22_000, bg: '#F5ECD9', label: 'SMIC'        },
-  { to: 27_600, bg: '#FFE0CF', label: 'Sous norme'  },
-  { to: 40_000, bg: '#FFF1C2', label: 'Norme 974'   },
-  { to: 65_000, bg: '#D6F0E0', label: 'Bien payé'   },
+  { to: 27_600, bg: 'var(--kz-orange-soft)', label: 'Sous norme'  },
+  { to: 40_000, bg: 'var(--kz-yellow-soft)', label: 'Norme 974'   },
+  { to: 65_000, bg: 'var(--kz-green-soft)', label: 'Bien payé'   },
 ]
 
 function pct(v: number) {
@@ -85,22 +85,22 @@ export function SalaryInsightsCard({
   })
 
   return (
-    <div className="kz-card p-5 bg-white">
+    <div className="kz-card p-5 bg-[var(--kz-paper)]">
       {/* Header */}
       <div className="flex items-center gap-2 mb-1">
-        <div className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0"
+        <div className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
           style={{ background: KZ.greenSoft }}>
           <Wallet size={13} color={KZ.green} />
         </div>
-        <h2 className="text-base font-bold text-[#1A1410]">Fourchette salariale</h2>
+        <h2 className="text-base font-bold text-[var(--kz-ink)]">Fourchette salariale</h2>
         {!hasOffer && aiEstimate && (
-          <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#6D3BEB]"
+          <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-violet)]"
             style={{ background: KZ.violetSoft, color: KZ.violet }}>
             <Sparkles size={9} /> Estimation KazaIA
           </span>
         )}
       </div>
-      <p className="text-xs text-[#6B5A4A] mb-4">
+      <p className="text-xs text-[var(--kz-mute)] mb-4">
         {hasOffer
           ? 'Salaire proposé par l\'employeur (brut annuel).'
           : 'Estimation IA réaliste pour le marché 974/976 — à titre indicatif.'}
@@ -113,29 +113,29 @@ export function SalaryInsightsCard({
           {/* Montants min / médian / max au-dessus */}
           <div className="flex justify-between items-end mb-2">
             <div>
-              <div className="text-[10px] font-bold uppercase tracking-wide text-[#6B5A4A]">Min</div>
-              <div className="text-xl font-extrabold text-[#1A1410]">{fmt(rangeMin!)} €<span className="text-xs font-semibold text-[#6B5A4A]">/an</span></div>
+              <div className="text-[10px] font-bold uppercase tracking-wide text-[var(--kz-mute)]">Min</div>
+              <div className="text-xl font-extrabold text-[var(--kz-ink)]">{fmt(rangeMin!)} €<span className="text-xs font-semibold text-[var(--kz-mute)]">/an</span></div>
             </div>
             {aiEstimate && !hasOffer && (
               <div className="text-center">
-                <div className="text-[10px] font-bold uppercase tracking-wide text-[#6B5A4A]">Médian</div>
-                <div className="text-base font-bold text-[#1A1410]">{fmt(aiEstimate.median)} €/an</div>
+                <div className="text-[10px] font-bold uppercase tracking-wide text-[var(--kz-mute)]">Médian</div>
+                <div className="text-base font-bold text-[var(--kz-ink)]">{fmt(aiEstimate.median)} €/an</div>
               </div>
             )}
             <div className="text-right">
-              <div className="text-[10px] font-bold uppercase tracking-wide text-[#6B5A4A]">Max</div>
-              <div className="text-xl font-extrabold text-[#1A1410]">{fmt(rangeMax!)} €<span className="text-xs font-semibold text-[#6B5A4A]">/an</span></div>
+              <div className="text-[10px] font-bold uppercase tracking-wide text-[var(--kz-mute)]">Max</div>
+              <div className="text-xl font-extrabold text-[var(--kz-ink)]">{fmt(rangeMax!)} €<span className="text-xs font-semibold text-[var(--kz-mute)]">/an</span></div>
             </div>
           </div>
 
           {/* Barre */}
-          <div className="relative rounded-xl overflow-hidden border-2 border-[#1A1410]" style={{ height: 40 }}>
+          <div className="relative rounded-xl overflow-hidden border-2 border-[var(--kz-edge)]" style={{ height: 40 }}>
             {/* Zones de couleur */}
             <div className="absolute inset-0 flex">
               {ZONES.map((z, i) => (
                 <div key={i} style={{ width: `${zoneWidths[i]}%`, background: z.bg }} className="relative">
                   {i < ZONES.length - 1 && (
-                    <div className="absolute right-0 top-0 bottom-0 w-px bg-[#1A1410] opacity-20" />
+                    <div className="absolute right-0 top-0 bottom-0 w-px bg-[var(--kz-ink)] opacity-20" />
                   )}
                 </div>
               ))}
@@ -143,7 +143,7 @@ export function SalaryInsightsCard({
 
             {/* Plage de l'offre */}
             <div
-              className="absolute top-2 bottom-2 rounded-lg border-2 border-[#1A1410] transition-all"
+              className="absolute top-2 bottom-2 rounded-lg border-2 border-[var(--kz-edge)] transition-all"
               style={{
                 left:       `${pct(rangeMin!)}%`,
                 width:      `${Math.max(5, pct(rangeMax!) - pct(rangeMin!))}%`,
@@ -157,7 +157,7 @@ export function SalaryInsightsCard({
               {ZONES.map((z, i) => (
                 <div key={i} style={{ width: `${zoneWidths[i]}%` }}
                   className="flex items-center justify-center">
-                  <span className="text-[8px] font-bold text-[#6B5A4A] opacity-70 truncate px-0.5 select-none">
+                  <span className="text-[8px] font-bold text-[var(--kz-mute)] opacity-70 truncate px-0.5 select-none">
                     {z.label}
                   </span>
                 </div>
@@ -168,7 +168,7 @@ export function SalaryInsightsCard({
           {/* Graduations */}
           <div className="flex justify-between mt-1 px-0.5">
             {[15, 22, 28, 40, 65].map(k => (
-              <span key={k} className="text-[10px] text-[#6B5A4A]">{k}k €</span>
+              <span key={k} className="text-[10px] text-[var(--kz-mute)]">{k}k €</span>
             ))}
           </div>
         </div>
@@ -176,19 +176,19 @@ export function SalaryInsightsCard({
 
       {/* ── Référence marché DB ──────────────────────────────────── */}
       {hasMarket && (
-        <div className="rounded-xl border border-[#1A1410] overflow-hidden">
+        <div className="rounded-xl border border-[var(--kz-edge)] overflow-hidden">
           <div className="px-3 py-1.5 text-[11px] font-bold text-white" style={{ background: KZ.violet }}>
             Référence marché — {sector} ({stats!.count} offre{stats!.count > 1 ? 's' : ''} Kazajob)
           </div>
-          <div className="grid grid-cols-3 divide-x divide-[#E8DDC9]">
+          <div className="grid grid-cols-3 divide-x divide-[var(--kz-line)]">
             {[
               { label: 'Plancher', value: stats!.min },
               { label: 'Médiane',  value: stats!.avg },
               { label: 'Plafond',  value: stats!.max },
             ].map(row => (
               <div key={row.label} className="px-3 py-2 text-center">
-                <div className="text-[10px] font-semibold text-[#6B5A4A]">{row.label}</div>
-                <div className="text-xs font-bold text-[#1A1410] mt-0.5">
+                <div className="text-[10px] font-semibold text-[var(--kz-mute)]">{row.label}</div>
+                <div className="text-xs font-bold text-[var(--kz-ink)] mt-0.5">
                   {row.value ? `${fmt(row.value)} €/an` : '—'}
                 </div>
               </div>
@@ -198,7 +198,7 @@ export function SalaryInsightsCard({
       )}
 
       {!hasMarket && !aiEstimate && loaded && (
-        <p className="text-xs text-[#6B5A4A] italic">
+        <p className="text-xs text-[var(--kz-mute)] italic">
           Pas encore assez d&apos;offres {sector ? `dans le secteur « ${sector} »` : ''} pour une référence marché.
           Les données s&apos;enrichissent à chaque nouvelle annonce publiée.
         </p>

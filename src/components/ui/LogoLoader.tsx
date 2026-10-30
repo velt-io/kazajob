@@ -66,7 +66,7 @@ export function LogoLoader({ size = 64, className = '' }: LogoLoaderProps) {
         {/* Fond très léger pour voir le trait sur fond clair */}
         <path
           d="M499.21,79.8L187.43,391.62c-6.22,6.22-13.15,11.32-20.54,15.25v241.54H50.43c-22.32,0-40.43-18.11-40.43-40.43V52.94c0-21.06,17.13-38.18,38.18-38.18h118.71v186.89L333.47,35.02c33.41-33.36,87.55-33.36,120.96,0l44.78,44.78Z"
-          stroke="#1A1410"
+          stroke="var(--kz-ink)"
           strokeWidth="20"
           strokeOpacity="0.06"
           strokeLinecap="round"
@@ -75,7 +75,7 @@ export function LogoLoader({ size = 64, className = '' }: LogoLoaderProps) {
         />
         <circle
           cx="390.74" cy="520.18" r="131.26"
-          stroke="#1A1410"
+          stroke="var(--kz-ink)"
           strokeWidth="20"
           strokeOpacity="0.06"
           fill="none"
@@ -107,10 +107,10 @@ export function LogoLoader({ size = 64, className = '' }: LogoLoaderProps) {
 
 export function FullPageLoader() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FFF7EE]">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--kz-cream)]">
       <div className="flex flex-col items-center gap-4">
         <LogoLoader size={72} />
-        <p className="text-sm font-bold text-[#6B5A4A] tracking-wide animate-pulse">
+        <p className="text-sm font-bold text-[var(--kz-mute)] tracking-wide animate-pulse">
           Chargement…
         </p>
       </div>

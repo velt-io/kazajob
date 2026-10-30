@@ -69,13 +69,13 @@ export default function AdminBugReportsPage() {
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div>
           <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Support</p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">Signalements de bug</h1>
-          <p className="text-sm text-[#6B5A4A] mt-1">
+          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Signalements de bug</h1>
+          <p className="text-sm text-[var(--kz-mute)] mt-1">
             {openCount} ouvert{openCount > 1 ? 's' : ''}
             {criticalCount > 0 && <span className="font-bold" style={{ color: KZ.orange }}> · {criticalCount} bloquant{criticalCount > 1 ? 's' : ''}</span>}
           </p>
         </div>
-        <div className="inline-flex items-center gap-0.5 p-0.5 rounded-full border border-[#1A1410] shrink-0" style={{ background: KZ.paper }}>
+        <div className="inline-flex items-center gap-0.5 p-0.5 rounded-full border border-[var(--kz-edge)] shrink-0" style={{ background: KZ.paper }}>
           {FILTERS.map((f) => (
             <button key={f.id} onClick={() => setFilter(f.id)}
               className="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
@@ -91,21 +91,21 @@ export default function AdminBugReportsPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {shown.map((r) => (
-            <div key={r.id} className="kz-card p-4 bg-white"
+            <div key={r.id} className="kz-card p-4 bg-[var(--kz-paper)]"
               style={r.severity === 'critical' && r.status !== 'resolved' ? { borderColor: KZ.orange } : undefined}>
               <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0"
+                <div className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
                   style={{ background: r.severity === 'critical' ? KZ.orangeSoft : KZ.violetSoft }}>
                   {r.severity === 'critical' ? <AlertTriangle size={16} color={KZ.orange} /> : <Bug size={16} color={KZ.violet} />}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     {r.severity === 'critical' && <Badge color="orange" size="sm">Bloquant</Badge>}
-                    <code className="text-xs text-[#1A1410] font-semibold">{r.page}</code>
-                    <span className="text-[11px] text-[#6B5A4A]">· {new Date(r.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                    <code className="text-xs text-[var(--kz-ink)] font-semibold">{r.page}</code>
+                    <span className="text-[11px] text-[var(--kz-mute)]">· {new Date(r.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
-                  <p className="text-sm text-[#2A2018] leading-relaxed whitespace-pre-wrap">{r.message}</p>
-                  <div className="flex items-center gap-3 mt-2 flex-wrap text-xs text-[#6B5A4A]">
+                  <p className="text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap">{r.message}</p>
+                  <div className="flex items-center gap-3 mt-2 flex-wrap text-xs text-[var(--kz-mute)]">
                     <span>{r.reporterName ?? 'Anonyme'} ({r.reporterRole ?? '—'}) · {r.reporterEmail ?? '—'}</span>
                     {r.attachmentUrl && (
                       <a href={r.attachmentUrl} target="_blank" rel="noreferrer"
@@ -118,13 +118,13 @@ export default function AdminBugReportsPage() {
                 <div className="flex items-center gap-2 shrink-0">
                   <Badge color={STATUS_LABELS[r.status].color} size="sm">{STATUS_LABELS[r.status].label}</Badge>
                   <select value={r.status} onChange={(e) => setStatus(r.id, e.target.value)}
-                    className="text-xs font-semibold h-8 px-2 border border-[#1A1410] rounded-lg bg-white cursor-pointer">
+                    className="text-xs font-semibold h-8 px-2 border border-[var(--kz-edge)] rounded-lg bg-[var(--kz-paper)] cursor-pointer">
                     <option value="open">Ouvert</option>
                     <option value="in_progress">En cours</option>
                     <option value="resolved">Résolu</option>
                   </select>
                   <button onClick={() => remove(r.id)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#6B5A4A] hover:text-red-600">
+                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600">
                     <Trash2 size={15} />
                   </button>
                 </div>

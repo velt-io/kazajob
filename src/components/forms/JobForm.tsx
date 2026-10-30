@@ -143,8 +143,8 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
 
       {admin && (
         <div className="rounded-xl border-2 p-4" style={{ borderColor: KZ.violet, background: KZ.violetSoft }}>
-          <h3 className="text-sm font-bold text-[#1A1410] mb-1">Annonce administrateur (externe)</h3>
-          <p className="text-xs text-[#6B5A4A] mb-3">Annonce publiée par Kazajob sans compte recruteur. Les candidatures sont envoyées par email au contact ci-dessous.</p>
+          <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-1">Annonce administrateur (externe)</h3>
+          <p className="text-xs text-[var(--kz-mute)] mb-3">Annonce publiée par Kazajob sans compte recruteur. Les candidatures sont envoyées par email au contact ci-dessous.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Input label="Entreprise affichée" value={externalCompany} onChange={(e) => setExternalCompany(e.target.value)} placeholder="Nom de l'entreprise" />
             <Input label="Email de contact (candidatures)" type="email" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} placeholder="recrutement@entreprise.re" />
@@ -162,8 +162,8 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
             required
           />
           {title && !hasMentionHF(title) && (
-            <div className="mt-1.5 flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#FFC93C]"
-              style={{ background: '#FFF1C2', color: '#1A1410' }}>
+            <div className="mt-1.5 flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg border border-[var(--kz-yellow)]"
+              style={{ background: 'var(--kz-yellow-soft)', color: 'var(--kz-ink)' }}>
               ⚠️ La mention <strong>(H/F)</strong> est obligatoire pour éviter la discrimination — ajoutez-la au titre.
             </div>
           )}
@@ -189,7 +189,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
           placeholder="Choisir un secteur"
         />
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs font-semibold text-[#2A2018]">Remote</label>
+          <label className="text-xs font-semibold text-[var(--kz-text)]">Remote</label>
           <div className="flex gap-2">
             {[{ v: false, l: 'Presentiel' }, { v: true, l: 'Remote possible' }].map(({ v, l }) => (
               <button
@@ -198,8 +198,8 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
                 onClick={() => setRemote(v)}
                 className="flex-1 py-2.5 text-sm font-semibold border-[1.5px] rounded-lg"
                 style={remote === v
-                  ? { background: '#1A1410', color: '#FFF7EE', borderColor: '#1A1410' }
-                  : { background: 'white', color: '#1A1410', borderColor: '#1A1410' }}
+                  ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)', borderColor: 'var(--kz-edge)' }
+                  : { background: 'var(--kz-paper)', color: 'var(--kz-ink)', borderColor: 'var(--kz-edge)' }}
               >
                 {l}
               </button>
@@ -229,11 +229,11 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
         {(salaryMin || salaryMax) && (() => {
           const sl = getSalaryLabel(salaryMin ? parseInt(salaryMin) : null, salaryMax ? parseInt(salaryMax) : null)
           return sl ? (
-            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[#1A1410] text-sm font-semibold"
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[var(--kz-edge)] text-sm font-semibold"
               style={{ background: sl.bg, color: sl.color }}>
               <span style={{ background: sl.color, width: 10, height: 10, borderRadius: '50%', display: 'inline-block' }} />
               <span>{sl.label}</span>
-              <span className="text-xs font-normal text-[#6B5A4A] ml-1">— repère marché La Réunion 974</span>
+              <span className="text-xs font-normal text-[var(--kz-mute)] ml-1">— repère marché La Réunion 974</span>
             </div>
           ) : null
         })()}
@@ -291,21 +291,21 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
           background: isAnonymous ? KZ.violetSoft : KZ.cream2,
         }}
       >
-        <div className="w-9 h-9 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0"
+        <div className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
           style={{ background: isAnonymous ? KZ.violet : 'white' }}>
           <EyeOff size={16} color={isAnonymous ? 'white' : KZ.mute} />
         </div>
         <div>
-          <div className="text-sm font-bold text-[#1A1410]">Publication anonyme</div>
-          <div className="text-xs text-[#6B5A4A]">
+          <div className="text-sm font-bold text-[var(--kz-ink)]">Publication anonyme</div>
+          <div className="text-xs text-[var(--kz-mute)]">
             {isAnonymous
               ? 'Les candidats verront "Entreprise confidentielle" — nom caché'
               : 'Les candidats verront le nom et le logo de votre entreprise'}
           </div>
         </div>
-        <div className="ml-auto w-10 h-6 rounded-full border border-[#1A1410] transition-colors shrink-0 relative"
-          style={{ background: isAnonymous ? KZ.violet : '#E8DDC9' }}>
-          <div className="absolute top-0.5 h-5 w-5 rounded-full border border-[#1A1410] transition-all bg-white"
+        <div className="ml-auto w-10 h-6 rounded-full border border-[var(--kz-edge)] transition-colors shrink-0 relative"
+          style={{ background: isAnonymous ? KZ.violet : 'var(--kz-line)' }}>
+          <div className="absolute top-0.5 h-5 w-5 rounded-full border border-[var(--kz-edge)] transition-all bg-[var(--kz-paper)]"
             style={{ left: isAnonymous ? 'calc(100% - 22px)' : '2px' }} />
         </div>
       </button>
@@ -314,16 +314,16 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
       <div className="rounded-xl border-2 p-4" style={{ borderColor: KZ.line, background: KZ.cream2 }}>
         <div className="flex items-center gap-2 mb-1">
           <ListChecks size={16} color={KZ.violet} />
-          <h3 className="text-sm font-bold text-[#1A1410]">Questions de préqualification</h3>
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]" style={{ background: KZ.violetSoft, color: KZ.violet }}>Optionnel</span>
+          <h3 className="text-sm font-bold text-[var(--kz-ink)]">Questions de préqualification</h3>
+          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft, color: KZ.violet }}>Optionnel</span>
         </div>
-        <p className="text-xs text-[#6B5A4A] mb-3">
+        <p className="text-xs text-[var(--kz-mute)] mb-3">
           Posez des questions rapides aux candidats pour faciliter le tri ({MAX_PREQUAL_QUESTIONS} max).
         </p>
 
         <div className="flex flex-col gap-2.5">
           {prequal.map((q) => (
-            <div key={q.id} className="flex flex-col sm:flex-row gap-2 p-2.5 rounded-lg border border-[#E8DDC9] bg-white">
+            <div key={q.id} className="flex flex-col sm:flex-row gap-2 p-2.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)]">
               <Input className="flex-1" value={q.label} placeholder="Ex : Avez-vous le permis B ?"
                 onChange={(e) => updateQuestion(q.id, { label: e.target.value })} />
               <Select className="sm:w-40" options={PREQUAL_TYPES.map((t) => ({ value: t.id, label: t.label }))}
@@ -333,7 +333,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
                   onChange={(e) => updateQuestion(q.id, { options: e.target.value.split(',').map((s) => s.trim()) })} />
               )}
               <button type="button" onClick={() => removeQuestion(q.id)}
-                className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#6B5A4A] hover:text-red-600 shrink-0 self-center">
+                className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600 shrink-0 self-center">
                 <Trash2 size={15} />
               </button>
             </div>
@@ -348,8 +348,8 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
             <div className="flex flex-wrap gap-1.5 mt-2">
               {PREQUAL_SUGGESTIONS.filter((s) => !prequal.some((q) => q.label === s)).map((s) => (
                 <button key={s} type="button" onClick={() => addQuestion(s)}
-                  className="text-[11px] font-semibold px-2 py-1 rounded-full border border-[#1A1410] hover:shadow-[2px_2px_0_#1A1410] transition-all"
-                  style={{ background: 'white', color: KZ.ink }}>
+                  className="text-[11px] font-semibold px-2 py-1 rounded-full border border-[var(--kz-edge)] hover:shadow-[2px_2px_0_var(--kz-shadow)] transition-all"
+                  style={{ background: 'var(--kz-paper)', color: KZ.ink }}>
                   + {s}
                 </button>
               ))}
@@ -372,7 +372,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
         </Button>
       </div>
       {isDraft && !admin && (
-        <p className="text-xs text-[#6B5A4A] -mt-2 text-center sm:text-right">
+        <p className="text-xs text-[var(--kz-mute)] -mt-2 text-center sm:text-right">
           Une offre publiée reste en ligne 60 jours, puis vous pouvez la republier en un clic.
         </p>
       )}

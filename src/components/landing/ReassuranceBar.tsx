@@ -10,10 +10,10 @@ const BADGES = [
 
 export function ReassuranceBar() {
   return (
-    <div className="px-4 sm:px-8 py-3 border-b border-[#1A1410]" style={{ background: KZ.cream }}>
+    <div className="px-4 sm:px-8 py-3 border-b border-[var(--kz-edge)]" style={{ background: KZ.cream }}>
       <div className="max-w-[1280px] mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-2">
         {BADGES.map((b) => (
-          <div key={b.label} className="flex items-center gap-2 text-xs font-semibold text-[#2A2018]">
+          <div key={b.label} className="flex items-center gap-2 text-xs font-semibold text-[var(--kz-text)]">
             <span style={{ color: b.color }}>{b.icon}</span>
             {b.label}
           </div>

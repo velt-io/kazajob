@@ -1,4 +1,5 @@
-export const KZ = {
+/** Couleurs brutes (hex) : emails, PDF/CV, couleurs enregistrées en base. */
+export const KZ_HEX = {
   orange:      '#FF6B35',
   orangeDeep:  '#E54E1A',
   orangeSoft:  '#FFE0CF',
@@ -18,6 +19,35 @@ export const KZ = {
   text:        '#2A2018',
   mute:        '#6B5A4A',
   line:        '#E8DDC9',
+} as const
+
+/**
+ * Couleurs de l'interface sous forme de variables CSS (thème défini dans globals.css).
+ * Utilisables partout où le CSS est accepté (style, fill, stroke). Pour une valeur
+ * hexadécimale brute (PDF, base de données…), utiliser KZ_HEX.
+ */
+export const KZ = {
+  orange:      'var(--kz-orange)',
+  orangeDeep:  'var(--kz-orange-deep)',
+  orangeSoft:  'var(--kz-orange-soft)',
+  violet:      'var(--kz-violet)',
+  violetSoft:  'var(--kz-violet-soft)',
+  blue:        'var(--kz-blue)',
+  blueSoft:    'var(--kz-blue-soft)',
+  green:       'var(--kz-green)',
+  greenSoft:   'var(--kz-green-soft)',
+  yellow:      'var(--kz-yellow)',
+  yellowSoft:  'var(--kz-yellow-soft)',
+  cream:       'var(--kz-cream)',
+  cream2:      'var(--kz-cream2)',
+  beige:       'var(--kz-beige)',
+  ink:         'var(--kz-ink)',
+  paper:       'var(--kz-paper)',
+  text:        'var(--kz-text)',
+  mute:        'var(--kz-mute)',
+  line:        'var(--kz-line)',
+  edge:        'var(--kz-edge)',
+  shadow:      'var(--kz-shadow)',
 } as const
 
 export const REUNION_CITIES = [

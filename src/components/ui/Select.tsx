@@ -17,7 +17,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={selectId} className="text-xs font-semibold text-[#2A2018] tracking-tight">
+          <label htmlFor={selectId} className="text-xs font-semibold text-[var(--kz-text)] tracking-tight">
             {label}
           </label>
         )}
@@ -25,8 +25,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={selectId}
           className={cn(
-            'h-11 px-3.5 bg-white border-[1.5px] rounded-lg shadow-[2px_2px_0_#1A1410] text-sm text-[#2A2018] outline-none appearance-none cursor-pointer',
-            error ? 'border-[#E54E4E]' : 'border-[#1A1410]',
+            'h-11 px-3.5 bg-[var(--kz-paper)] border-[1.5px] rounded-lg shadow-[2px_2px_0_var(--kz-shadow)] text-sm text-[var(--kz-text)] outline-none appearance-none cursor-pointer',
+            error ? 'border-[#E54E4E]' : 'border-[var(--kz-edge)]',
             className
           )}
           {...props}
@@ -37,7 +37,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ))}
         </select>
         {(hint || error) && (
-          <p className={cn('text-xs', error ? 'text-[#E54E4E]' : 'text-[#6B5A4A]')}>{error ?? hint}</p>
+          <p className={cn('text-xs', error ? 'text-[#E54E4E]' : 'text-[var(--kz-mute)]')}>{error ?? hint}</p>
         )}
       </div>
     )

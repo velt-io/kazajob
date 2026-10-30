@@ -15,7 +15,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={textareaId} className="text-xs font-semibold text-[#2A2018] tracking-tight">
+          <label htmlFor={textareaId} className="text-xs font-semibold text-[var(--kz-text)] tracking-tight">
             {label}
           </label>
         )}
@@ -23,14 +23,14 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={textareaId}
           className={cn(
-            'w-full px-3.5 py-3 bg-white border-[1.5px] rounded-lg shadow-[2px_2px_0_#1A1410] text-sm text-[#2A2018] placeholder:text-[#6B5A4A] outline-none resize-none focus:shadow-[3px_3px_0_#1A1410] transition-shadow',
-            error ? 'border-[#E54E4E]' : 'border-[#1A1410]',
+            'w-full px-3.5 py-3 bg-[var(--kz-paper)] border-[1.5px] rounded-lg shadow-[2px_2px_0_var(--kz-shadow)] text-sm text-[var(--kz-text)] placeholder:text-[var(--kz-mute)] outline-none resize-none focus:shadow-[3px_3px_0_var(--kz-shadow)] transition-shadow',
+            error ? 'border-[#E54E4E]' : 'border-[var(--kz-edge)]',
             className
           )}
           {...props}
         />
         {(hint || error) && (
-          <p className={cn('text-xs', error ? 'text-[#E54E4E]' : 'text-[#6B5A4A]')}>{error ?? hint}</p>
+          <p className={cn('text-xs', error ? 'text-[#E54E4E]' : 'text-[var(--kz-mute)]')}>{error ?? hint}</p>
         )}
       </div>
     )

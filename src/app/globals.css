@@ -5,30 +5,56 @@
   --font-sora: var(--font-sora);
 
   /* Brand colors */
-  --color-kz-orange:      #FF6B35;
-  --color-kz-orange-deep: #E54E1A;
-  --color-kz-orange-soft: #FFE0CF;
-  --color-kz-violet:      #6D3BEB;
-  --color-kz-violet-soft: #E5DCFF;
-  --color-kz-blue:        #1B4FB8;
-  --color-kz-blue-soft:   #DCE7FB;
-  --color-kz-green:       #19A974;
-  --color-kz-green-soft:  #D6F0E0;
-  --color-kz-yellow:      #FFC93C;
-  --color-kz-yellow-soft: #FFF1C2;
-  --color-kz-cream:       #FFF7EE;
-  --color-kz-cream2:      #FBEFE0;
-  --color-kz-beige:       #F2E4D0;
-  --color-kz-ink:         #1A1410;
-  --color-kz-paper:       #FFFFFF;
-  --color-kz-text:        #2A2018;
-  --color-kz-mute:        #6B5A4A;
-  --color-kz-line:        #E8DDC9;
+  --color-kz-orange:      var(--kz-orange);
+  --color-kz-orange-deep: var(--kz-orange-deep);
+  --color-kz-orange-soft: var(--kz-orange-soft);
+  --color-kz-violet:      var(--kz-violet);
+  --color-kz-violet-soft: var(--kz-violet-soft);
+  --color-kz-blue:        var(--kz-blue);
+  --color-kz-blue-soft:   var(--kz-blue-soft);
+  --color-kz-green:       var(--kz-green);
+  --color-kz-green-soft:  var(--kz-green-soft);
+  --color-kz-yellow:      var(--kz-yellow);
+  --color-kz-yellow-soft: var(--kz-yellow-soft);
+  --color-kz-cream:       var(--kz-cream);
+  --color-kz-cream2:      var(--kz-cream2);
+  --color-kz-beige:       var(--kz-beige);
+  --color-kz-ink:         var(--kz-ink);
+  --color-kz-paper:       var(--kz-paper);
+  --color-kz-text:        var(--kz-text);
+  --color-kz-mute:        var(--kz-mute);
+  --color-kz-line:        var(--kz-line);
+  --color-kz-edge:        var(--kz-edge);
 }
 
+/* ── Thème (valeurs de la production actuelle) ─────────────────
+ * Toute l'interface lit ces variables : un thème = un bloc :root.
+ * Encre en trois rôles : texte (ink), bordures (edge), ombres cartoon (shadow). */
 :root {
-  --background: #FFF7EE;
-  --foreground: #1A1410;
+  --kz-orange:      #FF6B35;
+  --kz-orange-deep: #E54E1A;
+  --kz-orange-soft: #FFE0CF;
+  --kz-violet:      #6D3BEB;
+  --kz-violet-soft: #E5DCFF;
+  --kz-blue:        #1B4FB8;
+  --kz-blue-soft:   #DCE7FB;
+  --kz-green:       #19A974;
+  --kz-green-soft:  #D6F0E0;
+  --kz-yellow:      #FFC93C;
+  --kz-yellow-soft: #FFF1C2;
+  --kz-cream:       #FFF7EE;
+  --kz-cream2:      #FBEFE0;
+  --kz-beige:       #F2E4D0;
+  --kz-ink:         #1A1410;
+  --kz-paper:       #FFFFFF;
+  --kz-text:        #2A2018;
+  --kz-mute:        #6B5A4A;
+  --kz-line:        #E8DDC9;
+  --kz-edge:        #1A1410;
+  --kz-shadow:      #1A1410;
+
+  --background: var(--kz-cream);
+  --foreground: var(--kz-ink);
 }
 
 * {
@@ -49,15 +75,15 @@ body {
 
 /* ── Cartoon card shadow ────────────────────────────────────── */
 .kz-card {
-  border: 1.5px solid #1A1410;
+  border: 1.5px solid var(--kz-edge);
   border-radius: 10px;
-  box-shadow: 4px 4px 0 #1A1410;
+  box-shadow: 4px 4px 0 var(--kz-shadow);
 }
 
 .kz-card-sm {
-  border: 1.5px solid #1A1410;
+  border: 1.5px solid var(--kz-edge);
   border-radius: 8px;
-  box-shadow: 3px 3px 0 #1A1410;
+  box-shadow: 3px 3px 0 var(--kz-shadow);
 }
 
 /* ── Typography helpers ─────────────────────────────────────── */
@@ -89,7 +115,7 @@ body {
 }
 
 .kz-mute {
-  color: #6B5A4A;
+  color: var(--kz-mute);
 }
 
 /* ── Animations ─────────────────────────────────────────────── */
@@ -113,5 +139,5 @@ body {
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track  { background: #FBEFE0; }
-::-webkit-scrollbar-thumb  { background: #1A1410; border-radius: 3px; }
+::-webkit-scrollbar-track  { background: var(--kz-cream2); }
+::-webkit-scrollbar-thumb  { background: var(--kz-ink); border-radius: 3px; }

@@ -53,44 +53,44 @@ const SORT_OPTIONS = [
 function StageCard({ job, isFav, onFav }: { job: Job; isFav: boolean; onFav: () => void }) {
   return (
     <div
-      className="kz-card p-4 bg-white flex flex-col gap-3 hover:shadow-md transition-shadow"
+      className="kz-card p-4 bg-[var(--kz-paper)] flex flex-col gap-3 hover:shadow-md transition-shadow"
       style={{ borderColor: KZ.line }}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1">
             <span
-              className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+              className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
               style={{ background: KZ.violetSoft, color: KZ.violet }}
             >
               Stage
             </span>
             {job.internship_paid === true && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]" style={{ background: KZ.greenSoft }}>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.greenSoft }}>
                 Gratifié
               </span>
             )}
           </div>
-          <Link href={`/stages/${job.id}`} className="text-base font-bold text-[#1A1410] hover:text-[#FF6B35] transition-colors line-clamp-2">
+          <Link href={`/stages/${job.id}`} className="text-base font-bold text-[var(--kz-ink)] hover:text-[var(--kz-orange)] transition-colors line-clamp-2">
             {job.title}
           </Link>
-          <p className="text-xs text-[#6B5A4A] mt-0.5">
+          <p className="text-xs text-[var(--kz-mute)] mt-0.5">
             {(job.company as { name?: string } | null)?.name ?? 'Entreprise'}
           </p>
         </div>
         <button
           onClick={onFav}
-          className="shrink-0 p-1.5 rounded-lg border border-[#E8DDC9] hover:border-[#1A1410] transition-all"
+          className="shrink-0 p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-all"
           style={{ background: isFav ? KZ.orangeSoft : 'white' }}
           aria-label={isFav ? 'Retirer des favoris' : 'Sauvegarder'}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill={isFav ? '#FF6B35' : 'none'} stroke="#1A1410" strokeWidth="2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill={isFav ? 'var(--kz-orange)' : 'none'} stroke="var(--kz-ink)" strokeWidth="2">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2 text-xs text-[#6B5A4A]">
+      <div className="flex flex-wrap gap-2 text-xs text-[var(--kz-mute)]">
         {job.location && (
           <span className="flex items-center gap-1"><MapPin size={11} />{job.location}</span>
         )}
@@ -180,10 +180,10 @@ function StagesContent() {
         {/* En-tête */}
         <div className="mb-6">
           <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>La Réunion 974</p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410] mb-1">
+          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-1">
             Offres de stage
           </h1>
-          <p className="text-sm text-[#6B5A4A]">
+          <p className="text-sm text-[var(--kz-mute)]">
             {loading ? '…' : `${count} stage${count !== 1 ? 's' : ''} disponible${count !== 1 ? 's' : ''}`}
           </p>
         </div>
@@ -214,7 +214,7 @@ function StagesContent() {
             {activeChips.length > 0 && (
               <span
                 className="ml-1 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center shrink-0"
-                style={{ background: '#FF6B35', color: 'white' }}
+                style={{ background: 'var(--kz-orange)', color: 'white' }}
               >
                 {activeChips.length}
               </span>
@@ -225,7 +225,7 @@ function StagesContent() {
         {/* Rayon */}
         {cityInput && (
           <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="flex items-center gap-1 text-xs font-semibold text-[#6B5A4A]">
+            <span className="flex items-center gap-1 text-xs font-semibold text-[var(--kz-mute)]">
               <MapPin size={12} /> Rayon :
             </span>
             {RADIUS_OPTIONS.map((opt) => (
@@ -233,11 +233,11 @@ function StagesContent() {
                 key={opt.value}
                 type="button"
                 onClick={() => setRadius(radius === opt.value ? null : opt.value)}
-                className="px-3 py-1 text-xs font-semibold rounded-full border border-[#1A1410] transition-all"
+                className="px-3 py-1 text-xs font-semibold rounded-full border border-[var(--kz-edge)] transition-all"
                 style={
                   radius === opt.value
-                    ? { background: '#1A1410', color: '#FFF7EE' }
-                    : { background: 'white', color: '#1A1410' }
+                    ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)' }
+                    : { background: 'var(--kz-paper)', color: 'var(--kz-ink)' }
                 }
               >
                 {opt.label}
@@ -248,7 +248,7 @@ function StagesContent() {
 
         {/* Filtres avancés */}
         {showFilters && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 p-4 mb-2 rounded-xl border border-[#1A1410] bg-white">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 p-4 mb-2 rounded-xl border border-[var(--kz-edge)] bg-[var(--kz-paper)]">
             <Select
               label="Secteur"
               options={SECTOR_OPTIONS}
@@ -294,7 +294,7 @@ function StagesContent() {
                 </Badge>
               )
             })}
-            <button onClick={clearAll} className="text-xs font-semibold underline text-[#6B5A4A] hover:text-[#1A1410]">
+            <button onClick={clearAll} className="text-xs font-semibold underline text-[var(--kz-mute)] hover:text-[var(--kz-ink)]">
               Tout effacer
             </button>
           </div>
@@ -330,7 +330,7 @@ function StagesContent() {
               onClick={() => updateFilters({ page: (filters.page ?? 1) - 1 })}>
               Précédent
             </Button>
-            <span className="flex items-center px-4 text-sm font-semibold text-[#1A1410]">
+            <span className="flex items-center px-4 text-sm font-semibold text-[var(--kz-ink)]">
               {filters.page ?? 1} / {Math.ceil(count / (filters.limit ?? 12))}
             </span>
             <Button kind="outline" size="md"

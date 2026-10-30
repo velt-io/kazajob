@@ -71,7 +71,7 @@ export default function TrainingDetailPage() {
   if (loading) return <PageLoader />
   if (!offer) return (
     <div className="text-center py-16">
-      <p className="text-[#6B5A4A] mb-4">Formation introuvable.</p>
+      <p className="text-[var(--kz-mute)] mb-4">Formation introuvable.</p>
       <Button kind="outline" onClick={() => router.back()}>Retour</Button>
     </div>
   )
@@ -82,7 +82,7 @@ export default function TrainingDetailPage() {
   return (
     <div className="max-w-[900px] mx-auto">
       <button onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] mb-5">
+        className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-5">
         <ArrowLeft size={16} /> Retour aux formations
       </button>
 
@@ -97,9 +97,9 @@ export default function TrainingDetailPage() {
           )}
 
           {/* Header */}
-          <div className="kz-card p-5 bg-white">
-            <div className="text-sm font-semibold text-[#6B5A4A] mb-1">{offer.company?.name ?? 'Organisme de formation'}</div>
-            <h1 className="text-xl font-extrabold text-[#1A1410] mb-3">{offer.title}</h1>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <div className="text-sm font-semibold text-[var(--kz-mute)] mb-1">{offer.company?.name ?? 'Organisme de formation'}</div>
+            <h1 className="text-xl font-extrabold text-[var(--kz-ink)] mb-3">{offer.title}</h1>
             <div className="flex flex-wrap gap-2 mb-4">
               {offer.certification_level && <Badge color="violet" size="md">{certLabel(offer.certification_level)}</Badge>}
               {offer.is_financed && <Badge color="green" size="md">Formation financée</Badge>}
@@ -114,33 +114,33 @@ export default function TrainingDetailPage() {
                 ...(offer.start_date ? [{ icon: <CalendarCheck size={14} />, label: 'Début', val: new Date(offer.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }] : []),
                 ...(offer.financing_options.length > 0 ? [{ icon: <Euro size={14} />, label: 'Financement', val: offer.financing_options.join(', ') }] : []),
               ].map(item => (
-                <div key={item.label} className="p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                  <div className="flex items-center gap-1.5 text-[#6B5A4A] mb-0.5">{item.icon}<span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span></div>
-                  <div className="text-xs font-bold text-[#1A1410]">{item.val}</div>
+                <div key={item.label} className="p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                  <div className="flex items-center gap-1.5 text-[var(--kz-mute)] mb-0.5">{item.icon}<span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span></div>
+                  <div className="text-xs font-bold text-[var(--kz-ink)]">{item.val}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Description */}
-          <div className="kz-card p-5 bg-white">
-            <h2 className="text-base font-bold text-[#1A1410] mb-3">À propos de la formation</h2>
-            <p className="text-sm leading-relaxed text-[#2A2018] whitespace-pre-line">{offer.description}</p>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">À propos de la formation</h2>
+            <p className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{offer.description}</p>
           </div>
 
           {/* Programme */}
           {offer.program && (
-            <div className="kz-card p-5 bg-white">
-              <h2 className="text-base font-bold text-[#1A1410] mb-3">Programme pédagogique</h2>
-              <p className="text-sm leading-relaxed text-[#2A2018] whitespace-pre-line">{offer.program}</p>
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">Programme pédagogique</h2>
+              <p className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{offer.program}</p>
             </div>
           )}
 
           {/* Prérequis */}
           {offer.prerequisites && (
-            <div className="kz-card p-5 bg-white">
-              <h2 className="text-base font-bold text-[#1A1410] mb-3">Prérequis d&apos;accès</h2>
-              <p className="text-sm leading-relaxed text-[#2A2018] whitespace-pre-line">{offer.prerequisites}</p>
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">Prérequis d&apos;accès</h2>
+              <p className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{offer.prerequisites}</p>
             </div>
           )}
         </div>
@@ -148,16 +148,16 @@ export default function TrainingDetailPage() {
         {/* Sidebar */}
         <div className="flex flex-col gap-4">
           {/* CTA principal */}
-          <div className="kz-card p-5 bg-white">
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
             {offer.certification && (
-              <div className="text-base font-extrabold text-[#1A1410] mb-1">{offer.certification}</div>
+              <div className="text-base font-extrabold text-[var(--kz-ink)] mb-1">{offer.certification}</div>
             )}
-            <div className="text-sm text-[#6B5A4A] mb-4">{offer.duration_value} {offer.duration_unit} · {offer.location}</div>
+            <div className="text-sm text-[var(--kz-mute)] mb-4">{offer.duration_value} {offer.duration_unit} · {offer.location}</div>
 
             {applied ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl border border-[#19A974] bg-[#D6F0E0]">
+              <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
                 <Check size={16} color={KZ.green} />
-                <span className="text-sm font-bold text-[#1A1410]">Dossier envoyé !</span>
+                <span className="text-sm font-bold text-[var(--kz-ink)]">Dossier envoyé !</span>
               </div>
             ) : (
               <Button kind="primary" size="lg" full onClick={() => setApplyModal(true)}>
@@ -168,22 +168,22 @@ export default function TrainingDetailPage() {
 
           {/* Session IC */}
           {hasIC && icDate && (
-            <div className="kz-card p-5 bg-white border-[#19A974]" style={{ borderColor: KZ.green }}>
+            <div className="kz-card p-5 bg-[var(--kz-paper)] border-[var(--kz-green)]" style={{ borderColor: KZ.green }}>
               <div className="flex items-center gap-2 mb-3">
                 <CalendarCheck size={16} color={KZ.green} />
-                <h3 className="text-sm font-bold text-[#1A1410]">Session d&apos;Information Collective</h3>
+                <h3 className="text-sm font-bold text-[var(--kz-ink)]">Session d&apos;Information Collective</h3>
               </div>
-              <div className="text-xs text-[#6B5A4A] mb-1">
+              <div className="text-xs text-[var(--kz-mute)] mb-1">
                 {(offer.info_session as { title: string }).title}
               </div>
-              <div className="text-xs font-bold text-[#1A1410] mb-3">
+              <div className="text-xs font-bold text-[var(--kz-ink)] mb-3">
                 {icDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                 {' à '}{icDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
               </div>
               {icRegistered ? (
-                <div className="flex items-center gap-2 p-2.5 rounded-xl border border-[#19A974] bg-[#D6F0E0]">
+                <div className="flex items-center gap-2 p-2.5 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
                   <Check size={14} color={KZ.green} />
-                  <span className="text-xs font-bold text-[#1A1410]">Inscrit à la session IC</span>
+                  <span className="text-xs font-bold text-[var(--kz-ink)]">Inscrit à la session IC</span>
                 </div>
               ) : (
                 <Button kind="outline" size="sm" full onClick={() => setIcModal(true)}>
@@ -198,7 +198,7 @@ export default function TrainingDetailPage() {
       {/* Modal candidature */}
       <Modal open={applyModal} onClose={() => setApplyModal(false)} title="Postuler à cette formation">
         <div className="flex flex-col gap-4">
-          <h3 className="font-bold text-[#1A1410]">{offer.title}</h3>
+          <h3 className="font-bold text-[var(--kz-ink)]">{offer.title}</h3>
           {error && <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
           <Textarea
             label="Lettre de motivation (optionnel)"
@@ -221,14 +221,14 @@ export default function TrainingDetailPage() {
         <div className="flex flex-col gap-4">
           {hasIC && icDate && (
             <>
-              <div className="p-4 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.greenSoft }}>
-                <div className="text-sm font-bold text-[#1A1410] mb-1">{(offer.info_session as { title: string }).title}</div>
-                <div className="text-xs text-[#6B5A4A]">
+              <div className="p-4 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.greenSoft }}>
+                <div className="text-sm font-bold text-[var(--kz-ink)] mb-1">{(offer.info_session as { title: string }).title}</div>
+                <div className="text-xs text-[var(--kz-mute)]">
                   {icDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
                   {' à '}{icDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                 </div>
               </div>
-              <p className="text-sm text-[#2A2018]">
+              <p className="text-sm text-[var(--kz-text)]">
                 Cette session vous permettra de découvrir la formation en détail, poser vos questions et rencontrer l&apos;équipe pédagogique.
               </p>
               <div className="flex gap-2.5">

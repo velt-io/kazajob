@@ -62,12 +62,12 @@ export function KazaPortfolioSection({ profile, onSaved }: { profile: Record<str
   }
 
   return (
-    <div className="kz-card p-5 bg-white">
+    <div className="kz-card p-5 bg-[var(--kz-paper)]">
       <div className="flex items-center gap-2 mb-1">
         <FolderGit2 size={16} color={KZ.violet} />
-        <h3 className="text-sm font-bold text-[#1A1410]">KazaPortfolio</h3>
+        <h3 className="text-sm font-bold text-[var(--kz-ink)]">KazaPortfolio</h3>
       </div>
-      <p className="text-xs text-[#6B5A4A] mb-4">Mets en avant tes liens, ton portfolio et tes réalisations auprès des recruteurs.</p>
+      <p className="text-xs text-[var(--kz-mute)] mb-4">Mets en avant tes liens, ton portfolio et tes réalisations auprès des recruteurs.</p>
 
       <div className="flex flex-col gap-3">
         <Input label="LinkedIn" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} placeholder="https://linkedin.com/in/..." icon={<Briefcase size={15} />} />
@@ -76,17 +76,17 @@ export function KazaPortfolioSection({ profile, onSaved }: { profile: Record<str
 
         {/* PDF portfolio */}
         <div>
-          <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Portfolio PDF (optionnel)</label>
+          <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Portfolio PDF (optionnel)</label>
           {pdfUrl ? (
-            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-[#1A1410]" style={{ background: KZ.greenSoft }}>
+            <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.greenSoft }}>
               <FileText size={14} />
-              <a href={pdfUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-[#1A1410] flex-1 truncate hover:underline">Voir le PDF</a>
-              <button type="button" onClick={() => setPdfUrl(null)} className="text-[#6B5A4A] hover:text-red-600"><Trash2 size={14} /></button>
+              <a href={pdfUrl} target="_blank" rel="noreferrer" className="text-xs font-semibold text-[var(--kz-ink)] flex-1 truncate hover:underline">Voir le PDF</a>
+              <button type="button" onClick={() => setPdfUrl(null)} className="text-[var(--kz-mute)] hover:text-red-600"><Trash2 size={14} /></button>
             </div>
           ) : (
-            <label className="flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 border-dashed border-[#1A1410] cursor-pointer hover:bg-[#FBEFE0]">
+            <label className="flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 border-dashed border-[var(--kz-edge)] cursor-pointer hover:bg-[var(--kz-cream2)]">
               <FileText size={14} />
-              <span className="text-xs font-semibold text-[#1A1410]">{uploading ? 'Envoi…' : 'Ajouter un PDF (max 10 Mo)'}</span>
+              <span className="text-xs font-semibold text-[var(--kz-ink)]">{uploading ? 'Envoi…' : 'Ajouter un PDF (max 10 Mo)'}</span>
               <input type="file" accept=".pdf" className="hidden" onChange={handlePdf} disabled={uploading} />
             </label>
           )}
@@ -94,13 +94,13 @@ export function KazaPortfolioSection({ profile, onSaved }: { profile: Record<str
 
         {/* Réalisations */}
         <div>
-          <label className="block text-sm font-semibold text-[#1A1410] mb-1.5">Réalisations</label>
+          <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Réalisations</label>
           <div className="flex flex-col gap-2">
             {realisations.map((r, i) => (
-              <div key={i} className="rounded-xl border border-[#E8DDC9] p-2.5 flex flex-col gap-2" style={{ background: KZ.cream2 }}>
+              <div key={i} className="rounded-xl border border-[var(--kz-line)] p-2.5 flex flex-col gap-2" style={{ background: KZ.cream2 }}>
                 <div className="flex gap-2">
                   <Input className="flex-1" value={r.title} placeholder="Titre (ex : Refonte site X)" onChange={(e) => updateReal(i, { title: e.target.value })} />
-                  <button type="button" onClick={() => removeReal(i)} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#6B5A4A] hover:text-red-600 shrink-0 self-center"><Trash2 size={15} /></button>
+                  <button type="button" onClick={() => removeReal(i)} className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600 shrink-0 self-center"><Trash2 size={15} /></button>
                 </div>
                 <Input value={r.url ?? ''} placeholder="Lien (optionnel)" onChange={(e) => updateReal(i, { url: e.target.value })} icon={<Globe size={14} />} />
                 <Textarea value={r.description ?? ''} rows={2} placeholder="Description courte (optionnel)" onChange={(e) => updateReal(i, { description: e.target.value })} />

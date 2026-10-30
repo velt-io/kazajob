@@ -52,11 +52,11 @@ function Toggle({ on, onClick, disabled }: { on: boolean; onClick: () => void; d
   return (
     <button
       type="button" onClick={onClick} disabled={disabled}
-      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[#1A1410] transition-colors disabled:opacity-40 shrink-0"
+      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors disabled:opacity-40 shrink-0"
       style={{ background: on ? KZ.green : KZ.beige }}
       aria-pressed={on}
     >
-      <span className="inline-block h-4 w-4 rounded-full bg-white border border-[#1A1410] transition-transform"
+      <span className="inline-block h-4 w-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
         style={{ transform: on ? 'translateX(22px)' : 'translateX(2px)' }} />
     </button>
   )
@@ -157,8 +157,8 @@ export default function AdminLaunchPage() {
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#1A1410]">Campagne de lancement</h1>
-          <p className="text-sm text-[#6B5A4A] mt-1">
+          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Campagne de lancement</h1>
+          <p className="text-sm text-[var(--kz-mute)] mt-1">
             Accès gratuit temporaire, indépendant des forfaits Stripe. Jamais visible comme tarif public.
           </p>
         </div>
@@ -171,16 +171,16 @@ export default function AdminLaunchPage() {
       {data && (
         <div className="kz-card p-4 mb-6 flex flex-wrap items-center gap-4" style={{ background: KZ.violetSoft }}>
           <div className="flex items-center gap-2">
-            <Rocket size={20} className="text-[#6D3BEB]" />
-            <span className="font-extrabold text-[#1A1410]">Impact global</span>
+            <Rocket size={20} className="text-[var(--kz-violet)]" />
+            <span className="font-extrabold text-[var(--kz-ink)]">Impact global</span>
           </div>
-          <div className="flex items-center gap-1.5 text-sm text-[#1A1410]">
+          <div className="flex items-center gap-1.5 text-sm text-[var(--kz-ink)]">
             <Building2 size={15} /> <b>{data.usage.companies}</b> entreprise(s) enrôlée(s)
           </div>
-          <div className="flex items-center gap-1.5 text-sm text-[#1A1410]">
+          <div className="flex items-center gap-1.5 text-sm text-[var(--kz-ink)]">
             <Briefcase size={15} /> <b>{data.usage.activeJobs}</b> offre(s) active(s)
           </div>
-          <div className="flex items-center gap-1.5 text-sm text-[#1A1410]">
+          <div className="flex items-center gap-1.5 text-sm text-[var(--kz-ink)]">
             <BookOpen size={15} /> <b>{data.usage.activeTrainings}</b> formation(s) active(s)
           </div>
         </div>
@@ -194,19 +194,19 @@ export default function AdminLaunchPage() {
         const paidVisible = activeCampaign ? activeCampaign.new_subscriptions_enabled : true
         return (
           <div className="kz-card p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
-            style={{ background: daysLeft <= 30 ? '#FFF3E0' : '#FFF9F0', borderColor: daysLeft <= 30 ? '#FF6B35' : '#E8DDC9' }}>
+            style={{ background: daysLeft <= 30 ? '#FFF3E0' : '#FFF9F0', borderColor: daysLeft <= 30 ? 'var(--kz-orange)' : 'var(--kz-line)' }}>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <AlertTriangle size={16} className="text-[#FF6B35] shrink-0" />
-                <span className="font-extrabold text-[#1A1410] text-sm">
+                <AlertTriangle size={16} className="text-[var(--kz-orange)] shrink-0" />
+                <span className="font-extrabold text-[var(--kz-ink)] text-sm">
                   Lancement de l&apos;écosystème payant — 6 octobre 2026
                 </span>
                 <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: '#FF6B35', color: 'white' }}>
+                  style={{ background: 'var(--kz-orange)', color: 'white' }}>
                   J{daysLeft > 0 ? `−${daysLeft}` : ' PASSÉ'}
                 </span>
               </div>
-              <p className="text-xs text-[#6B5A4A] leading-relaxed">
+              <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
                 À partir de cette date, activer le toggle <b>Abonnements payants</b> sur la campagne active
                 pour que les offres payantes redeviennent visibles dans le tunnel d&apos;activation recruteur.
                 Actuellement&nbsp;: offres payantes <b>{paidVisible ? 'visibles ✓' : 'masquées (skeletons)'}</b>.
@@ -218,8 +218,8 @@ export default function AdminLaunchPage() {
 
       {/* Création d'une campagne */}
       {showCreate && (
-        <div className="kz-card p-4 mb-6 bg-white">
-          <h2 className="font-bold text-[#1A1410] mb-3">Nouvelle campagne (créée en brouillon)</h2>
+        <div className="kz-card p-4 mb-6 bg-[var(--kz-paper)]">
+          <h2 className="font-bold text-[var(--kz-ink)] mb-3">Nouvelle campagne (créée en brouillon)</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <Input label="Nom" value={createForm.name}
               onChange={(e) => setCreateForm((f) => ({ ...f, name: e.target.value }))}
@@ -229,17 +229,17 @@ export default function AdminLaunchPage() {
               placeholder="rentree-2026" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-            <label className="text-xs text-[#6B5A4A]">
+            <label className="text-xs text-[var(--kz-mute)]">
               Ouverture des inscriptions (optionnel)
               <input type="date" value={createForm.startsAt}
                 onChange={(e) => setCreateForm((f) => ({ ...f, startsAt: e.target.value }))}
-                className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
             </label>
-            <label className="text-xs text-[#6B5A4A]">
+            <label className="text-xs text-[var(--kz-mute)]">
               Fermeture des inscriptions (optionnel)
               <input type="date" value={createForm.endsAt}
                 onChange={(e) => setCreateForm((f) => ({ ...f, endsAt: e.target.value }))}
-                className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
             </label>
           </div>
           {createError && <p className="text-sm font-semibold mb-3" style={{ color: '#E54E4E' }}>{createError}</p>}
@@ -253,23 +253,23 @@ export default function AdminLaunchPage() {
       )}
 
       {loading ? (
-        <div className="kz-card p-8 text-center text-[#6B5A4A] bg-white">Chargement…</div>
+        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Chargement…</div>
       ) : !data || data.campaigns.length === 0 ? (
-        <div className="kz-card p-8 text-center text-[#6B5A4A] bg-white">Aucune campagne pour le moment.</div>
+        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Aucune campagne pour le moment.</div>
       ) : (
         <div className="space-y-4">
           {data.campaigns.map((c) => {
             const status = STATUS_LABEL[c.effective_status] ?? STATUS_LABEL.draft
             const actions = QUICK_ACTIONS[c.state] ?? []
             return (
-              <div key={c.id} className="kz-card p-4 bg-white">
+              <div key={c.id} className="kz-card p-4 bg-[var(--kz-paper)]">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-[#1A1410]">{c.name}</span>
+                    <span className="font-extrabold text-[var(--kz-ink)]">{c.name}</span>
                     <Badge color={status.color} size="sm">{status.label}</Badge>
-                    {c.starts_at && <span className="text-xs text-[#6B5A4A]">du {toLocalInput(c.starts_at)}</span>}
-                    {c.ends_at && <span className="text-xs text-[#6B5A4A]">au {toLocalInput(c.ends_at)}</span>}
-                    {busy === c.id && <span className="text-xs text-[#6D3BEB]">enregistrement…</span>}
+                    {c.starts_at && <span className="text-xs text-[var(--kz-mute)]">du {toLocalInput(c.starts_at)}</span>}
+                    {c.ends_at && <span className="text-xs text-[var(--kz-mute)]">au {toLocalInput(c.ends_at)}</span>}
+                    {busy === c.id && <span className="text-xs text-[var(--kz-violet)]">enregistrement…</span>}
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {actions.map((a) => (
@@ -286,8 +286,8 @@ export default function AdminLaunchPage() {
                   <div className="flex items-center gap-2">
                     <AlertTriangle size={14} style={{ color: c.free_publishing_enabled ? KZ.mute : '#E54E4E' }} />
                     <div>
-                      <div className="text-xs font-bold text-[#1A1410]">Arrêt d&apos;urgence</div>
-                      <div className="text-[10px] text-[#6B5A4A] leading-tight">Coupe l&apos;accès gratuit immédiatement, pour toutes les entreprises déjà enrôlées</div>
+                      <div className="text-xs font-bold text-[var(--kz-ink)]">Arrêt d&apos;urgence</div>
+                      <div className="text-[10px] text-[var(--kz-mute)] leading-tight">Coupe l&apos;accès gratuit immédiatement, pour toutes les entreprises déjà enrôlées</div>
                     </div>
                   </div>
                   <Toggle on={c.free_publishing_enabled} disabled={busy === c.id} onClick={() => toggleKillSwitch(c)} />
@@ -295,10 +295,10 @@ export default function AdminLaunchPage() {
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-3">
                   {TOGGLES.map((t) => (
-                    <div key={t.key} className="flex items-center justify-between gap-2 p-2 rounded-lg border border-[#E8DDC9]">
+                    <div key={t.key} className="flex items-center justify-between gap-2 p-2 rounded-lg border border-[var(--kz-line)]">
                       <div>
-                        <div className="text-xs font-bold text-[#1A1410]">{t.label}</div>
-                        <div className="text-[10px] text-[#6B5A4A] leading-tight">{t.help}</div>
+                        <div className="text-xs font-bold text-[var(--kz-ink)]">{t.label}</div>
+                        <div className="text-[10px] text-[var(--kz-mute)] leading-tight">{t.help}</div>
                       </div>
                       <Toggle on={Boolean(c[t.key])} disabled={busy === c.id}
                         onClick={() => patchConfig(c, { [t.key.replace(/_([a-z])/g, (_, l) => l.toUpperCase())]: !c[t.key] })} />
@@ -307,42 +307,42 @@ export default function AdminLaunchPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-                  <label className="text-xs text-[#6B5A4A]">
+                  <label className="text-xs text-[var(--kz-mute)]">
                     Durée d&apos;accès par entreprise (jours)
                     <input type="number" min={1} defaultValue={c.grant_duration_days}
                       onBlur={(e) => { const v = Number(e.target.value); if (v > 0 && v !== c.grant_duration_days) patchConfig(c, { grantDurationDays: v }) }}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                   </label>
-                  <label className="text-xs text-[#6B5A4A]">
+                  <label className="text-xs text-[var(--kz-mute)]">
                     Offres actives max / entreprise <span className="text-[#8A7A6A]">(−1 = illimité)</span>
                     <input type="number" min={-1} defaultValue={c.max_active_jobs_per_company}
                       onBlur={(e) => { const v = Number(e.target.value); if (v >= -1 && v !== c.max_active_jobs_per_company) patchConfig(c, { maxActiveJobsPerCompany: v }) }}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                   </label>
-                  <label className="text-xs text-[#6B5A4A]">
+                  <label className="text-xs text-[var(--kz-mute)]">
                     Formations actives max / entreprise <span className="text-[#8A7A6A]">(−1 = illimité)</span>
                     <input type="number" min={-1} defaultValue={c.max_active_trainings_per_company}
                       onBlur={(e) => { const v = Number(e.target.value); if (v >= -1 && v !== c.max_active_trainings_per_company) patchConfig(c, { maxActiveTrainingsPerCompany: v }) }}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                   </label>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                  <label className="text-xs text-[#6B5A4A]">
+                  <label className="text-xs text-[var(--kz-mute)]">
                     Inscriptions ouvertes à partir du
                     <input type="date" defaultValue={toLocalInput(c.starts_at)}
                       onChange={(e) => patchConfig(c, { startsAt: e.target.value ? new Date(e.target.value).toISOString() : null })}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                   </label>
-                  <label className="text-xs text-[#6B5A4A]">
+                  <label className="text-xs text-[var(--kz-mute)]">
                     Inscriptions fermées à partir du
                     <input type="date" defaultValue={toLocalInput(c.ends_at)}
                       onChange={(e) => patchConfig(c, { endsAt: e.target.value ? new Date(e.target.value).toISOString() : null })}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[#E8DDC9] bg-white text-[#1A1410]" />
+                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
                   </label>
                 </div>
 
-                <label className="text-xs text-[#6B5A4A] block">
+                <label className="text-xs text-[var(--kz-mute)] block">
                   Message recruteur (affiché aux entreprises enrôlées — wording réutilisable)
                   <Textarea value={c.recruiter_message ?? ''} rows={2} label=""
                     onChange={(e) => setData((d) => d ? { ...d, campaigns: d.campaigns.map((x) => x.id === c.id ? { ...x, recruiter_message: e.target.value } : x) } : d)}

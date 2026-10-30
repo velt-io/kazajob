@@ -19,17 +19,17 @@ export function IllustratedCta({
   id?: string
 }) {
   return (
-    <section id={id} className="relative overflow-hidden border-t border-[#1A1410] px-4 sm:px-8 py-16 lg:py-28">
+    <section id={id} className="relative overflow-hidden border-t border-[var(--kz-edge)] px-4 sm:px-8 py-16 lg:py-28">
       <Image src={image} alt={alt} fill sizes="100vw" className="object-cover" />
-      <div className="relative max-w-[680px] mx-auto text-center rounded-2xl border-[1.5px] border-[#1A1410] px-6 py-9 sm:px-10 sm:py-11"
-        style={{ background: 'rgba(255,247,238,0.94)', boxShadow: '6px 6px 0 #1A1410' }}>
+      <div className="relative max-w-[680px] mx-auto text-center rounded-2xl border-[1.5px] border-[var(--kz-edge)] px-6 py-9 sm:px-10 sm:py-11"
+        style={{ background: 'rgba(255,247,238,0.94)', boxShadow: '6px 6px 0 var(--kz-shadow)' }}>
         {eyebrow && <div className="mb-4 flex justify-center">{eyebrow}</div>}
-        <h2 className="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-[-0.03em] leading-[1.02] text-[#1A1410] mb-4">
+        <h2 className="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-[-0.03em] leading-[1.02] text-[var(--kz-ink)] mb-4">
           {title}
         </h2>
-        {text && <p className="text-sm sm:text-base lg:text-lg text-[#2A2018] mb-7 max-w-[520px] mx-auto">{text}</p>}
+        {text && <p className="text-sm sm:text-base lg:text-lg text-[var(--kz-text)] mb-7 max-w-[520px] mx-auto">{text}</p>}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">{actions}</div>
-        {footnote && <p className="text-xs text-[#6B5A4A] mt-5">{footnote}</p>}
+        {footnote && <p className="text-xs text-[var(--kz-mute)] mt-5">{footnote}</p>}
       </div>
     </section>
   )

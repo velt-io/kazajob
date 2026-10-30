@@ -19,12 +19,12 @@ export function Stepper({ steps, currentIndex, visitedIds, onStepClick }: Steppe
   const progress = Math.round(((currentIndex + 1) / steps.length) * 100)
 
   return (
-    <div className="p-4 border-b border-[#E8DDC9]">
+    <div className="p-4 border-b border-[var(--kz-line)]">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-bold text-[#1A1410] uppercase tracking-wide">
+        <span className="text-xs font-bold text-[var(--kz-ink)] uppercase tracking-wide">
           Étape {currentIndex + 1} / {steps.length}
         </span>
-        <span className="text-xs font-semibold text-[#6B5A4A]">{progress}%</span>
+        <span className="text-xs font-semibold text-[var(--kz-mute)]">{progress}%</span>
       </div>
 
       <div className="h-1.5 rounded-full overflow-hidden mb-3" style={{ background: KZ.cream2 }}>
@@ -47,7 +47,7 @@ export function Stepper({ steps, currentIndex, visitedIds, onStepClick }: Steppe
                 ? { background: KZ.violet, color: 'white', borderColor: KZ.violet }
                 : isVisited
                   ? { background: KZ.violetSoft, color: KZ.violet, borderColor: KZ.violet }
-                  : { background: KZ.paper, color: '#6B5A4A', borderColor: '#E8DDC9' }}
+                  : { background: KZ.paper, color: 'var(--kz-mute)', borderColor: 'var(--kz-line)' }}
             >
               {isVisited && !isCurrent ? <Check size={11} /> : <span>{i + 1}</span>}
               {step.label}

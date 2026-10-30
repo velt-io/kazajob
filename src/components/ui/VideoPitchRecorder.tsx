@@ -131,7 +131,7 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
   if (state === 'done' && currentUrl) {
     return (
       <div className="flex flex-col gap-3">
-        <div className="relative rounded-xl overflow-hidden border border-[#1A1410]" style={{ background: KZ.ink }}>
+        <div className="relative rounded-xl overflow-hidden border border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
           <video
             src={currentUrl}
             controls
@@ -156,17 +156,17 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
   if (state === 'idle') {
     return (
       <div
-        className="flex flex-col items-center gap-4 p-6 rounded-xl border-[1.5px] border-dashed border-[#1A1410] cursor-pointer hover:border-[#FF6B35] hover:bg-[#FFF7EE] transition-all"
+        className="flex flex-col items-center gap-4 p-6 rounded-xl border-[1.5px] border-dashed border-[var(--kz-edge)] cursor-pointer hover:border-[var(--kz-orange)] hover:bg-[var(--kz-cream)] transition-all"
         style={{ background: KZ.cream2 }}
         onClick={requestCamera}
       >
-        <div className="w-14 h-14 rounded-full border-[1.5px] border-[#1A1410] flex items-center justify-center" style={{ background: KZ.orangeSoft }}>
+        <div className="w-14 h-14 rounded-full border-[1.5px] border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.orangeSoft }}>
           <Video size={24} color={KZ.ink} />
         </div>
         <div className="text-center">
-          <div className="text-sm font-bold text-[#1A1410] mb-1">Enregistrer mon pitch vidéo</div>
-          <div className="text-xs text-[#6B5A4A]">60 secondes max · Caméra + micro requis</div>
-          <div className="text-xs text-[#6B5A4A] mt-1 opacity-70">Visible par les recruteurs sur ton profil</div>
+          <div className="text-sm font-bold text-[var(--kz-ink)] mb-1">Enregistrer mon pitch vidéo</div>
+          <div className="text-xs text-[var(--kz-mute)]">60 secondes max · Caméra + micro requis</div>
+          <div className="text-xs text-[var(--kz-mute)] mt-1 opacity-70">Visible par les recruteurs sur ton profil</div>
         </div>
         <Button kind="primary" size="sm" icon={<Video size={14} />}>
           Activer la caméra
@@ -177,8 +177,8 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
 
   if (state === 'permission') {
     return (
-      <div className="flex items-center justify-center p-8 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-        <p className="text-sm text-[#6B5A4A]">Autorisation caméra en cours...</p>
+      <div className="flex items-center justify-center p-8 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+        <p className="text-sm text-[var(--kz-mute)]">Autorisation caméra en cours...</p>
       </div>
     )
   }
@@ -199,17 +199,17 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
     return (
       <div className="flex flex-col gap-3">
         {/* Viewfinder */}
-        <div className="relative rounded-xl overflow-hidden border border-[#1A1410] bg-black" style={{ aspectRatio: '4/3' }}>
+        <div className="relative rounded-xl overflow-hidden border border-[var(--kz-edge)] bg-black" style={{ aspectRatio: '4/3' }}>
           <video ref={videoRef} autoPlay muted playsInline className="w-full h-full object-cover" style={{ transform: 'scaleX(-1)' }} />
 
           {/* Barre de progression */}
           {state === 'recording' && (
             <>
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-white/20">
-                <div className="h-full bg-[#FF6B35] transition-all" style={{ width: `${pct}%` }} />
+                <div className="h-full bg-[var(--kz-orange)] transition-all" style={{ width: `${pct}%` }} />
               </div>
               <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-red-600 text-white">
-                <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
+                <div className="w-2 h-2 rounded-full bg-[var(--kz-paper)] animate-pulse" />
                 <span className="text-xs font-bold">{remaining}s</span>
               </div>
             </>
@@ -240,7 +240,7 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
     return (
       <div className="flex flex-col gap-3">
         {/* Preview */}
-        <div className="relative rounded-xl overflow-hidden border border-[#1A1410]" style={{ background: KZ.ink, aspectRatio: '4/3' }}>
+        <div className="relative rounded-xl overflow-hidden border border-[var(--kz-edge)]" style={{ background: KZ.ink, aspectRatio: '4/3' }}>
           <video
             ref={previewRef}
             src={blobUrl ?? undefined}
@@ -260,7 +260,7 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
           </div>
         </div>
 
-        <div className="p-3 rounded-xl border border-[#E8DDC9] text-xs text-[#6B5A4A]" style={{ background: KZ.yellowSoft }}>
+        <div className="p-3 rounded-xl border border-[var(--kz-line)] text-xs text-[var(--kz-mute)]" style={{ background: KZ.yellowSoft }}>
           Regarde ta vidéo avant de la publier. Elle sera visible par les recruteurs qui consultent ton profil.
         </div>
 
@@ -278,9 +278,9 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
 
   if (state === 'uploading') {
     return (
-      <div className="flex flex-col items-center gap-3 p-8 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-        <div className="w-10 h-10 border-2 border-[#1A1410] border-t-[#FF6B35] rounded-full animate-spin" />
-        <p className="text-sm font-semibold text-[#1A1410]">Publication en cours...</p>
+      <div className="flex flex-col items-center gap-3 p-8 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+        <div className="w-10 h-10 border-2 border-[var(--kz-edge)] border-t-[var(--kz-orange)] rounded-full animate-spin" />
+        <p className="text-sm font-semibold text-[var(--kz-ink)]">Publication en cours...</p>
       </div>
     )
   }

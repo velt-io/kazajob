@@ -70,7 +70,7 @@ function RegisterForm() {
   return (
     <div className="min-h-screen flex flex-col md:grid md:grid-cols-2" style={{ background: KZ.cream }}>
       {/* Panneau gauche */}
-      <div className="hidden md:block relative overflow-hidden border-r border-[#1A1410]">
+      <div className="hidden md:block relative overflow-hidden border-r border-[var(--kz-edge)]">
         <img
           src="/assets/img/logimage.webp"
           decoding="async"
@@ -84,12 +84,12 @@ function RegisterForm() {
           style={{ background: 'linear-gradient(135deg, rgba(255,107,53,0.75) 0%, rgba(255,107,53,0.55) 100%)' }}
         />
         <div className="relative z-10 h-full p-8 flex flex-col">
-          <Logo size={32} mono color="#FFF7EE" accentColor="#FFF1C2" href="/" />
-          <div className="absolute top-12 right-8 opacity-70"><Soleil size={72} color={KZ.yellow} stroke="#FFF7EE" /></div>
-          <div className="absolute top-24 left-16 opacity-80"><Sparkle size={28} color="#FFF7EE" stroke="#FFF7EE" /></div>
-          <div className="absolute bottom-[260px] right-12 opacity-70"><Sparkle size={22} color="#FFF1C2" stroke="#FFF7EE" /></div>
-          <div className="absolute bottom-8 left-[-20px] opacity-80"><Palme size={150} color="#19A974" stroke="#FFF7EE" /></div>
-          <div className="absolute bottom-16 right-[-10px] opacity-70"><Palme size={130} color="#19A974" stroke="#FFF7EE" rotate={18} /></div>
+          <Logo size={32} mono color="var(--kz-cream)" accentColor="var(--kz-yellow-soft)" href="/" />
+          <div className="absolute top-12 right-8 opacity-70"><Soleil size={72} color={KZ.yellow} stroke="var(--kz-cream)" /></div>
+          <div className="absolute top-24 left-16 opacity-80"><Sparkle size={28} color="var(--kz-cream)" stroke="var(--kz-cream)" /></div>
+          <div className="absolute bottom-[260px] right-12 opacity-70"><Sparkle size={22} color="var(--kz-yellow-soft)" stroke="var(--kz-cream)" /></div>
+          <div className="absolute bottom-8 left-[-20px] opacity-80"><Palme size={150} color="var(--kz-green)" stroke="var(--kz-cream)" /></div>
+          <div className="absolute bottom-16 right-[-10px] opacity-70"><Palme size={130} color="var(--kz-green)" stroke="var(--kz-cream)" rotate={18} /></div>
           <div className="absolute bottom-0 left-0 right-0"><Vague width={520} height={24} color="rgba(255,247,238,0.35)" /></div>
           <div className="mt-auto pb-6">
             <p className="kz-eyebrow mb-3 text-white/90">Inscription · 3 min</p>
@@ -110,14 +110,14 @@ function RegisterForm() {
           <Logo size={36} />
         </div>
 
-        <h2 className="text-2xl lg:text-[28px] font-extrabold tracking-tight mb-2 text-[#1A1410]">Créer un compte</h2>
-        <p className="text-sm text-[#6B5A4A] mb-6">
+        <h2 className="text-2xl lg:text-[28px] font-extrabold tracking-tight mb-2 text-[var(--kz-ink)]">Créer un compte</h2>
+        <p className="text-sm text-[var(--kz-mute)] mb-6">
           Deja inscrit ?{' '}
           <Link href="/auth/login" className="font-bold" style={{ color: KZ.orange }}>Se connecter</Link>
         </p>
 
         {/* Choix du role */}
-        <div className="flex gap-2 mb-6 p-1 rounded-xl border border-[#1A1410]" style={{ background: KZ.paper }}>
+        <div className="flex gap-2 mb-6 p-1 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.paper }}>
           {(['candidate', 'recruiter'] as const).map((r) => (
             <button
               key={r}
@@ -125,7 +125,7 @@ function RegisterForm() {
               onClick={() => setRole(r)}
               className="flex-1 py-2.5 rounded-lg text-sm font-bold transition-all border-[1.5px]"
               style={role === r
-                ? { background: KZ.ink, color: KZ.cream, borderColor: KZ.ink, boxShadow: '2px 2px 0 #FF6B35' }
+                ? { background: KZ.ink, color: KZ.cream, borderColor: 'var(--kz-edge)', boxShadow: '2px 2px 0 var(--kz-orange)' }
                 : { background: 'transparent', color: KZ.text, borderColor: 'transparent' }}
             >
               {r === 'candidate' ? 'Je cherche' : 'Je recrute'}
@@ -149,13 +149,13 @@ function RegisterForm() {
             icon={<Lock size={16} />}
             hint="Minimum 8 caracteres"
             suffix={
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#6B5A4A] hover:text-[#1A1410]">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[var(--kz-mute)] hover:text-[var(--kz-ink)]">
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             }
             required
           />
-          <p className="text-xs text-[#6B5A4A] -mt-1">
+          <p className="text-xs text-[var(--kz-mute)] -mt-1">
             En creant un compte tu acceptes nos{' '}
             <span className="font-semibold" style={{ color: KZ.orange }}>CGU</span> et notre{' '}
             <span className="font-semibold" style={{ color: KZ.orange }}>politique de confidentialite</span>.
@@ -164,7 +164,7 @@ function RegisterForm() {
             {role === 'recruiter' ? 'Créer mon espace recruteur' : 'Créer mon compte — gratuit'}
           </Button>
           {role === 'recruiter' && (
-            <p className="text-xs text-center text-[#6B5A4A] -mt-1">
+            <p className="text-xs text-center text-[var(--kz-mute)] -mt-1">
               {launchDays
                 ? `Phase de lancement — accès gratuit pendant encore ${launchDays} jours · sans carte bancaire.`
                 : "Essai 30 jours · carte requise à l'activation · 1er débit après l'essai."
@@ -175,8 +175,8 @@ function RegisterForm() {
 
         <OAuthButtons role={role} />
 
-        <p className="text-center text-xs text-[#6B5A4A] mt-6">
-          <Link href="/" className="hover:text-[#FF6B35] font-semibold">← Retour à l&apos;accueil</Link>
+        <p className="text-center text-xs text-[var(--kz-mute)] mt-6">
+          <Link href="/" className="hover:text-[var(--kz-orange)] font-semibold">← Retour à l&apos;accueil</Link>
         </p>
       </div>
     </div>

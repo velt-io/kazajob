@@ -56,13 +56,13 @@ export default function CandidateQuizPage() {
     const a = ARCHETYPES[archetype]
     return (
       <div className="max-w-[560px] mx-auto py-6">
-        <div className="kz-card p-8 bg-white text-center animate-slide-up"
+        <div className="kz-card p-8 bg-[var(--kz-paper)] text-center animate-slide-up"
           style={{ boxShadow: `6px 6px 0 ${a.color}` }}>
           <div className="text-6xl mb-3">{a.emoji}</div>
           <p className="kz-eyebrow mb-2" style={{ color: a.color }}>Ton profil</p>
-          <h1 className="text-3xl font-extrabold tracking-tight text-[#1A1410] mb-3">{a.label}</h1>
-          <p className="text-sm text-[#6B5A4A] leading-relaxed mb-6 max-w-[400px] mx-auto">{a.tagline}</p>
-          <div className="p-3 rounded-xl border border-[#E8DDC9] text-xs text-[#2A2018] mb-6" style={{ background: KZ.cream2 }}>
+          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-3">{a.label}</h1>
+          <p className="text-sm text-[var(--kz-mute)] leading-relaxed mb-6 max-w-[400px] mx-auto">{a.tagline}</p>
+          <div className="p-3 rounded-xl border border-[var(--kz-line)] text-xs text-[var(--kz-text)] mb-6" style={{ background: KZ.cream2 }}>
             <strong>Visible par les recruteurs</strong> — ça leur donne un aperçu de ta façon de travailler.
           </div>
           <div className="flex flex-col sm:flex-row gap-2.5 justify-center">
@@ -84,13 +84,13 @@ export default function CandidateQuizPage() {
           <p className="kz-eyebrow flex items-center gap-1.5" style={{ color: KZ.violet }}>
             <Sparkles size={13} /> Quiz profil
           </p>
-          <span className="text-xs font-semibold text-[#6B5A4A]">{step + 1} / {total}</span>
+          <span className="text-xs font-semibold text-[var(--kz-mute)]">{step + 1} / {total}</span>
         </div>
         <Progress value={((step + 1) / total) * 100} color={KZ.violet} height={8} />
       </div>
 
-      <div key={step} className="kz-card p-6 bg-white animate-slide-up">
-        <h1 className="text-xl font-extrabold tracking-tight text-[#1A1410] mb-5 leading-snug">{question.q}</h1>
+      <div key={step} className="kz-card p-6 bg-[var(--kz-paper)] animate-slide-up">
+        <h1 className="text-xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-5 leading-snug">{question.q}</h1>
         <div className="flex flex-col gap-2.5">
           {question.options.map((opt, i) => (
             <button
@@ -98,7 +98,7 @@ export default function CandidateQuizPage() {
               type="button"
               disabled={saving}
               onClick={() => pick(i)}
-              className="text-left p-3.5 rounded-xl border-2 text-sm font-semibold text-[#1A1410] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50"
+              className="text-left p-3.5 rounded-xl border-2 text-sm font-semibold text-[var(--kz-ink)] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] disabled:opacity-50"
               style={{ borderColor: KZ.line, background: KZ.cream2 }}
               onMouseEnter={(e) => { e.currentTarget.style.borderColor = KZ.violet; e.currentTarget.style.boxShadow = `3px 3px 0 ${KZ.violet}` }}
               onMouseLeave={(e) => { e.currentTarget.style.borderColor = KZ.line; e.currentTarget.style.boxShadow = 'none' }}
@@ -109,7 +109,7 @@ export default function CandidateQuizPage() {
         </div>
       </div>
 
-      <p className="text-center text-xs text-[#6B5A4A] mt-4">
+      <p className="text-center text-xs text-[var(--kz-mute)] mt-4">
         Réponds spontanément — il n’y a pas de mauvaise réponse 😎
       </p>
     </div>

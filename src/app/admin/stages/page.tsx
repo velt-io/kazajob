@@ -70,8 +70,8 @@ export default function AdminStagesPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="kz-h2 text-[#1A1410] mb-1">Gestion des stages</h1>
-          <p className="text-sm text-[#6B5A4A]">{stages.length} offre{stages.length !== 1 ? 's' : ''} de stage</p>
+          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Gestion des stages</h1>
+          <p className="text-sm text-[var(--kz-mute)]">{stages.length} offre{stages.length !== 1 ? 's' : ''} de stage</p>
         </div>
       </div>
 
@@ -89,30 +89,30 @@ export default function AdminStagesPage() {
           icon={<ClipboardList size={28} />}
         />
       ) : (
-        <div className="kz-card bg-white overflow-x-auto">
+        <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
           <table className="w-full min-w-[700px]">
             <thead>
-              <tr className="border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+              <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                 {['Titre', 'Entreprise', 'Ville', 'Durée', 'Statut', 'Candidatures', 'Publié', 'Actions'].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold text-[#6B5A4A] uppercase tracking-widest">{h}</th>
+                  <th key={h} className="px-4 py-3 text-left text-xs font-bold text-[var(--kz-mute)] uppercase tracking-widest">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {filtered.map((stage) => (
-                <tr key={stage.id} className="border-b border-[#E8DDC9] last:border-0 hover:bg-[#FBEFE0] transition-colors">
+                <tr key={stage.id} className="border-b border-[var(--kz-line)] last:border-0 hover:bg-[var(--kz-cream2)] transition-colors">
                   <td className="px-4 py-3 max-w-[200px]">
                     <Link href={`/stages/${stage.id}`} target="_blank"
-                      className="text-sm font-semibold text-[#1A1410] hover:text-[#FF6B35] line-clamp-2">
+                      className="text-sm font-semibold text-[var(--kz-ink)] hover:text-[var(--kz-orange)] line-clamp-2">
                       {stage.title}
                     </Link>
-                    {stage.sector && <div className="text-xs text-[#6B5A4A]">{stage.sector}</div>}
+                    {stage.sector && <div className="text-xs text-[var(--kz-mute)]">{stage.sector}</div>}
                   </td>
-                  <td className="px-4 py-3 text-sm text-[#2A2018] max-w-[140px]">
+                  <td className="px-4 py-3 text-sm text-[var(--kz-text)] max-w-[140px]">
                     {(stage.company as { name?: string } | undefined)?.name ?? '—'}
                   </td>
-                  <td className="px-4 py-3 text-sm text-[#2A2018]">{stage.location}</td>
-                  <td className="px-4 py-3 text-sm text-[#2A2018]">
+                  <td className="px-4 py-3 text-sm text-[var(--kz-text)]">{stage.location}</td>
+                  <td className="px-4 py-3 text-sm text-[var(--kz-text)]">
                     {stage.internship_duration ?? '—'}
                   </td>
                   <td className="px-4 py-3">
@@ -120,23 +120,23 @@ export default function AdminStagesPage() {
                       {stage.is_active ? 'Actif' : 'Inactif'}
                     </Badge>
                   </td>
-                  <td className="px-4 py-3 text-sm text-[#2A2018] text-center">
+                  <td className="px-4 py-3 text-sm text-[var(--kz-text)] text-center">
                     {stage.applications_count}
                   </td>
-                  <td className="px-4 py-3 text-xs text-[#6B5A4A] whitespace-nowrap">
+                  <td className="px-4 py-3 text-xs text-[var(--kz-mute)] whitespace-nowrap">
                     {timeAgo(stage.created_at)}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
                       <button onClick={() => toggleActive(stage)}
-                        className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-[#1A1410] transition-all"
+                        className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-all"
                         title={stage.is_active ? 'Désactiver' : 'Activer'}>
                         {stage.is_active
-                          ? <EyeOff size={14} color="#6B5A4A" />
+                          ? <EyeOff size={14} color="var(--kz-mute)" />
                           : <Eye size={14} color={KZ.green} />}
                       </button>
                       <button onClick={() => deleteStage(stage.id)}
-                        className="p-1.5 rounded-lg border border-[#E8DDC9] hover:border-red-300 transition-all">
+                        className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-300 transition-all">
                         <Trash2 size={14} color="#E54E4E" />
                       </button>
                     </div>

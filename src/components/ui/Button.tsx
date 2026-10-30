@@ -5,14 +5,14 @@ import { cn } from '@/lib/utils'
 import type { ButtonKind, ButtonSize } from '@/lib/types'
 
 const kindStyles: Record<ButtonKind, string> = {
-  primary: 'bg-[#FF6B35] text-[#1A1410] border-[#1A1410] shadow-[3px_3px_0_#1A1410] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#1A1410]',
-  dark:    'bg-[#1A1410] text-[#FFF7EE] border-[#1A1410] shadow-[3px_3px_0_#FF6B35] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#FF6B35]',
-  violet:  'bg-[#6D3BEB] text-white border-[#1A1410] shadow-[3px_3px_0_#1A1410] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#1A1410]',
-  yellow:  'bg-[#FFC93C] text-[#1A1410] border-[#1A1410] shadow-[3px_3px_0_#1A1410] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#1A1410]',
-  outline: 'bg-white text-[#1A1410] border-[#1A1410] shadow-[3px_3px_0_#1A1410] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#1A1410]',
-  ghost:   'bg-transparent text-[#1A1410] border-transparent shadow-none hover:bg-[#FBEFE0] hover:text-black',
-  soft:    'bg-[#FBEFE0] text-[#1A1410] border-[#E8DDC9] shadow-none hover:bg-[#F2E4D0]',
-  danger:  'bg-[#E54E4E] text-white border-[#1A1410] shadow-[3px_3px_0_#1A1410] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#1A1410]',
+  primary: 'bg-[var(--kz-orange)] text-[var(--kz-ink)] border-[var(--kz-edge)] shadow-[3px_3px_0_var(--kz-shadow)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_var(--kz-shadow)]',
+  dark:    'bg-[var(--kz-ink)] text-[var(--kz-cream)] border-[var(--kz-edge)] shadow-[3px_3px_0_var(--kz-orange)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_var(--kz-orange)]',
+  violet:  'bg-[var(--kz-violet)] text-white border-[var(--kz-edge)] shadow-[3px_3px_0_var(--kz-shadow)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_var(--kz-shadow)]',
+  yellow:  'bg-[var(--kz-yellow)] text-[var(--kz-ink)] border-[var(--kz-edge)] shadow-[3px_3px_0_var(--kz-shadow)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_var(--kz-shadow)]',
+  outline: 'bg-[var(--kz-paper)] text-[var(--kz-ink)] border-[var(--kz-edge)] shadow-[3px_3px_0_var(--kz-shadow)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_var(--kz-shadow)]',
+  ghost:   'bg-transparent text-[var(--kz-ink)] border-transparent shadow-none hover:bg-[var(--kz-cream2)] hover:text-black',
+  soft:    'bg-[var(--kz-cream2)] text-[var(--kz-ink)] border-[var(--kz-line)] shadow-none hover:bg-[var(--kz-beige)]',
+  danger:  'bg-[#E54E4E] text-white border-[var(--kz-edge)] shadow-[3px_3px_0_var(--kz-shadow)] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_var(--kz-shadow)]',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {

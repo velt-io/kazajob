@@ -7,8 +7,8 @@ import { Logo } from '../layout/Logo'
 export function HeroIllustrationNew() {
   return (
     <div
-      className="relative w-[520px] h-[50vh] rounded-2xl border-[1.5px] border-[#1A1410] overflow-hidden animate-float"
-      style={{ boxShadow: '6px 6px 0 #1A1410', background: KZ.violetSoft }}
+      className="relative w-[520px] h-[50vh] rounded-2xl border-[1.5px] border-[var(--kz-edge)] overflow-hidden animate-float"
+      style={{ boxShadow: '6px 6px 0 var(--kz-shadow)', background: KZ.violetSoft }}
     >
       {/* Ciel dégradé */}
       <div
@@ -44,7 +44,7 @@ export function HeroIllustrationNew() {
 
       {/* Sol */}
       {/* <div
-        className="absolute bottom-0 left-0 right-0 border-t border-[#1A1410]"
+        className="absolute bottom-0 left-0 right-0 border-t border-[var(--kz-edge)]"
         style={{ height: 130, background: KZ.greenSoft }}
       /> */}
 
@@ -62,49 +62,49 @@ export function HeroIllustrationNew() {
       </div>
       {/* Card flottante : offre */}
       <div
-        className="absolute top-10 right-70 w-[220px] p-3.5 rounded-[10px] border-[1.5px] border-[#1A1410]"
-        style={{ background: KZ.paper, boxShadow: '4px 4px 0 #1A1410', transform: 'rotate(-4deg)' }}
+        className="absolute top-10 right-70 w-[220px] p-3.5 rounded-[10px] border-[1.5px] border-[var(--kz-edge)]"
+        style={{ background: KZ.paper, boxShadow: '4px 4px 0 var(--kz-shadow)', transform: 'rotate(-4deg)' }}
       >
         <div className="flex items-center gap-2.5 mb-2">
           <div
-            className="w-9 h-9 rounded-md border border-[#1A1410] flex items-center justify-center"
+            className="w-9 h-9 rounded-md border border-[var(--kz-edge)] flex items-center justify-center"
             style={{ background: KZ.orange }}
           >
             <Briefcase size={16} color={KZ.ink} />
           </div>
           <div>
-            <div className="text-sm font-bold text-[#1A1410]">Run Tech</div>
-            <div className="text-[10px] text-[#6B5A4A]">Saint-Pierre · 974</div>
+            <div className="text-sm font-bold text-[var(--kz-ink)]">Run Tech</div>
+            <div className="text-[10px] text-[var(--kz-mute)]">Saint-Pierre · 974</div>
           </div>
         </div>
-        <div className="text-sm font-bold text-[#1A1410] mb-1.5">Dev Full-Stack</div>
+        <div className="text-sm font-bold text-[var(--kz-ink)] mb-1.5">Dev Full-Stack</div>
         <div className="flex gap-1">
-          <span className="text-xs font-semibold px-2 py-0.5 border border-[#1A1410] rounded-md" style={{ background: KZ.violetSoft }}>React</span>
-          <span className="text-xs font-semibold px-2 py-0.5 border border-[#1A1410] rounded-md" style={{ background: KZ.greenSoft }}>Remote</span>
+          <span className="text-xs font-semibold px-2 py-0.5 border border-[var(--kz-edge)] rounded-md" style={{ background: KZ.violetSoft }}>React</span>
+          <span className="text-xs font-semibold px-2 py-0.5 border border-[var(--kz-edge)] rounded-md" style={{ background: KZ.greenSoft }}>Remote</span>
         </div>
       </div>
 
       {/* Card flottante : matching */}
       <div
-        className="absolute top-[200px] right-8 w-[200px] p-3 rounded-[10px] border-[1.5px] border-[#1A1410]"
-        style={{ background: KZ.paper, boxShadow: '4px 4px 0 #1A1410', transform: 'rotate(5deg)' }}
+        className="absolute top-[200px] right-8 w-[200px] p-3 rounded-[10px] border-[1.5px] border-[var(--kz-edge)]"
+        style={{ background: KZ.paper, boxShadow: '4px 4px 0 var(--kz-shadow)', transform: 'rotate(5deg)' }}
       >
         <div className="flex items-center gap-2 mb-2">
           <Sparkles size={14} color={KZ.violet} />
-          <span className="text-[11px] font-bold uppercase tracking-widest text-[#1A1410]">Matching IA</span>
+          <span className="text-[11px] font-bold uppercase tracking-widest text-[var(--kz-ink)]">Matching IA</span>
         </div>
         <div className="flex items-baseline gap-1 mb-1.5">
           <span className="text-[32px] font-extrabold leading-none" style={{ color: KZ.violet }}>94</span>
           <span className="text-sm font-bold" style={{ color: KZ.violet }}>%</span>
         </div>
-        <div className="h-3 bg-[#FBEFE0] border border-[#1A1410] rounded-full overflow-hidden">
-          <div className="h-full w-[94%] border-r border-[#1A1410]" style={{ background: KZ.violet }} />
+        <div className="h-3 bg-[var(--kz-cream2)] border border-[var(--kz-edge)] rounded-full overflow-hidden">
+          <div className="h-full w-[94%] border-r border-[var(--kz-edge)]" style={{ background: KZ.violet }} />
         </div>
       </div>
       {/* Bulle BD
       <div
-        className="absolute bottom-3 left-2 px-3.5 py-2.5 rounded-2xl border-[1.5px] border-[#1A1410] text-sm font-bold text-[#1A1410]"
-        style={{ background: KZ.yellow, boxShadow: '3px 3px 0 #1A1410', transform: 'rotate(-3deg)' }}
+        className="absolute bottom-3 left-2 px-3.5 py-2.5 rounded-2xl border-[1.5px] border-[var(--kz-edge)] text-sm font-bold text-[var(--kz-ink)]"
+        style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', transform: 'rotate(-3deg)' }}
       >
         Le la !
       </div> */}

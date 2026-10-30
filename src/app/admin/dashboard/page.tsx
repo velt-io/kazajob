@@ -64,8 +64,8 @@ export default function AdminDashboard() {
   return (
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-7">
-        <h1 className="kz-h2 text-[#1A1410] mb-1">Administration</h1>
-        <p className="text-sm text-[#6B5A4A]">Vue globale · Kazajob La Reunion 974</p>
+        <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Administration</h1>
+        <p className="text-sm text-[var(--kz-mute)]">Vue globale · Kazajob La Reunion 974</p>
       </div>
 
       {/* KPI — ligne 1 */}
@@ -84,20 +84,20 @@ export default function AdminDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-5">
         {/* Offres récentes */}
-        <div className="kz-card p-6 bg-white">
+        <div className="kz-card p-6 bg-[var(--kz-paper)]">
           <div className="flex justify-between items-center mb-5">
-            <h2 className="kz-h3 text-[#1A1410]">Offres recentes</h2>
+            <h2 className="kz-h3 text-[var(--kz-ink)]">Offres recentes</h2>
             <Link href="/admin/jobs"><Button kind="soft" size="sm">Tout voir</Button></Link>
           </div>
           {recentJobs.length === 0 ? (
-            <p className="text-sm text-[#6B5A4A] text-center py-6">Aucune offre publiee pour le moment.</p>
+            <p className="text-sm text-[var(--kz-mute)] text-center py-6">Aucune offre publiee pour le moment.</p>
           ) : (
             <div className="flex flex-col gap-2">
               {recentJobs.map((job) => (
-                <div key={job.id} className="flex items-center gap-3 p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                <div key={job.id} className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-[#1A1410] truncate">{job.title}</div>
-                    <div className="text-xs text-[#6B5A4A]">
+                    <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{job.title}</div>
+                    <div className="text-xs text-[var(--kz-mute)]">
                       {new Date(job.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                     </div>
                   </div>
@@ -113,8 +113,8 @@ export default function AdminDashboard() {
         {/* Colonne droite */}
         <div className="flex flex-col gap-4">
           {/* Accès rapides */}
-          <div className="kz-card p-5 bg-white">
-            <h3 className="kz-h3 text-[#1A1410] mb-4">Acces rapides</h3>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h3 className="kz-h3 text-[var(--kz-ink)] mb-4">Acces rapides</h3>
             <div className="flex flex-col gap-2">
               {[
                 { href: '/admin/users',         label: 'Gérer les utilisateurs',  color: KZ.violetSoft, icon: <Users size={16} /> },
@@ -129,30 +129,30 @@ export default function AdminDashboard() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 p-3.5 rounded-xl border border-[#1A1410] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0_#1A1410]"
-                  style={{ background: item.color, boxShadow: '2px 2px 0 #1A1410' }}
+                  className="flex items-center gap-3 p-3.5 rounded-xl border border-[var(--kz-edge)] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0_var(--kz-shadow)]"
+                  style={{ background: item.color, boxShadow: '2px 2px 0 var(--kz-shadow)' }}
                 >
                   {item.icon}
-                  <span className="text-sm font-bold text-[#1A1410]">{item.label}</span>
+                  <span className="text-sm font-bold text-[var(--kz-ink)]">{item.label}</span>
                 </Link>
               ))}
             </div>
           </div>
 
           {/* Distribution rôles — données réelles */}
-          <div className="kz-card p-5 bg-white">
-            <h3 className="kz-h3 text-[#1A1410] mb-4">Distribution des roles</h3>
+          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <h3 className="kz-h3 text-[var(--kz-ink)] mb-4">Distribution des roles</h3>
             {stats.users === 0 ? (
-              <p className="text-xs text-[#6B5A4A] text-center py-4">Aucun utilisateur inscrit.</p>
+              <p className="text-xs text-[var(--kz-mute)] text-center py-4">Aucun utilisateur inscrit.</p>
             ) : (
               <div className="flex flex-col gap-3">
                 {roleDistrib.map((r) => (
                   <div key={r.label}>
                     <div className="flex justify-between text-xs font-semibold mb-1">
-                      <span className="text-[#1A1410]">{r.label} <span className="text-[#6B5A4A] font-normal">({r.count})</span></span>
-                      <span className="text-[#6B5A4A]">{r.pct}%</span>
+                      <span className="text-[var(--kz-ink)]">{r.label} <span className="text-[var(--kz-mute)] font-normal">({r.count})</span></span>
+                      <span className="text-[var(--kz-mute)]">{r.pct}%</span>
                     </div>
-                    <div className="h-2.5 bg-[#FBEFE0] border border-[#1A1410] rounded-full overflow-hidden">
+                    <div className="h-2.5 bg-[var(--kz-cream2)] border border-[var(--kz-edge)] rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all duration-500" style={{ width: `${r.pct}%`, background: r.color }} />
                     </div>
                   </div>

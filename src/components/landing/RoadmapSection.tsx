@@ -62,11 +62,11 @@ export function RoadmapSection() {
       <div className="max-w-[1280px] mx-auto">
         <div className="text-center mb-12">
           <p className="kz-eyebrow mb-3" style={{ color: KZ.green }}>Roadmap</p>
-          <h2 className="text-3xl lg:text-[40px] font-extrabold tracking-tight text-[#1A1410] mb-4">
+          <h2 className="text-3xl lg:text-[40px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-4">
             On construit Kazajob<br />
             <span style={{ color: KZ.green }}>avec vous.</span>
           </h2>
-          <p className="text-base text-[#6B5A4A] max-w-[480px] mx-auto">
+          <p className="text-base text-[var(--kz-mute)] max-w-[480px] mx-auto">
             Transparence totale sur ce qui est disponible, ce qui arrive bientôt et ce que nous préparons.
             Chaque retour utilisateur influence la priorité.
           </p>
@@ -85,7 +85,7 @@ export function RoadmapSection() {
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <div
-                      className="w-7 h-7 rounded-lg border border-[#1A1410] flex items-center justify-center"
+                      className="w-7 h-7 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center"
                       style={{ background: style.accent, color: 'white' }}
                     >
                       {style.icon}
@@ -97,7 +97,7 @@ export function RoadmapSection() {
                       {style.label}
                     </Badge>
                   </div>
-                  <h3 className="text-base font-extrabold text-[#1A1410]">{phase.quarter}</h3>
+                  <h3 className="text-base font-extrabold text-[var(--kz-ink)]">{phase.quarter}</h3>
                 </div>
 
                 {/* Items */}
@@ -105,15 +105,15 @@ export function RoadmapSection() {
                   {phase.items.map((item) => (
                     <li key={item} className="flex items-start gap-2.5">
                       <div
-                        className="w-4 h-4 rounded-full border border-[#1A1410] flex items-center justify-center shrink-0 mt-0.5"
+                        className="w-4 h-4 rounded-full border border-[var(--kz-edge)] flex items-center justify-center shrink-0 mt-0.5"
                         style={{ background: style.accent }}
                       >
                         {phase.status === 'done'
                           ? <Check size={9} color="white" />
-                          : <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                          : <div className="w-1.5 h-1.5 rounded-full bg-[var(--kz-paper)]" />
                         }
                       </div>
-                      <span className="text-sm text-[#1A1410] leading-snug">{item}</span>
+                      <span className="text-sm text-[var(--kz-ink)] leading-snug">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -124,7 +124,7 @@ export function RoadmapSection() {
 
         {/* Note de transparence */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-[#6B5A4A]">
+          <p className="text-sm text-[var(--kz-mute)]">
             Tu as une idée de feature ?{' '}
             <a href="mailto:kazajob.re@gmail.com" className="font-bold hover:underline" style={{ color: KZ.violet }}>
               kazajob.re@gmail.com

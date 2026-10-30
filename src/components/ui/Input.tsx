@@ -19,32 +19,32 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-xs font-semibold text-[#2A2018] tracking-tight"
+            className="text-xs font-semibold text-[var(--kz-text)] tracking-tight"
           >
             {label}
           </label>
         )}
         <div
           className={cn(
-            'flex items-center gap-2 h-11 px-3.5 bg-white border-[1.5px] rounded-lg shadow-[2px_2px_0_#1A1410] transition-shadow',
-            error ? 'border-[#E54E4E]' : 'border-[#1A1410]',
-            'focus-within:shadow-[3px_3px_0_#1A1410]'
+            'flex items-center gap-2 h-11 px-3.5 bg-[var(--kz-paper)] border-[1.5px] rounded-lg shadow-[2px_2px_0_var(--kz-shadow)] transition-shadow',
+            error ? 'border-[#E54E4E]' : 'border-[var(--kz-edge)]',
+            'focus-within:shadow-[3px_3px_0_var(--kz-shadow)]'
           )}
         >
-          {icon && <span className="inline-flex text-[#6B5A4A] shrink-0">{icon}</span>}
+          {icon && <span className="inline-flex text-[var(--kz-mute)] shrink-0">{icon}</span>}
           <input
             ref={ref}
             id={inputId}
             className={cn(
-              'flex-1 bg-transparent text-sm text-[#2A2018] placeholder:text-[#6B5A4A] outline-none min-w-0',
+              'flex-1 bg-transparent text-sm text-[var(--kz-text)] placeholder:text-[var(--kz-mute)] outline-none min-w-0',
               className
             )}
             {...props}
           />
-          {suffix && <span className="inline-flex text-[#6B5A4A] shrink-0">{suffix}</span>}
+          {suffix && <span className="inline-flex text-[var(--kz-mute)] shrink-0">{suffix}</span>}
         </div>
         {(hint || error) && (
-          <p className={cn('text-xs', error ? 'text-[#E54E4E]' : 'text-[#6B5A4A]')}>
+          <p className={cn('text-xs', error ? 'text-[#E54E4E]' : 'text-[var(--kz-mute)]')}>
             {error ?? hint}
           </p>
         )}

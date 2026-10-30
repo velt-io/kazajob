@@ -16,8 +16,8 @@ export default function FavoritesPage() {
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6">
-        <h1 className="kz-h2 text-[#1A1410] mb-1">Mes favoris</h1>
-        <p className="text-sm text-[#6B5A4A]">{favorites.length} offre(s) sauvegardee(s)</p>
+        <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Mes favoris</h1>
+        <p className="text-sm text-[var(--kz-mute)]">{favorites.length} offre(s) sauvegardee(s)</p>
       </div>
 
       {loading ? (

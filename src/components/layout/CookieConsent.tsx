@@ -31,14 +31,14 @@ export function CookieConsent() {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[60] p-3 sm:p-4" role="dialog" aria-label="Consentement cookies">
       <div
-        className="max-w-[760px] mx-auto rounded-2xl border border-[#1A1410] bg-white p-4 sm:p-5 flex flex-col gap-4"
-        style={{ boxShadow: '4px 4px 0 #1A1410' }}
+        className="max-w-[760px] mx-auto rounded-2xl border border-[var(--kz-edge)] bg-[var(--kz-paper)] p-4 sm:p-5 flex flex-col gap-4"
+        style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}
       >
         <div className="flex items-start gap-3 flex-1">
-          <div className="w-9 h-9 rounded-xl border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: KZ.yellowSoft }}>
-            <Cookie size={16} className="text-[#1A1410]" />
+          <div className="w-9 h-9 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: KZ.yellowSoft }}>
+            <Cookie size={16} className="text-[var(--kz-ink)]" />
           </div>
-          <p className="text-xs sm:text-sm text-[#2A2018] leading-relaxed">
+          <p className="text-xs sm:text-sm text-[var(--kz-text)] leading-relaxed">
             Kazajob utilise des <strong>cookies essentiels</strong> au fonctionnement (session de connexion), et,
             avec ton accord, des cookies de mesure d&apos;audience et publicitaires.{' '}
             <Link href="/legal/cookies" className="font-bold underline" style={{ color: KZ.violet }}>En savoir plus</Link>.
@@ -47,15 +47,15 @@ export function CookieConsent() {
 
         {customizing && (
           <div className="flex flex-col gap-2 pl-12">
-            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[#2A2018]">
-              <span>Cookies nécessaires <span className="text-[#6B5A4A]">(toujours actifs)</span></span>
+            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[var(--kz-text)]">
+              <span>Cookies nécessaires <span className="text-[var(--kz-mute)]">(toujours actifs)</span></span>
               <input type="checkbox" checked disabled className="w-4 h-4" />
             </label>
-            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[#2A2018] cursor-pointer">
+            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[var(--kz-text)] cursor-pointer">
               <span>Mesure d&apos;audience (Analytics)</span>
               <input type="checkbox" checked={analytics} onChange={(e) => setAnalytics(e.target.checked)} className="w-4 h-4" />
             </label>
-            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[#2A2018] cursor-pointer">
+            <label className="flex items-center justify-between gap-3 text-xs sm:text-sm text-[var(--kz-text)] cursor-pointer">
               <span>Publicité (Marketing)</span>
               <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} className="w-4 h-4" />
             </label>

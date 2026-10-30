@@ -64,28 +64,28 @@ export default function AdminDemoPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6">
         <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Commercial</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">Démos &amp; rendez-vous</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">Lien public à mettre dans vos mailings : <code>/demo</code></p>
+        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Démos &amp; rendez-vous</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">Lien public à mettre dans vos mailings : <code>/demo</code></p>
       </div>
 
       {/* Créneaux */}
-      <div className="kz-card p-5 bg-white mb-6">
-        <h2 className="text-base font-bold text-[#1A1410] mb-3 flex items-center gap-2"><CalendarPlus size={16} />Ouvrir un créneau</h2>
+      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-6">
+        <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2"><CalendarPlus size={16} />Ouvrir un créneau</h2>
         <div className="flex flex-col sm:flex-row gap-2 mb-4">
           <Input className="flex-1" type="datetime-local" value={newSlot} onChange={(e) => setNewSlot(e.target.value)} />
           <Select className="sm:w-36" options={[{ value: '15', label: '15 min' }, { value: '30', label: '30 min' }, { value: '45', label: '45 min' }, { value: '60', label: '1 heure' }]} value={dur} onChange={(e) => setDur(e.target.value)} />
           <Button kind="primary" size="md" icon={<Plus size={15} />} onClick={addSlot}>Ajouter</Button>
         </div>
         {slots.length === 0 ? (
-          <p className="text-xs text-[#6B5A4A]">Aucun créneau ouvert. Ajoutez-en pour permettre la réservation en ligne.</p>
+          <p className="text-xs text-[var(--kz-mute)]">Aucun créneau ouvert. Ajoutez-en pour permettre la réservation en ligne.</p>
         ) : (
           <div className="flex flex-wrap gap-2">
             {slots.map((s) => (
-              <div key={s.id} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#1A1410] text-xs font-semibold"
+              <div key={s.id} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--kz-edge)] text-xs font-semibold"
                 style={{ background: s.is_booked ? KZ.orangeSoft : KZ.greenSoft }}>
                 <Clock size={11} />{fmt(s.starts_at)} · {s.duration_min}min
                 {s.is_booked && <Badge color="orange" size="sm">Réservé</Badge>}
-                {!s.is_booked && <button onClick={() => delSlot(s.id)} className="text-[#6B5A4A] hover:text-red-600"><Trash2 size={12} /></button>}
+                {!s.is_booked && <button onClick={() => delSlot(s.id)} className="text-[var(--kz-mute)] hover:text-red-600"><Trash2 size={12} /></button>}
               </div>
             ))}
           </div>
@@ -93,29 +93,29 @@ export default function AdminDemoPage() {
       </div>
 
       {/* RDV */}
-      <h2 className="text-base font-bold text-[#1A1410] mb-3">Demandes de RDV ({bookings.length})</h2>
+      <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">Demandes de RDV ({bookings.length})</h2>
       {loading ? <PageLoader /> : bookings.length === 0 ? (
         <EmptyState title="Aucune demande" description="Les demandes de démo arriveront ici, depuis la page publique /demo." icon={<CalendarPlus size={28} />} />
       ) : (
         <div className="flex flex-col gap-3">
           {bookings.map((b) => (
-            <div key={b.id} className="kz-card p-4 bg-white">
+            <div key={b.id} className="kz-card p-4 bg-[var(--kz-paper)]">
               <div className="flex items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <span className="text-sm font-bold text-[#1A1410]">{b.name}</span>
-                    {b.company && <span className="text-xs text-[#6B5A4A] flex items-center gap-1"><Building2 size={11} />{b.company}</span>}
+                    <span className="text-sm font-bold text-[var(--kz-ink)]">{b.name}</span>
+                    {b.company && <span className="text-xs text-[var(--kz-mute)] flex items-center gap-1"><Building2 size={11} />{b.company}</span>}
                     <Badge color={ST[b.status]?.color ?? 'cream'} size="sm">{ST[b.status]?.label ?? b.status}</Badge>
                   </div>
-                  <div className="flex items-center gap-3 flex-wrap text-xs text-[#6B5A4A]">
+                  <div className="flex items-center gap-3 flex-wrap text-xs text-[var(--kz-mute)]">
                     <a href={`mailto:${b.email}`} className="flex items-center gap-1 hover:underline"><Mail size={11} />{b.email}</a>
                     {b.phone && <a href={`tel:${b.phone}`} className="flex items-center gap-1 hover:underline"><Phone size={11} />{b.phone}</a>}
                     <span className="flex items-center gap-1 font-semibold" style={{ color: KZ.violet }}><Clock size={11} />{b.when ? fmt(b.when) : 'À convenir'}</span>
                   </div>
-                  {b.message && <p className="text-xs text-[#6B5A4A] mt-1 italic">« {b.message} »</p>}
+                  {b.message && <p className="text-xs text-[var(--kz-mute)] mt-1 italic">« {b.message} »</p>}
                 </div>
                 <select value={b.status} onChange={(e) => setStatus(b.id, e.target.value)}
-                  className="text-xs font-semibold h-8 px-2 border border-[#1A1410] rounded-lg bg-white cursor-pointer shrink-0">
+                  className="text-xs font-semibold h-8 px-2 border border-[var(--kz-edge)] rounded-lg bg-[var(--kz-paper)] cursor-pointer shrink-0">
                   <option value="confirmed">Confirmé</option>
                   <option value="cancelled">Annulé</option>
                   <option value="done">Terminé</option>

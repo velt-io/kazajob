@@ -1,7 +1,7 @@
 import { KZ } from '@/lib/constants'
 
 const CHECK = (
-  <div className="w-5 h-5 rounded-full bg-[#19A974] border border-white/20 flex items-center justify-center">
+  <div className="w-5 h-5 rounded-full bg-[var(--kz-green)] border border-white/20 flex items-center justify-center">
     <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round" /></svg>
   </div>
 )
@@ -31,7 +31,7 @@ const ICON: Record<'yes' | 'partial' | 'no', React.ReactNode> = { yes: CHECK, pa
 
 export function EnterpriseComparisonSection() {
   return (
-    <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410]" style={{ background: KZ.ink }}>
+    <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
       <div className="max-w-[860px] mx-auto">
         <div className="text-center mb-10">
           <p className="kz-eyebrow mb-3" style={{ color: KZ.orange }}>Comparatif</p>

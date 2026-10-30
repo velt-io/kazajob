@@ -52,11 +52,11 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
   const settingsPath = profile?.role === 'candidate' ? '/candidate/settings' : '/recruiter/dashboard'
 
   return (
-    <header className="h-14 lg:h-16 px-4 border-b border-[#1A1410] bg-white flex items-center gap-3 shrink-0 z-10">
+    <header className="h-14 lg:h-16 px-4 border-b border-[var(--kz-edge)] bg-[var(--kz-paper)] flex items-center gap-3 shrink-0 z-10">
       {/* Hamburger mobile */}
       <button
         onClick={onMenuClick}
-        className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg border border-[#1A1410] bg-[#FFF7EE] shrink-0"
+        className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg border border-[var(--kz-edge)] bg-[var(--kz-cream)] shrink-0"
       >
         <Menu size={16} />
       </button>
@@ -67,10 +67,10 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
       {/* Barre de recherche */}
       {searchPlaceholder && (
         <div className="hidden sm:flex flex-1 max-w-sm">
-          <div className="flex items-center gap-2 h-9 px-3 bg-[#FFF7EE] border border-[#1A1410] rounded-lg text-sm text-[#6B5A4A] w-full">
+          <div className="flex items-center gap-2 h-9 px-3 bg-[var(--kz-cream)] border border-[var(--kz-edge)] rounded-lg text-sm text-[var(--kz-mute)] w-full">
             <Search size={15} className="shrink-0" />
             <input
-              className="flex-1 bg-transparent outline-none placeholder:text-[#6B5A4A] text-[#2A2018]"
+              className="flex-1 bg-transparent outline-none placeholder:text-[var(--kz-mute)] text-[var(--kz-text)]"
               placeholder={searchPlaceholder}
               onChange={(e) => onSearch?.(e.target.value)}
             />
@@ -84,11 +84,11 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
           <div className="relative">
             <button
               onClick={() => { setBellOpen(v => !v); setProfileOpen(false) }}
-              className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[#FFF7EE] border border-[#1A1410] hover:bg-[#FBEFE0] transition-colors"
+              className="relative w-9 h-9 flex items-center justify-center rounded-lg bg-[var(--kz-cream)] border border-[var(--kz-edge)] hover:bg-[var(--kz-cream2)] transition-colors"
             >
               <Bell size={16} />
               {unreadCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-[#FF6B35] border border-[#1A1410] text-[9px] font-bold text-[#1A1410] flex items-center justify-center px-0.5">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] rounded-full bg-[var(--kz-orange)] border border-[var(--kz-edge)] text-[9px] font-bold text-[var(--kz-ink)] flex items-center justify-center px-0.5">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
@@ -98,16 +98,16 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setBellOpen(false)} />
                 <div
-                  className="absolute right-0 top-full mt-2 w-80 z-40 rounded-xl border border-[#1A1410] overflow-hidden"
-                  style={{ background: KZ.paper, boxShadow: '4px 4px 0 #1A1410' }}
+                  className="absolute right-0 top-full mt-2 w-80 z-40 rounded-xl border border-[var(--kz-edge)] overflow-hidden"
+                  style={{ background: KZ.paper, boxShadow: '4px 4px 0 var(--kz-shadow)' }}
                 >
                   {/* Header */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                     <div className="flex items-center gap-2">
-                      <Bell size={14} className="text-[#6B5A4A]" />
-                      <span className="text-sm font-bold text-[#1A1410]">Notifications</span>
+                      <Bell size={14} className="text-[var(--kz-mute)]" />
+                      <span className="text-sm font-bold text-[var(--kz-ink)]">Notifications</span>
                       {unreadCount > 0 && (
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410] bg-[#FFE0CF]">
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)] bg-[var(--kz-orange-soft)]">
                           {unreadCount} non lue{unreadCount > 1 ? 's' : ''}
                         </span>
                       )}
@@ -115,7 +115,7 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
                     {unreadCount > 0 && (
                       <button
                         onClick={markAllRead}
-                        className="flex items-center gap-1 text-[10px] font-bold text-[#6B5A4A] hover:text-[#1A1410] transition-colors"
+                        className="flex items-center gap-1 text-[10px] font-bold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] transition-colors"
                       >
                         <CheckCheck size={12} /> Tout lire
                       </button>
@@ -126,21 +126,21 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
                   <div className="overflow-y-auto max-h-[360px]">
                     {notifications.length === 0 ? (
                       <div className="px-4 py-8 text-center">
-                        <Bell size={28} className="mx-auto mb-2 text-[#E8DDC9]" />
-                        <p className="text-sm text-[#6B5A4A]">Aucune notification</p>
-                        <p className="text-xs text-[#6B5A4A] opacity-70 mt-1">Les mises à jour de tes candidatures apparaîtront ici</p>
+                        <Bell size={28} className="mx-auto mb-2 text-[var(--kz-line)]" />
+                        <p className="text-sm text-[var(--kz-mute)]">Aucune notification</p>
+                        <p className="text-xs text-[var(--kz-mute)] opacity-70 mt-1">Les mises à jour de tes candidatures apparaîtront ici</p>
                       </div>
                     ) : (
                       notifications.map((n) => (
                         <button
                           key={n.id}
                           onClick={() => handleNotifClick(n)}
-                          className="w-full flex items-start gap-3 px-4 py-3 border-b border-[#F5F0E8] text-left hover:bg-[#FBEFE0] transition-colors"
-                          style={{ background: n.read ? 'transparent' : '#FFF7EE' }}
+                          className="w-full flex items-start gap-3 px-4 py-3 border-b border-[#F5F0E8] text-left hover:bg-[var(--kz-cream2)] transition-colors"
+                          style={{ background: n.read ? 'transparent' : 'var(--kz-cream)' }}
                         >
                           {/* Icône */}
                           <div
-                            className="w-8 h-8 rounded-lg border border-[#E8DDC9] flex items-center justify-center text-base shrink-0 mt-0.5"
+                            className="w-8 h-8 rounded-lg border border-[var(--kz-line)] flex items-center justify-center text-base shrink-0 mt-0.5"
                             style={{ background: n.read ? KZ.cream2 : KZ.orangeSoft }}
                           >
                             {getNotifIcon(n.type)}
@@ -149,15 +149,15 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
                           {/* Contenu */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2">
-                              <span className={`text-xs font-bold truncate ${n.read ? 'text-[#6B5A4A]' : 'text-[#1A1410]'}`}>
+                              <span className={`text-xs font-bold truncate ${n.read ? 'text-[var(--kz-mute)]' : 'text-[var(--kz-ink)]'}`}>
                                 {n.title}
                               </span>
                               {!n.read && (
                                 <div className="w-2 h-2 rounded-full shrink-0" style={{ background: KZ.orange }} />
                               )}
                             </div>
-                            <p className="text-xs text-[#6B5A4A] mt-0.5 line-clamp-2 leading-relaxed">{n.message}</p>
-                            <p className="text-[10px] text-[#6B5A4A] opacity-60 mt-1">{timeAgo(n.created_at)}</p>
+                            <p className="text-xs text-[var(--kz-mute)] mt-0.5 line-clamp-2 leading-relaxed">{n.message}</p>
+                            <p className="text-[10px] text-[var(--kz-mute)] opacity-60 mt-1">{timeAgo(n.created_at)}</p>
                           </div>
                         </button>
                       ))
@@ -166,7 +166,7 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
 
                   {/* Footer */}
                   {profile?.role === 'candidate' && (
-                    <div className="px-4 py-2.5 border-t border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+                    <div className="px-4 py-2.5 border-t border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
                       <Link
                         href="/candidate/settings"
                         onClick={() => setBellOpen(false)}
@@ -188,38 +188,38 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
           <div className="relative">
             <button
               onClick={() => { setProfileOpen(v => !v); setBellOpen(false) }}
-              className="flex items-center gap-2 px-2 py-1 rounded-xl border border-[#1A1410] hover:bg-[#FBEFE0] transition-colors"
+              className="flex items-center gap-2 px-2 py-1 rounded-xl border border-[var(--kz-edge)] hover:bg-[var(--kz-cream2)] transition-colors"
               style={{ background: KZ.paper }}
             >
               <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={28} color={KZ.orangeSoft} badge />
-              <span className="hidden md:block text-sm font-bold text-[#1A1410] max-w-[100px] truncate">
+              <span className="hidden md:block text-sm font-bold text-[var(--kz-ink)] max-w-[100px] truncate">
                 {profile.full_name.split(' ')[0]}
               </span>
-              <ChevronDown size={13} className="hidden md:block text-[#6B5A4A]" />
+              <ChevronDown size={13} className="hidden md:block text-[var(--kz-mute)]" />
             </button>
 
             {profileOpen && (
               <>
                 <div className="fixed inset-0 z-30" onClick={() => setProfileOpen(false)} />
                 <div
-                  className="absolute right-0 top-full mt-2 w-56 z-40 rounded-xl border border-[#1A1410] overflow-hidden"
-                  style={{ background: KZ.paper, boxShadow: '4px 4px 0 #1A1410' }}
+                  className="absolute right-0 top-full mt-2 w-56 z-40 rounded-xl border border-[var(--kz-edge)] overflow-hidden"
+                  style={{ background: KZ.paper, boxShadow: '4px 4px 0 var(--kz-shadow)' }}
                 >
-                  <div className="px-4 py-3 border-b border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                    <div className="text-xs font-bold text-[#1A1410] truncate">{profile.full_name}</div>
-                    <div className="text-[11px] text-[#6B5A4A] truncate">{profile.email}</div>
+                  <div className="px-4 py-3 border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                    <div className="text-xs font-bold text-[var(--kz-ink)] truncate">{profile.full_name}</div>
+                    <div className="text-[11px] text-[var(--kz-mute)] truncate">{profile.email}</div>
                     <div className="text-[10px] font-bold mt-0.5 capitalize" style={{ color: KZ.orange }}>{profile.role}</div>
                   </div>
                   <div className="p-1.5 flex flex-col gap-0.5">
                     <Link href={profilePath} onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-[#1A1410] hover:bg-[#FBEFE0] transition-colors">
-                      <User size={15} className="text-[#6B5A4A]" />Mon profil
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-[var(--kz-ink)] hover:bg-[var(--kz-cream2)] transition-colors">
+                      <User size={15} className="text-[var(--kz-mute)]" />Mon profil
                     </Link>
                     <Link href={settingsPath} onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-[#1A1410] hover:bg-[#FBEFE0] transition-colors">
-                      <Settings size={15} className="text-[#6B5A4A]" />Paramètres
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-[var(--kz-ink)] hover:bg-[var(--kz-cream2)] transition-colors">
+                      <Settings size={15} className="text-[var(--kz-mute)]" />Paramètres
                     </Link>
-                    <div className="h-px bg-[#E8DDC9] my-1" />
+                    <div className="h-px bg-[var(--kz-line)] my-1" />
                     <button onClick={handleSignOut}
                       className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors w-full text-left">
                       <LogOut size={15} />Se déconnecter

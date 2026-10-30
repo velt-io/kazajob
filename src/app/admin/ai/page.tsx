@@ -26,14 +26,14 @@ function StatBlock({ icon, label, value, sub, color }: {
   icon: React.ReactNode; label: string; value: string | number; sub: string; color: string
 }) {
   return (
-    <div className="kz-card p-5 bg-white flex items-start gap-4">
-      <div className="w-10 h-10 rounded-xl border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: color }}>
+    <div className="kz-card p-5 bg-[var(--kz-paper)] flex items-start gap-4">
+      <div className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: color }}>
         {icon}
       </div>
       <div>
-        <div className="text-2xl font-extrabold text-[#1A1410]">{value}</div>
-        <div className="text-sm font-bold text-[#1A1410]">{label}</div>
-        <div className="text-xs text-[#6B5A4A]">{sub}</div>
+        <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{value}</div>
+        <div className="text-sm font-bold text-[var(--kz-ink)]">{label}</div>
+        <div className="text-xs text-[var(--kz-mute)]">{sub}</div>
       </div>
     </div>
   )
@@ -86,13 +86,13 @@ export default function AdminAIPage() {
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[#1A1410]">KazaIA — Statistiques</h1>
-        <p className="text-sm text-[#6B5A4A] mt-1">Usage de l&apos;IA et estimation des coûts Groq</p>
+        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">KazaIA — Statistiques</h1>
+        <p className="text-sm text-[var(--kz-mute)] mt-1">Usage de l&apos;IA et estimation des coûts Groq</p>
       </div>
 
       {loading ? (
         <div className="grid grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 rounded-2xl bg-[#FBEFE0] animate-pulse" />)}
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />)}
         </div>
       ) : (
         <>
@@ -115,8 +115,8 @@ export default function AdminAIPage() {
           </div>
 
           {/* Détail par feature */}
-          <div className="kz-card p-5 bg-white mb-5">
-            <h2 className="text-sm font-bold text-[#1A1410] mb-4">Détail par fonctionnalité</h2>
+          <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+            <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Détail par fonctionnalité</h2>
             <div className="flex flex-col gap-4">
               {[
                 {
@@ -144,17 +144,17 @@ export default function AdminAIPage() {
                   color: KZ.greenSoft,
                 },
               ].map(row => (
-                <div key={row.label} className="flex items-center gap-4 p-3 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                  <div className="w-8 h-8 rounded-lg border border-[#1A1410] flex items-center justify-center shrink-0" style={{ background: row.color }}>
+                <div key={row.label} className="flex items-center gap-4 p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                  <div className="w-8 h-8 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: row.color }}>
                     {row.icon}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-[#1A1410]">{row.label}</div>
-                    <div className="text-xs text-[#6B5A4A]">{row.desc}</div>
+                    <div className="text-sm font-bold text-[var(--kz-ink)]">{row.label}</div>
+                    <div className="text-xs text-[var(--kz-mute)]">{row.desc}</div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-lg font-extrabold text-[#1A1410]">{row.count.toLocaleString('fr-FR')}</div>
-                    <div className="text-[11px] text-[#6B5A4A]">~${row.cost.toFixed(3)}</div>
+                    <div className="text-lg font-extrabold text-[var(--kz-ink)]">{row.count.toLocaleString('fr-FR')}</div>
+                    <div className="text-[11px] text-[var(--kz-mute)]">~${row.cost.toFixed(3)}</div>
                   </div>
                 </div>
               ))}
@@ -163,17 +163,17 @@ export default function AdminAIPage() {
 
           {/* Note + liens */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="kz-card p-5 bg-white">
-              <h3 className="text-sm font-bold text-[#1A1410] mb-2 flex items-center gap-1.5"><Info size={14} /> Note sur les estimations</h3>
-              <p className="text-xs text-[#6B5A4A] leading-relaxed">
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-2 flex items-center gap-1.5"><Info size={14} /> Note sur les estimations</h3>
+              <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
                 Ces chiffres sont des <strong>estimations</strong> basées sur les données Supabase (candidatures, conversations).
                 Pour un suivi exact, activez les logs IA dans les routes API ({' '}
-                <code className="bg-[#FBEFE0] px-1 rounded text-[10px]">/api/kaza-ia/*</code>).
+                <code className="bg-[var(--kz-cream2)] px-1 rounded text-[10px]">/api/kaza-ia/*</code>).
               </p>
             </div>
 
-            <div className="kz-card p-5 bg-white">
-              <h3 className="text-sm font-bold text-[#1A1410] mb-3">Tableaux de bord fournisseurs</h3>
+            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+              <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Tableaux de bord fournisseurs</h3>
               <div className="flex flex-col gap-2">
                 {[
                   { label: 'Console Groq', url: 'https://console.groq.com', color: KZ.orangeSoft },
@@ -185,7 +185,7 @@ export default function AdminAIPage() {
                     href={link.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#1A1410] text-sm font-semibold text-[#1A1410] transition-all hover:shadow-[2px_2px_0_#1A1410]"
+                    className="flex items-center gap-2.5 p-2.5 rounded-xl border border-[var(--kz-edge)] text-sm font-semibold text-[var(--kz-ink)] transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
                     style={{ background: link.color }}
                   >
                     <ExternalLink size={13} className="shrink-0" />

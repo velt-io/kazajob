@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/Badge'
 import { Logo } from '@/components/layout/Logo'
 import { useAuth } from '@/features/auth/useAuth'
 import { PROFESSION_CATEGORIES } from '@/lib/onboarding-categories'
-import { KZ, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
+import { KZ, KZ_HEX, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
 import { useDraftSave, DRAFT_SAVE_LABEL } from '@/features/profile/useDraftSave'
 import { Stepper } from '@/components/ui/Stepper'
 import { computeCvCompletion } from '@/lib/cv'
@@ -402,7 +402,7 @@ export default function CvBuilderPage() {
         softSkills: saved!.softSkills ?? profile.soft_skills ?? prev.softSkills,
         hobbies:    saved!.hobbies ?? profile.hobbies ?? prev.hobbies,
       }))
-      setColor(profile.cv_color ?? KZ.violet)
+      setColor(profile.cv_color ?? KZ_HEX.violet)
       setTemplate(profile.cv_template ?? 'modern')
       return
     }
@@ -425,7 +425,7 @@ export default function CvBuilderPage() {
       hobbies:    profile.hobbies ?? prev.hobbies,
     }))
 
-    setColor(profile.cv_color ?? primaryCat?.accentColor ?? KZ.violet)
+    setColor(profile.cv_color ?? primaryCat?.accentColor ?? KZ_HEX.violet)
     setTemplate(profile.cv_template ?? 'modern')
   }, [profile])
 

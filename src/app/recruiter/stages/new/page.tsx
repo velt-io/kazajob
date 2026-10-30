@@ -12,11 +12,11 @@ export default function NewStagePage() {
   return (
     <CompanyRequired action="publier un stage">
       <div className="max-w-[760px] mx-auto">
-        <Link href="/recruiter/stages" className="flex items-center gap-2 text-sm font-semibold text-[#6B5A4A] hover:text-[#1A1410] mb-6">
+        <Link href="/recruiter/stages" className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-6">
           <ArrowLeft size={16} />
           Retour aux stages
         </Link>
-        <h1 className="kz-h2 text-[#1A1410] mb-6">Publier un stage</h1>
+        <h1 className="kz-h2 text-[var(--kz-ink)] mb-6">Publier un stage</h1>
         <StageForm companyId={profile?.company_id ?? undefined} />
       </div>
     </CompanyRequired>

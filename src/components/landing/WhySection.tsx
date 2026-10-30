@@ -73,11 +73,11 @@ export function WhySection() {
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-12">
             <p className="kz-eyebrow mb-3" style={{ color: KZ.orange }}>Pourquoi Kazajob</p>
-            <h2 className="text-3xl lg:text-[44px] font-extrabold tracking-tight text-[#1A1410] mb-4">
+            <h2 className="text-3xl lg:text-[44px] font-extrabold tracking-tight text-[var(--kz-ink)] mb-4">
               Pas juste un moteur d&apos;offres.<br />
               <span style={{ color: KZ.orange }}>Un vrai assistant emploi.</span>
             </h2>
-            <p className="text-base text-[#6B5A4A] max-w-[540px] mx-auto">
+            <p className="text-base text-[var(--kz-mute)] max-w-[540px] mx-auto">
               Kazajob est la seule plateforme d&apos;emploi de La Réunion à combiner IA, gamification et accompagnement
               personnalisé pour chaque candidat.
             </p>
@@ -87,26 +87,26 @@ export function WhySection() {
             {USP.map((item) => (
               <div
                 key={item.title}
-                className="kz-card p-6 flex flex-col gap-4 group hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_#1A1410] transition-all duration-150"
+                className="kz-card p-6 flex flex-col gap-4 group hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[6px_6px_0_var(--kz-shadow)] transition-all duration-150"
                 style={{ background: item.color }}
               >
                 <div className="flex items-start justify-between">
                   <div
-                    className="w-12 h-12 rounded-xl border border-[#1A1410] flex items-center justify-center text-[#1A1410]"
+                    className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-[var(--kz-ink)]"
                     style={{ background: KZ.paper }}
                   >
                     {item.icon}
                   </div>
                   <span
-                    className="text-[10px] font-bold px-2 py-1 rounded-full border border-[#1A1410]"
+                    className="text-[10px] font-bold px-2 py-1 rounded-full border border-[var(--kz-edge)]"
                     style={{ background: item.accentColor, color: item.accentColor === KZ.mute || item.accentColor === '#B8860B' ? KZ.cream : 'white' }}
                   >
                     {item.tag}
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-[#1A1410] mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#2A2018] leading-relaxed">{item.desc}</p>
+                  <h3 className="text-base font-extrabold text-[var(--kz-ink)] mb-2">{item.title}</h3>
+                  <p className="text-sm text-[var(--kz-text)] leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -143,7 +143,7 @@ export function WhySection() {
                 <div className="text-sm text-white/80">{row.feature}</div>
                 <div className="flex justify-center w-24">
                   {row.kazajob
-                    ? <div className="w-5 h-5 rounded-full bg-[#19A974] border border-white/20 flex items-center justify-center"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg></div>
+                    ? <div className="w-5 h-5 rounded-full bg-[var(--kz-green)] border border-white/20 flex items-center justify-center"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg></div>
                     : <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center"><svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 1L8 8M8 1L1 8" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeLinecap="round"/></svg></div>
                   }
                 </div>

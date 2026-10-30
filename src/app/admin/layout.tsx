@@ -58,9 +58,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           mobileOpen={sidebarOpen}
           onMobileClose={() => setSidebarOpen(false)}
           footer={
-            <div className="p-3 rounded-xl border border-[#1A1410] flex items-center gap-2" style={{ background: KZ.yellowSoft }}>
+            <div className="p-3 rounded-xl border border-[var(--kz-edge)] flex items-center gap-2" style={{ background: KZ.yellowSoft }}>
               <Shield size={16} />
-              <span className="text-xs font-bold text-[#1A1410]">Super Admin</span>
+              <span className="text-xs font-bold text-[var(--kz-ink)]">Super Admin</span>
             </div>
           }
         />

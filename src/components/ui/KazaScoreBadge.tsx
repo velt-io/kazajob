@@ -45,7 +45,7 @@ export function KazaScoreBadge({ recruiterId, size = 'md', showDetails = false }
   if (!data || data.total_apps === 0) {
     if (size === 'sm') return null
     return (
-      <span className="inline-flex items-center gap-1 text-xs text-[#6B5A4A] px-2 py-1 rounded-full border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
+      <span className="inline-flex items-center gap-1 text-xs text-[var(--kz-mute)] px-2 py-1 rounded-full border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
         Nouveau recruteur
       </span>
     )
@@ -60,7 +60,7 @@ export function KazaScoreBadge({ recruiterId, size = 'md', showDetails = false }
   if (size === 'sm') {
     return (
       <span
-        className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-1 rounded-full border border-[#1A1410]"
+        className="inline-flex items-center gap-1.5 text-[11px] font-bold px-2 py-1 rounded-full border border-[var(--kz-edge)]"
         style={{ background: style.bg, color: KZ.ink }}
         title={`KazaScore : ${data.score}/100 — ${data.label}`}
       >
@@ -112,9 +112,9 @@ export function KazaScoreBadge({ recruiterId, size = 'md', showDetails = false }
       {/* Texte */}
       <div className="min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-sm font-bold text-[#1A1410]">KazaScore</span>
+          <span className="text-sm font-bold text-[var(--kz-ink)]">KazaScore</span>
           <span
-            className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]"
+            className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]"
             style={{ background: style.bg, color: style.color }}
           >
             {data.label}
@@ -122,8 +122,8 @@ export function KazaScoreBadge({ recruiterId, size = 'md', showDetails = false }
         </div>
         {showDetails && (
           <div className="flex gap-3 mt-1 flex-wrap">
-            <span className="text-xs text-[#6B5A4A]">{data.responded}/{data.total_apps} réponses</span>
-            <span className="text-xs text-[#6B5A4A]">
+            <span className="text-xs text-[var(--kz-mute)]">{data.responded}/{data.total_apps} réponses</span>
+            <span className="text-xs text-[var(--kz-mute)]">
               {data.avg_hours < 24
                 ? `Répond en ${Math.round(data.avg_hours)}h`
                 : `Répond en ${Math.round(data.avg_hours / 24)}j`}
@@ -141,10 +141,10 @@ export function KazaScoreMini({ recruiterId }: { recruiterId: string }) {
 
 export function KazaScoreCard({ recruiterId }: { recruiterId: string }) {
   return (
-    <div className="kz-card p-5 bg-white">
-      <p className="kz-eyebrow text-[#6B5A4A] mb-3">Votre KazaScore</p>
+    <div className="kz-card p-5 bg-[var(--kz-paper)]">
+      <p className="kz-eyebrow text-[var(--kz-mute)] mb-3">Votre KazaScore</p>
       <KazaScoreBadge recruiterId={recruiterId} size="lg" showDetails />
-      <p className="text-xs text-[#6B5A4A] mt-3 leading-relaxed">
+      <p className="text-xs text-[var(--kz-mute)] mt-3 leading-relaxed">
         Calculé sur les 90 derniers jours · Visible par les candidats sur vos offres.
         Répondez rapidement pour améliorer votre score.
       </p>

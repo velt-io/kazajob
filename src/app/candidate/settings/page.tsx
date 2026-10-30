@@ -31,11 +31,11 @@ function Toggle({ checked, onChange, disabled }: ToggleProps) {
       type="button"
       onClick={() => !disabled && onChange(!checked)}
       disabled={disabled}
-      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[#1A1410] transition-colors shrink-0"
-      style={{ background: checked ? KZ.green : KZ.cream2, boxShadow: '2px 2px 0 #1A1410' }}
+      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors shrink-0"
+      style={{ background: checked ? KZ.green : KZ.cream2, boxShadow: '2px 2px 0 var(--kz-shadow)' }}
     >
       <span
-        className="inline-block w-4 h-4 rounded-full bg-white border border-[#1A1410] transition-transform"
+        className="inline-block w-4 h-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
         style={{ transform: checked ? 'translateX(22px)' : 'translateX(2px)' }}
       />
     </button>
@@ -122,30 +122,30 @@ export default function CandidateSettingsPage() {
   return (
     <div className="max-w-[680px] mx-auto">
       <div className="mb-7">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[#1A1410] mb-1">Paramètres</h1>
-        <p className="text-sm text-[#6B5A4A]">Contrôle tes notifications et préférences de communication.</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-1">Paramètres</h1>
+        <p className="text-sm text-[var(--kz-mute)]">Contrôle tes notifications et préférences de communication.</p>
       </div>
 
       {/* Notifications */}
-      <div className="kz-card bg-white mb-5">
-        <div className="px-6 py-4 border-b border-[#E8DDC9] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-          <Bell size={16} className="text-[#6B5A4A]" />
-          <span className="text-sm font-bold text-[#1A1410]">Notifications &amp; alertes</span>
+      <div className="kz-card bg-[var(--kz-paper)] mb-5">
+        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
+          <Bell size={16} className="text-[var(--kz-mute)]" />
+          <span className="text-sm font-bold text-[var(--kz-ink)]">Notifications &amp; alertes</span>
         </div>
 
         <div className="divide-y divide-[#F5F0E8]">
           {NOTIF_SETTINGS.map((s) => (
             <div key={s.key} className="flex items-start gap-4 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl border border-[#E8DDC9] flex items-center justify-center shrink-0 text-[#6B5A4A]" style={{ background: KZ.cream2 }}>
+              <div className="w-9 h-9 rounded-xl border border-[var(--kz-line)] flex items-center justify-center shrink-0 text-[var(--kz-mute)]" style={{ background: KZ.cream2 }}>
                 {s.icon}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-sm font-bold text-[#1A1410]">{s.title}</span>
+                  <span className="text-sm font-bold text-[var(--kz-ink)]">{s.title}</span>
                   {s.badge && <Badge color="cream" size="sm">{s.badge}</Badge>}
                   {saved === s.key && <CheckCheck size={13} color={KZ.green} />}
                 </div>
-                <p className="text-xs text-[#6B5A4A] leading-relaxed">{s.description}</p>
+                <p className="text-xs text-[var(--kz-mute)] leading-relaxed">{s.description}</p>
               </div>
               <Toggle
                 checked={s.value}
@@ -159,10 +159,10 @@ export default function CandidateSettingsPage() {
 
       {/* Fréquence des alertes email */}
       {settings.email_alerts_enabled && (
-        <div className="kz-card bg-white mb-5">
-          <div className="px-6 py-4 border-b border-[#E8DDC9] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-            <Mail size={16} className="text-[#6B5A4A]" />
-            <span className="text-sm font-bold text-[#1A1410]">Fréquence des alertes email</span>
+        <div className="kz-card bg-[var(--kz-paper)] mb-5">
+          <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
+            <Mail size={16} className="text-[var(--kz-mute)]" />
+            <span className="text-sm font-bold text-[var(--kz-ink)]">Fréquence des alertes email</span>
           </div>
           <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {FREQ_OPTIONS.map((f) => {
@@ -173,16 +173,16 @@ export default function CandidateSettingsPage() {
                   onClick={() => handleFrequency(f.value)}
                   className="flex flex-col items-start p-4 rounded-xl border-[1.5px] transition-all text-left"
                   style={active
-                    ? { borderColor: KZ.orange, background: KZ.orangeSoft, boxShadow: '3px 3px 0 #1A1410' }
-                    : { borderColor: '#E8DDC9', background: KZ.cream }}
+                    ? { borderColor: KZ.orange, background: KZ.orangeSoft, boxShadow: '3px 3px 0 var(--kz-shadow)' }
+                    : { borderColor: 'var(--kz-line)', background: KZ.cream }}
                 >
                   <div className="flex items-center justify-between w-full mb-1">
-                    <span className="text-sm font-bold text-[#1A1410]">{f.label}</span>
-                    {active && <div className="w-4 h-4 rounded-full border border-[#1A1410] flex items-center justify-center" style={{ background: KZ.orange }}>
-                      <div className="w-2 h-2 rounded-full bg-white" />
+                    <span className="text-sm font-bold text-[var(--kz-ink)]">{f.label}</span>
+                    {active && <div className="w-4 h-4 rounded-full border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.orange }}>
+                      <div className="w-2 h-2 rounded-full bg-[var(--kz-paper)]" />
                     </div>}
                   </div>
-                  <span className="text-xs text-[#6B5A4A]">{f.desc}</span>
+                  <span className="text-xs text-[var(--kz-mute)]">{f.desc}</span>
                 </button>
               )
             })}
@@ -196,26 +196,26 @@ export default function CandidateSettingsPage() {
       )}
 
       {/* Expérience — Gamification */}
-      <div className="kz-card bg-white mb-5">
-        <div className="px-6 py-4 border-b border-[#E8DDC9] flex items-center gap-2" style={{ background: KZ.violetSoft }}>
+      <div className="kz-card bg-[var(--kz-paper)] mb-5">
+        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.violetSoft }}>
           <Gamepad2 size={16} style={{ color: KZ.violet }} />
-          <span className="text-sm font-bold text-[#1A1410]">Expérience &amp; Gamification</span>
-          <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full border border-[#1A1410]"
+          <span className="text-sm font-bold text-[var(--kz-ink)]">Expérience &amp; Gamification</span>
+          <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
             style={{ background: KZ.violet, color: 'white' }}>BETA</span>
         </div>
         <div className="px-6 py-5">
           {/* Toggle principal */}
           <div className="flex items-start gap-4 mb-5">
-            <div className="w-9 h-9 rounded-xl border border-[#E8DDC9] flex items-center justify-center shrink-0"
+            <div className="w-9 h-9 rounded-xl border border-[var(--kz-line)] flex items-center justify-center shrink-0"
               style={{ background: KZ.violetSoft, color: KZ.violet }}>
               <Gamepad2 size={18} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-sm font-bold text-[#1A1410]">Mode Quête actif</span>
+                <span className="text-sm font-bold text-[var(--kz-ink)]">Mode Quête actif</span>
                 {gami.enabled && <Badge color="violet" size="sm">ON</Badge>}
               </div>
-              <p className="text-xs text-[#6B5A4A] leading-relaxed">
+              <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
                 Transforme ton tableau de bord en jeu de quêtes — niveaux, XP, défis à accomplir.
                 Désactive pour retrouver l&apos;interface classique.
               </p>
@@ -230,8 +230,8 @@ export default function CandidateSettingsPage() {
           {/* Aperçu du niveau quand actif */}
           {gami.enabled && (
             <div
-              className="rounded-xl border-2 border-[#1A1410] p-4"
-              style={{ background: '#1A1410', boxShadow: '3px 3px 0 ' + gami.level.color }}
+              className="rounded-xl border-2 border-[var(--kz-edge)] p-4"
+              style={{ background: 'var(--kz-ink)', boxShadow: '3px 3px 0 ' + gami.level.color }}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -263,13 +263,13 @@ export default function CandidateSettingsPage() {
       </div>
 
       {/* Confidentialité */}
-      <div className="kz-card bg-white">
-        <div className="px-6 py-4 border-b border-[#E8DDC9] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-          <Shield size={16} className="text-[#6B5A4A]" />
-          <span className="text-sm font-bold text-[#1A1410]">Confidentialité</span>
+      <div className="kz-card bg-[var(--kz-paper)]">
+        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
+          <Shield size={16} className="text-[var(--kz-mute)]" />
+          <span className="text-sm font-bold text-[var(--kz-ink)]">Confidentialité</span>
         </div>
         <div className="px-6 py-5 flex flex-col gap-3">
-          <p className="text-xs text-[#6B5A4A] leading-relaxed">
+          <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
             Tes données sont hébergées en Europe, chiffrées au repos et en transit.
             Kazajob ne revend jamais tes informations personnelles et ne t&apos;envoie
             jamais d&apos;emails commerciaux non sollicités.

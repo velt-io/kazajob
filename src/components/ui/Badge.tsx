@@ -3,14 +3,14 @@ import { cn } from '@/lib/utils'
 import type { BadgeColor } from '@/lib/types'
 
 const colorMap: Record<BadgeColor, string> = {
-  orange: 'bg-[#FFE0CF] text-[#1A1410]',
-  violet: 'bg-[#E5DCFF] text-[#1A1410]',
-  blue:   'bg-[#DCE7FB] text-[#1A1410]',
-  green:  'bg-[#D6F0E0] text-[#1A1410]',
-  yellow: 'bg-[#FFF1C2] text-[#1A1410]',
-  ink:    'bg-[#1A1410] text-[#FFF7EE]',
-  cream:  'bg-[#FBEFE0] text-[#1A1410]',
-  paper:  'bg-white text-[#1A1410]',
+  orange: 'bg-[var(--kz-orange-soft)] text-[var(--kz-ink)]',
+  violet: 'bg-[var(--kz-violet-soft)] text-[var(--kz-ink)]',
+  blue:   'bg-[var(--kz-blue-soft)] text-[var(--kz-ink)]',
+  green:  'bg-[var(--kz-green-soft)] text-[var(--kz-ink)]',
+  yellow: 'bg-[var(--kz-yellow-soft)] text-[var(--kz-ink)]',
+  ink:    'bg-[var(--kz-ink)] text-[var(--kz-cream)]',
+  cream:  'bg-[var(--kz-cream2)] text-[var(--kz-ink)]',
+  paper:  'bg-[var(--kz-paper)] text-[var(--kz-ink)]',
 }
 
 const sizeMap = {
@@ -42,7 +42,7 @@ export function Badge({
         'inline-flex items-center font-bold tracking-tight whitespace-nowrap rounded-full',
         colorMap[color],
         sizeMap[size],
-        outline && 'border border-[#1A1410]',
+        outline && 'border border-[var(--kz-edge)]',
         className
       )}
     >

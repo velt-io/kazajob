@@ -72,18 +72,18 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
               {/* Sélecteur d'entreprise (multi-structures) */}
               <CompanySwitcher />
               {/* Utilisateur connecté */}
-              <div className="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#E8DDC9]" style={{ background: KZ.cream2 }}>
-                <div className="w-7 h-7 rounded-full border border-[#1A1410] flex items-center justify-center text-[10px] font-extrabold shrink-0"
+              <div className="flex items-center gap-2.5 p-2.5 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                <div className="w-7 h-7 rounded-full border border-[var(--kz-edge)] flex items-center justify-center text-[10px] font-extrabold shrink-0"
                   style={{ background: KZ.violetSoft, color: KZ.violet }}>
                   {profile?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
                 </div>
-                <span className="text-xs font-semibold text-[#1A1410] truncate">{profile?.full_name}</span>
+                <span className="text-xs font-semibold text-[var(--kz-ink)] truncate">{profile?.full_name}</span>
               </div>
               {/* CTA nouvelle offre */}
               <a
                 href="/recruiter/jobs/new"
-                className="flex items-center justify-center gap-2 p-3 rounded-xl border border-[#1A1410] font-bold text-sm transition-all"
-                style={{ background: KZ.orange, color: KZ.ink, boxShadow: '3px 3px 0 #1A1410' }}
+                className="flex items-center justify-center gap-2 p-3 rounded-xl border border-[var(--kz-edge)] font-bold text-sm transition-all"
+                style={{ background: KZ.orange, color: KZ.ink, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
               >
                 <Plus size={16} />
                 Nouvelle offre

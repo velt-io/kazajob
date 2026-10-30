@@ -51,12 +51,12 @@ export default function ApplicationsPage() {
   return (
     <div className="max-w-[800px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[#1A1410] mb-1">Mes candidatures</h1>
-        <p className="text-sm text-[#6B5A4A]">{applications.filter(a => a.status !== 'withdrawn').length} candidature(s) active(s)</p>
+        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-1">Mes candidatures</h1>
+        <p className="text-sm text-[var(--kz-mute)]">{applications.filter(a => a.status !== 'withdrawn').length} candidature(s) active(s)</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1.5 mb-6 p-1 rounded-xl border border-[#1A1410] bg-white overflow-x-auto">
+      <div className="flex gap-1.5 mb-6 p-1 rounded-xl border border-[var(--kz-edge)] bg-[var(--kz-paper)] overflow-x-auto">
         {STATUS_TABS.map((tab) => {
           const cnt = tab.key === 'all'
             ? applications.filter(a => a.status !== 'withdrawn').length
@@ -67,12 +67,12 @@ export default function ApplicationsPage() {
               onClick={() => setActiveTab(tab.key)}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all border-[1.5px]"
               style={activeTab === tab.key
-                ? { background: KZ.ink, color: KZ.cream, borderColor: KZ.ink, boxShadow: '2px 2px 0 #FF6B35' }
+                ? { background: KZ.ink, color: KZ.cream, borderColor: 'var(--kz-edge)', boxShadow: '2px 2px 0 var(--kz-orange)' }
                 : { background: 'transparent', color: KZ.text, borderColor: 'transparent' }}
             >
               {tab.label}
               {cnt > 0 && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[#1A1410]"
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]"
                   style={{ background: activeTab === tab.key ? KZ.orange : KZ.cream2, color: KZ.ink }}>
                   {cnt}
                 </span>
@@ -99,13 +99,13 @@ export default function ApplicationsPage() {
             const canCancel = !['hired', 'rejected', 'withdrawn'].includes(app.status)
 
             return (
-              <div key={app.id} className="kz-card p-5 bg-white flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl border border-[#1A1410] flex items-center justify-center font-bold text-sm text-[#1A1410] shrink-0" style={{ background: KZ.cream2 }}>
+              <div key={app.id} className="kz-card p-5 bg-[var(--kz-paper)] flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center font-bold text-sm text-[var(--kz-ink)] shrink-0" style={{ background: KZ.cream2 }}>
                   {companyInit}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-base font-bold text-[#1A1410] truncate">{app.job?.title}</div>
-                  <div className="text-sm text-[#6B5A4A]">
+                  <div className="text-base font-bold text-[var(--kz-ink)] truncate">{app.job?.title}</div>
+                  <div className="text-sm text-[var(--kz-mute)]">
                     {company?.name} · {app.job?.location} · {timeAgo(app.created_at)}
                   </div>
                 </div>
@@ -116,7 +116,7 @@ export default function ApplicationsPage() {
                 {canCancel && (
                   <button
                     onClick={() => setCancelId(app.id)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E8DDC9] text-[#6B5A4A] hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-colors shrink-0"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg border border-[var(--kz-line)] text-[var(--kz-mute)] hover:border-red-300 hover:text-red-500 hover:bg-red-50 transition-colors shrink-0"
                     title="Retirer ma candidature"
                   >
                     <X size={14} />
@@ -131,12 +131,12 @@ export default function ApplicationsPage() {
       {/* Modal confirmation annulation */}
       <Modal open={!!cancelId} onClose={() => setCancelId(null)} title="Retirer ma candidature">
         <div className="flex flex-col gap-4">
-          <p className="text-sm text-[#2A2018]">
+          <p className="text-sm text-[var(--kz-text)]">
             Tu es sur le point de retirer ta candidature pour{' '}
             <strong>{cancelTarget?.job?.title}</strong>{' '}
             chez <strong>{cancelTarget?.job?.company?.name}</strong>.
           </p>
-          <div className="p-3 rounded-xl border border-[#E8DDC9] text-xs text-[#6B5A4A]" style={{ background: KZ.yellowSoft }}>
+          <div className="p-3 rounded-xl border border-[var(--kz-line)] text-xs text-[var(--kz-mute)]" style={{ background: KZ.yellowSoft }}>
             Le recruteur sera informé que tu as retiré ta candidature. Cette action est irréversible.
           </div>
           <div className="flex gap-3">
