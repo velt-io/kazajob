@@ -1,12 +1,18 @@
 import Link from 'next/link'
-import { ArrowRight, Check, Users, BarChart2, Zap, Shield, Globe, Landmark, Target, Briefcase, Search, Rss, Lock, HeartHandshake, Clock, FileText } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowRight, Check, Users, BarChart2, Zap, Shield, Globe, Landmark, Target, Briefcase, Search, Rss, Lock, HeartHandshake, Clock, FileText, Gift, MapPin, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
+import { Avatar } from '@/components/ui/Avatar'
 import { KZ, SUBSCRIPTION_PLANS, PARTNERS, MULTIDIFFUSION_ENABLED, planFeatures } from '@/lib/constants'
 import { PartnerCarousel } from './PartnerCarousel'
 import { QualityModerationSection } from './QualityModerationSection'
 import { EnterpriseComparisonSection } from './EnterpriseComparisonSection'
 import { RiskReversalSection } from './RiskReversalSection'
+import { RecruiterPainSection } from './RecruiterPainSection'
+import { ProductPreviewSection } from './ProductPreviewSection'
+import { SectorsSection } from './SectorsSection'
+import { IllustratedCta } from './IllustratedCta'
 
 const PARTNER_ICON_MAP: Record<string, React.ReactNode> = {
   Landmark:  <Landmark  size={16} />,
@@ -91,69 +97,108 @@ function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTIO
   )
 }
 
+// Personnage de la carte flottante du hero (exemple illustratif)
+const HERO_CANDIDATE = {
+  skinColor: 'd08b5b', top: 'curvy', hairColor: '2c1b18', eyes: 'happy', eyebrow: 'defaultNatural',
+  mouth: 'smile', clothes: 'blazerAndShirt', clothesColor: 'ff488e', accessories: 'blank', facialHair: 'blank',
+}
+
 export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps) {
+  const topPlan = SUBSCRIPTION_PLANS[SUBSCRIPTION_PLANS.length - 1]
   const VALUE_PROPS = [
     { icon: <Users size={24} />, color: KZ.violetSoft, title: 'Gestion d\'équipe', desc: 'Plusieurs recruteurs sur un même compte. Rôles, permissions, KazaScore collectif.' },
     ...(MULTIDIFFUSION_ENABLED ? [{ icon: <Globe size={24} />, color: KZ.blueSoft, title: 'Multi-diffusion', desc: 'Publiez une fois, diffusez partout : France Travail, Mission Locale, APEC, Indeed et plus.' }] : []),
-    { icon: <Zap size={24} />, color: KZ.yellowSoft, title: 'IA de tri', desc: 'KazaIA analyse chaque candidature. Matching automatique. Zéro CV non pertinent.' },
-    { icon: <BarChart2 size={24} />, color: KZ.greenSoft, title: 'Analytics RH', desc: 'Pipeline Kanban, taux de conversion, temps de réponse, KazaScore recruteur.' },
-    { icon: <Shield size={24} />, color: KZ.orangeSoft, title: 'Conformité RGPD', desc: 'Données hébergées en France. Chiffrement E2E. Droit à l\'oubli automatisé.' },
+    { icon: <Zap size={24} />, color: KZ.yellowSoft, title: 'IA de tri', desc: 'KazaIA analyse chaque candidature et propose une recommandation : à contacter, à étudier…' },
+    { icon: <BarChart2 size={24} />, color: KZ.greenSoft, title: 'Analytics RH', desc: 'Pipeline de candidatures, taux de conversion, temps de réponse, KazaScore recruteur.' },
+    { icon: <Shield size={24} />, color: KZ.orangeSoft, title: 'Conformité RGPD', desc: 'Données hébergées en Europe, chiffrées en transit et au repos. Droit à l\'oubli sur demande.' },
   ]
+
+  // Preuves concrètes : on n'affiche un chiffre que s'il est parlant
+  const TRUST = [
+    stats.users >= 20 ? { icon: <Users size={14} />, label: `${stats.users.toLocaleString('fr-FR')} candidats inscrits` } : { icon: <MapPin size={14} />, label: '100 % La Réunion' },
+    { icon: <Clock size={14} />, label: 'Offre en ligne en 5 min' },
+    { icon: <Check size={14} />, label: 'Sans engagement' },
+  ]
+
+  const ctaLabel = launchDays ? 'Publier gratuitement' : 'Essai gratuit 30 jours'
 
   return (
     <>
       {/* HERO B2B ─────────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 pt-16 pb-12 relative overflow-hidden" style={{ background: KZ.ink }}>
-        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="px-4 sm:px-8 lg:px-16 pt-10 lg:pt-16 pb-14 lg:pb-20 relative overflow-hidden" style={{ background: KZ.cream }}>
+        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-14 items-center">
           <div>
-            <Badge color="violet" size="lg" className="mb-5">Solution Entreprise · 974</Badge>
-            <h1 className="text-[44px] sm:text-[56px] lg:text-[68px] font-extrabold tracking-[-0.04em] leading-[0.92] mb-6"
-              style={{ color: KZ.cream }}>
+            <Badge color="violet" size="lg" className="mb-5">Kazajob Entreprises · 974</Badge>
+            <h1 className="text-[40px] sm:text-[56px] lg:text-[66px] font-extrabold tracking-[-0.04em] leading-[0.95] text-[#1A1410] mb-5">
               Recrutez les<br />
-              <span style={{ color: KZ.orange }}>meilleurs talents</span><br />
+              <span style={{ color: KZ.violet }}>meilleurs talents</span><br />
               de La Réunion.
             </h1>
-            <p className="text-lg leading-relaxed mb-8 max-w-[500px]" style={{ color: 'rgba(255,247,238,0.75)' }}>
-              La plateforme RH faite pour les entreprises réunionnaises. IA de tri des candidatures, équipe multi-recruteurs, analytics RH complet.
+            <p className="text-base lg:text-lg leading-relaxed text-[#2A2018] mb-7 max-w-[520px]">
+              Publiez vos offres, recevez des candidats locaux triés par l&apos;IA et gérez tout votre recrutement
+              au même endroit. Simple, rapide, pensé pour les entreprises du 974.
             </p>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 mb-5">
               <Link href="/auth/register?role=recruiter">
-                <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>
-                  {launchDays ? 'Démarrer gratuitement' : 'Essai gratuit 30 jours'}
-                </Button>
+                <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>{ctaLabel}</Button>
               </Link>
               <a href="#tarifs-pro">
-                <Button kind="outline" size="lg" className=" !border-[#FFF7EE]/40">
-                  Voir les tarifs
-                </Button>
+                <Button kind="outline" size="lg">Voir les tarifs</Button>
               </a>
             </div>
-            <p className="text-xs mt-4" style={{ color: 'rgba(255,247,238,0.4)' }}>
-              Carte requise · Annulable à tout moment · RGPD conforme
+            <p className="text-xs text-[#6B5A4A] mb-6">
+              {launchDays
+                ? `Offre de lancement · encore ${launchDays} jours · sans carte bancaire`
+                : 'Carte requise · 1er débit après 30 jours · annulable à tout moment'}
             </p>
+            <div className="flex flex-wrap gap-2">
+              {TRUST.map((t) => (
+                <span key={t.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#1A1410] bg-white text-xs font-bold text-[#1A1410]">
+                  <span style={{ color: KZ.violet }}>{t.icon}</span>{t.label}
+                </span>
+              ))}
+            </div>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { v: stats.companies || '—', l: 'Entreprises inscrites', color: KZ.violetSoft },
-              { v: stats.users || '—',     l: 'Candidats inscrits', color: KZ.orangeSoft },
-              { v: stats.jobs || '—',      l: 'Offres publiées', color: KZ.greenSoft },
-              { v: '974',                  l: '100% La Réunion', color: KZ.yellowSoft },
-            ].map(c => (
-              <div key={c.l} className="p-4 rounded-2xl border border-white/10 text-center"
-                style={{ background: 'rgba(255,255,255,0.06)' }}>
-                <div className="text-3xl font-extrabold mb-1" style={{ color: c.color }}>{c.v}</div>
-                <div className="text-xs font-semibold opacity-60" style={{ color: KZ.cream }}>{c.l}</div>
+          {/* Illustration + cartes flottantes */}
+          <div className="relative">
+            <div className="relative rounded-2xl border-[1.5px] border-[#1A1410] overflow-hidden aspect-[16/10]" style={{ boxShadow: '8px 8px 0 #1A1410' }}>
+              <Image
+                src="/assets/img/scenes/recrutement.webp"
+                alt="Une recruteuse réunionnaise rencontre un candidat sur la route du littoral"
+                fill priority sizes="(min-width: 1024px) 640px, 100vw" className="object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 left-2 sm:left-6 w-[230px] p-3 rounded-xl border-[1.5px] border-[#1A1410] bg-white rotate-[-3deg]"
+              style={{ boxShadow: '4px 4px 0 #1A1410' }}>
+              <div className="text-[10px] font-extrabold uppercase tracking-widest mb-2" style={{ color: KZ.violet }}>Nouvelle candidature</div>
+              <div className="flex items-center gap-2.5">
+                <Avatar name="Maëva L." avatarConfig={HERO_CANDIDATE} size={38} color={KZ.orangeSoft} />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-bold text-[#1A1410] truncate">Maëva L.</div>
+                  <div className="text-[11px] text-[#6B5A4A] truncate">Réceptionniste · Saint-Paul</div>
+                </div>
+                <span className="text-sm font-extrabold" style={{ color: KZ.green }}>92%</span>
               </div>
-            ))}
+            </div>
+            {launchDays ? (
+              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[#1A1410] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
+                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 #1A1410', color: KZ.ink }}>
+                <Gift size={14} /> Gratuit pendant le lancement
+              </div>
+            ) : (
+              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[#1A1410] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
+                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 #1A1410', color: KZ.ink }}>
+                <Sparkles size={14} /> Tri des CV par IA
+              </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* PARTENAIRES (multidiffusion — masqué tant que OFF) ───── */}
       {MULTIDIFFUSION_ENABLED && (
-        <section className="px-4 sm:px-8 lg:px-16 py-10 border-b border-[#1A1410]" style={{ background: KZ.cream2 }}>
+        <section className="px-4 sm:px-8 lg:px-16 py-10 border-y border-[#1A1410]" style={{ background: KZ.cream2 }}>
           <p className="text-center text-xs font-bold text-[#6B5A4A] uppercase tracking-widest mb-6">
             Multi-diffusion automatique vers
           </p>
@@ -163,8 +208,14 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
         </section>
       )}
 
+      {/* PROBLÈMES → SOLUTIONS ───────────────────────────────── */}
+      <RecruiterPainSection />
+
+      {/* APERÇU PRODUIT ──────────────────────────────────────── */}
+      <ProductPreviewSection />
+
       {/* VALEUR AJOUTÉE ─────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20" style={{ background: KZ.cream }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410]" style={{ background: KZ.cream }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-12">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Pourquoi Kazajob Pro</p>
@@ -209,11 +260,11 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
               Recruter sur Kazajob, c&apos;est simple.
             </h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 gap-y-9">
             {[
               { n: '1', color: KZ.violetSoft, icon: <Briefcase size={26} />, title: 'Créez votre compte', desc: 'Inscription en 3 minutes. Configurez votre entreprise, logo, secteur, équipe RH.' },
               { n: '2', color: KZ.yellowSoft, icon: <FileText size={26} />, title: 'Publiez votre offre', desc: 'Formulaire guidé, mention H/F vérifiée, questions de préqualification, fourchette salariale.' },
-              { n: '3', color: KZ.greenSoft, icon: <Users size={26} />, title: 'Recevez les candidatures', desc: 'KazaIA trie et classe les dossiers. Pipeline Kanban intégré. Messagerie directe avec les candidats.' },
+              { n: '3', color: KZ.greenSoft, icon: <Users size={26} />, title: 'Recevez les candidatures', desc: 'KazaIA trie et classe les dossiers. Pipeline intégré. Messagerie directe avec les candidats.' },
               { n: '4', color: KZ.orangeSoft, icon: <HeartHandshake size={26} />, title: 'Recrutez & mesurez', desc: 'Suivi du temps de réponse (KazaScore), analytics de conversion, historique complet.' },
             ].map((step) => (
               <div key={step.n} className="kz-card p-6 relative pt-10 bg-white">
@@ -232,6 +283,25 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
           </div>
         </div>
       </section>
+
+      {/* SECTEURS ───────────────────────────────────────────── */}
+      <SectorsSection variant="entreprise" />
+
+      {/* OFFRE DE LANCEMENT ─────────────────────────────────── */}
+      {launchDays ? (
+        <IllustratedCta
+          image="/assets/img/scenes/cadre-tropical-1.webp"
+          eyebrow={<Badge color="orange" size="lg" icon={<Gift size={13} />}>Offre de lancement · {launchDays} jours restants</Badge>}
+          title={<>Publiez vos offres<br /><span style={{ color: KZ.violet }}>gratuitement.</span></>}
+          text="Pendant le lancement de Kazajob, les entreprises réunionnaises publient sans payer et sans carte bancaire. Profitez-en pour constituer votre vivier de talents."
+          actions={
+            <Link href="/auth/register?role=recruiter">
+              <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>J&apos;en profite</Button>
+            </Link>
+          }
+          footnote="Aucun prélèvement automatique à la fin du lancement : vous choisissez ensuite librement."
+        />
+      ) : null}
 
       {/* QUALITÉ & MODÉRATION ───────────────────────────────── */}
       <QualityModerationSection />
@@ -252,7 +322,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
               { icon: <HeartHandshake size={22} />, color: KZ.yellowSoft, title: 'Support local réactif', desc: 'Une équipe réunionnaise disponible du lundi au vendredi. Réponse garantie sous 24h. Accompagnement à l\'onboarding inclus dans tous les plans.' },
               { icon: <BarChart2 size={22} />, color: KZ.orangeSoft, title: 'Transparence des données', desc: 'Statistiques réelles affichées : vues, candidatures, taux d\'ouverture. Aucune donnée gonflée. Vos performances, telles qu\'elles sont.' },
               { icon: <Shield size={22} />, color: KZ.blueSoft, title: 'Conformité légale 974', desc: 'Mention H/F vérifiée à la publication. Aide à la rédaction d\'offres conformes au Code du Travail. Archivage légal des candidatures pendant 2 ans.' },
-              { icon: <Users size={22} />, color: KZ.cream2, title: 'Candidats qualifiés locaux', desc: 'Plateforme 100% tournée vers La Réunion et Mayotte. Chaque candidat inscrit est un habitant local. Matching géographique inclus d\'office.' },
+              { icon: <Users size={22} />, color: KZ.cream2, title: 'Candidats qualifiés locaux', desc: 'Plateforme 100% tournée vers La Réunion et Mayotte. Matching géographique inclus d\'office.' },
             ].map((g) => (
               <div key={g.title} className="flex gap-4 p-5 rounded-2xl border border-white/10"
                 style={{ background: 'rgba(255,255,255,0.06)' }}>
@@ -273,43 +343,8 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       {/* COMPARATIF ─────────────────────────────────────────── */}
       <EnterpriseComparisonSection />
 
-      {/* FAQ RECRUTEUR ──────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[#1A1410]" style={{ background: KZ.cream }}>
-        <div className="max-w-[860px] mx-auto">
-          <div className="text-center mb-10">
-            <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Questions fréquentes</p>
-            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">
-              Vous avez des questions. On a les réponses.
-            </h2>
-          </div>
-          <div className="flex flex-col gap-3">
-            {[
-              { q: 'Puis-je annuler à tout moment ?', a: 'Oui. L\'annulation est effective immédiatement depuis votre espace recruteur. Aucun frais de résiliation, aucun engagement. Le prochain débit est simplement annulé.' },
-              { q: 'Combien de recruteurs peuvent utiliser le même compte ?', a: 'Cela dépend de votre plan. Le plan Starter inclut 1 recruteur, Pro 3, Studio 5 et Agency est illimité. Vous pouvez inviter des membres depuis Paramètres > Équipe.' },
-              { q: 'Mes offres sont-elles visibles immédiatement après publication ?', a: 'Oui, dès la validation du formulaire votre offre est en ligne. Les candidats la voient en temps réel. Les offres boostées apparaissent en tête de liste pendant la durée du boost.' },
-              { q: 'Comment fonctionne la période de lancement ?', a: launchDays ? `Kazajob est en phase de lancement. Vous pouvez accéder à la plateforme gratuitement encore ${launchDays} jours, sans carte bancaire. À l'issue du lancement, vous choisissez un forfait payant ou votre accès passe en lecture seule.` : "Votre carte est débitée automatiquement du montant du plan choisi. Vous recevez un email de rappel 3 jours avant. Si vous annulez avant la fin de l'essai, aucun débit n'est effectué." },
-              { q: 'Les données de mes candidats sont-elles sécurisées ?', a: 'Absolument. Les données sont hébergées en Europe, chiffrées en transit (HTTPS/TLS) et au repos. Kazajob est conforme RGPD. Les candidats peuvent exercer leur droit à l\'effacement à tout moment.' },
-              { q: 'Puis-je créer des offres pour une autre entreprise (cabinet RH) ?', a: 'Oui. Le plan Agency est conçu pour les cabinets de recrutement. Vous gérez plusieurs entreprises clientes depuis un seul tableau de bord, avec des offres anonymisées si besoin.' },
-            ].map((item) => (
-              <div key={item.q} className="kz-card p-5 bg-white">
-                <h3 className="text-sm font-bold text-[#1A1410] mb-2">{item.q}</h3>
-                <p className="text-sm text-[#6B5A4A] leading-relaxed">{item.a}</p>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-8">
-            <p className="text-sm text-[#6B5A4A]">Une autre question ?{' '}
-              <a href="mailto:contact@kazajob.re" className="font-bold text-[#1A1410] hover:underline">contact@kazajob.re</a>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* RÉASSURANCE SANS RISQUE ────────────────────────────── */}
-      <RiskReversalSection launchDays={launchDays} />
-
       {/* PRICING ─────────────────────────────────────────────── */}
-      <section id="tarifs-pro" className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410]"
+      <section id="tarifs-pro" className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[#1A1410] scroll-mt-20"
         style={{ background: KZ.cream2 }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-12">
@@ -323,7 +358,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
                 : "30 jours d'essai sur tous les plans · Carte requise · 1er débit après l'essai"}
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-end">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 gap-y-8 items-end">
             {SUBSCRIPTION_PLANS.map(plan => (
               <PriceCard key={plan.id} plan={plan} isHighlight={plan.highlight} launchDays={launchDays} />
             ))}
@@ -334,30 +369,61 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
         </div>
       </section>
 
-      {/* CTA FINAL ───────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-16 text-center border-t border-[#1A1410]"
-        style={{ background: KZ.ink }}>
-        <h2 className="text-[36px] lg:text-[52px] font-extrabold tracking-tight leading-none mb-4"
-          style={{ color: KZ.cream }}>
-          Prêt à recruter<br />
-          <span style={{ color: KZ.orange }}>différemment ?</span>
-        </h2>
-        <p className="text-base opacity-70 mb-8 max-w-[500px] mx-auto" style={{ color: KZ.cream }}>
-          Rejoignez les entreprises réunionnaises qui font confiance à Kazajob pour leurs recrutements.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/auth/register?role=recruiter">
-            <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>
-              {launchDays ? 'Démarrer gratuitement' : "Démarrer l'essai gratuit"}
-            </Button>
-          </Link>
-          <Link href="/recruiter/company-setup">
-            <Button kind="outline" size="lg" className=" !border-[#FFF7EE]/40">
-              Configurer mon entreprise
-            </Button>
-          </Link>
+      {/* RÉASSURANCE SANS RISQUE ────────────────────────────── */}
+      <RiskReversalSection launchDays={launchDays} />
+
+      {/* FAQ RECRUTEUR ──────────────────────────────────────── */}
+      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[#1A1410]" style={{ background: KZ.cream }}>
+        <div className="max-w-[860px] mx-auto">
+          <div className="text-center mb-10">
+            <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Questions fréquentes</p>
+            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[#1A1410]">
+              Vous avez des questions. On a les réponses.
+            </h2>
+          </div>
+          <div className="flex flex-col gap-3">
+            {[
+              { q: 'Puis-je annuler à tout moment ?', a: 'Oui. L\'annulation est effective immédiatement depuis votre espace recruteur. Aucun frais de résiliation, aucun engagement. Le prochain débit est simplement annulé.' },
+              { q: 'Combien de recruteurs peuvent utiliser le même compte ?', a: `Cela dépend de votre forfait : ${SUBSCRIPTION_PLANS.map((p) => `${p.name} ${p.maxMembers} recruteur${p.maxMembers > 1 ? 's' : ''}`).join(', ')}. Vous invitez vos collègues depuis Paramètres > Équipe.` },
+              { q: 'Mes offres sont-elles visibles immédiatement après publication ?', a: 'Oui, dès la validation du formulaire votre offre est en ligne. Les candidats la voient en temps réel. Les offres boostées apparaissent en tête de liste pendant la durée du boost.' },
+              { q: launchDays ? 'Comment fonctionne la période de lancement ?' : 'Comment fonctionne l\'essai gratuit ?', a: launchDays ? `Kazajob est en phase de lancement. Vous pouvez accéder à la plateforme gratuitement encore ${launchDays} jours, sans carte bancaire. À l'issue du lancement, vous choisissez un forfait payant ou votre accès passe en lecture seule.` : "Votre carte est débitée automatiquement du montant du plan choisi à la fin des 30 jours. Vous recevez un email de rappel 3 jours avant. Si vous annulez avant la fin de l'essai, aucun débit n'est effectué." },
+              { q: 'Les données de mes candidats sont-elles sécurisées ?', a: 'Absolument. Les données sont hébergées en Europe, chiffrées en transit (HTTPS/TLS) et au repos. Kazajob est conforme RGPD. Les candidats peuvent exercer leur droit à l\'effacement à tout moment.' },
+              { q: 'Je suis une grande structure ou un cabinet RH, est-ce adapté ?', a: `Oui. Le forfait ${topPlan.name} accueille jusqu'à ${topPlan.maxMembers} recruteurs avec des offres illimitées. Pour un besoin spécifique, écrivez-nous : on construit la solution avec vous.` },
+            ].map((item) => (
+              <details key={item.q} className="kz-card bg-white group [&_summary::-webkit-details-marker]:hidden">
+                <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+                  <h3 className="text-sm font-bold text-[#1A1410]">{item.q}</h3>
+                  <span className="w-7 h-7 rounded-full border border-[#1A1410] flex items-center justify-center shrink-0 text-lg leading-none transition-transform group-open:rotate-45" style={{ background: KZ.violetSoft }}>+</span>
+                </summary>
+                <p className="text-sm text-[#6B5A4A] leading-relaxed px-5 pb-5 -mt-1">{item.a}</p>
+              </details>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <p className="text-sm text-[#6B5A4A]">Une autre question ?{' '}
+              <a href="mailto:contact@kazajob.re" className="font-bold text-[#1A1410] hover:underline">contact@kazajob.re</a>
+            </p>
+          </div>
         </div>
       </section>
+
+      {/* CTA FINAL ───────────────────────────────────────────── */}
+      <IllustratedCta
+        image="/assets/img/scenes/coucher-soleil.webp"
+        title={<>Prêt à recruter<br /><span style={{ color: KZ.violet }}>différemment ?</span></>}
+        text="Créez votre compte entreprise en 3 minutes et publiez votre première offre dès aujourd'hui."
+        actions={
+          <>
+            <Link href="/auth/register?role=recruiter">
+              <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>{ctaLabel}</Button>
+            </Link>
+            <Link href="/contact">
+              <Button kind="outline" size="lg">Parler à l&apos;équipe</Button>
+            </Link>
+          </>
+        }
+        footnote={launchDays ? 'Sans carte bancaire · Sans engagement · Support local' : 'Sans engagement · Annulable à tout moment · Support local'}
+      />
     </>
   )
 }

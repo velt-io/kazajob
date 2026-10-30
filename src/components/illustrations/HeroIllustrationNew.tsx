@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { KZ } from '@/lib/constants'
 import { Soleil, Palme, Montagne, Vague, Nuage, Hibiscus, Sparkle } from './Tropical'
 import { Briefcase, Sparkles } from 'lucide-react'
@@ -17,12 +18,15 @@ export function HeroIllustrationNew() {
           height: 240,
         }}
       >
-        <img
-            src="/assets/img/homepage/hero.png"
-            alt="Illustration Kazajob La Reunion"
-            className="w-full object-contain object-bottom"
-            style={{ maxHeight: '100vh', maxWidth: 'auto'}}
-          />
+        <Image
+          src="/assets/img/homepage/hero.webp"
+          alt="Illustration Kazajob La Réunion"
+          width={1100}
+          height={825}
+          sizes="520px"
+          priority
+          className="w-full h-auto object-contain object-bottom"
+        />
       </div>
 
       {/* Éléments décoratifs */}

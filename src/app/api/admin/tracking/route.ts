@@ -1,3 +1,4 @@
+import { revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin-guard'
 import { createIntegration, listIntegrations, type IntegrationInput } from '@/lib/queries/tracking'
@@ -25,5 +26,6 @@ export async function POST(req: NextRequest) {
   }
 
   const created = await createIntegration(body as IntegrationInput, adminId)
+  revalidateTag('tracking', 'max')
   return NextResponse.json(created)
 }

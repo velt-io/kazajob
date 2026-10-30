@@ -9,6 +9,17 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      // Ancienne URL de la vue recruteur (avant /entreprise)
+      {
+        source: '/',
+        has: [{ type: 'query', key: 'view', value: 'entreprise' }],
+        destination: '/entreprise',
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       {

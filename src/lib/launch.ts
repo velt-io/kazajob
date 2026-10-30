@@ -32,6 +32,13 @@ export function daysUntil(expiresAt: Date, now: Date = new Date()): number {
   return ms <= 0 ? 0 : Math.ceil(ms / 86_400_000)
 }
 
+/** Jours restants d'une campagne publique (ISO), null si terminée ou sans échéance. */
+export function launchDaysLeft(endsAt: string | null): number | null {
+  if (!endsAt) return null
+  const d = daysUntil(new Date(endsAt))
+  return d > 0 ? d : null
+}
+
 export function isLaunchExpired(expiresAt: Date, now: Date = new Date()): boolean {
   return now.getTime() >= expiresAt.getTime()
 }
