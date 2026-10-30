@@ -198,7 +198,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
                 onClick={() => setRemote(v)}
                 className="flex-1 py-2.5 text-sm font-semibold border-[1.5px] rounded-lg"
                 style={remote === v
-                  ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)', borderColor: 'var(--kz-edge)' }
+                  ? { background: 'var(--kz-inverse)', color: 'var(--kz-on-inverse)', borderColor: 'var(--kz-edge)' }
                   : { background: 'var(--kz-paper)', color: 'var(--kz-ink)', borderColor: 'var(--kz-edge)' }}
               >
                 {l}

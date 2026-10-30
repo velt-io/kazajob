@@ -17,20 +17,19 @@ export function StatCard({ label, value, delta, icon, color = 'var(--kz-violet-s
 
   return (
     <div
-      className={cn('kz-card p-4', className)}
-      style={{ background: color }}
+      className={cn('rounded-[24px] os-glass p-5', className)}
     >
       <div className="flex justify-between items-start mb-2">
-        <div className="text-[11px] font-bold uppercase tracking-widest text-[var(--kz-mute)]">
+        <div className="text-[13px] font-medium text-[var(--kz-mute)]">
           {label}
         </div>
         {icon && (
-          <div className="w-8 h-8 rounded-lg bg-[var(--kz-paper)] border border-[var(--kz-edge)] flex items-center justify-center text-[var(--kz-ink)]">
+          <div className="w-8 h-8 rounded-[10px] flex items-center justify-center text-[var(--kz-ink)]" style={{ background: color }}>
             {icon}
           </div>
         )}
       </div>
-      <div className="text-[32px] font-extrabold tracking-tighter leading-none text-[var(--kz-ink)]">
+      <div className="text-[34px] font-semibold tracking-[-0.05em] leading-none text-white tabular-nums">
         {value}
       </div>
       {delta && (

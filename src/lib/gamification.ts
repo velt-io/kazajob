@@ -10,12 +10,13 @@ export interface GamificationLevel {
   emoji:  string
 }
 
+// Thème OS 2027 : pas d'emoji de niveau (sobriété « système »).
 export const LEVELS: GamificationLevel[] = [
-  { level: 1, title: 'Débutant',    minXp: 0,     maxXp: 999,   color: 'var(--kz-mute)', bg: 'var(--kz-cream2)', emoji: '🌱' },
-  { level: 2, title: 'Candidat',    minXp: 1000,  maxXp: 2499,  color: 'var(--kz-orange)', bg: 'var(--kz-orange-soft)', emoji: '⚡' },
-  { level: 3, title: 'Explorateur', minXp: 2500,  maxXp: 4999,  color: 'var(--kz-violet)', bg: 'var(--kz-violet-soft)', emoji: '🔮' },
-  { level: 4, title: 'Chasseur',    minXp: 5000,  maxXp: 9999,  color: 'var(--kz-green)', bg: 'var(--kz-green-soft)', emoji: '🎯' },
-  { level: 5, title: 'Expert 974',  minXp: 10000, maxXp: 99999, color: 'var(--kz-yellow)', bg: 'var(--kz-yellow-soft)', emoji: '👑' },
+  { level: 1, title: 'Débutant',    minXp: 0,     maxXp: 999,   color: 'var(--kz-mute)', bg: 'var(--kz-cream2)', emoji: '' },
+  { level: 2, title: 'Candidat',    minXp: 1000,  maxXp: 2499,  color: 'var(--kz-orange)', bg: 'var(--kz-orange-soft)', emoji: '' },
+  { level: 3, title: 'Explorateur', minXp: 2500,  maxXp: 4999,  color: 'var(--kz-violet)', bg: 'var(--kz-violet-soft)', emoji: '' },
+  { level: 4, title: 'Chasseur',    minXp: 5000,  maxXp: 9999,  color: 'var(--kz-green)', bg: 'var(--kz-green-soft)', emoji: '' },
+  { level: 5, title: 'Expert 974',  minXp: 10000, maxXp: 99999, color: 'var(--kz-yellow)', bg: 'var(--kz-yellow-soft)', emoji: '' },
 ]
 
 export function getLevel(xp: number): GamificationLevel {

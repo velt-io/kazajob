@@ -45,14 +45,13 @@ export function ChatAssistantDrawer() {
       {/* ── Bouton flottant ─────────────────────────────────────── */}
       <button
         onClick={() => setOpen(true)}
-        className={`fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 ${open ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-        style={{ background: KZ.violet, boxShadow: '4px 4px 0 var(--kz-shadow)' }}
+        className={`fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-105 active:scale-95 bg-[linear-gradient(140deg,#5E5CE6,#BF5AF2_55%,#FF375F)] shadow-[0_12px_32px_-8px_rgba(191,90,242,0.7)] ${open ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         title="KazaIA — Assistant carrière"
         aria-label="Ouvrir KazaIA"
       >
         <Sparkles size={22} color="white" />
         {/* Badge pulsant */}
-        <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-white animate-pulse" style={{ background: KZ.orange }} />
+        <span className="absolute top-0.5 right-0.5 w-3 h-3 rounded-full bg-[#30D158] ring-2 ring-[#050507]" />
       </button>
 
       {/* ── Backdrop mobile ─────────────────────────────────────── */}

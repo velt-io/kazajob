@@ -288,7 +288,7 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
               <button key={l} type="button" onClick={() => setRemote(v)}
                 className="flex-1 rounded-xl border-2 text-sm font-semibold transition-all"
                 style={remote === v
-                  ? { background: 'var(--kz-ink)', color: KZ.onInverse, borderColor: 'var(--kz-edge)' }
+                  ? { background: 'var(--kz-inverse)', color: KZ.onInverse, borderColor: 'var(--kz-edge)' }
                   : { background: 'var(--kz-paper)', color: 'var(--kz-ink)', borderColor: 'var(--kz-edge)' }}>
                 {l}
               </button>

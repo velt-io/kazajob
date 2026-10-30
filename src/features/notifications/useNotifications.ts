@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, createElement, type ReactNode } from 'react'
+import { Bell, CalendarDays, ClipboardList, Clock, Sparkles, Undo2, type LucideIcon } from 'lucide-react'
 
 export interface Notification {
   id: string
@@ -13,15 +14,17 @@ export interface Notification {
   created_at: string
 }
 
-const TYPE_ICON: Record<string, string> = {
-  application_status:     '📋',
-  new_job_match:          '✨',
-  interview_scheduled:    '📅',
-  application_withdrawn:  '↩️',
+// Thème OS 2027 : icônes système (lucide) au lieu d'emojis.
+const TYPE_ICON: Record<string, LucideIcon> = {
+  application_status:     ClipboardList,
+  new_job_match:          Sparkles,
+  interview_scheduled:    CalendarDays,
+  application_withdrawn:  Undo2,
+  job_expired:            Clock,
 }
 
-export function getNotifIcon(type: string): string {
-  return TYPE_ICON[type] ?? '🔔'
+export function getNotifIcon(type: string): ReactNode {
+  return createElement(TYPE_ICON[type] ?? Bell, { size: 16, className: 'text-[var(--kz-ink)]' })
 }
 
 const POLL_MS = 10000

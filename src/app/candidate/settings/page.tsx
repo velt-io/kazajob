@@ -231,7 +231,7 @@ export default function CandidateSettingsPage() {
           {gami.enabled && (
             <div
               className="rounded-xl border-2 border-[var(--kz-edge)] p-4"
-              style={{ background: 'var(--kz-ink)', boxShadow: '3px 3px 0 ' + gami.level.color }}
+              style={{ background: 'var(--kz-inverse)', boxShadow: '3px 3px 0 ' + gami.level.color }}
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">

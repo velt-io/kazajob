@@ -236,7 +236,7 @@ function StagesContent() {
                 className="px-3 py-1 text-xs font-semibold rounded-full border border-[var(--kz-edge)] transition-all"
                 style={
                   radius === opt.value
-                    ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)' }
+                    ? { background: 'var(--kz-inverse)', color: 'var(--kz-on-inverse)' }
                     : { background: 'var(--kz-paper)', color: 'var(--kz-ink)' }
                 }
               >

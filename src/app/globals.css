@@ -147,6 +147,11 @@ body::before {
 /* Pas d'inclinaisons « cartoon » : tout est droit et aligné */
 [class*="rotate-["], .rotate-1, .rotate-2, .rotate-3, .rotate-6, .-rotate-1, .-rotate-2, .-rotate-3, .-rotate-6 { rotate: none !important; }
 
+/* Plus de « trait cartoon » : bordures fines, graisses mesurées, survols sobres */
+[class*="border-[1.5px]"], .border-2 { border-width: 1px !important; }
+.font-extrabold, .font-black { font-weight: 600 !important; }
+[class*="hover:translate-x-[-1px]"]:hover, [class*="hover:translate-x-[1px]"]:hover { translate: 0 -1px !important; }
+
 /* Fonds assombris (modales, menus) */
 .os-scrim { background: var(--os-scrim); }
 

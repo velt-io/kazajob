@@ -480,7 +480,7 @@ export default function OnboardingPage() {
 
               {/* Level card */}
               <div className="rounded-2xl border-2 border-[var(--kz-edge)] p-5 mb-5 text-left"
-                style={{ background: 'var(--kz-ink)', boxShadow: '5px 5px 0 var(--kz-mute)' }}>
+                style={{ background: 'var(--kz-inverse)', boxShadow: '5px 5px 0 var(--kz-mute)' }}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-3xl">🌱</span>

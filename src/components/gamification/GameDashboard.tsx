@@ -35,7 +35,7 @@ function QuestCard({ quest }: { quest: Quest }) {
     <div
       className="relative rounded-2xl border-2 border-[var(--kz-edge)] overflow-hidden transition-all"
       style={{
-        background: done ? 'var(--kz-ink)' : KZ.paper,
+        background: done ? 'var(--kz-inverse)' : KZ.paper,
         boxShadow: done ? 'none' : '4px 4px 0 var(--kz-shadow)',
       }}
     >
@@ -48,7 +48,7 @@ function QuestCard({ quest }: { quest: Quest }) {
           <div className="flex items-center gap-2">
             <div
               className="w-8 h-8 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-              style={{ background: done ? quest.accentColor + '30' : quest.accentColor, color: done ? quest.accentColor : 'var(--kz-ink)' }}
+              style={{ background: done ? `color-mix(in srgb, ${quest.accentColor} 19%, transparent)` : quest.accentColor, color: done ? quest.accentColor : 'var(--kz-ink)' }}
             >
               {ICON_MAP[quest.iconName]}
             </div>
@@ -104,7 +104,7 @@ function XpBar({ xp, xpProgress, level, nextLevel }: {
   return (
     <div
       className="rounded-2xl border-2 border-[var(--kz-edge)] p-4 mb-5"
-      style={{ background: 'var(--kz-ink)', boxShadow: '5px 5px 0 ' + level.color }}
+      style={{ background: 'var(--kz-inverse)', boxShadow: '5px 5px 0 ' + level.color }}
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -128,7 +128,7 @@ function XpBar({ xp, xpProgress, level, nextLevel }: {
       <div className="h-4 rounded-full border border-white/20 overflow-hidden relative" style={{ background: 'rgba(255,255,255,0.1)' }}>
         <div
           className="h-full rounded-full relative overflow-hidden transition-all duration-1000"
-          style={{ width: `${xpProgress}%`, background: `linear-gradient(90deg, ${level.color}, ${level.color}cc)` }}
+          style={{ width: `${xpProgress}%`, background: `linear-gradient(90deg, ${level.color}, color-mix(in srgb, ${level.color} 80%, transparent))` }}
         >
           {/* Shine effect */}
           <div className="absolute inset-0 bg-gradient-to-b from-white/30 to-transparent" />
@@ -268,7 +268,7 @@ export function GameDashboard({
               className="rounded-2xl border-2 border-[var(--kz-edge)] overflow-hidden"
               style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}
             >
-              <div className="px-5 py-3 flex justify-between items-center" style={{ background: 'var(--kz-ink)' }}>
+              <div className="px-5 py-3 flex justify-between items-center" style={{ background: 'var(--kz-inverse)' }}>
                 <h3 className="text-sm font-extrabold flex items-center gap-2" style={{ color: KZ.onInverse }}>
                   <Send size={15} color={KZ.orange} />
                   Candidatures en cours
@@ -297,7 +297,7 @@ export function GameDashboard({
           {/* Profil héros */}
           <div
             className="rounded-2xl border-2 border-[var(--kz-edge)] overflow-hidden"
-            style={{ background: 'var(--kz-ink)', boxShadow: '4px 4px 0 ' + gami.level.color }}
+            style={{ background: 'var(--kz-inverse)', boxShadow: '4px 4px 0 ' + gami.level.color }}
           >
             <div className="p-5">
               <div className="flex items-center gap-3 mb-4">
@@ -339,7 +339,7 @@ export function GameDashboard({
                     className="flex items-center gap-3 p-2.5 rounded-xl border border-[var(--kz-line)]"
                     style={{ background: KZ.cream2 }}
                   >
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: q.accentColor + '20', color: q.accentColor }}>
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `color-mix(in srgb, ${q.accentColor} 13%, transparent)`, color: q.accentColor }}>
                       {ICON_MAP[q.iconName]}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -378,7 +378,7 @@ export function GameDashboard({
             {gami.activeQuests[0] ? (
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center"
-                  style={{ background: gami.activeQuests[0].accentColor + '30', color: gami.activeQuests[0].accentColor }}>
+                  style={{ background: `color-mix(in srgb, ${gami.activeQuests[0].accentColor} 19%, transparent)`, color: gami.activeQuests[0].accentColor }}>
                   {ICON_MAP[gami.activeQuests[0].iconName]}
                 </div>
                 <div className="flex-1">

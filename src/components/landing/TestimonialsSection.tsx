@@ -115,7 +115,7 @@ export function TestimonialsSection() {
                 </div>
                 <span
                   className="text-[10px] font-bold px-2.5 py-1 rounded-full border border-[var(--kz-edge)]"
-                  style={{ background: t.tagColor + '25', color: t.tagColor }}
+                  style={{ background: `color-mix(in srgb, ${t.tagColor} 15%, transparent)`, color: t.tagColor }}
                 >
                   {t.tag}
                 </span>
