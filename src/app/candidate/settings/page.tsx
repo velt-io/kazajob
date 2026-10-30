@@ -237,15 +237,15 @@ export default function CandidateSettingsPage() {
                 <div className="flex items-center gap-2">
                   <span className="text-xl">{gami.level.emoji}</span>
                   <div>
-                    <div className="text-[10px] opacity-60 font-bold" style={{ color: KZ.cream }}>TON NIVEAU</div>
+                    <div className="text-[10px] opacity-60 font-bold" style={{ color: KZ.onInverse }}>TON NIVEAU</div>
                     <div className="text-sm font-extrabold" style={{ color: gami.level.color }}>{gami.level.title}</div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-base font-extrabold" style={{ color: KZ.cream }}>
+                  <div className="text-base font-extrabold" style={{ color: KZ.onInverse }}>
                     {gami.xp.toLocaleString('fr-FR')} XP
                   </div>
-                  <div className="text-[10px] opacity-50" style={{ color: KZ.cream }}>
+                  <div className="text-[10px] opacity-50" style={{ color: KZ.onInverse }}>
                     {gami.doneQuests.length}/{gami.quests.length} quêtes accomplies
                   </div>
                 </div>

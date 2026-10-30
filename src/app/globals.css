@@ -2,7 +2,7 @@
 
 /* ── Kazajob Design Tokens ─────────────────────────────────── */
 @theme inline {
-  --font-sora: var(--font-sora);
+  --font-sora: var(--font-ui);
 
   /* Brand colors */
   --color-kz-orange:      var(--kz-orange);
@@ -27,31 +27,46 @@
   --color-kz-edge:        var(--kz-edge);
 }
 
-/* ── Thème (valeurs de la production actuelle) ─────────────────
- * Toute l'interface lit ces variables : un thème = un bloc :root.
- * Encre en trois rôles : texte (ink), bordures (edge), ombres cartoon (shadow). */
+/* ── Thème « Kazajob OS 2027 » — dark, tech premium ────────────
+ * Couleurs système iOS/macOS en mode sombre, surfaces en verre dépoli.
+ * Encre en trois rôles : texte (ink), bordures (edge), ombres (shadow,
+ * ici transparentes : les ombres « cartoon » disparaissent au profit
+ * d'ombres douces portées par les composants). */
 :root {
-  --kz-orange:      #FF6B35;
-  --kz-orange-deep: #E54E1A;
-  --kz-orange-soft: #FFE0CF;
-  --kz-violet:      #6D3BEB;
-  --kz-violet-soft: #E5DCFF;
-  --kz-blue:        #1B4FB8;
-  --kz-blue-soft:   #DCE7FB;
-  --kz-green:       #19A974;
-  --kz-green-soft:  #D6F0E0;
-  --kz-yellow:      #FFC93C;
-  --kz-yellow-soft: #FFF1C2;
-  --kz-cream:       #FFF7EE;
-  --kz-cream2:      #FBEFE0;
-  --kz-beige:       #F2E4D0;
-  --kz-ink:         #1A1410;
-  --kz-paper:       #FFFFFF;
-  --kz-text:        #2A2018;
-  --kz-mute:        #6B5A4A;
-  --kz-line:        #E8DDC9;
-  --kz-edge:        #1A1410;
-  --kz-shadow:      #1A1410;
+  color-scheme: dark;
+
+  --kz-orange:      #FF9F0A;
+  --kz-orange-deep: #FF6A00;
+  --kz-orange-soft: rgba(255, 159, 10, 0.09);
+  --kz-violet:      #BF5AF2;
+  --kz-violet-soft: rgba(191, 90, 242, 0.10);
+  --kz-blue:        #0A84FF;
+  --kz-blue-soft:   rgba(10, 132, 255, 0.10);
+  --kz-green:       #30D158;
+  --kz-green-soft:  rgba(48, 209, 88, 0.09);
+  --kz-yellow:      #FFD60A;
+  --kz-yellow-soft: rgba(255, 214, 10, 0.08);
+  --kz-cream:       #050507;
+  --kz-cream2:      rgba(255, 255, 255, 0.06);
+  --kz-beige:       rgba(255, 255, 255, 0.10);
+  --kz-ink:         #F5F5F7;
+  --kz-paper:       rgba(28, 28, 34, 0.72);
+  --kz-text:        #E5E5EA;
+  --kz-mute:        #8E8E93;
+  --kz-line:        rgba(255, 255, 255, 0.08);
+  --kz-edge:        rgba(255, 255, 255, 0.10);
+  --kz-shadow:      transparent;
+  --kz-inverse:     #0B0B0F;
+  --kz-on-inverse:  #F5F5F7;
+
+  /* Propres au thème */
+  --os-glass:        rgba(30, 30, 36, 0.55);
+  --os-glass-strong: rgba(22, 22, 28, 0.82);
+  --os-highlight:    rgba(255, 255, 255, 0.14);
+  --os-scrim:        rgba(0, 0, 0, 0.6);
+  --os-elevation:    0 1px 0 0 rgba(255, 255, 255, 0.06) inset, 0 24px 48px -24px rgba(0, 0, 0, 0.8);
+  --os-aurora:       linear-gradient(120deg, #FF9F0A 0%, #FF375F 38%, #BF5AF2 70%, #0A84FF 100%);
+  --os-radius:       20px;
 
   --background: var(--kz-cream);
   --foreground: var(--kz-ink);
@@ -68,55 +83,118 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sora), 'Segoe UI', sans-serif;
+  font-family: var(--font-ui), -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-feature-settings: 'cv11', 'ss01', 'ss03';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Cartoon card shadow ────────────────────────────────────── */
-.kz-card {
-  border: 1.5px solid var(--kz-edge);
-  border-radius: 10px;
-  box-shadow: 4px 4px 0 var(--kz-shadow);
+/* Halo de fond (fixe, derrière tout le contenu) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60vw 50vh at 85% -10%, rgba(191, 90, 242, 0.20), transparent 60%),
+    radial-gradient(50vw 45vh at -5% 10%, rgba(10, 132, 255, 0.16), transparent 60%),
+    radial-gradient(60vw 50vh at 50% 120%, rgba(255, 159, 10, 0.10), transparent 60%);
 }
 
+::selection { background: rgba(10, 132, 255, 0.45); color: #fff; }
+
+/* ── Cartes : verre dépoli ──────────────────────────────────── */
+.kz-card,
 .kz-card-sm {
-  border: 1.5px solid var(--kz-edge);
-  border-radius: 8px;
-  box-shadow: 3px 3px 0 var(--kz-shadow);
+  border: 1px solid var(--kz-edge);
+  border-radius: var(--os-radius);
+  box-shadow: var(--os-elevation);
+  /* Pas de flou ici : trop coûteux sur les longues listes. Le verre est réservé à .os-glass. */
 }
+.kz-card-sm { border-radius: 14px; }
+
+/* Utilitaires du thème */
+.os-glass {
+  background: var(--os-glass);
+  border: 1px solid var(--kz-edge);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  backdrop-filter: blur(28px) saturate(170%);
+}
+.os-text-aurora {
+  background: var(--os-aurora);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.os-ring-aurora {
+  position: relative;
+}
+.os-ring-aurora::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--os-aurora);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+/* Pas d'inclinaisons « cartoon » : tout est droit et aligné */
+[class*="rotate-["], .rotate-1, .rotate-2, .rotate-3, .rotate-6, .-rotate-1, .-rotate-2, .-rotate-3, .-rotate-6 { rotate: none !important; }
+
+/* Fonds assombris (modales, menus) */
+.os-scrim { background: var(--os-scrim); }
+
+/* Messages d'erreur Tailwind clairs → version sombre */
+.bg-red-50 { background-color: rgba(255, 69, 58, 0.12) !important; }
+.border-red-200, .border-red-300 { border-color: rgba(255, 69, 58, 0.35) !important; }
+.border-red-400 { border-color: rgba(255, 69, 58, 0.6) !important; }
+.text-red-700, .text-red-600 { color: #FF6961 !important; }
+.hover\:bg-red-50:hover { background-color: rgba(255, 69, 58, 0.14) !important; }
+
+/* Images d'illustration : un peu moins lumineuses sur fond noir */
+img[src*="/assets/img/"] { filter: saturate(0.95) brightness(0.92); }
 
 /* ── Typography helpers ─────────────────────────────────────── */
 .kz-eyebrow {
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .kz-h1 {
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.045em;
   line-height: 1;
 }
 
 .kz-h2 {
-  font-size: 36px;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
 }
 
 .kz-h3 {
   font-size: 22px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.02em;
 }
 
 .kz-mute {
   color: var(--kz-mute);
 }
+
+/* Titres plus « Apple » : graisse moins lourde, approche resserrée */
+h1, h2 { letter-spacing: -0.035em; }
+.font-extrabold { font-weight: 700; }
 
 /* ── Animations ─────────────────────────────────────────────── */
 @keyframes float {
@@ -125,19 +203,35 @@ body {
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes spin-slow {
   to { transform: rotate(360deg); }
 }
 
-.animate-float     { animation: float 4s ease-in-out infinite; }
-.animate-slide-up  { animation: slide-up 0.4s ease both; }
+@keyframes os-shimmer {
+  from { background-position: 0% 50%; }
+  to   { background-position: 200% 50%; }
+}
+
+@keyframes os-pop {
+  0%   { opacity: 0; transform: translateY(-8px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-float     { animation: float 5s ease-in-out infinite; }
+.animate-slide-up  { animation: slide-up 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
 .animate-spin-slow { animation: spin-slow 12s linear infinite; }
+.os-pop            { animation: os-pop 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track  { background: var(--kz-cream2); }
-::-webkit-scrollbar-thumb  { background: var(--kz-ink); border-radius: 3px; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(255, 255, 255, 0.16); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.28); background-clip: padding-box; }

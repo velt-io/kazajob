@@ -14,7 +14,7 @@ interface LogoProps {
 export function Logo({ size = 32, href = '/', className }: LogoProps) {
   const iconSize = Math.round(size * 1.1)
   const iconWidth = Math.round(iconSize * (532 / 661.43))
-  const cls1 = '#544797'
+  const cls1 = '#F5F5F7' // OS 2027 : trait clair sur fond sombre
   const gradientId = `kazajob-logo-gradient-${useId()}`
 
   const content = (
@@ -22,16 +22,9 @@ export function Logo({ size = 32, href = '/', className }: LogoProps) {
       <svg width={iconWidth} height={iconSize} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 532 661.43">
         <defs>
           <linearGradient id={gradientId} x1="-96.43" y1="534.89" x2="429.76" y2="-3.1" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#111527"/>
-            <stop offset=".27" stopColor="#131526"/>
-            <stop offset=".41" stopColor="#1b1826"/>
-            <stop offset=".53" stopColor="#281c26"/>
-            <stop offset=".63" stopColor="#3c2326"/>
-            <stop offset=".71" stopColor="#552b26"/>
-            <stop offset=".8" stopColor="#743525"/>
-            <stop offset=".87" stopColor="#984125"/>
-            <stop offset=".94" stopColor="#c14e24"/>
-            <stop offset="1" stopColor="#eb5c24"/>
+            <stop offset="0" stopColor="#BF5AF2"/>
+            <stop offset=".5" stopColor="#FF375F"/>
+            <stop offset="1" stopColor="#FF9F0A"/>
           </linearGradient>
         </defs>
         <g>

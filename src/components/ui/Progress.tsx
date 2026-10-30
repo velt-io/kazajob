@@ -19,7 +19,7 @@ export function Progress({ value, color = 'var(--kz-orange)', height = 12, label
         </div>
       )}
       <div
-        className="w-full bg-[var(--kz-cream2)] border border-[var(--kz-edge)] rounded-full overflow-hidden"
+        className="w-full bg-white/[0.08] rounded-full overflow-hidden"
         style={{ height }}
       >
         <div

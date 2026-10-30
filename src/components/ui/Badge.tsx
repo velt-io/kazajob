@@ -2,15 +2,16 @@ import { type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import type { BadgeColor } from '@/lib/types'
 
+// Thème OS 2027 : texte coloré sur fond teinté (style iOS), sans contour.
 const colorMap: Record<BadgeColor, string> = {
-  orange: 'bg-[var(--kz-orange-soft)] text-[var(--kz-ink)]',
-  violet: 'bg-[var(--kz-violet-soft)] text-[var(--kz-ink)]',
-  blue:   'bg-[var(--kz-blue-soft)] text-[var(--kz-ink)]',
-  green:  'bg-[var(--kz-green-soft)] text-[var(--kz-ink)]',
-  yellow: 'bg-[var(--kz-yellow-soft)] text-[var(--kz-ink)]',
-  ink:    'bg-[var(--kz-ink)] text-[var(--kz-cream)]',
-  cream:  'bg-[var(--kz-cream2)] text-[var(--kz-ink)]',
-  paper:  'bg-[var(--kz-paper)] text-[var(--kz-ink)]',
+  orange: 'bg-[rgba(255,159,10,0.16)] text-[#FFB340]',
+  violet: 'bg-[rgba(191,90,242,0.16)] text-[#DA8FFF]',
+  blue:   'bg-[rgba(10,132,255,0.16)] text-[#409CFF]',
+  green:  'bg-[rgba(48,209,88,0.16)] text-[#30DB5B]',
+  yellow: 'bg-[rgba(255,214,10,0.16)] text-[#FFD426]',
+  ink:    'bg-white text-black',
+  cream:  'bg-white/[0.08] text-[var(--kz-text)]',
+  paper:  'bg-white/[0.08] text-[var(--kz-ink)]',
 }
 
 const sizeMap = {
@@ -39,10 +40,10 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center font-bold tracking-tight whitespace-nowrap rounded-full',
+        'inline-flex items-center font-semibold tracking-tight whitespace-nowrap rounded-full backdrop-blur-md',
         colorMap[color],
         sizeMap[size],
-        outline && 'border border-[var(--kz-edge)]',
+        outline && 'border border-white/[0.06]',
         className
       )}
     >

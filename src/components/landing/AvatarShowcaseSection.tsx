@@ -23,7 +23,7 @@ const POINTS = [
 
 export function AvatarShowcaseSection() {
   return (
-    <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-20 border-t border-[var(--kz-edge)] relative overflow-hidden" style={{ background: KZ.violet }}>
+    <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-20 border-t border-[var(--kz-edge)] relative overflow-hidden" style={{ background: 'radial-gradient(80% 120% at 0% 0%, rgba(191,90,242,0.32), transparent 60%), radial-gradient(70% 100% at 100% 100%, rgba(10,132,255,0.22), transparent 60%), #0B0B0F' }}>
       <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center">
         <div>
           <p className="kz-eyebrow mb-2" style={{ color: KZ.yellow }}>Ton perso Kazajob</p>

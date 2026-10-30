@@ -131,7 +131,7 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
   if (state === 'done' && currentUrl) {
     return (
       <div className="flex flex-col gap-3">
-        <div className="relative rounded-xl overflow-hidden border border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
+        <div className="relative rounded-xl overflow-hidden border border-[var(--kz-edge)]" style={{ background: KZ.inverse }}>
           <video
             src={currentUrl}
             controls
@@ -240,7 +240,7 @@ export function VideoPitchRecorder({ currentUrl, onUpload, onDelete, uploading }
     return (
       <div className="flex flex-col gap-3">
         {/* Preview */}
-        <div className="relative rounded-xl overflow-hidden border border-[var(--kz-edge)]" style={{ background: KZ.ink, aspectRatio: '4/3' }}>
+        <div className="relative rounded-xl overflow-hidden border border-[var(--kz-edge)]" style={{ background: KZ.inverse, aspectRatio: '4/3' }}>
           <video
             ref={previewRef}
             src={blobUrl ?? undefined}

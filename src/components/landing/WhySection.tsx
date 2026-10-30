@@ -115,7 +115,7 @@ export function WhySection() {
       </section>
 
       {/* Comparatif */}
-      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20" style={{ background: KZ.inverse }}>
         <div className="max-w-[860px] mx-auto">
           <div className="text-center mb-10">
             <p className="kz-eyebrow mb-3" style={{ color: KZ.orange }}>Comparatif</p>

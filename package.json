@@ -15,6 +15,7 @@
     "db:migrate:email-verifications": "tsx --env-file=.env.local src/lib/db/migrate-email-verifications.ts",
     "db:seed": "tsx --env-file=.env.local src/lib/db/seed.ts",
     "db:seed:admin": "tsx --env-file=.env.local src/lib/db/seed-admin.ts",
+    "db:seed:demo": "tsx --env-file=.env.local src/lib/db/seed-demo.ts",
     "db:backup": "tsx --env-file=.env.local -e \"import('./src/lib/db/backup-export').then(m=>m.exportBackup()).then(r=>console.log(r.file,r.total,'lignes'))\"",
     "db:reset:launch:dry": "tsx --env-file=.env.local scripts/reset-launch-database.ts --dry-run",
     "db:reset:launch": "tsx --env-file=.env.local scripts/reset-launch-database.ts"
@@ -38,6 +39,7 @@
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
     "next-auth": "^5.0.0-beta.31",
+    "radix-ui": "^1.8.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.76.1",

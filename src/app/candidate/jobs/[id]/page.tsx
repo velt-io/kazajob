@@ -389,7 +389,7 @@ export default function JobDetailPage() {
                         <button key={opt} type="button" onClick={() => setPrequalAnswers((a) => ({ ...a, [q.id]: opt }))}
                           className="flex-1 py-2 rounded-lg border-[1.5px] text-sm font-semibold"
                           style={prequalAnswers[q.id] === opt
-                            ? { background: KZ.ink, color: KZ.cream, borderColor: 'var(--kz-edge)' }
+                            ? { background: KZ.inverse, color: KZ.onInverse, borderColor: 'var(--kz-edge)' }
                             : { background: 'var(--kz-paper)', color: KZ.ink, borderColor: 'var(--kz-edge)' }}>
                           {opt}
                         </button>

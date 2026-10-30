@@ -292,7 +292,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
         }}
       >
         <div className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-          style={{ background: isAnonymous ? KZ.violet : 'white' }}>
+          style={{ background: isAnonymous ? KZ.violet : KZ.paper }}>
           <EyeOff size={16} color={isAnonymous ? 'white' : KZ.mute} />
         </div>
         <div>

@@ -22,7 +22,7 @@ function LogoFrame({ n }: { n: number }) {
   return (
     <div
       className="partner-frame shrink-0 w-[180px] h-[88px] rounded-2xl xs:border xs:border-[var(--kz-line)] xs:bg-[var(--kz-paper)] flex items-center justify-center overflow-hidden"
-      style={{ boxShadow: '0px 0px 0 var(--kz-line)' /* 2px 2px 0 var(--kz-line) */}}
+      style={{ boxShadow: 'none' /* none */}}
     >
       {loaded ? (
         // eslint-disable-next-line @next/next/no-img-element

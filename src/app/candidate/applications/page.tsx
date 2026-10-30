@@ -67,7 +67,7 @@ export default function ApplicationsPage() {
               onClick={() => setActiveTab(tab.key)}
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all border-[1.5px]"
               style={activeTab === tab.key
-                ? { background: KZ.ink, color: KZ.cream, borderColor: 'var(--kz-edge)', boxShadow: '2px 2px 0 var(--kz-orange)' }
+                ? { background: KZ.inverse, color: KZ.onInverse, borderColor: 'var(--kz-edge)', boxShadow: 'none' }
                 : { background: 'transparent', color: KZ.text, borderColor: 'transparent' }}
             >
               {tab.label}

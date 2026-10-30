@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin } from 'lucide-react'
 import { Button } from './Button'
-import { KZ, REUNION_CITIES } from '@/lib/constants'
+import { REUNION_CITIES } from '@/lib/constants'
 
 export function SearchBarLanding() {
   const [query, setQuery] = useState('')
@@ -22,8 +22,7 @@ export function SearchBarLanding() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center p-2 mb-4 rounded-xl border-[1.5px] border-[var(--kz-edge)]"
-      style={{ background: KZ.paper, boxShadow: '5px 5px 0 var(--kz-shadow)' }}
+      className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center p-2 mb-4 rounded-[22px] sm:rounded-full os-glass os-ring-aurora shadow-[0_20px_60px_-20px_rgba(191,90,242,0.45)]"
     >
       <div className="flex-1 flex items-center gap-2 px-3 py-2 sm:py-1">
         <Search size={18} className="text-[var(--kz-mute)] shrink-0" />
@@ -41,7 +40,7 @@ export function SearchBarLanding() {
         <select
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          className="flex-1 bg-transparent text-sm outline-none text-[var(--kz-text)] cursor-pointer appearance-none"
+          className="flex-1 bg-transparent text-sm outline-none text-[var(--kz-text)] cursor-pointer appearance-none [&>option]:bg-[#1C1C22]"
           style={{ minWidth: 130 }}
         >
           <option value="">Toute la Réunion</option>
@@ -50,7 +49,7 @@ export function SearchBarLanding() {
           ))}
         </select>
       </div>
-      <Button type="submit" kind="primary" size="md" className="w-full sm:w-auto">
+      <Button type="submit" kind="primary" size="lg" className="w-full sm:w-auto !h-11">
         Rechercher
       </Button>
     </form>

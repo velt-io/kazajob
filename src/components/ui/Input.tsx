@@ -19,16 +19,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="text-xs font-semibold text-[var(--kz-text)] tracking-tight"
+            className="text-xs font-medium text-[var(--kz-mute)] tracking-tight"
           >
             {label}
           </label>
         )}
         <div
           className={cn(
-            'flex items-center gap-2 h-11 px-3.5 bg-[var(--kz-paper)] border-[1.5px] rounded-lg shadow-[2px_2px_0_var(--kz-shadow)] transition-shadow',
-            error ? 'border-[#E54E4E]' : 'border-[var(--kz-edge)]',
-            'focus-within:shadow-[3px_3px_0_var(--kz-shadow)]'
+            'flex items-center gap-2 h-11 px-3.5 bg-white/[0.06] border rounded-xl transition-all duration-200 hover:bg-white/[0.08]',
+            error ? 'border-[#FF453A]' : 'border-white/10',
+            'focus-within:border-[#0A84FF] focus-within:ring-4 focus-within:ring-[#0A84FF]/25 focus-within:bg-white/[0.08]'
           )}
         >
           {icon && <span className="inline-flex text-[var(--kz-mute)] shrink-0">{icon}</span>}

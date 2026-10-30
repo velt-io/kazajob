@@ -14,6 +14,7 @@ import { EmailVerifyBanner } from '@/components/auth/EmailVerifyBanner'
 import { BugReportWidget } from '@/components/feedback/BugReportWidget'
 import { useGamification, getLevel } from '@/features/gamification/useGamification'
 import { KZ } from '@/lib/constants'
+import { ActivityRings, RING_COLORS } from '@/components/os/ActivityRings'
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/candidate/dashboard',    label: 'Tableau de bord', icon: <LayoutDashboard size={16} /> },
@@ -38,6 +39,11 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const gami = useGamification(profile, 0, 0)  // counts approx — dashboard a les vrais
   const level = getLevel(profile?.xp ?? 0)
+  // Anneau « Profil » : part des éléments clés renseignés
+  const profileCompletion = profile
+    ? Math.round(([profile.location, profile.bio, profile.phone, profile.cv_url || profile.cv_data, profile.avatar_config || profile.avatar_url, profile.video_pitch_url]
+        .filter(Boolean).length / 6) * 100)
+    : 0
 
   // Pages publiques (offres + formations) : accessibles sans connexion (SEO + visiteurs).
   const isPublicPath = ['/candidate/jobs', '/candidate/training'].some(
@@ -59,7 +65,7 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
   if (!profile) {
     if (isPublicPath) {
       return (
-        <div className="min-h-screen flex flex-col" style={{ background: KZ.cream }}>
+        <div className="min-h-screen flex flex-col" >
           <NavLanding />
           <main className="flex-1 px-4 sm:px-8 lg:px-12 py-6">{children}</main>
           <Footer />
@@ -70,7 +76,7 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden" style={{ background: KZ.cream }}>
+    <div className="h-screen flex flex-col overflow-hidden" >
       <TopBar
         searchPlaceholder="Metier, entreprise, ville..."
         onMenuClick={() => setSidebarOpen(true)}
@@ -84,65 +90,35 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
           onMobileClose={() => setSidebarOpen(false)}
           footer={
             gami.enabled ? (
-              /* ── HUD Gamification ── */
-              <div
-                className="rounded-xl border-2 border-[var(--kz-edge)] overflow-hidden"
-                style={{ background: 'var(--kz-ink)', boxShadow: '3px 3px 0 ' + level.color }}
-              >
-                <div className="px-3 pt-3 pb-1">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-base">{level.emoji}</span>
-                      <div>
-                        <div className="text-[9px] font-bold opacity-50 uppercase tracking-widest" style={{ color: KZ.cream }}>NIVEAU</div>
-                        <div className="text-[11px] font-extrabold leading-none" style={{ color: level.color }}>{level.title}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Flame size={11} color={KZ.yellow} fill={KZ.yellow} />
-                      <span className="text-[10px] font-bold" style={{ color: KZ.yellow }}>{profile.streak ?? 0}j</span>
-                    </div>
-                  </div>
-                  {/* Mini XP bar */}
-                  <div className="h-1.5 rounded-full overflow-hidden mb-2" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: `${gami.xpProgress}%`, background: level.color }}
-                    />
-                  </div>
-                  <div className="text-[9px] opacity-50 text-center pb-1" style={{ color: KZ.cream }}>
-                    {(profile.xp ?? 0).toLocaleString('fr-FR')} XP
+              /* ── Anneaux d'activité (gamification OS 2027) ── */
+              <div className="rounded-[20px] os-glass !bg-white/[0.05] p-3">
+                <div className="flex items-center gap-3">
+                  <ActivityRings size={64} stroke={8} gap={2} rings={[
+                    { value: gami.xpProgress, ...RING_COLORS.move, label: 'Niveau' },
+                    { value: Math.min(100, ((profile.streak ?? 0) / 7) * 100), ...RING_COLORS.exercise, label: 'Série' },
+                    { value: profileCompletion, ...RING_COLORS.stand, label: 'Profil' },
+                  ]} />
+                  <div className="min-w-0 flex-1 text-[11px] leading-[1.35]">
+                    <div className="font-semibold text-white truncate">{level.emoji} {level.title}</div>
+                    <div className="text-[#FA114F] font-semibold">{(profile.xp ?? 0).toLocaleString('fr-FR')} XP</div>
+                    <div className="text-[#92E82A] font-semibold flex items-center gap-1"><Flame size={10} />{profile.streak ?? 0} j de série</div>
+                    <div className="text-[#1EEAEF] font-semibold">Profil {profileCompletion} %</div>
                   </div>
                 </div>
                 <button
                   onClick={() => gami.toggle()}
-                  className="w-full px-3 py-1.5 text-[10px] font-bold border-t border-white/10 flex items-center justify-center gap-1 hover:bg-white/5 transition-colors"
-                  style={{ color: 'rgba(255,247,238,0.5)' }}
+                  className="w-full mt-2.5 pt-2 text-[10px] font-medium border-t border-white/[0.06] flex items-center justify-center gap-1 text-[var(--kz-mute)] hover:text-white transition-colors"
                 >
-                  <Gamepad2 size={10} /> Désactiver le mode quête
+                  <Gamepad2 size={10} /> Masquer les anneaux
                 </button>
               </div>
             ) : (
-              /* ── Footer normal ── */
-              <div className="flex flex-col gap-2">
-                <div
-                  className="p-3.5 rounded-xl border border-[var(--kz-edge)] flex gap-2.5 items-center"
-                  style={{ background: KZ.violet, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
-                >
-                  <div className="flex-1">
-                    <div className="text-xs font-bold mb-0.5">Boost IA</div>
-                    <div className="text-[10px] opacity-80">Niveau {Math.floor((profile.xp ?? 0) / 1000) + 1}</div>
-                  </div>
-                  <Sparkles size={18} />
-                </div>
-                <button
-                  onClick={() => gami.toggle()}
-                  className="flex items-center justify-center gap-1.5 p-2 rounded-xl border border-[var(--kz-edge)] text-[11px] font-bold transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
-                  style={{ background: KZ.violetSoft, color: KZ.violet }}
-                >
-                  <Gamepad2 size={12} /> Mode Quête
-                </button>
-              </div>
+              <button
+                onClick={() => gami.toggle()}
+                className="flex items-center justify-center gap-1.5 h-9 rounded-full bg-white/[0.07] hover:bg-white/[0.12] text-[11px] font-semibold text-[var(--kz-text)] transition-colors"
+              >
+                <Gamepad2 size={12} /> Afficher mes anneaux
+              </button>
             )
           }
         />

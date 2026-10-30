@@ -65,7 +65,7 @@ export function FileUpload({
     return (
       <div className={cn('relative group cursor-pointer', className)} onClick={() => inputRef.current?.click()}>
         <input ref={inputRef} type="file" accept={accept} className="hidden" onChange={handleChange} />
-        <div className="absolute inset-0 rounded-full bg-[var(--kz-ink)]/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <div className="absolute inset-0 rounded-full os-scrim backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           {uploading ? (
             <InlineLoader size={24} />
           ) : (

@@ -1,15 +1,14 @@
-import Image from 'next/image'
 import type { ReactNode } from 'react'
 
 /**
- * Bandeau d'appel à l'action posé sur une illustration de la DA (cadres tropicaux,
- * coucher de soleil). Le contenu est centré dans une carte pour rester lisible
- * quelle que soit l'image et la largeur d'écran.
+ * Thème « OS 2027 » : appel à l'action posé sur un « fond d'écran » dégradé
+ * (façon iOS), contenu dans une feuille de verre. La prop `image` de la DA
+ * cartoon est conservée pour compatibilité mais n'est plus affichée.
  */
 export function IllustratedCta({
-  image, alt = '', eyebrow, title, text, actions, footnote, id,
+  eyebrow, title, text, actions, footnote, id,
 }: {
-  image: string
+  image?: string
   alt?: string
   eyebrow?: ReactNode
   title: ReactNode
@@ -19,17 +18,21 @@ export function IllustratedCta({
   id?: string
 }) {
   return (
-    <section id={id} className="relative overflow-hidden border-t border-[var(--kz-edge)] px-4 sm:px-8 py-16 lg:py-28">
-      <Image src={image} alt={alt} fill sizes="100vw" className="object-cover" />
-      <div className="relative max-w-[680px] mx-auto text-center rounded-2xl border-[1.5px] border-[var(--kz-edge)] px-6 py-9 sm:px-10 sm:py-11"
-        style={{ background: 'rgba(255,247,238,0.94)', boxShadow: '6px 6px 0 var(--kz-shadow)' }}>
-        {eyebrow && <div className="mb-4 flex justify-center">{eyebrow}</div>}
-        <h2 className="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-[-0.03em] leading-[1.02] text-[var(--kz-ink)] mb-4">
+    <section id={id} className="relative overflow-hidden px-4 sm:px-8 py-20 lg:py-32">
+      {/* Fond d'écran */}
+      <div aria-hidden className="absolute inset-0 bg-[#050507]" />
+      <div aria-hidden className="absolute -top-1/3 -left-1/4 w-[70%] aspect-square rounded-full bg-[#BF5AF2] opacity-40 blur-[120px]" />
+      <div aria-hidden className="absolute -bottom-1/3 -right-1/4 w-[70%] aspect-square rounded-full bg-[#FF9F0A] opacity-30 blur-[120px]" />
+      <div aria-hidden className="absolute top-1/4 right-1/4 w-[40%] aspect-square rounded-full bg-[#0A84FF] opacity-25 blur-[120px]" />
+
+      <div className="relative max-w-[720px] mx-auto text-center rounded-[36px] os-glass !bg-[rgba(20,20,26,0.55)] px-6 py-12 sm:px-12 sm:py-14 shadow-[0_60px_120px_-40px_rgba(0,0,0,0.9)]">
+        {eyebrow && <div className="mb-5 flex justify-center">{eyebrow}</div>}
+        <h2 className="text-[38px] sm:text-[56px] lg:text-[68px] font-semibold tracking-[-0.055em] leading-[0.98] text-white mb-5">
           {title}
         </h2>
-        {text && <p className="text-sm sm:text-base lg:text-lg text-[var(--kz-text)] mb-7 max-w-[520px] mx-auto">{text}</p>}
+        {text && <p className="text-[15px] sm:text-[17px] text-[var(--kz-mute)] mb-8 max-w-[520px] mx-auto leading-relaxed">{text}</p>}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">{actions}</div>
-        {footnote && <p className="text-xs text-[var(--kz-mute)] mt-5">{footnote}</p>}
+        {footnote && <p className="text-xs text-[var(--kz-mute)] mt-6">{footnote}</p>}
       </div>
     </section>
   )

@@ -173,7 +173,7 @@ export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel
               onClick={() => setTab(t.id)}
               className="flex-1 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-colors"
               style={t.id === tab
-                ? { background: KZ.ink, color: KZ.cream }
+                ? { background: KZ.inverse, color: KZ.onInverse }
                 : { color: 'var(--kz-mute)' }}
             >
               {t.label}

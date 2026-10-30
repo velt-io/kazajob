@@ -36,10 +36,10 @@ export default async function RadarEmploiPage() {
   return (
     <PublicShell>
       {/* HERO */}
-      <section className="px-4 sm:px-8 lg:px-16 pt-14 pb-10" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 pt-14 pb-10" style={{ background: KZ.inverse }}>
         <div className="max-w-[1100px] mx-auto">
           <Badge color="violet" size="lg" className="mb-4">Radar Emploi · 974 / 976</Badge>
-          <h1 className="text-3xl sm:text-[44px] font-extrabold tracking-[-0.03em] leading-[0.95] mb-4" style={{ color: KZ.cream }}>
+          <h1 className="text-3xl sm:text-[44px] font-extrabold tracking-[-0.03em] leading-[0.95] mb-4" style={{ color: KZ.onInverse }}>
             Le pouls de l&apos;emploi<br /><span style={{ color: KZ.orange }}>à La Réunion & Mayotte.</span>
           </h1>
           <p className="text-base max-w-[620px]" style={{ color: 'rgba(255,247,238,0.75)' }}>
@@ -48,7 +48,7 @@ export default async function RadarEmploiPage() {
           </p>
           <div className="flex flex-wrap gap-3 mt-5">
             <div className="px-4 py-2.5 rounded-xl border border-white/10" style={{ background: 'rgba(255,255,255,0.06)' }}>
-              <span className="text-2xl font-extrabold" style={{ color: KZ.cream }}>{radar.totalActive}</span>
+              <span className="text-2xl font-extrabold" style={{ color: KZ.onInverse }}>{radar.totalActive}</span>
               <span className="text-xs ml-2" style={{ color: 'rgba(255,247,238,0.6)' }}>offres actives</span>
             </div>
             <div className="px-4 py-2.5 rounded-xl border border-white/10" style={{ background: 'rgba(255,255,255,0.06)' }}>

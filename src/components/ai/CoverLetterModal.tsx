@@ -73,7 +73,7 @@ export function CoverLetterModal({
                   onClick={() => setTone(t.value)}
                   className="flex flex-col items-center gap-1 p-3 rounded-xl border-[1.5px] text-center transition-all"
                   style={tone === t.value
-                    ? { borderColor: KZ.violet, background: KZ.violetSoft, boxShadow: '2px 2px 0 var(--kz-violet)' }
+                    ? { borderColor: KZ.violet, background: KZ.violetSoft, boxShadow: 'none' }
                     : { borderColor: KZ.line, background: KZ.paper }
                   }
                 >
@@ -125,7 +125,7 @@ export function CoverLetterModal({
             </div>
             <div
               className="p-4 rounded-xl border border-[var(--kz-edge)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap max-h-72 overflow-y-auto"
-              style={{ background: KZ.paper, boxShadow: '2px 2px 0 var(--kz-line)' }}
+              style={{ background: KZ.paper, boxShadow: 'none' }}
             >
               {letter}
             </div>

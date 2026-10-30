@@ -1,6 +1,7 @@
 'use client'
 
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode } from 'react'
+import { Dialog, VisuallyHidden } from 'radix-ui'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -18,44 +19,40 @@ const sizeMap = {
   lg: 'max-w-2xl',
 }
 
+/**
+ * Fenêtre modale sur Radix Dialog : piège du focus, fermeture à Échap,
+ * blocage du défilement et annonce aux lecteurs d'écran. Même API qu'avant.
+ */
 export function Modal({ open, onClose, title, children, size = 'md' }: ModalProps) {
-  useEffect(() => {
-    if (open) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => { document.body.style.overflow = '' }
-  }, [open])
-
-  if (!open) return null
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-[var(--kz-ink)]/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        className={cn(
-          'relative w-full max-h-[90vh] flex flex-col bg-[var(--kz-paper)] border-[1.5px] border-[var(--kz-edge)] rounded-xl shadow-[6px_6px_0_var(--kz-shadow)] animate-slide-up',
-          sizeMap[size]
-        )}
-      >
-        {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--kz-line)] shrink-0">
-            <h3 className="text-lg font-bold text-[var(--kz-ink)] tracking-tight">{title}</h3>
-            <button
-              onClick={onClose}
-              aria-label="Fermer"
-              className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] transition-colors"
-            >
-              <X size={16} />
-            </button>
-          </div>
-        )}
-        <div className="p-4 sm:p-6 overflow-y-auto">{children}</div>
-      </div>
-    </div>
+    <Dialog.Root open={open} onOpenChange={(o) => { if (!o) onClose() }}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 z-50 os-scrim backdrop-blur-md" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+          <Dialog.Content
+            aria-describedby={undefined}
+            className={cn(
+              'pointer-events-auto relative w-full max-h-[90vh] flex flex-col os-glass !bg-[rgba(24,24,30,0.86)] rounded-[28px] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] animate-slide-up outline-none',
+              sizeMap[size]
+            )}
+          >
+            {title ? (
+              <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--kz-line)] shrink-0">
+                <Dialog.Title className="text-[17px] font-semibold text-[var(--kz-ink)] tracking-tight">{title}</Dialog.Title>
+                <Dialog.Close
+                  aria-label="Fermer"
+                  className="w-8 h-8 flex items-center justify-center rounded-full bg-white/[0.08] hover:bg-white/[0.16] transition-colors"
+                >
+                  <X size={16} />
+                </Dialog.Close>
+              </div>
+            ) : (
+              <VisuallyHidden.Root><Dialog.Title>Fenêtre</Dialog.Title></VisuallyHidden.Root>
+            )}
+            <div className="p-4 sm:p-6 overflow-y-auto">{children}</div>
+          </Dialog.Content>
+        </div>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }

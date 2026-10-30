@@ -64,9 +64,9 @@ export function ProfileBoostPaid({ boostedUntil }: { boostedUntil?: string | nul
               return (
                 <button key={opt.days} onClick={() => setDays(opt.days)}
                   className="flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all"
-                  style={{ borderColor: selected ? KZ.orange : KZ.line, background: selected ? KZ.orangeSoft : 'white' }}>
+                  style={{ borderColor: selected ? KZ.orange : KZ.line, background: selected ? KZ.orangeSoft : KZ.paper }}>
                   <div className="w-7 h-7 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                    style={{ background: selected ? KZ.orange : 'white' }}>
+                    style={{ background: selected ? KZ.orange : KZ.paper }}>
                     {selected && <Rocket size={12} color="white" />}
                   </div>
                   <div className="flex-1">

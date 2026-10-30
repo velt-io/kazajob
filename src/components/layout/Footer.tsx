@@ -43,7 +43,7 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="bg-[var(--kz-ink)] text-[var(--kz-cream)] pt-10 lg:pt-12 pb-6 lg:pb-8 px-4 sm:px-8 lg:px-16">
+    <footer className="bg-[var(--kz-inverse)] text-[var(--kz-on-inverse)] pt-10 lg:pt-12 pb-6 lg:pb-8 px-4 sm:px-8 lg:px-16">
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 mb-8">
         {/* Logo + description */}
         <div className="col-span-2 sm:col-span-3 lg:col-span-1">

@@ -110,15 +110,15 @@ function XpBar({ xp, xpProgress, level, nextLevel }: {
         <div className="flex items-center gap-2">
           <span className="text-2xl">{level.emoji}</span>
           <div>
-            <div className="text-xs font-bold opacity-60" style={{ color: KZ.cream }}>NIVEAU ACTUEL</div>
+            <div className="text-xs font-bold opacity-60" style={{ color: KZ.onInverse }}>NIVEAU ACTUEL</div>
             <div className="text-base font-extrabold tracking-tight" style={{ color: level.color }}>{level.title}</div>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xl font-extrabold" style={{ color: KZ.cream }}>
+          <div className="text-xl font-extrabold" style={{ color: KZ.onInverse }}>
             {xp.toLocaleString('fr-FR')} <span className="text-sm opacity-60">XP</span>
           </div>
-          <div className="text-[10px] opacity-50" style={{ color: KZ.cream }}>
+          <div className="text-[10px] opacity-50" style={{ color: KZ.onInverse }}>
             → {nextLevel.minXp.toLocaleString('fr-FR')} XP pour {nextLevel.emoji} {nextLevel.title}
           </div>
         </div>
@@ -269,7 +269,7 @@ export function GameDashboard({
               style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}
             >
               <div className="px-5 py-3 flex justify-between items-center" style={{ background: 'var(--kz-ink)' }}>
-                <h3 className="text-sm font-extrabold flex items-center gap-2" style={{ color: KZ.cream }}>
+                <h3 className="text-sm font-extrabold flex items-center gap-2" style={{ color: KZ.onInverse }}>
                   <Send size={15} color={KZ.orange} />
                   Candidatures en cours
                 </h3>
@@ -312,8 +312,8 @@ export function GameDashboard({
                   </div>
                 </div>
                 <div className="min-w-0">
-                  <div className="text-sm font-extrabold truncate" style={{ color: KZ.cream }}>{profile.full_name}</div>
-                  <div className="text-[11px] opacity-60" style={{ color: KZ.cream }}>{profile.location ?? 'La Réunion 974'}</div>
+                  <div className="text-sm font-extrabold truncate" style={{ color: KZ.onInverse }}>{profile.full_name}</div>
+                  <div className="text-[11px] opacity-60" style={{ color: KZ.onInverse }}>{profile.location ?? 'La Réunion 974'}</div>
                   <div className="flex items-center gap-1 mt-1">
                     <Flame size={11} color={KZ.yellow} fill={KZ.yellow} />
                     <span className="text-[10px] font-bold" style={{ color: KZ.yellow }}>{gami.streak} jours de streak</span>

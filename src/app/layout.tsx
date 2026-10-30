@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Sora } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import { CookieConsent } from '@/components/layout/CookieConsent'
@@ -8,10 +8,10 @@ import { TrackingScripts } from '@/components/tracking/TrackingScripts'
 import { getCachedActiveIntegrations } from '@/lib/queries/cached'
 import { Analytics } from '@vercel/analytics/next'
 
-const sora = Sora({
+// Thème OS 2027 : Inter, proche de SF Pro (variable, toutes graisses).
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-sora',
+  variable: '--font-ui',
   display: 'swap',
 })
 
@@ -104,7 +104,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: 'var(--kz-violet)',
+  themeColor: '#050507',
 }
 
 const jsonLd = {
@@ -155,7 +155,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const integrations = await getCachedActiveIntegrations(environment)
 
   return (
-    <html lang="fr" className={sora.variable}>
+    <html lang="fr" className={inter.variable}>
       <head>
         <script
           type="application/ld+json"

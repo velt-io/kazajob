@@ -38,7 +38,7 @@ function MessageBubble({ msg, userName, userAvatarConfig }: { msg: ChatMessage; 
         style={{
           background:  isAssistant ? KZ.paper : KZ.violet,
           color:       isAssistant ? KZ.ink   : 'white',
-          boxShadow:   isAssistant ? '3px 3px 0 var(--kz-line)' : '3px 3px 0 var(--kz-shadow)',
+          boxShadow:   isAssistant ? 'none' : '3px 3px 0 var(--kz-shadow)',
           borderRadius: isAssistant ? '4px 18px 18px 18px' : '18px 4px 18px 18px',
         }}
       >

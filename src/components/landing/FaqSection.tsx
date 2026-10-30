@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
 import { KZ } from '@/lib/constants'
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/radix'
 
 const FAQ_ITEMS = [
   {
@@ -55,12 +54,10 @@ const FAQ_JSONLD = {
 }
 
 export function FaqSection() {
-  const [open, setOpen] = useState<number | null>(null)
-
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSONLD) }} />
-      <section id="faq" className="px-4 sm:px-8 lg:px-16 py-16 lg:py-24" style={{ background: KZ.cream2 }}>
+      <section id="faq" className="px-4 sm:px-8 lg:px-16 py-16 lg:py-24">
       <div className="max-w-[800px] mx-auto">
         <div className="text-center mb-12">
           <p className="kz-eyebrow mb-3" style={{ color: KZ.violet }}>FAQ</p>
@@ -70,35 +67,15 @@ export function FaqSection() {
           </h2>
         </div>
 
-        <div className="flex flex-col gap-3">
+        {/* Accordéon Radix : clavier, ARIA et animation d'ouverture */}
+        <Accordion type="single" collapsible className="flex flex-col gap-3">
           {FAQ_ITEMS.map((item, i) => (
-            <div
-              key={i}
-              className="rounded-2xl border border-[var(--kz-edge)] overflow-hidden transition-all"
-              style={{
-                background: open === i ? KZ.paper : KZ.cream,
-                boxShadow: open === i ? '4px 4px 0 var(--kz-shadow)' : '2px 2px 0 var(--kz-line)',
-              }}
-            >
-              <button
-                onClick={() => setOpen(open === i ? null : i)}
-                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[var(--kz-cream2)] transition-colors"
-              >
-                <span className="text-sm font-bold text-[var(--kz-ink)] pr-4">{item.q}</span>
-                {open === i
-                  ? <ChevronUp size={18} className="text-[var(--kz-mute)] shrink-0" />
-                  : <ChevronDown size={18} className="text-[var(--kz-mute)] shrink-0" />
-                }
-              </button>
-              {open === i && (
-                <div className="px-5 pb-5 pt-0">
-                  <div className="h-px bg-[var(--kz-line)] mb-4" />
-                  <p className="text-sm text-[var(--kz-text)] leading-relaxed">{item.a}</p>
-                </div>
-              )}
-            </div>
+            <AccordionItem key={i} value={String(i)}>
+              <AccordionTrigger>{item.q}</AccordionTrigger>
+              <AccordionContent>{item.a}</AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
 
         <p className="text-center text-sm text-[var(--kz-mute)] mt-8">
           Tu as une autre question ?{' '}

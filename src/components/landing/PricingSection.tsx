@@ -65,7 +65,7 @@ export function PricingSection() {
             return (
               <div key={plan.id} className="kz-card p-6 flex flex-col"
                 style={{
-                  background: hl ? KZ.violet : 'white',
+                  background: hl ? KZ.violet : KZ.paper,
                   color: hl ? 'white' : KZ.ink,
                   boxShadow: hl ? '6px 6px 0 var(--kz-shadow)' : '3px 3px 0 var(--kz-shadow)',
                 }}>
@@ -103,7 +103,7 @@ export function PricingSection() {
 
         {/* Plan candidat — toujours gratuit */}
         <div className="rounded-2xl border border-[var(--kz-edge)] overflow-hidden"
-          style={{ background: KZ.ink, boxShadow: '5px 5px 0 ' + KZ.violet }}>
+          style={{ background: KZ.inverse, boxShadow: '5px 5px 0 ' + KZ.violet }}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 px-6 pt-6 pb-4 border-b border-white/10">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl border border-white/20 flex items-center justify-center shrink-0" style={{ background: KZ.violet }}>

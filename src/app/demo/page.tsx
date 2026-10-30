@@ -51,10 +51,10 @@ export default function DemoPage() {
 
   return (
     <PublicShell>
-      <section className="px-4 sm:px-8 lg:px-16 py-12" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-12" style={{ background: KZ.inverse }}>
         <div className="max-w-[900px] mx-auto">
           <Badge color="violet" size="lg" className="mb-4">Démo gratuite · Recruteurs 974</Badge>
-          <h1 className="text-3xl sm:text-[44px] font-extrabold tracking-[-0.03em] leading-[0.95] mb-4" style={{ color: KZ.cream }}>
+          <h1 className="text-3xl sm:text-[44px] font-extrabold tracking-[-0.03em] leading-[0.95] mb-4" style={{ color: KZ.onInverse }}>
             Découvrez Kazajob<br /><span style={{ color: KZ.orange }}>en 30 minutes.</span>
           </h1>
           <p className="text-base max-w-[560px]" style={{ color: 'rgba(255,247,238,0.75)' }}>
@@ -107,7 +107,7 @@ export default function DemoPage() {
                               return (
                                 <button key={s.id} type="button" onClick={() => setSlotId(sel ? null : s.id)}
                                   className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 text-sm font-semibold transition-all"
-                                  style={{ borderColor: sel ? KZ.violet : KZ.line, background: sel ? KZ.violetSoft : 'white', color: KZ.ink }}>
+                                  style={{ borderColor: sel ? KZ.violet : KZ.line, background: sel ? KZ.violetSoft : KZ.paper, color: KZ.ink }}>
                                   <Clock size={12} />{time}
                                 </button>
                               )

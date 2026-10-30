@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRight, Check, Users, BarChart2, Zap, Shield, Globe, Landmark, Target, Briefcase, Search, Rss, Lock, HeartHandshake, Clock, FileText, Gift, MapPin, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
@@ -13,6 +12,7 @@ import { RecruiterPainSection } from './RecruiterPainSection'
 import { ProductPreviewSection } from './ProductPreviewSection'
 import { SectorsSection } from './SectorsSection'
 import { IllustratedCta } from './IllustratedCta'
+import { RecruiterWindow } from '@/components/os/RecruiterWindow'
 
 const PARTNER_ICON_MAP: Record<string, React.ReactNode> = {
   Landmark:  <Landmark  size={16} />,
@@ -31,11 +31,13 @@ function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTIO
   const euros = Math.floor(plan.priceCts / 100)
   return (
     <div
-      className="kz-card p-6 flex flex-col relative"
+      className={`kz-card p-6 flex flex-col relative ${isHighlight ? 'os-ring-aurora' : ''}`}
       style={{
-        background: isHighlight ? KZ.violet : 'white',
-        color: isHighlight ? 'white' : KZ.ink,
-        boxShadow: isHighlight ? '6px 6px 0 var(--kz-shadow)' : '3px 3px 0 var(--kz-shadow)',
+        background: isHighlight
+          ? 'radial-gradient(120% 80% at 50% 0%, rgba(191,90,242,0.28), transparent 60%), rgba(28,28,34,0.85)'
+          : KZ.paper,
+        color: KZ.ink,
+        boxShadow: isHighlight ? '0 40px 80px -30px rgba(191,90,242,0.55)' : undefined,
         transform: isHighlight ? 'scale(1.03)' : 'none',
       }}
     >
@@ -45,7 +47,7 @@ function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTIO
         </div>
       )}
       <div className="text-sm font-bold mb-1 opacity-70">{plan.name}</div>
-      <div className="text-[42px] font-extrabold tracking-tight leading-none mb-1">
+      <div className="text-[46px] font-semibold tracking-[-0.05em] leading-none mb-1">
         {euros}€
         <span className="text-base font-semibold opacity-60">/mois</span>
       </div>
@@ -125,13 +127,15 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
   return (
     <>
       {/* HERO B2B ─────────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 pt-10 lg:pt-16 pb-14 lg:pb-20 relative overflow-hidden" style={{ background: KZ.cream }}>
-        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-10 lg:gap-14 items-center">
+      <section className="px-4 sm:px-8 lg:px-16 pt-14 lg:pt-24 pb-16 lg:pb-24 relative overflow-hidden">
+        <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-center">
           <div>
-            <Badge color="violet" size="lg" className="mb-5">Kazajob Entreprises · 974</Badge>
-            <h1 className="text-[40px] sm:text-[56px] lg:text-[66px] font-extrabold tracking-[-0.04em] leading-[0.95] text-[var(--kz-ink)] mb-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full os-glass text-xs font-medium text-[var(--kz-text)] mb-6 os-pop">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#BF5AF2] shadow-[0_0_10px_#BF5AF2]" /> Kazajob Entreprises · 974
+            </div>
+            <h1 className="text-[44px] sm:text-[64px] lg:text-[80px] font-semibold tracking-[-0.06em] leading-[0.92] text-white mb-6 os-pop" style={{ animationDelay: '0.05s' }}>
               Recrutez les<br />
-              <span style={{ color: KZ.violet }}>meilleurs talents</span><br />
+              <span className="os-text-aurora">meilleurs talents</span><br />
               de La Réunion.
             </h1>
             <p className="text-base lg:text-lg leading-relaxed text-[var(--kz-text)] mb-7 max-w-[520px]">
@@ -153,25 +157,19 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
             </p>
             <div className="flex flex-wrap gap-2">
               {TRUST.map((t) => (
-                <span key={t.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--kz-edge)] bg-[var(--kz-paper)] text-xs font-bold text-[var(--kz-ink)]">
+                <span key={t.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full os-glass text-xs font-medium text-[var(--kz-text)]">
                   <span style={{ color: KZ.violet }}>{t.icon}</span>{t.label}
                 </span>
               ))}
             </div>
           </div>
 
-          {/* Illustration + cartes flottantes */}
-          <div className="relative">
-            <div className="relative rounded-2xl border-[1.5px] border-[var(--kz-edge)] overflow-hidden aspect-[16/10]" style={{ boxShadow: '8px 8px 0 var(--kz-shadow)' }}>
-              <Image
-                src="/assets/img/scenes/recrutement.webp"
-                alt="Une recruteuse réunionnaise rencontre un candidat sur la route du littoral"
-                fill priority sizes="(min-width: 1024px) 640px, 100vw" className="object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-6 left-2 sm:left-6 w-[230px] p-3 rounded-xl border-[1.5px] border-[var(--kz-edge)] bg-[var(--kz-paper)] rotate-[-3deg]"
-              style={{ boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
-              <div className="text-[10px] font-extrabold uppercase tracking-widest mb-2" style={{ color: KZ.violet }}>Nouvelle candidature</div>
+          {/* Fenêtre macOS + cartes flottantes */}
+          <div className="relative os-pop" style={{ animationDelay: '0.15s' }}>
+            <div aria-hidden className="absolute -inset-8 bg-[radial-gradient(closest-side,rgba(191,90,242,0.3),transparent)] blur-2xl" />
+            <RecruiterWindow />
+            <div className="absolute -bottom-7 left-2 sm:-left-6 w-[250px] p-3.5 rounded-[20px] os-glass !bg-[rgba(28,28,34,0.82)] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.9)] animate-float">
+              <div className="text-[10px] font-semibold uppercase tracking-[0.12em] mb-2" style={{ color: KZ.violet }}>Nouvelle candidature</div>
               <div className="flex items-center gap-2.5">
                 <Avatar name="Maëva L." avatarConfig={HERO_CANDIDATE} size={38} color={KZ.orangeSoft} />
                 <div className="flex-1 min-w-0">
@@ -181,17 +179,13 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
                 <span className="text-sm font-extrabold" style={{ color: KZ.green }}>92%</span>
               </div>
             </div>
-            {launchDays ? (
-              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[var(--kz-edge)] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
-                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', color: KZ.ink }}>
-                <Gift size={14} /> Gratuit pendant le lancement
-              </div>
-            ) : (
-              <div className="absolute -top-4 -right-1 sm:right-4 px-3.5 py-2 rounded-xl border-[1.5px] border-[var(--kz-edge)] text-xs font-extrabold flex items-center gap-1.5 rotate-[4deg]"
-                style={{ background: KZ.yellow, boxShadow: '3px 3px 0 var(--kz-shadow)', color: KZ.ink }}>
-                <Sparkles size={14} /> Tri des CV par IA
-              </div>
-            )}
+            {/* Notification façon « Dynamic Island » */}
+            <div className="absolute -top-5 right-2 sm:-right-4 pl-2 pr-4 py-2 rounded-full bg-black border border-white/10 text-xs font-semibold text-white flex items-center gap-2 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.9)]">
+              <span className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: launchDays ? '#30D158' : '#BF5AF2' }}>
+                {launchDays ? <Gift size={14} /> : <Sparkles size={14} />}
+              </span>
+              {launchDays ? 'Gratuit pendant le lancement' : 'Tri des CV par IA'}
+            </div>
           </div>
         </div>
       </section>
@@ -269,7 +263,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
             ].map((step) => (
               <div key={step.n} className="kz-card p-6 relative pt-10 bg-[var(--kz-paper)]">
                 <div className="absolute -top-5 left-6 w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold border border-[var(--kz-edge)]"
-                  style={{ background: KZ.ink, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-orange)' }}>
+                  style={{ background: KZ.inverse, color: KZ.onInverse, boxShadow: 'none' }}>
                   {step.n}
                 </div>
                 <div className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center mb-4 text-[var(--kz-ink)]"
@@ -307,11 +301,11 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       <QualityModerationSection />
 
       {/* GARANTIES ──────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[var(--kz-edge)]" style={{ background: KZ.inverse }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-10">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.orange }}>Nos engagements</p>
-            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight" style={{ color: KZ.cream }}>
+            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight" style={{ color: KZ.onInverse }}>
               Ce que Kazajob garantit à chaque recruteur.
             </h2>
           </div>
@@ -331,7 +325,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
                   {g.icon}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold mb-1" style={{ color: KZ.cream }}>{g.title}</h3>
+                  <h3 className="text-sm font-bold mb-1" style={{ color: KZ.onInverse }}>{g.title}</h3>
                   <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,247,238,0.6)' }}>{g.desc}</p>
                 </div>
               </div>
