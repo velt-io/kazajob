@@ -7,6 +7,7 @@ import { Tag } from '@/components/ui/Tag'
 import type { Job } from '@/lib/types'
 import { formatSalary, timeAgo } from '@/lib/utils'
 import { KZ } from '@/lib/constants'
+import { ViewTransition } from 'react'
 
 const COMPANY_COLORS = [
   KZ.orangeSoft, KZ.violetSoft, KZ.greenSoft, KZ.yellowSoft, KZ.blueSoft,
@@ -51,9 +52,11 @@ export function JobCard({ job, isFavorite, onToggleFavorite, showMatch = true, c
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-xs font-semibold text-[var(--kz-mute)]">{job.company?.name}</div>
-          <div className="text-base font-bold text-[var(--kz-ink)] mt-0.5 leading-snug truncate">
-            {job.title}
-          </div>
+          <ViewTransition name={`job-title-${job.id}`} share="morph">
+            <div className="text-base font-bold text-[var(--kz-ink)] mt-0.5 leading-snug truncate">
+              {job.title}
+            </div>
+          </ViewTransition>
         </div>
         {onToggleFavorite && (
           <button

@@ -180,6 +180,34 @@ h1 { text-shadow: 0 0 32px rgba(192, 132, 252, 0.35); }
 [class*="border-[1.5px]"], .border-2 { border-width: 1px !important; }
 [class*="hover:translate-x-[-1px]"]:hover, [class*="hover:translate-x-[1px]"]:hover { translate: 0 -2px !important; box-shadow: 0 0 24px -6px rgba(232,121,249,0.7) !important; }
 
+/* ── Mouvement « magie » ─────────────────────────────────────
+ * Transitions entre pages, bannières de récompense, halo au pointeur. */
+::view-transition-old(.qx-page-out) { animation: qx-page-out 0.3s ease-in both; }
+::view-transition-new(.qx-page-in)  { animation: qx-page-in 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+::view-transition-group(.morph) { animation-duration: 0.55s; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+::view-transition-image-pair(.morph) { animation-name: qx-via-glow; }
+@keyframes qx-page-out { to { opacity: 0; transform: scale(0.97); filter: blur(8px) brightness(1.6) saturate(1.4); } }
+@keyframes qx-page-in  { from { opacity: 0; transform: translateY(16px) scale(1.02); filter: blur(10px) brightness(1.8); } }
+@keyframes qx-via-glow { 45% { filter: drop-shadow(0 0 12px rgba(232, 121, 249, 0.9)) brightness(1.4); } }
+@keyframes qx-toast-in  { from { opacity: 0; transform: translateY(-40px) scale(0.85); } }
+@keyframes qx-toast-out { to   { opacity: 0; transform: translateY(-24px) scale(0.95); } }
+
+/* Halo néon qui suit le pointeur (variables posées par <MagicLayer />) */
+.qx-panel:hover {
+  background-image: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(232, 121, 249, 0.12), transparent 45%), var(--qx-panel);
+}
+[data-tilt] { transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; transform-style: preserve-3d; }
+
+/* Apparition au défilement (navigateurs compatibles ; sinon affichage direct) */
+@supports (animation-timeline: view()) {
+  main section, body > div > section > div {
+    animation: qx-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+@keyframes qx-reveal { from { opacity: 0; transform: translateY(32px); filter: blur(6px); } }
+
 /* Fonds assombris (modales, menus) */
 .qx-scrim { background: rgba(6, 2, 14, 0.72); }
 
@@ -238,6 +266,7 @@ h1 { text-shadow: 0 0 32px rgba(192, 132, 252, 0.35); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */

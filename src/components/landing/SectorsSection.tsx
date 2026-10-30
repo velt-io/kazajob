@@ -41,7 +41,7 @@ export function SectorsSection({ variant }: { variant: 'candidat' | 'entreprise'
         {/* Sélection de classe */}
         <div className="order-2 lg:order-1 relative">
           <div aria-hidden className="absolute -inset-6 bg-[radial-gradient(closest-side,rgba(168,85,247,0.3),transparent)] blur-2xl" />
-          <div className="relative qx-panel p-6 sm:p-8">
+          <div data-tilt className="relative qx-panel p-6 sm:p-8">
             <div className="kz-eyebrow text-[var(--qx-gold)] text-center mb-5">Choisis ta classe</div>
             <div className="grid grid-cols-4 sm:grid-cols-4 gap-x-3 gap-y-5 sm:gap-x-6 sm:gap-y-7">
               {SECTORS.map(({ sector, short, icon: Icon, g }) => {

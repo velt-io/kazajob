@@ -82,7 +82,9 @@ export default function JobDetailPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-semibold text-[var(--kz-mute)]">{job.company?.name}</div>
-                <h1 className="text-xl lg:text-[26px] font-extrabold tracking-tight text-[var(--kz-ink)] leading-tight">{job.title}</h1>
+                <ViewTransition name={`job-title-${job.id}`} share="morph">
+                  <h1 className="text-xl lg:text-[26px] font-extrabold tracking-tight text-[var(--kz-ink)] leading-tight">{job.title}</h1>
+                </ViewTransition>
                 <div className="flex gap-3 mt-2 flex-wrap">
                   <span className="flex items-center gap-1 text-xs text-[var(--kz-text)]"><MapPin size={13} />{job.location}</span>
                   <span className="flex items-center gap-1 text-xs text-[var(--kz-text)]"><Clock size={13} />{timeAgo(job.created_at)}</span>
@@ -465,6 +467,7 @@ export default function JobDetailPage() {
 
 import { useInterviewPrepAI, useExplainJobAI } from '@/features/ai/useKazaIA'
 import { Modal as ModalBase } from '@/components/ui/Modal'
+import { ViewTransition } from 'react'
 
 function ExplainJobSection({ jobId }: { jobId: string }) {
   const { generating, explain, raw, error, generate } = useExplainJobAI()

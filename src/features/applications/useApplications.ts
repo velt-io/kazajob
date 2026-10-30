@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import type { Application } from '@/lib/types'
 import type { PrequalAnswer } from '@/lib/prequal'
+import { island } from '@/lib/island'
 
 export function useApplications(candidateId?: string) {
   const [applications, setApplications] = useState<Application[]>([])
@@ -45,6 +46,7 @@ export function useApplications(candidateId?: string) {
       }).catch(() => {})
     }
 
+    island({ title: 'Sort lancé : candidature envoyée', subtitle: 'Le recruteur est prévenu', tone: 'success' })
     return { error: null }
   }, [candidateId, fetchApplications])
 

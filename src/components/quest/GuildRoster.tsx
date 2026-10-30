@@ -32,7 +32,7 @@ export function GuildRoster({ className = '' }: { className?: string }) {
         const r = RARITY[h.rarity]
         const Icon = r.icon
         return (
-          <div key={h.name} className="qx-panel p-4 qx-rise text-left transition-transform duration-300 hover:-translate-y-1.5"
+          <div key={h.name} data-tilt className="qx-panel p-4 qx-rise text-left"
             style={{ animationDelay: `${i * 0.12}s`, boxShadow: `0 0 36px -12px ${r.color}` }}>
             <div className="flex items-center justify-between mb-3">
               <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: r.color }}><Icon size={11} />{r.label}</span>

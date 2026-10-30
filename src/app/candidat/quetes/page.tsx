@@ -8,14 +8,15 @@ import { useApplications } from '@/features/applications/useApplications'
 import { useFavorites } from '@/features/favorites/useFavorites'
 import { useGamification } from '@/features/gamification/useGamification'
 import { QuestMap } from '@/components/quest/QuestMap'
+import { island } from '@/lib/island'
 import { computeJourney, journeySummary, RARITY_META, ROMAN, type Chapter } from '@/lib/quest-journey'
 
 export default function AdventurePage() {
   const { profile } = useAuth()
-  const { applications } = useApplications(profile?.id)
+  const { applications, loading: appsLoading } = useApplications(profile?.id)
   const { favorites } = useFavorites(profile?.id)
   const gami = useGamification(profile, applications.length, favorites.length)
-  const [skills, setSkills] = useState(0)
+  const [skills, setSkills] = useState<number | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export default function AdventurePage() {
   const chapters = useMemo(() => computeJourney({
     hasAvatar: !!(profile?.avatar_config || profile?.avatar_url),
     profileFields: [profile?.location, profile?.bio, profile?.phone].filter(Boolean).length,
-    skills,
+    skills: skills ?? 0,
     hasCv: !!(profile?.cv_url || profile?.cv_data),
     favorites: favorites.length,
     applications: applications.filter((a) => a.status !== 'withdrawn').length,
@@ -38,6 +39,21 @@ export default function AdventurePage() {
   }), [profile, skills, favorites.length, applications])
 
   const summary = journeySummary(chapters)
+
+  // Surprise : chapitre terminé depuis la dernière visite → bannière « Quête accomplie ».
+  // Première visite : on mémorise l'état sans rien annoncer.
+  const ready = !!profile && !appsLoading && skills !== null
+  useEffect(() => {
+    if (!ready || !profile) return
+    const key = `kz-quest-done:${profile.id}`
+    const done = chapters.filter((c) => c.status === 'done').map((c) => c.id)
+    let seen: string[] | null = null
+    try { seen = JSON.parse(localStorage.getItem(key) ?? 'null') } catch { /* stockage indisponible */ }
+    try { localStorage.setItem(key, JSON.stringify(done)) } catch { /* stockage indisponible */ }
+    if (!seen) return
+    const fresh = chapters.find((c) => c.status === 'done' && !seen.includes(c.id))
+    if (fresh) island({ title: `Quête accomplie : ${fresh.title}`, subtitle: `+${fresh.xp} XP · ${RARITY_META[fresh.rarity].label}`, tone: 'success' })
+  }, [ready, profile, chapters])
   const active = chapters.find((c) => c.id === selected) ?? summary.current ?? chapters[chapters.length - 1]
 
   return (

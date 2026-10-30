@@ -30,6 +30,7 @@ import { KZ, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
 import { SkillSelector } from '@/components/skills/SkillSelector'
 import { computeCvCompletion } from '@/lib/cv'
 import type { Skill } from '@/lib/types'
+import { island } from '@/lib/island'
 
 async function patchProfile(patch: Record<string, unknown>): Promise<{ ok: boolean; error?: string }> {
   const res = await fetch('/api/profile', {
@@ -120,6 +121,7 @@ export default function CandidateProfilePage() {
     if (!ok) { setUploadError(error ?? "Échec de l'enregistrement de l'avatar"); return }
     await refetch?.()
     setAvatarOpen(false)
+    island({ title: 'Ton héros a pris vie', subtitle: 'Avatar enregistré', tone: 'success' })
   }
 
   const handleCvFile = async (file: File) => {

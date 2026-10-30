@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import type { Favorite } from '@/lib/types'
+import { island } from '@/lib/island'
 
 export function useFavorites(candidateId?: string) {
   const [favorites, setFavorites] = useState<Favorite[]>([])
@@ -30,13 +31,17 @@ export function useFavorites(candidateId?: string) {
       }
       return
     }
-    await fetch('/api/favorites', {
+    const wasFavorite = favorites.some((f) => f.job_id === jobId)
+    const res = await fetch('/api/favorites', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ jobId }),
-    }).catch(() => {})
+    }).catch(() => null)
+    if (res?.ok) island(wasFavorite
+      ? { title: 'Offre retirée du grimoire', tone: 'info' }
+      : { title: 'Offre ajoutée au grimoire', subtitle: 'Exploration de l’île en cours', tone: 'love' })
     await fetchFavorites()
-  }, [candidateId, fetchFavorites])
+  }, [candidateId, fetchFavorites, favorites])
 
   return { favorites, loading, isFavorite, toggle }
 }
