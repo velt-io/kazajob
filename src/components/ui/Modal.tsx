@@ -38,22 +38,23 @@ export function Modal({ open, onClose, title, children, size = 'md' }: ModalProp
       />
       <div
         className={cn(
-          'relative w-full bg-white border-[1.5px] border-[#1A1410] rounded-xl shadow-[6px_6px_0_#1A1410] animate-slide-up',
+          'relative w-full max-h-[90vh] flex flex-col bg-white border-[1.5px] border-[#1A1410] rounded-xl shadow-[6px_6px_0_#1A1410] animate-slide-up',
           sizeMap[size]
         )}
       >
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8DDC9]">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8DDC9] shrink-0">
             <h3 className="text-lg font-bold text-[#1A1410] tracking-tight">{title}</h3>
             <button
               onClick={onClose}
+              aria-label="Fermer"
               className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[#FBEFE0] transition-colors"
             >
               <X size={16} />
             </button>
           </div>
         )}
-        <div className="p-6">{children}</div>
+        <div className="p-4 sm:p-6 overflow-y-auto">{children}</div>
       </div>
     </div>
   )

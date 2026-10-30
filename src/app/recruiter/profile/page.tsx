@@ -43,7 +43,7 @@ export default function RecruiterProfilePage() {
 
       <div className="kz-card bg-white p-6 mb-5">
         <div className="flex items-center gap-4 mb-6">
-          <Avatar name={profile.full_name} src={profile.avatar_url} size={56} color={KZ.violetSoft} />
+          <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={56} color={KZ.violetSoft} />
           <div className="min-w-0">
             <div className="text-base font-bold text-[#1A1410] truncate">{profile.full_name}</div>
             <div className="text-sm text-[#6B5A4A] truncate">{profile.email}</div>

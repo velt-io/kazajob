@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Star, Trash2, MapPin } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
+import { Avatar } from '@/components/ui/Avatar'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import type { BadgeColor } from '@/lib/types'
@@ -14,7 +15,7 @@ interface Entry {
   category: string
   note: string | null
   created_at: string
-  candidate: { id: string; full_name: string; avatar_url: string | null; location: string | null; bio: string | null }
+  candidate: { id: string; full_name: string; avatar_url: string | null; avatar_config: Record<string, unknown> | null; location: string | null; bio: string | null }
 }
 
 const CAT_MAP = Object.fromEntries(TALENT_POOL_CATEGORIES.map((c) => [c.id, c]))
@@ -73,12 +74,9 @@ export default function TalentPoolPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {list.map((e) => {
                     const c = e.candidate
-                    const initials = c.full_name?.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() ?? 'CA'
                     return (
                       <div key={e.id} className="kz-card p-4 bg-white flex items-start gap-3">
-                        <div className="w-11 h-11 rounded-full border border-[#1A1410] flex items-center justify-center font-bold text-sm shrink-0 overflow-hidden" style={{ background: KZ.orangeSoft }}>
-                          {c.avatar_url ? <img src={c.avatar_url} alt="" className="w-full h-full object-cover" /> : initials}
-                        </div>
+                        <Avatar name={c.full_name ?? 'CA'} src={c.avatar_url} avatarConfig={c.avatar_config} size={44} color={KZ.orangeSoft} />
                         <div className="flex-1 min-w-0">
                           <Link href={`/recruiter/candidates/${c.id}`} className="text-sm font-bold text-[#1A1410] hover:underline">{c.full_name}</Link>
                           {c.location && <div className="text-xs text-[#6B5A4A] flex items-center gap-1 mt-0.5"><MapPin size={11} />{c.location}</div>}

@@ -277,12 +277,12 @@ export default function CompanyTeamPage() {
         ) : (
           <div className="divide-y divide-[#E8DDC9]">
             {members.map(m => {
-              const p = m.profile as { full_name: string; email: string; avatar_url?: string | null } | undefined
+              const p = m.profile as { full_name: string; email: string; avatar_url?: string | null; avatar_config?: Record<string, unknown> | null } | undefined
               const isSelf = m.recruiter_id === profile?.id
               const memberIsOwner = m.role === 'owner'
               return (
                 <div key={m.id} className="flex items-center gap-3 p-4 hover:bg-[#FBEFE0] transition-colors">
-                  <Avatar name={p?.full_name ?? '?'} src={p?.avatar_url ?? null} size={36} />
+                  <Avatar name={p?.full_name ?? '?'} src={p?.avatar_url ?? null} avatarConfig={p?.avatar_config} size={36} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold text-[#1A1410]">{p?.full_name ?? '—'}</span>

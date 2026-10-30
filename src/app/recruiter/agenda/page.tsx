@@ -117,7 +117,7 @@ export default function RecruiterAgendaPage() {
                           {/* Candidat */}
                           {candidate && (
                             <div className="flex items-center gap-2 mb-2">
-                              <Avatar name={candidate.full_name} size={24} color={KZ.orangeSoft} />
+                              <Avatar name={candidate.full_name} src={candidate.avatar_url} avatarConfig={candidate.avatar_config} size={24} color={KZ.orangeSoft} />
                               <span className="text-sm font-semibold text-[#1A1410]">{candidate.full_name}</span>
                               <span className="text-xs text-[#6B5A4A]">{candidate.email}</span>
                             </div>

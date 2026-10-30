@@ -17,7 +17,7 @@ import { serialize } from './_serialize'
 
 const INVITE_TTL_DAYS = 7
 
-const MEMBER_PROFILE = { fullName: true, email: true, avatarUrl: true } as const
+const MEMBER_PROFILE = { fullName: true, email: true, avatarUrl: true, avatarConfig: true } as const
 
 export async function searchCompanies(q: string): Promise<Company[]> {
   if (q.trim().length < 2) return []

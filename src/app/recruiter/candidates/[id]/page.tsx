@@ -66,7 +66,7 @@ export default function CandidateDetailPage() {
         <div className="flex flex-col gap-4">
           <div className="kz-card p-5 bg-white text-center">
             <div className="flex justify-center mb-3">
-              <Avatar name={candidate.full_name} src={candidate.avatar_url} size={72} color={KZ.orangeSoft} />
+              <Avatar name={candidate.full_name} src={candidate.avatar_url} avatarConfig={candidate.avatar_config} size={72} color={KZ.orangeSoft} />
             </div>
             <h2 className="text-lg font-bold text-[#1A1410]">{candidate.full_name}</h2>
             {candidate.location && (

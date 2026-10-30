@@ -14,7 +14,7 @@ import { useAuth } from '@/features/auth/useAuth'
 import { PROFESSION_CATEGORIES } from '@/lib/onboarding-categories'
 import { KZ, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
 import { Soleil, Palme, Hibiscus } from '@/components/illustrations/Tropical'
-import { type AvatarConfig, buildAvatarUrl, buildCharacterConfig, CHARACTER_GENDERS, CHARACTER_DOMAINS } from '@/lib/avatar'
+import { type AvatarConfig, applyCharacterPreset, buildCharacterConfig, hasAvatarConfig, sanitizeAvatarConfig, CHARACTER_GENDERS, CHARACTER_DOMAINS } from '@/lib/avatar'
 
 const TOTAL_STEPS = 6  // +2 : Avatar (étape 2) + Gamification Welcome (étape 6)
 
@@ -36,10 +36,14 @@ export default function OnboardingPage() {
   const [saving, setSaving] = useState(false)
   const [savingAvatar, setSavingAvatar] = useState(false)
 
-  // Génère un personnage "métier" à partir du genre + domaine choisis
+  // Personnage "métier" : le genre change la coiffure, le domaine change la tenue.
+  // Le reste (peau, yeux, couleurs…) personnalisé par l'utilisateur est conservé.
   const applyCharacter = (g: string, d: string) => {
+    setAvatarConfig((prev) => applyCharacterPreset(prev ?? buildCharacterConfig(charDomain, gender), {
+      genderId: g !== gender ? g : undefined,
+      domainId: d !== charDomain ? d : undefined,
+    }))
     setGender(g); setCharDomain(d)
-    setAvatarConfig(buildCharacterConfig(d, g))
   }
   const toggleIn = (arr: string[], v: string) =>
     arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v]
@@ -54,6 +58,9 @@ export default function OnboardingPage() {
       if (profile.character_domain) setCharDomain(profile.character_domain)
       if (profile.soft_skills) setSoftSkills(profile.soft_skills)
       if (profile.hobbies) setHobbies(profile.hobbies)
+      if (hasAvatarConfig(profile.avatar_config)) {
+        setAvatarConfig((prev) => prev ?? sanitizeAvatarConfig(profile.avatar_config))
+      }
     }
   }, [profile])
 
@@ -259,8 +266,8 @@ export default function OnboardingPage() {
 
               <div className="kz-card p-6 bg-white">
                 <AvatarBuilder
-                  key={`${gender}-${charDomain}`}
-                  initialConfig={avatarConfig}
+                  value={avatarConfig ?? buildCharacterConfig(charDomain, gender)}
+                  onChange={setAvatarConfig}
                   onSave={handleSaveAvatar}
                   saving={savingAvatar}
                   compact

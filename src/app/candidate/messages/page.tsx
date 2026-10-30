@@ -58,7 +58,7 @@ export default function CandidateMessagesPage() {
                 <button key={conv.id} onClick={() => openConv(conv.id)}
                   className="w-full flex items-center gap-3 p-4 border-b border-[#E8DDC9] text-left transition-colors"
                   style={{ background: conv.id === activeConvId ? KZ.cream2 : 'white' }}>
-                  <Avatar name={other?.full_name ?? 'KZ'} size={38} color={KZ.orangeSoft} />
+                  <Avatar name={other?.full_name ?? 'KZ'} src={other?.avatar_url} avatarConfig={other?.avatar_config} size={38} color={KZ.orangeSoft} />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-[#1A1410] truncate">{other?.full_name}</div>
                     {conv.job && <div className="text-xs text-[#6B5A4A] truncate">{conv.job.title}</div>}
@@ -81,7 +81,7 @@ export default function CandidateMessagesPage() {
                 <button onClick={() => setShowList(true)} className="md:hidden mr-1 text-[#6B5A4A]">←</button>
                 {activeConv && (
                   <>
-                    <Avatar name={otherUser(activeConv)?.full_name ?? 'KZ'} size={34} color={KZ.orangeSoft} />
+                    <Avatar name={otherUser(activeConv)?.full_name ?? 'KZ'} src={otherUser(activeConv)?.avatar_url} avatarConfig={otherUser(activeConv)?.avatar_config} size={34} color={KZ.orangeSoft} />
                     <div className="text-sm font-bold text-[#1A1410]">{otherUser(activeConv)?.full_name}</div>
                   </>
                 )}

@@ -1,176 +1,239 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Shuffle, Check } from 'lucide-react'
+import { memo, useMemo, useState } from 'react'
+import { Shuffle, Check, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { KZ } from '@/lib/constants'
 import {
-  generateAvatarSvg, randomAvatarConfig, DEFAULT_AVATAR_CONFIG,
-  SKIN_COLORS, HAIR_STYLES, HAIR_COLORS, EYES_STYLES,
-  MOUTH_STYLES, CLOTHES_STYLES, CLOTHES_COLORS, ACCESSORIES,
+  generateAvatarSvg, randomAvatarConfig, sanitizeAvatarConfig, DEFAULT_AVATAR_CONFIG,
+  SKIN_COLORS, HAIR_STYLES, HAIR_COLORS, EYES_STYLES, EYEBROW_STYLES,
+  MOUTH_STYLES, CLOTHES_STYLES, CLOTHES_COLORS, ACCESSORIES, FACIAL_HAIR,
   type AvatarConfig,
 } from '@/lib/avatar'
 
-function useLocalSvg(config: AvatarConfig) {
-  const [svg, setSvg] = useState<string | null>(null)
+type Option = { id: string; label: string }
+type Section = { label: string; key: keyof AvatarConfig; type: 'color' | 'thumb'; options: Option[] }
 
-  useEffect(() => {
-    // Génération synchrone — pas besoin de loading async
-    try {
-      const s = generateAvatarSvg(config)
-      setSvg(s)
-    } catch {
-      setSvg(null)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(config)])
+const TABS: { id: string; label: string; sections: Section[] }[] = [
+  {
+    id: 'cheveux', label: 'Cheveux',
+    sections: [
+      { label: 'Coiffure',            key: 'top',        type: 'thumb', options: HAIR_STYLES },
+      { label: 'Couleur des cheveux', key: 'hairColor',  type: 'color', options: HAIR_COLORS },
+      { label: 'Barbe & moustache',   key: 'facialHair', type: 'thumb', options: FACIAL_HAIR },
+    ],
+  },
+  {
+    id: 'visage', label: 'Visage',
+    sections: [
+      { label: 'Couleur de peau', key: 'skinColor', type: 'color', options: SKIN_COLORS },
+      { label: 'Yeux',            key: 'eyes',      type: 'thumb', options: EYES_STYLES },
+      { label: 'Sourcils',        key: 'eyebrow',   type: 'thumb', options: EYEBROW_STYLES },
+      { label: 'Bouche',          key: 'mouth',     type: 'thumb', options: MOUTH_STYLES },
+    ],
+  },
+  {
+    id: 'tenue', label: 'Tenue',
+    sections: [
+      { label: 'Tenue',            key: 'clothes',      type: 'thumb', options: CLOTHES_STYLES },
+      { label: 'Couleur de tenue', key: 'clothesColor', type: 'color', options: CLOTHES_COLORS },
+    ],
+  },
+  {
+    id: 'accessoires', label: 'Lunettes',
+    sections: [
+      { label: 'Lunettes', key: 'accessories', type: 'thumb', options: ACCESSORIES },
+    ],
+  },
+]
 
-  return svg
+function Svg({ svg, className }: { svg: string; className?: string }) {
+  return <div className={`[&>svg]:w-full [&>svg]:h-full ${className ?? ''}`} dangerouslySetInnerHTML={{ __html: svg }} />
 }
 
-interface AvatarBuilderProps {
-  initialConfig?: AvatarConfig | null
-  onSave: (config: AvatarConfig) => void | Promise<void>
-  saving?: boolean
-  compact?: boolean   // version sans titre (dans l'onboarding)
-}
-
-function ColorSwatch({ hex, selected, onClick }: { hex: string; selected: boolean; onClick: () => void }) {
+function ColorSwatch({ hex, label, selected, onClick }: { hex: string; label: string; selected: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="w-8 h-8 rounded-full border-2 transition-all hover:scale-110 active:scale-95"
+      aria-label={label}
+      aria-pressed={selected}
+      title={label}
+      className="w-9 h-9 rounded-full border-[1.5px] border-[#1A1410] transition-transform hover:scale-110 active:scale-95 flex items-center justify-center"
       style={{
         background: '#' + hex,
-        borderColor: selected ? '#1A1410' : 'transparent',
-        boxShadow: selected ? '0 0 0 2px white, 0 0 0 4px #1A1410' : 'none',
-      }}
-      title={hex}
-    />
-  )
-}
-
-function OptionChip({ label, selected, onClick }: { label: string; selected: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="px-3 py-1.5 rounded-full border-2 text-xs font-bold transition-all whitespace-nowrap hover:scale-105 active:scale-95"
-      style={{
-        borderColor: selected ? '#1A1410' : '#E8DDC9',
-        background: selected ? '#1A1410' : KZ.cream2,
-        color: selected ? KZ.cream : '#2A2018',
-        boxShadow: selected ? '2px 2px 0 ' + KZ.orange : 'none',
+        boxShadow: selected ? '0 0 0 2px white, 0 0 0 4px #FF6B35' : 'none',
       }}
     >
-      {selected && <span className="mr-1">✓</span>}
-      {label}
+      {selected && <Check size={14} color={['ffffff', 'ffffb1', 'e8e1e1', 'fae3d0', 'ffdeb5', 'a7ffc4'].includes(hex) ? '#1A1410' : '#fff'} strokeWidth={3} />}
     </button>
   )
 }
 
-export function AvatarBuilder({ initialConfig, onSave, saving, compact }: AvatarBuilderProps) {
-  const [config, setConfig] = useState<AvatarConfig>(
-    (initialConfig as AvatarConfig) ?? DEFAULT_AVATAR_CONFIG
+// Vignette = l'avatar ACTUEL avec cette option appliquée : on voit le résultat avant de cliquer.
+const ThumbOption = memo(function ThumbOption({
+  config, field, option, selected, onSelect,
+}: {
+  config: AvatarConfig; field: keyof AvatarConfig; option: Option; selected: boolean; onSelect: (key: keyof AvatarConfig, id: string) => void
+}) {
+  const svg = useMemo(() => generateAvatarSvg({ ...config, [field]: option.id }), [config, field, option.id])
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(field, option.id)}
+      aria-pressed={selected}
+      aria-label={option.label}
+      className="group flex flex-col items-center gap-1 p-1.5 rounded-xl border-[1.5px] transition-all hover:-translate-y-0.5 active:translate-y-0"
+      style={{
+        borderColor: selected ? '#1A1410' : '#E8DDC9',
+        background: selected ? KZ.orangeSoft : KZ.paper,
+        boxShadow: selected ? '2px 2px 0 #1A1410' : 'none',
+      }}
+    >
+      <span aria-hidden className="w-14 h-14 rounded-full overflow-hidden" style={{ background: KZ.cream2 }}>
+        <Svg svg={svg} className="w-full h-full" />
+      </span>
+      <span className="text-[10px] font-bold text-[#1A1410] leading-tight text-center line-clamp-1 max-w-[64px]">
+        {option.label}
+      </span>
+    </button>
   )
+})
 
-  const set = (key: keyof AvatarConfig, val: string) =>
-    setConfig(prev => ({ ...prev, [key]: val }))
+interface AvatarBuilderProps {
+  initialConfig?: AvatarConfig | Record<string, unknown> | null
+  /** Mode contrôlé : le parent détient le config (ex. onboarding avec presets métier). */
+  value?: AvatarConfig
+  onChange?: (config: AvatarConfig) => void
+  onSave: (config: AvatarConfig) => void | Promise<void>
+  onCancel?: () => void
+  saving?: boolean
+  compact?: boolean   // libellé du bouton pour l'onboarding
+}
 
-  const handleRandomize = () => setConfig(randomAvatarConfig())
+export function AvatarBuilder({ initialConfig, value, onChange, onSave, onCancel, saving, compact }: AvatarBuilderProps) {
+  const [inner, setInner] = useState<AvatarConfig>(() =>
+    initialConfig ? sanitizeAvatarConfig(initialConfig) : DEFAULT_AVATAR_CONFIG,
+  )
+  const config = value ?? inner
+  const [tab, setTab] = useState(TABS[0].id)
 
-  // SVG généré localement — aucun appel HTTP
-  const previewSvg = useLocalSvg(config)
+  const update = (next: AvatarConfig) => {
+    if (!value) setInner(next)
+    onChange?.(next)
+  }
+  const select = (key: keyof AvatarConfig, id: string) => update({ ...config, [key]: id })
 
-  const SECTIONS: { label: string; key: keyof AvatarConfig; type: 'color' | 'chip'; options: { id: string; label: string }[] }[] = [
-    { label: 'Couleur de peau',   key: 'skinColor',    type: 'color', options: SKIN_COLORS    },
-    { label: 'Coiffure',          key: 'top',          type: 'chip',  options: HAIR_STYLES    },
-    { label: 'Couleur des cheveux',key: 'hairColor',   type: 'color', options: HAIR_COLORS    },
-    { label: 'Yeux',              key: 'eyes',         type: 'chip',  options: EYES_STYLES    },
-    { label: 'Bouche',            key: 'mouth',        type: 'chip',  options: MOUTH_STYLES   },
-    { label: 'Tenue',             key: 'clothes',      type: 'chip',  options: CLOTHES_STYLES },
-    { label: 'Couleur de tenue',  key: 'clothesColor', type: 'color', options: CLOTHES_COLORS },
-    { label: 'Accessoires',       key: 'accessories',  type: 'chip',  options: ACCESSORIES    },
-  ]
+  const previewSvg = useMemo(() => generateAvatarSvg(config), [config])
+  const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0]
 
   return (
-    <div className="w-full">
+    <div className="w-full grid gap-6 md:grid-cols-[180px_1fr] md:items-start">
       {/* Prévisualisation */}
-      <div className="flex flex-col items-center mb-6">
+      <div className="flex flex-col items-center gap-3 md:sticky md:top-4">
         <div
-          className="relative rounded-full border-4 border-[#1A1410] overflow-hidden mb-3 flex items-center justify-center"
-          style={{ width: 140, height: 140, background: KZ.cream2, boxShadow: '6px 6px 0 #1A1410' }}
+          role="img"
+          aria-label="Aperçu de ton avatar"
+          className="rounded-full border-[3px] border-[#1A1410] overflow-hidden"
+          style={{ width: 150, height: 150, background: KZ.cream2, boxShadow: '5px 5px 0 #1A1410' }}
         >
-          {!previewSvg ? (
-            <div className="w-full h-full animate-pulse" style={{ background: KZ.orangeSoft }} />
-          ) : previewSvg ? (
-            <div
-              className="w-full h-full"
-              style={{ padding: 4 }}
-              dangerouslySetInnerHTML={{ __html: previewSvg }}
-            />
-          ) : (
-            /* Fallback si l'API DiceBear est inaccessible */
-            <span className="text-4xl select-none">🧑</span>
-          )}
+          <Svg svg={previewSvg} className="w-full h-full" />
         </div>
-        <button
-          type="button"
-          onClick={handleRandomize}
-          className="flex items-center gap-2 px-4 py-2 rounded-full border-2 border-[#1A1410] text-sm font-bold transition-all hover:shadow-[3px_3px_0_#1A1410]"
-          style={{ background: KZ.yellowSoft, color: '#1A1410' }}
-        >
-          <Shuffle size={14} /> Aléatoire
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => update(randomAvatarConfig())}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border-[1.5px] border-[#1A1410] text-xs font-bold transition-shadow hover:shadow-[2px_2px_0_#1A1410]"
+            style={{ background: KZ.yellowSoft, color: '#1A1410' }}
+          >
+            <Shuffle size={13} /> Aléatoire
+          </button>
+          <button
+            type="button"
+            onClick={() => update(DEFAULT_AVATAR_CONFIG)}
+            aria-label="Réinitialiser"
+            title="Réinitialiser"
+            className="flex items-center px-2.5 py-1.5 rounded-full border-[1.5px] border-[#1A1410] transition-shadow hover:shadow-[2px_2px_0_#1A1410]"
+            style={{ background: KZ.paper, color: '#1A1410' }}
+          >
+            <RotateCcw size={13} />
+          </button>
+        </div>
       </div>
 
-      {/* Options par section */}
-      <div className="flex flex-col gap-5">
-        {SECTIONS.map(section => (
-          <div key={section.key}>
-            <p className="text-xs font-extrabold text-[#1A1410] uppercase tracking-widest mb-2">
-              {section.label}
-            </p>
-            {section.type === 'color' ? (
-              <div className="flex gap-2 flex-wrap">
-                {section.options.map(opt => (
-                  <ColorSwatch
-                    key={opt.id}
-                    hex={opt.id}
-                    selected={config[section.key] === opt.id}
-                    onClick={() => set(section.key, opt.id)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="flex gap-1.5 flex-wrap">
-                {section.options.map(opt => (
-                  <OptionChip
-                    key={opt.id}
-                    label={opt.label}
-                    selected={config[section.key] === opt.id}
-                    onClick={() => set(section.key, opt.id)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      <div className="min-w-0">
+        {/* Onglets */}
+        <div role="tablist" className="flex gap-1 p-1 rounded-full border-[1.5px] border-[#1A1410] mb-4 overflow-x-auto" style={{ background: KZ.cream2 }}>
+          {TABS.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={t.id === tab}
+              onClick={() => setTab(t.id)}
+              className="flex-1 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-bold transition-colors"
+              style={t.id === tab
+                ? { background: KZ.ink, color: KZ.cream }
+                : { color: '#6B5A4A' }}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
 
-      {/* Bouton sauvegarde */}
-      <div className="mt-6">
-        <Button
-          kind="primary"
-          size="lg"
-          full
-          icon={<Check size={16} />}
-          loading={saving}
-          onClick={() => onSave(config)}
-        >
-          {compact ? 'Valider mon avatar' : 'Sauvegarder mon avatar'}
-        </Button>
+        <div className="flex flex-col gap-5">
+          {activeTab.sections.map((section) => (
+            <div key={section.key}>
+              <p className="text-[11px] font-extrabold text-[#1A1410] uppercase tracking-widest mb-2">
+                {section.label}
+              </p>
+              {section.type === 'color' ? (
+                <div className="flex gap-2.5 flex-wrap">
+                  {section.options.map((opt) => (
+                    <ColorSwatch
+                      key={opt.id}
+                      hex={opt.id}
+                      label={opt.label}
+                      selected={config[section.key] === opt.id}
+                      onClick={() => select(section.key, opt.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(72px,1fr))] gap-2">
+                  {section.options.map((opt) => (
+                    <ThumbOption
+                      key={opt.id}
+                      config={config}
+                      field={section.key}
+                      option={opt}
+                      selected={config[section.key] === opt.id}
+                      onSelect={select}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-6 flex gap-2">
+          {onCancel && (
+            <Button kind="outline" size="lg" onClick={onCancel} disabled={saving}>
+              Annuler
+            </Button>
+          )}
+          <Button
+            kind="primary"
+            size="lg"
+            full
+            icon={<Check size={16} />}
+            loading={saving}
+            onClick={() => onSave(config)}
+          >
+            {compact ? 'Valider mon avatar' : 'Sauvegarder mon avatar'}
+          </Button>
+        </div>
       </div>
     </div>
   )

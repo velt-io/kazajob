@@ -302,7 +302,7 @@ export function GameDashboard({
             <div className="p-5">
               <div className="flex items-center gap-3 mb-4">
                 <div className="relative">
-                  <Avatar name={profile.full_name} src={profile.avatar_url} size={56} color={gami.level.bg} />
+                  <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={56} color={gami.level.bg} />
                   {/* Level ring */}
                   <div
                     className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-[#1A1410] flex items-center justify-center text-[10px] font-extrabold"

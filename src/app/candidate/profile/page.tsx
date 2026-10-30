@@ -2,11 +2,14 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Edit3, Check, X, Download, ExternalLink } from 'lucide-react'
+import { MapPin, Phone, Mail, Edit3, Check, X, Download, ExternalLink, Palette, Camera } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Avatar } from '@/components/ui/Avatar'
+import { AvatarBuilder } from '@/components/ui/AvatarBuilder'
+import { Modal } from '@/components/ui/Modal'
+import { hasAvatarConfig, type AvatarConfig } from '@/lib/avatar'
 import { Badge } from '@/components/ui/Badge'
 import { Progress } from '@/components/ui/Progress'
 import { FileUpload } from '@/components/ui/FileUpload'
@@ -57,6 +60,8 @@ export default function CandidateProfilePage() {
   const [softSkills, setSoftSkills] = useState<string[]>([])
   const [hobbies, setHobbies] = useState<string[]>([])
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [avatarOpen, setAvatarOpen] = useState(false)
+  const [savingAvatar, setSavingAvatar] = useState(false)
   const [cvFileName, setCvFileName] = useState<string | null>(null)
   const [saveError, setSaveError] = useState<string | null>(null)
 
@@ -102,7 +107,19 @@ export default function CandidateProfilePage() {
     setUploadError(null)
     const { error } = await uploadAvatar(file)
     if (error) { setUploadError(error); return }
+    // La photo remplace le personnage : sinon l'avatar DiceBear resterait prioritaire.
+    if (hasAvatarConfig(profile?.avatar_config)) await patchProfile({ avatar_config: null })
     await refetch?.()
+  }
+
+  const handleSaveAvatar = async (config: AvatarConfig) => {
+    setUploadError(null)
+    setSavingAvatar(true)
+    const { ok, error } = await patchProfile({ avatar_config: config })
+    setSavingAvatar(false)
+    if (!ok) { setUploadError(error ?? "Échec de l'enregistrement de l'avatar"); return }
+    await refetch?.()
+    setAvatarOpen(false)
   }
 
   const handleCvFile = async (file: File) => {
@@ -192,7 +209,7 @@ export default function CandidateProfilePage() {
           <div className="kz-card p-5 bg-white text-center">
             <div className="flex justify-center mb-4 relative">
               <div className="relative">
-                <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} size={80} color={KZ.orangeSoft} badge />
+                <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={96} color={KZ.orangeSoft} badge />
                 {/* Zone de click pour changer l'avatar */}
                 <FileUpload
                   accept="image/jpeg,image/png,image/webp"
@@ -204,13 +221,20 @@ export default function CandidateProfilePage() {
                 />
               </div>
             </div>
+            <div className="flex justify-center gap-2 mb-4">
+              <Button kind="outline" size="sm" icon={<Palette size={13} />} onClick={() => setAvatarOpen(true)}>
+                {hasAvatarConfig(profile?.avatar_config) ? 'Modifier mon perso' : 'Créer mon perso'}
+              </Button>
+            </div>
             {uploadingAvatar && (
               <p className="text-xs text-[#6B5A4A] mb-2">Upload de la photo...</p>
             )}
             <div className="text-base font-bold text-[#1A1410]">{profile?.full_name}</div>
             <div className="text-xs text-[#6B5A4A] mt-0.5 mb-4">{profile?.location ?? 'La Reunion'}</div>
             <Progress value={profileScore} color={KZ.orange} label="Profil complete" />
-            <p className="text-[11px] text-[#6B5A4A] mt-2">Clique sur ta photo pour la changer</p>
+            <p className="text-[11px] text-[#6B5A4A] mt-2 flex items-center justify-center gap-1">
+              <Camera size={11} /> Clique sur l&apos;avatar pour utiliser une photo
+            </p>
           </div>
 
           {/* CV */}
@@ -486,6 +510,17 @@ export default function CandidateProfilePage() {
           </div>
         </div>
       </div>
+
+      <Modal open={avatarOpen} onClose={() => setAvatarOpen(false)} title="Mon personnage Kazajob" size="lg">
+        {avatarOpen && (
+          <AvatarBuilder
+            initialConfig={profile?.avatar_config}
+            onSave={handleSaveAvatar}
+            onCancel={() => setAvatarOpen(false)}
+            saving={savingAvatar}
+          />
+        )}
+      </Modal>
     </div>
   )
 }

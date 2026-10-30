@@ -17,7 +17,7 @@ const SUGGESTED_PROMPTS = [
   { icon: <Sparkles size={14} />, text: 'Quels secteurs recrutent le plus en 974 ?' },
 ]
 
-function MessageBubble({ msg, userName }: { msg: ChatMessage; userName: string }) {
+function MessageBubble({ msg, userName, userAvatarConfig }: { msg: ChatMessage; userName: string; userAvatarConfig?: Record<string, unknown> | null }) {
   const isAssistant = msg.role === 'assistant'
 
   return (
@@ -61,7 +61,7 @@ function MessageBubble({ msg, userName }: { msg: ChatMessage; userName: string }
       </div>
 
       {!isAssistant && (
-        <Avatar name={userName} size={32} color={KZ.orangeSoft} className="shrink-0 mt-0.5" />
+        <Avatar name={userName} avatarConfig={userAvatarConfig} size={32} color={KZ.orangeSoft} className="shrink-0 mt-0.5" />
       )}
     </div>
   )
@@ -169,7 +169,7 @@ export default function KazaIAPage() {
           ) : (
             <>
               {messages.map(msg => (
-                <MessageBubble key={msg.id} msg={msg} userName={profile?.full_name ?? 'Toi'} />
+                <MessageBubble key={msg.id} msg={msg} userName={profile?.full_name ?? 'Toi'} userAvatarConfig={profile?.avatar_config} />
               ))}
               <div ref={bottomRef} />
             </>

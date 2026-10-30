@@ -1,37 +1,31 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { initials } from '@/lib/utils'
-import { generateAvatarSvg } from '@/lib/avatar'
-import type { AvatarConfig } from '@/lib/avatar'
+import { generateAvatarSvg, hasAvatarConfig, type AvatarConfig } from '@/lib/avatar'
 
 interface AvatarProps {
   name: string
   src?: string | null
-  avatarConfig?: Record<string, string> | null
+  avatarConfig?: AvatarConfig | Record<string, unknown> | null
   size?: number
   color?: string
   badge?: boolean
   className?: string
 }
 
+// Priorité d'affichage : avatar personnalisé (DiceBear) > photo > initiales.
 export function Avatar({ name, src, avatarConfig, size = 40, color = '#FFE0CF', badge, className }: AvatarProps) {
-  const init      = initials(name)
-  const px        = `${size}px`
-  const isDiceBear = !!(avatarConfig && Object.keys(avatarConfig).length > 0)
+  const init = initials(name)
+  const px   = `${size}px`
 
-  // Génération SVG locale — 0 appel HTTP, instantané
-  const [dicebearSvg, setDicebearSvg] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!isDiceBear || !avatarConfig) return
-    try {
-      const svg = generateAvatarSvg(avatarConfig as unknown as AvatarConfig)
-      setDicebearSvg(svg)
-    } catch { /* garde les initiales */ }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDiceBear, JSON.stringify(avatarConfig)])
+  // Génération SVG locale et déterministe : rendu immédiat, identique serveur/client.
+  const configKey = hasAvatarConfig(avatarConfig) ? JSON.stringify(avatarConfig) : null
+  const svg = useMemo(
+    () => (configKey ? generateAvatarSvg(JSON.parse(configKey)) : null),
+    [configKey],
+  )
 
   return (
     <div
@@ -42,14 +36,15 @@ export function Avatar({ name, src, avatarConfig, size = 40, color = '#FFE0CF', 
         className="w-full h-full rounded-full border-[1.5px] border-[#1A1410] flex items-center justify-center font-bold overflow-hidden"
         style={{ background: color, fontSize: size * 0.36 }}
       >
-        {isDiceBear && dicebearSvg ? (
+        {svg ? (
           <div
-            className="w-full h-full flex items-center justify-center"
-            style={{ padding: 1 }}
-            dangerouslySetInnerHTML={{ __html: dicebearSvg }}
+            className="w-full h-full [&>svg]:w-full [&>svg]:h-full"
+            role="img"
+            aria-label={name}
+            dangerouslySetInnerHTML={{ __html: svg }}
           />
-        ) : !isDiceBear && src ? (
-          <img src={src} alt={name} className="w-full h-full object-cover" />
+        ) : src ? (
+          <img src={src} alt={name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
         ) : (
           <span className="text-[#1A1410]">{init}</span>
         )}

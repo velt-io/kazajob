@@ -55,7 +55,7 @@ export default function CandidateDashboard() {
 
   const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
 
-  const profileFields = [profile?.full_name, profile?.bio, profile?.location, profile?.phone, profile?.cv_url, profile?.avatar_url]
+  const profileFields = [profile?.full_name, profile?.bio, profile?.location, profile?.phone, profile?.cv_url, profile?.avatar_url || (profile?.avatar_config ? 'avatar' : null)]
   const profileScore = Math.round((profileFields.filter(Boolean).length / profileFields.length) * 100)
 
   const pendingApps   = applications.filter(a => a.status === 'pending').length
@@ -123,7 +123,7 @@ export default function CandidateDashboard() {
         <div className="flex flex-col gap-5">
           {/* Profil */}
           <div className="kz-card p-4 md:p-5 bg-white flex gap-4 items-center">
-            <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} size={64} color={KZ.orangeSoft} badge />
+            <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={64} color={KZ.orangeSoft} badge />
             <div className="flex-1 min-w-0">
               <div className="text-base font-bold text-[#1A1410] truncate">{profile?.full_name}</div>
               <div className="text-xs text-[#6B5A4A] mb-2 truncate">
