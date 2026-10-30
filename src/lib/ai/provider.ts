@@ -1,7 +1,7 @@
 /**
  * KAZAJOB — Couche d'abstraction IA
  * ─────────────────────────────────────────────────────────────
- * Provider actuel : Groq (llama-3.3-70b, gratuit)
+ * Provider actuel : Groq (openai/gpt-oss-120b — Llama 3.3 a été retiré par Groq le 16/08/2026)
  * Pour passer à Claude : AI_PROVIDER=anthropic + ANTHROPIC_API_KEY
  *
  * Interface unique → aucun changement côté application
@@ -17,13 +17,48 @@ export interface AIStreamChunk {
   done: boolean
 }
 
+export const DEFAULT_GROQ_MODEL = 'openai/gpt-oss-120b'
+
 const GROQ_CONFIG = {
   baseUrl: 'https://api.groq.com/openai/v1',
-  model:   'llama-3.3-70b-versatile',      // Meilleur modèle Groq gratuit
-  // Alternatives Groq :
-  //   'mixtral-8x7b-32768'   → contexte 32k, bon pour longs CV
-  //   'llama3-8b-8192'       → ultra rapide, qualité légèrement inférieure
-  //   'gemma2-9b-it'         → compact, bon rapport qualité/vitesse
+  // Surchargeable sans redéployer de code : GROQ_MODEL=openai/gpt-oss-20b (plus rapide)
+  // ou qwen/qwen3.6-27b (autre remplaçant conseillé par Groq).
+  model:   process.env.GROQ_MODEL || DEFAULT_GROQ_MODEL,
+}
+
+/**
+ * Les modèles gpt-oss « réfléchissent » avant de répondre, et ce raisonnement
+ * consomme le même budget de jetons que la réponse. On garde donc maxTokens
+ * comme longueur de la réponse visible et on ajoute un budget de raisonnement,
+ * avec un effort bas (réponses rapides, suffisant pour nos usages).
+ */
+const REASONING_BUDGET = 1024
+
+export function groqRequestBody(
+  model: string,
+  messages: AIMessage[],
+  options: { maxTokens?: number; temperature?: number } | undefined,
+  stream: boolean,
+): Record<string, unknown> {
+  const maxTokens = options?.maxTokens ?? 2048
+  const reasoning = model.startsWith('openai/gpt-oss')
+  return {
+    model,
+    messages,
+    temperature: options?.temperature ?? 0.7,
+    stream,
+    ...(reasoning
+      ? { max_completion_tokens: maxTokens + REASONING_BUDGET, reasoning_effort: 'low', include_reasoning: false }
+      : { max_tokens: maxTokens }),
+  }
+}
+
+/** Message d'erreur affichable à l'utilisateur (le détail technique part dans les logs). */
+export function publicAIError(err: unknown): string {
+  const msg = err instanceof Error ? err.message : ''
+  if (msg.includes('GROQ_API_KEY manquant')) return 'KazaIA n’est pas encore configurée sur ce serveur.'
+  if (/\b429\b/.test(msg)) return 'KazaIA est très sollicitée en ce moment. Réessaie dans une minute.'
+  return 'KazaIA est momentanément indisponible. Réessaie dans un instant.'
 }
 
 const ANTHROPIC_CONFIG = {
@@ -83,13 +118,7 @@ async function generateWithGroq(
       'Authorization': `Bearer ${key}`,
       'Content-Type':  'application/json',
     },
-    body: JSON.stringify({
-      model:       GROQ_CONFIG.model,
-      messages,
-      max_tokens:  options?.maxTokens  ?? 2048,
-      temperature: options?.temperature ?? 0.7,
-      stream:      false,
-    }),
+    body: JSON.stringify(groqRequestBody(GROQ_CONFIG.model, messages, options, false)),
   })
 
   if (!res.ok) {
@@ -114,13 +143,7 @@ async function streamWithGroq(
       'Authorization': `Bearer ${key}`,
       'Content-Type':  'application/json',
     },
-    body: JSON.stringify({
-      model:       GROQ_CONFIG.model,
-      messages,
-      max_tokens:  options?.maxTokens  ?? 2048,
-      temperature: options?.temperature ?? 0.7,
-      stream:      true,
-    }),
+    body: JSON.stringify(groqRequestBody(GROQ_CONFIG.model, messages, options, true)),
   })
 
   if (!res.ok) {
@@ -128,35 +151,47 @@ async function streamWithGroq(
     throw new Error(`Groq API stream error ${res.status}: ${err}`)
   }
 
-  // Transformer le SSE Groq en stream de texte brut
+  return sseToTextStream(res.body!)
+}
+
+/**
+ * Transforme le SSE OpenAI-compatible de Groq en flux de texte brut.
+ * Une ligne SSE peut arriver coupée entre deux paquets réseau : on garde
+ * le reste incomplet en tampon au lieu de le jeter (sinon du texte se perd).
+ * Seul delta.content est transmis (jamais le raisonnement du modèle).
+ */
+export function sseToTextStream(body: ReadableStream<Uint8Array>): ReadableStream<Uint8Array> {
   const encoder = new TextEncoder()
   const decoder = new TextDecoder()
 
   return new ReadableStream({
     async start(controller) {
-      const reader = res.body!.getReader()
+      const reader = body.getReader()
+      let buffer = ''
+      const handle = (line: string): boolean => {
+        if (!line.startsWith('data:')) return false
+        const data = line.slice(5).trim()
+        if (data === '[DONE]') return true
+        try {
+          const text = JSON.parse(data).choices?.[0]?.delta?.content ?? ''
+          if (text) controller.enqueue(encoder.encode(text))
+        } catch {
+          // Ligne mal formée : ignorée
+        }
+        return false
+      }
       try {
         while (true) {
           const { done, value } = await reader.read()
           if (done) break
-
-          const chunk = decoder.decode(value, { stream: true })
-          const lines = chunk.split('\n').filter(l => l.trim())
-
+          buffer += decoder.decode(value, { stream: true })
+          const lines = buffer.split('\n')
+          buffer = lines.pop() ?? ''
           for (const line of lines) {
-            if (!line.startsWith('data: ')) continue
-            const data = line.slice(6).trim()
-            if (data === '[DONE]') { controller.close(); return }
-
-            try {
-              const json = JSON.parse(data)
-              const text = json.choices?.[0]?.delta?.content ?? ''
-              if (text) controller.enqueue(encoder.encode(text))
-            } catch {
-              // Ignorer les lignes mal formées
-            }
+            if (handle(line.trim())) return
           }
         }
+        handle(buffer.trim())
       } finally {
         reader.releaseLock()
         controller.close()

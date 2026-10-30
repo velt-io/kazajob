@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { auth, getCurrentUser } from '@/lib/auth'
 import { getCandidateSkills } from '@/lib/queries/profiles'
-import { streamText } from '@/lib/ai/provider'
+import { publicAIError, streamText } from '@/lib/ai/provider'
 import { SYSTEM_PROMPTS } from '@/lib/ai/prompts'
 import type { AIMessage } from '@/lib/ai/provider'
 
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('[KazaIA chat]', err)
     return new Response(
-      JSON.stringify({ error: err instanceof Error ? err.message : 'Erreur serveur' }),
+      JSON.stringify({ error: publicAIError(err) }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }

@@ -112,7 +112,7 @@ export default function KazaIAPage() {
               <h1 className="text-xl font-extrabold tracking-tight text-[#1A1410]">KazaIA</h1>
               <Badge color="violet" size="sm">Beta</Badge>
               <span className="text-[10px] text-[#6B5A4A] font-semibold">
-                propulsé par Groq · Llama 3.3
+                propulsé par Groq · GPT-OSS
               </span>
             </div>
             <p className="text-xs text-[#6B5A4A]">Ton assistant emploi intelligent pour le 974</p>
