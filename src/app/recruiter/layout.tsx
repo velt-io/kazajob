@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { LayoutDashboard, Briefcase, Users, MessageCircle, Plus, Calendar, Star, Building2, GraduationCap, BarChart2, User, Bookmark, ClipboardList } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
+import { EmailVerifyBanner } from '@/components/auth/EmailVerifyBanner'
 import { Sidebar, type NavItem } from '@/components/layout/Sidebar'
 import { CompanySwitcher } from '@/components/layout/CompanySwitcher'
 import { useAuth } from '@/features/auth/useAuth'
@@ -57,6 +58,9 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
         searchPlaceholder="Rechercher un candidat..."
         onMenuClick={() => setSidebarOpen(true)}
       />
+      {profile.email_verified === false && (
+        <EmailVerifyBanner email={profile.email} detail="Elle est nécessaire pour publier vos offres." />
+      )}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
           title={company?.name ?? 'Recruteur'}

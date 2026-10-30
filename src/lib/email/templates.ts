@@ -1364,3 +1364,50 @@ export function passwordResetEmail(data: {
 
   return { subject, html: shell(C.orange, body) }
 }
+
+// ══════════════════════════════════════════════════════════════════
+// TEMPLATE — Confirmation de l'adresse email
+// ══════════════════════════════════════════════════════════════════
+
+export function verifyEmailEmail(data: {
+  fullName: string
+  verifyUrl: string
+}): { subject: string; html: string } {
+  const firstName = data.fullName.split(' ')[0].replace(/[<>&"]/g, '')
+  const subject = 'Confirme ton adresse email Kazajob'
+
+  const body = `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:28px 32px 16px;">
+          <h1 style="margin:0;font-size:28px;font-weight:900;color:${C.ink};
+            letter-spacing:-0.03em;line-height:1.1;font-family:Arial,sans-serif;">
+            Une dernière étape
+          </h1>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:12px 32px 24px;">
+          <p style="margin:0;font-size:14px;color:#2A2018;line-height:1.6;font-family:Arial,sans-serif;">
+            Bonjour <strong style="color:${C.ink};">${firstName}</strong>,<br><br>
+            Confirme ton adresse email pour sécuriser ton compte Kazajob.
+            Ce lien est valable <strong>7 jours</strong>.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 32px 24px;text-align:center;">
+          ${ctaButton('Confirmer mon adresse', data.verifyUrl)}
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 32px 28px;">
+          <p style="margin:0;font-size:12px;color:${C.mute};line-height:1.6;font-family:Arial,sans-serif;">
+            Tu n'as pas créé de compte sur Kazajob ? Ignore simplement cet email.
+          </p>
+        </td>
+      </tr>
+    </table>`
+
+  return { subject, html: shell(C.orange, body) }
+}

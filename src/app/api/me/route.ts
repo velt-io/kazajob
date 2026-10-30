@@ -4,6 +4,7 @@
 import { NextResponse } from 'next/server'
 import type { Profile } from '@/lib/types'
 import { getCurrentUser } from '@/lib/auth'
+import { isEmailVerified } from '@/lib/email-verification'
 import { serialize } from '@/lib/queries/_serialize'
 
 export async function GET() {
@@ -16,5 +17,6 @@ export async function GET() {
   // Réattacher les jsonb verbatim sous leur clé snake_case attendue.
   profile.cv_data = (cvData ?? null) as Profile['cv_data']
   profile.avatar_config = (avatarConfig ?? null) as Profile['avatar_config']
+  profile.email_verified = await isEmailVerified(user.id)
   return NextResponse.json(profile)
 }

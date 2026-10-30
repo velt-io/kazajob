@@ -47,6 +47,8 @@ export interface TrainingApplication {
 export interface Profile {
   id: string
   email: string
+  /** false tant que l'adresse d'une inscription email n'est pas confirmée (cf. email-verification.ts). */
+  email_verified?: boolean
   full_name: string
   role: UserRole
   avatar_url: string | null

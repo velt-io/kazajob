@@ -7,6 +7,7 @@ import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import { db } from '@/lib/db'
 import { profiles } from '@/lib/db/schema'
+import { markEmailPending, sendVerificationEmail } from '@/lib/email-verification'
 import { AUTH_LIMITS, clientIp, hitRateLimit, rateLimitKey, retryMessage } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
@@ -46,12 +47,18 @@ export async function POST(request: Request) {
 
   const passwordHash = await bcrypt.hash(password, 10)
 
-  await db.insert(profiles).values({
+  const [created] = await db.insert(profiles).values({
     email,
     passwordHash,
     fullName: fullName || email.split('@')[0],
     role,
-  })
+  }).returning({ id: profiles.id, fullName: profiles.fullName })
+
+  // Adresse à confirmer : lien envoyé tout de suite (le compte reste utilisable).
+  if (created) {
+    await markEmailPending(created.id)
+    await sendVerificationEmail({ id: created.id, email, fullName: created.fullName })
+  }
 
   return NextResponse.json({ ok: true })
 }
