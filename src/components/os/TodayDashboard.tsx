@@ -95,7 +95,7 @@ export function TodayDashboard({ profile, gami, applications, appsLoading, recom
           { icon: <Heart size={16} />, color: '#FF375F', label: 'Favoris', value: favoritesCount, href: '/candidate/favorites' },
           { icon: <Flame size={16} />, color: '#FFD60A', label: 'Jours de série', value: profile.streak ?? 0, href: '/candidate/profile' },
         ].map((s) => (
-          <Link key={s.label} href={s.href} className="lg:col-span-3 group rounded-[24px] os-glass p-5 hover:bg-white/[0.08] transition-colors">
+          <Link key={s.label} href={s.href} data-tilt className="lg:col-span-3 group rounded-[24px] os-glass p-5 hover:bg-white/[0.08] transition-colors">
             <div className="flex items-center justify-between">
               <span className="w-8 h-8 rounded-[10px] flex items-center justify-center text-white" style={{ background: s.color }}>{s.icon}</span>
               <ArrowUpRight size={16} className="text-[var(--kz-mute)] opacity-0 group-hover:opacity-100 transition-opacity" />

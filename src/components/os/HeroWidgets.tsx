@@ -13,7 +13,7 @@ export function HeroWidgets() {
 
       <div className="relative grid grid-cols-2 md:grid-cols-4 auto-rows-[150px] md:auto-rows-[170px] gap-3 md:gap-4">
         {/* Widget « Météo de l'emploi » — fond d'écran dégradé */}
-        <div className="col-span-2 row-span-2 relative rounded-[28px] overflow-hidden border border-white/10 os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.05s', background: 'linear-gradient(160deg, #1E3A8A 0%, #5B21B6 45%, #DB2777 85%, #F97316 120%)' }}>
+        <div data-tilt className="col-span-2 row-span-2 relative rounded-[28px] overflow-hidden border border-white/10 os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.05s', background: 'linear-gradient(160deg, #1E3A8A 0%, #5B21B6 45%, #DB2777 85%, #F97316 120%)' }}>
           <div aria-hidden className="absolute -right-16 -top-16 w-72 h-72 rounded-full bg-[#FFD60A] opacity-30 blur-3xl" />
           {/* Silhouette du Piton (simple courbe) */}
           <svg aria-hidden viewBox="0 0 400 160" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 w-full h-[45%] opacity-60">
@@ -38,7 +38,7 @@ export function HeroWidgets() {
         </div>
 
         {/* Match */}
-        <div className="col-span-2 md:col-span-2 relative rounded-[28px] os-glass p-5 flex flex-col justify-between os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.15s' }}>
+        <div data-tilt className="col-span-2 md:col-span-2 relative rounded-[28px] os-glass p-5 flex flex-col justify-between os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.15s' }}>
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-[#BF5AF2]"><Sparkles size={13} /> KazaMatch</span>
             <span className="text-[11px] text-[var(--kz-mute)]">à l&apos;instant</span>
@@ -56,7 +56,7 @@ export function HeroWidgets() {
         </div>
 
         {/* Anneaux */}
-        <div className="relative rounded-[28px] os-glass p-4 flex items-center justify-center os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.25s' }}>
+        <div data-tilt className="relative rounded-[28px] os-glass p-4 flex items-center justify-center os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.25s' }}>
           <ActivityRings size={118} stroke={13} rings={[
             { value: 82, ...RING_COLORS.move, label: 'Niveau' },
             { value: 60, ...RING_COLORS.exercise, label: 'Candidatures' },
@@ -65,7 +65,7 @@ export function HeroWidgets() {
         </div>
 
         {/* Notifications */}
-        <div className="relative rounded-[28px] os-glass p-3.5 flex flex-col gap-2 justify-center os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.35s' }}>
+        <div data-tilt className="relative rounded-[28px] os-glass p-3.5 flex flex-col gap-2 justify-center os-pop shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]" style={{ animationDelay: '0.35s' }}>
           {[
             { icon: <CalendarCheck size={14} />, color: '#30D158', title: 'Entretien jeudi', sub: '10:00 · Visio' },
             { icon: <Bell size={14} />, color: '#FF9F0A', title: 'Profil consulté', sub: '3 recruteurs' },

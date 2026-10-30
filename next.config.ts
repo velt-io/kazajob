@@ -9,6 +9,10 @@ const securityHeaders = [
 ]
 
 const nextConfig: NextConfig = {
+  // Transitions entre pages (View Transitions natives via <ViewTransition> de React)
+  experimental: {
+    viewTransition: true,
+  },
   async redirects() {
     return [
       // Ancienne URL de la vue recruteur (avant /entreprise)

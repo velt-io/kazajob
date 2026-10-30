@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { LayoutDashboard, Briefcase, Users, MessageCircle, Plus, Calendar, Star, Building2, GraduationCap, BarChart2, User, Bookmark, ClipboardList } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
 import { EmailVerifyBanner } from '@/components/auth/EmailVerifyBanner'
+import { PageTransition } from '@/components/os/PageTransition'
 import { Sidebar, type NavItem } from '@/components/layout/Sidebar'
 import { CompanySwitcher } from '@/components/layout/CompanySwitcher'
 import { useAuth } from '@/features/auth/useAuth'
@@ -92,7 +93,7 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
           }
         />
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
       </div>
       {/* Signalement de bug */}

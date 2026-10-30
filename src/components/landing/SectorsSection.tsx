@@ -41,7 +41,7 @@ export function SectorsSection({ variant }: { variant: 'candidat' | 'entreprise'
         {/* « Écran d'accueil » des secteurs */}
         <div className="order-2 lg:order-1 relative">
           <div aria-hidden className="absolute -inset-6 bg-[radial-gradient(closest-side,rgba(10,132,255,0.22),transparent)] blur-2xl" />
-          <div className="relative rounded-[40px] os-glass p-6 sm:p-8 shadow-[0_50px_100px_-40px_rgba(0,0,0,0.9)]">
+          <div data-tilt className="relative rounded-[40px] os-glass p-6 sm:p-8 shadow-[0_50px_100px_-40px_rgba(0,0,0,0.9)]">
             <div className="grid grid-cols-4 sm:grid-cols-4 gap-x-3 gap-y-5 sm:gap-x-6 sm:gap-y-7">
               {SECTORS.map(({ sector, short, icon: Icon, g }) => {
                 const icon = (

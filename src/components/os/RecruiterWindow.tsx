@@ -17,7 +17,7 @@ const PEOPLE: { name: string; role: string; city: string; score: number; config:
 export function RecruiterWindow({ className = '' }: { className?: string }) {
   const sel = PEOPLE[0]
   return (
-    <div className={`relative rounded-[22px] os-glass overflow-hidden shadow-[0_50px_100px_-30px_rgba(0,0,0,0.9)] text-left ${className}`}>
+    <div data-tilt className={`relative rounded-[22px] os-glass overflow-hidden shadow-[0_50px_100px_-30px_rgba(0,0,0,0.9)] text-left ${className}`}>
       {/* Barre de titre */}
       <div className="flex items-center gap-2 px-4 h-10 border-b border-white/[0.06] bg-white/[0.03]">
         <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />

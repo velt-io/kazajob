@@ -152,6 +152,35 @@ body::before {
 .font-extrabold, .font-black { font-weight: 600 !important; }
 [class*="hover:translate-x-[-1px]"]:hover, [class*="hover:translate-x-[1px]"]:hover { translate: 0 -1px !important; }
 
+/* ── Mouvement « OS » ─────────────────────────────────────────
+ * Transitions entre pages, apparition au défilement, lumière au pointeur. */
+::view-transition-old(.os-page-out) { animation: os-page-out 0.26s cubic-bezier(0.4, 0, 1, 1) both; }
+::view-transition-new(.os-page-in)  { animation: os-page-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+::view-transition-group(.morph) { animation-duration: 0.5s; animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1); }
+::view-transition-image-pair(.morph) { animation-name: os-via-blur; }
+@keyframes os-page-out { to { opacity: 0; transform: scale(0.985); filter: blur(6px); } }
+@keyframes os-page-in  { from { opacity: 0; transform: translateY(12px) scale(1.01); filter: blur(8px); } }
+@keyframes os-via-blur { 40% { filter: blur(3px); } }
+
+/* Lumière qui suit le pointeur sur le verre (variables posées par <MotionLayer />) */
+.os-glass:hover {
+  background-image: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.075), transparent 45%);
+}
+[data-tilt] { transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform; }
+
+/* Apparition au défilement (navigateurs compatibles ; sinon affichage direct) */
+@supports (animation-timeline: view()) {
+  main section, body > div > section > div {
+    animation: os-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+@keyframes os-reveal { from { opacity: 0; transform: translateY(28px) scale(0.98); } }
+
+/* Retour tactile : tout ce qui est cliquable « s'enfonce » légèrement */
+a:active > .kz-card, a:active > .os-glass, .os-glass:is(a, button):active { transform: scale(0.985); transition: transform 0.1s; }
+
 /* Fonds assombris (modales, menus) */
 .os-scrim { background: var(--os-scrim); }
 
@@ -233,6 +262,7 @@ h1, h2 { letter-spacing: -0.035em; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; }
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
