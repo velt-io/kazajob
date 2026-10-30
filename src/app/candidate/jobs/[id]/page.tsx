@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, MapPin, Clock, Heart, Briefcase, Sparkles, Building2, Check, Brain, ChevronDown, ChevronUp, Lightbulb, Wallet, ListChecks, Gift, GraduationCap } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
@@ -219,7 +220,15 @@ export default function JobDetailPage() {
             {alreadyApplied ? (
               <div className="flex items-center gap-2 p-3 rounded-xl border border-[#19A974] bg-[#D6F0E0]">
                 <Check size={16} color={KZ.green} />
-                <span className="text-sm font-bold text-[#1A1410]">Candidature envoyee !</span>
+                <span className="text-sm font-bold text-[#1A1410]">Candidature envoyée !</span>
+              </div>
+            ) : !job.is_active ? (
+              <div className="flex items-start gap-2 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.cream2 }}>
+                <Clock size={16} className="shrink-0 mt-0.5" />
+                <span className="text-sm text-[#1A1410]">
+                  <strong>Cette offre n&apos;est plus disponible.</strong>{' '}
+                  <Link href="/candidate/jobs" className="font-bold underline" style={{ color: KZ.orange }}>Voir les offres en cours</Link>
+                </span>
               </div>
             ) : (
               <Button kind="primary" size="lg" full onClick={() => setApplyModal(true)}>Postuler maintenant</Button>
@@ -318,7 +327,15 @@ export default function JobDetailPage() {
             {alreadyApplied ? (
               <div className="flex items-center gap-2 p-3 rounded-xl border border-[#19A974] bg-[#D6F0E0]">
                 <Check size={16} color={KZ.green} />
-                <span className="text-sm font-bold text-[#1A1410]">Candidature envoyee !</span>
+                <span className="text-sm font-bold text-[#1A1410]">Candidature envoyée !</span>
+              </div>
+            ) : !job.is_active ? (
+              <div className="flex items-start gap-2 p-3 rounded-xl border border-[#1A1410]" style={{ background: KZ.cream2 }}>
+                <Clock size={16} className="shrink-0 mt-0.5" />
+                <span className="text-sm text-[#1A1410]">
+                  <strong>Cette offre n&apos;est plus disponible.</strong>{' '}
+                  <Link href="/candidate/jobs" className="font-bold underline" style={{ color: KZ.orange }}>Voir les offres en cours</Link>
+                </span>
               </div>
             ) : (
               <Button kind="primary" size="lg" full onClick={() => setApplyModal(true)}>Postuler maintenant</Button>

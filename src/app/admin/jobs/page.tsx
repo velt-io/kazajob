@@ -10,6 +10,7 @@ import { EmptyState } from '@/components/feedback/EmptyState'
 import type { Job } from '@/lib/types'
 import { KZ } from '@/lib/constants'
 import { timeAgo, formatSalary } from '@/lib/utils'
+import { JOB_STATUS_META, resolveJobStatus } from '@/lib/job-lifecycle'
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([])
@@ -25,13 +26,23 @@ export default function AdminJobsPage() {
 
   useEffect(() => { fetchJobs() }, [])
 
+  // Masquer une offre en ligne = la suspendre (le recruteur ne peut plus la remettre en ligne).
   const toggleActive = async (job: Job) => {
-    await fetch(`/api/admin/jobs/${job.id}`, {
+    const active = !job.is_active
+    if (!active && !confirm('Suspendre cette offre ? Elle sera retirée du site et le recruteur ne pourra pas la remettre en ligne.')) return
+    const res = await fetch(`/api/admin/jobs/${job.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ active: !job.is_active }),
+      body: JSON.stringify({ active }),
     })
-    setJobs((prev) => prev.map((j) => j.id === job.id ? { ...j, is_active: !j.is_active } : j))
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      alert(data.error ?? 'Action impossible.')
+      return
+    }
+    setJobs((prev) => prev.map((j) => j.id === job.id
+      ? { ...j, is_active: active, status: active ? 'published' : 'suspended' }
+      : j))
   }
 
   const deleteJob = async (id: string) => {
@@ -73,14 +84,15 @@ export default function AdminJobsPage() {
                   <td className="px-4 py-3 text-sm text-[#6B5A4A]">{job.location}</td>
                   <td className="px-4 py-3 text-sm text-[#6B5A4A]">{formatSalary(job.salary_min, job.salary_max)}</td>
                   <td className="px-4 py-3">
-                    <Badge color={job.is_active ? 'green' : 'cream'} size="sm">
-                      {job.is_active ? 'Active' : 'Inactive'}
+                    <Badge color={JOB_STATUS_META[resolveJobStatus(job)].color} size="sm">
+                      {JOB_STATUS_META[resolveJobStatus(job)].label}
                     </Badge>
                   </td>
                   <td className="px-4 py-3 text-xs text-[#6B5A4A]">{timeAgo(job.created_at)}</td>
                   <td className="px-4 py-3">
                     <div className="flex gap-1.5">
-                      <button onClick={() => toggleActive(job)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FBEFE0] text-[#6B5A4A] hover:text-[#1A1410]">
+                      <button onClick={() => toggleActive(job)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FBEFE0] text-[#6B5A4A] hover:text-[#1A1410]"
+                        title={job.is_active ? 'Suspendre' : 'Publier / rétablir'} aria-label={job.is_active ? 'Suspendre' : 'Publier / rétablir'}>
                         {job.is_active ? <EyeOff size={14} /> : <Eye size={14} />}
                       </button>
                       <button onClick={() => deleteJob(job.id)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-[#6B5A4A] hover:text-red-600">

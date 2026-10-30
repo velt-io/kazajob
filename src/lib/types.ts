@@ -1,3 +1,5 @@
+import type { JobStatus } from '@/lib/job-lifecycle'
+
 export type UserRole = 'candidate' | 'recruiter' | 'admin'
 
 export interface TrainingOffer {
@@ -172,6 +174,10 @@ export interface Job {
   salary_max: number | null
   salary_currency: string
   is_active: boolean
+  /** Cycle de vie — cf. src/lib/job-lifecycle.ts (absent avant migration). */
+  status?: JobStatus
+  published_at?: string | null
+  expires_at?: string | null
   is_boosted: boolean
   boost_expires_at: string | null
   missions: string | null

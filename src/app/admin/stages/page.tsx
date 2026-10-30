@@ -41,13 +41,23 @@ export default function AdminStagesPage() {
     ) : stages)
   }, [search, stages])
 
+  // Masquer une offre en ligne = la suspendre (le recruteur ne peut plus la remettre en ligne).
   const toggleActive = async (job: Job) => {
-    await fetch(`/api/admin/jobs/${job.id}`, {
+    const active = !job.is_active
+    if (!active && !confirm('Suspendre cette offre ? Elle sera retirée du site et le recruteur ne pourra pas la remettre en ligne.')) return
+    const res = await fetch(`/api/admin/jobs/${job.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ active: !job.is_active }),
+      body: JSON.stringify({ active }),
     })
-    setStages((prev) => prev.map((j) => j.id === job.id ? { ...j, is_active: !j.is_active } : j))
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      alert(data.error ?? 'Action impossible.')
+      return
+    }
+    setStages((prev) => prev.map((j) => j.id === job.id
+      ? { ...j, is_active: active, status: active ? 'published' : 'suspended' }
+      : j))
   }
 
   const deleteStage = async (id: string) => {
