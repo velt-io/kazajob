@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { createJob, listRecruiterJobs } from '@/lib/queries/jobs'
+import { createJob, initialJobStatus, listRecruiterJobs } from '@/lib/queries/jobs'
 import { canPublishJob, getActiveMembership } from '@/lib/queries/companies'
 
 // GET /api/recruiter/jobs — mes offres
@@ -11,7 +11,7 @@ export async function GET() {
   return NextResponse.json(await listRecruiterJobs(userId))
 }
 
-// POST /api/recruiter/jobs  { ...payload, companyId? } → { id }
+// POST /api/recruiter/jobs  { ...payload, status?: 'draft' | 'published', companyId? } → { id }
 export async function POST(req: NextRequest) {
   const session = await auth()
   const userId = session?.user?.id
@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
       )
     }
     companyId = membership.companyId
-    // Plafond d'offres actives selon le forfait.
-    const quota = await canPublishJob(companyId)
+    // Plafond d'offres actives selon le forfait (un brouillon n'en consomme pas).
+    const quota = initialJobStatus(body) === 'published' ? await canPublishJob(companyId) : { ok: true as const }
     if (!quota.ok) {
       const error = quota.reason === 'expired'
         ? 'Votre essai ou abonnement a expiré. Activez votre abonnement pour publier de nouvelles offres.'

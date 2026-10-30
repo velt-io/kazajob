@@ -5,8 +5,12 @@
 import { cache } from 'react'
 import { and, asc, desc, eq, gte, ilike, inArray, lt, or, sql, type SQL } from 'drizzle-orm'
 import { db } from '@/lib/db'
-import { candidateSkills, jobs, profiles, skills } from '@/lib/db/schema'
+import { candidateSkills, jobs, notifications, profiles, skills } from '@/lib/db/schema'
 import type { Job, JobFilters } from '@/lib/types'
+import {
+  jobStatusPatch, nextJobStatus, resolveJobStatus,
+  type JobAction, type JobActor, type JobStatus,
+} from '@/lib/job-lifecycle'
 import { matchScore } from '@/lib/utils'
 import { serialize } from './_serialize'
 
@@ -15,11 +19,11 @@ export const getJobSeo = cache(async (id: string) => {
     where: eq(jobs.id, id),
     columns: {
       title: true, description: true, location: true, remote: true, jobType: true,
-      salaryMin: true, salaryMax: true, isActive: true, createdAt: true,
+      salaryMin: true, salaryMax: true, isActive: true, status: true, createdAt: true,
     },
     with: { company: { columns: { name: true } } },
   })
-  if (!row) return null
+  if (!row || !isPubliclyViewable(row.status)) return null
   const r = row as typeof row & { company?: { name: string } | null }
   return {
     title: r.title, description: r.description, location: r.location, remote: r.remote,
@@ -27,6 +31,11 @@ export const getJobSeo = cache(async (id: string) => {
     isActive: r.isActive, createdAt: r.createdAt, company: r.company?.name ?? null,
   }
 })
+
+/** Brouillons et offres suspendues : jamais exposés publiquement (404). */
+function isPubliclyViewable(status: string | null | undefined): boolean {
+  return status !== 'draft' && status !== 'suspended'
+}
 
 type JobRow = typeof jobs.$inferSelect & {
   company: unknown
@@ -181,7 +190,7 @@ const JOB_FIELDS: Record<string, keyof typeof jobs.$inferInsert> = {
   title: 'title', description: 'description', requirements: 'requirements',
   location: 'location', job_type: 'jobType', sector: 'sector', remote: 'remote',
   salary_min: 'salaryMin', salary_max: 'salaryMax', salary_currency: 'salaryCurrency',
-  is_anonymous: 'isAnonymous', is_active: 'isActive',
+  is_anonymous: 'isAnonymous',
   prequal_questions: 'prequalQuestions',
   missions: 'missions', benefits: 'benefits', required_level: 'requiredLevel',
   contact_email: 'contactEmail', external_company: 'externalCompany',
@@ -198,6 +207,11 @@ function mapJobPayload(payload: Record<string, unknown>): Record<string, unknown
   return set
 }
 
+/** Statut initial demandé à la création : brouillon ou publication immédiate (défaut). */
+export function initialJobStatus(payload: Record<string, unknown>): JobStatus {
+  return payload.status === 'draft' ? 'draft' : 'published'
+}
+
 export async function createJob(
   recruiterId: string,
   payload: Record<string, unknown>,
@@ -205,6 +219,7 @@ export async function createJob(
 ): Promise<string | undefined> {
   const values = {
     ...mapJobPayload(payload),
+    ...jobStatusPatch(initialJobStatus(payload)),
     recruiterId,
     publishedBy: recruiterId,
     companyId: companyId ?? null,
@@ -228,6 +243,52 @@ export async function updateJob(
     await db.update(jobs).set(set as Partial<typeof jobs.$inferInsert>).where(eq(jobs.id, id))
   }
   return { error: null }
+}
+
+/**
+ * Change le statut d'une offre (publier, mettre en pause, archiver, suspendre).
+ * Le contrôle du propriétaire et du quota est fait par l'appelant.
+ */
+export async function changeJobStatus(
+  id: string,
+  action: JobAction,
+  actor: JobActor,
+): Promise<{ error: string | null; status?: JobStatus }> {
+  const [job] = await db.select({ status: jobs.status, isActive: jobs.isActive }).from(jobs).where(eq(jobs.id, id)).limit(1)
+  if (!job) return { error: 'Offre introuvable' }
+  const current = resolveJobStatus({ status: job.status, is_active: job.isActive })
+  const next = nextJobStatus(current, action, actor)
+  if (!next) {
+    return {
+      error: current === 'suspended'
+        ? 'Cette offre a été suspendue par la modération Kazajob. Contactez-nous pour la rétablir.'
+        : 'Action impossible pour une offre dans cet état.',
+    }
+  }
+  await db.update(jobs).set({ ...jobStatusPatch(next), updatedAt: new Date() }).where(eq(jobs.id, id))
+  return { error: null, status: next }
+}
+
+/**
+ * Cron quotidien : passe en « expirée » les offres publiées arrivées à échéance
+ * et prévient le recruteur (notification in-app).
+ */
+export async function expirePublishedJobs(): Promise<number> {
+  const rows = await db.update(jobs)
+    .set({ ...jobStatusPatch('expired'), updatedAt: new Date() })
+    .where(and(eq(jobs.status, 'published'), lt(jobs.expiresAt, new Date())))
+    .returning({ id: jobs.id, recruiterId: jobs.recruiterId, title: jobs.title })
+  if (rows.length > 0) {
+    await db.insert(notifications).values(rows.map((r) => ({
+      userId: r.recruiterId,
+      type: 'job_expired',
+      title: 'Offre expirée',
+      message: `« ${r.title} » n'est plus visible des candidats. Republiez-la en un clic pour 60 jours de plus.`,
+      link: '/recruiter/jobs?status=expired',
+      data: { jobId: r.id },
+    })))
+  }
+  return rows.length
 }
 
 export async function deleteRecruiterJob(recruiterId: string, id: string): Promise<{ error: string | null }> {
@@ -274,12 +335,14 @@ export async function getJob(id: string): Promise<Job | null> {
     where: eq(jobs.id, id),
     with: { company: true, jobSkills: { with: { skill: true } } },
   })
-  if (!row) return null
+  if (!row || !isPubliclyViewable(row.status)) return null
 
-  await db
-    .update(jobs)
-    .set({ views: sql`${jobs.views} + 1` })
-    .where(eq(jobs.id, id))
+  if (row.isActive) {
+    await db
+      .update(jobs)
+      .set({ views: sql`${jobs.views} + 1` })
+      .where(eq(jobs.id, id))
+  }
 
   return mapJob(row as JobRow)
 }

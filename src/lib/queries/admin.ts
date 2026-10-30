@@ -10,6 +10,7 @@ import {
   eventRegistrations, events, jobs, notifications, profiles, referrals, skills,
 } from '@/lib/db/schema'
 import type { Company, CompanySubscription, Job, Profile } from '@/lib/types'
+import { changeJobStatus } from './jobs'
 import { normalizeSkillName } from '@/lib/skills'
 import { serialize } from './_serialize'
 
@@ -48,8 +49,9 @@ export async function listAllJobs(): Promise<Job[]> {
   return serialize<Job[]>(rows)
 }
 
-export async function setJobActive(id: string, active: boolean): Promise<void> {
-  await db.update(jobs).set({ isActive: active }).where(eq(jobs.id, id))
+/** Modération : rétablir (publier) ou suspendre une offre. */
+export async function setJobActive(id: string, active: boolean): Promise<{ error: string | null }> {
+  return changeJobStatus(id, active ? 'publish' : 'suspend', 'admin')
 }
 
 export async function deleteJob(id: string): Promise<void> {

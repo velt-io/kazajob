@@ -139,6 +139,10 @@ export const jobs = pgTable('jobs', {
   views:        integer().notNull().default(0),
   applicationsCount: integer('applications_count').notNull().default(0),
   billingOrigin: text('billing_origin').notNull().default('normal'),
+  // ── Cycle de vie (cf. src/lib/job-lifecycle.ts) — is_active === (status = 'published') ──
+  status:       text().notNull().default('published'),
+  publishedAt:  timestamp('published_at', { withTimezone: true }),
+  expiresAt:    timestamp('expires_at', { withTimezone: true }),
   createdAt:    now(),
   updatedAt:    now(),
 })

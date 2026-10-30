@@ -32,11 +32,15 @@ export default function RecruiterStagesPage() {
   useEffect(() => { if (profile) fetchStages() }, [profile])
 
   const toggleActive = async (job: Job) => {
-    await fetch(`/api/recruiter/jobs/${job.id}`, {
+    const res = await fetch(`/api/recruiter/jobs/${job.id}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ is_active: !job.is_active }),
+      body: JSON.stringify({ action: job.is_active ? 'pause' : 'publish' }),
     })
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}))
+      alert(data.error ?? 'Action impossible.')
+    }
     fetchStages()
   }
 

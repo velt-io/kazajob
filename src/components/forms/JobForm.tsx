@@ -55,8 +55,15 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
     setPrequal((q) => q.map((x) => (x.id === id ? { ...x, ...patch } : x)))
   const removeQuestion = (id: string) => setPrequal((q) => q.filter((x) => x.id !== id))
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const isDraft = !job?.id || job?.status === 'draft'
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    save(false)
+  }
+
+  // asDraft : création en brouillon, ou enregistrement d'un brouillon sans le publier.
+  const save = async (asDraft: boolean) => {
     if (!title || !description || !location) {
       setError('Titre, description et localisation sont obligatoires.')
       return
@@ -83,7 +90,6 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
       salary_max: salaryMax ? parseInt(salaryMax) : null,
       salary_currency: '€',
       is_anonymous: isAnonymous,
-      is_active: true,
       ...(admin ? { contact_email: contactEmail || null, external_company: externalCompany || null } : {}),
       prequal_questions: prequal
         .filter((q) => q.label.trim())
@@ -99,7 +105,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
       : await fetch('/api/recruiter/jobs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...payload, companyId: companyId ?? null }),
+          body: JSON.stringify({ ...payload, status: asDraft ? 'draft' : 'published', companyId: companyId ?? null }),
         })
 
     if (!res.ok) {
@@ -109,9 +115,24 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
       return
     }
 
+    // Brouillon existant publié : contenu enregistré ci-dessus, puis mise en ligne.
+    if (job?.id && job.status === 'draft' && !asDraft) {
+      const pub = await fetch(`/api/recruiter/jobs/${job.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'publish' }),
+      })
+      if (!pub.ok) {
+        const data = await pub.json().catch(() => ({}))
+        setError(`Brouillon enregistré, mais non publié : ${data.error ?? 'erreur inconnue.'}`)
+        setSaving(false)
+        return
+      }
+    }
+
     setSaving(false)
     onSuccess?.()
-    router.push(admin ? '/admin/jobs' : '/recruiter/jobs')
+    router.push(admin ? '/admin/jobs' : asDraft ? '/recruiter/jobs?status=draft' : '/recruiter/jobs')
   }
 
   return (
@@ -337,14 +358,24 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
         )}
       </div>
 
-      <div className="flex gap-3 pt-2">
+      <div className="flex flex-col sm:flex-row gap-3 pt-2">
         <Button type="button" kind="soft" size="lg" onClick={() => router.back()}>
           Annuler
         </Button>
+        {isDraft && !admin && (
+          <Button type="button" kind="outline" size="lg" disabled={saving} onClick={() => save(true)}>
+            Enregistrer en brouillon
+          </Button>
+        )}
         <Button type="submit" kind="primary" size="lg" full loading={saving}>
-          {job?.id ? 'Mettre a jour' : 'Publier l\'offre'}
+          {isDraft ? 'Publier l\'offre' : 'Mettre à jour'}
         </Button>
       </div>
+      {isDraft && !admin && (
+        <p className="text-xs text-[#6B5A4A] -mt-2 text-center sm:text-right">
+          Une offre publiée reste en ligne 60 jours, puis vous pouvez la republier en un clic.
+        </p>
+      )}
     </form>
   )
 }

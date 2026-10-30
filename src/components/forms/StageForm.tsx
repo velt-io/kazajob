@@ -65,7 +65,6 @@ export function StageForm({ job, companyId, onSuccess }: StageFormProps) {
       internship_paid: paid === '' ? null : paid === 'true',
       internship_compensation: compensation || null,
       internship_agreement_required: agreementRequired,
-      is_active: true,
     }
 
     const res = job?.id
