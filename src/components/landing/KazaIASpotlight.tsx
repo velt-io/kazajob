@@ -70,7 +70,7 @@ export function KazaIASpotlight() {
             </p>
 
             <div className="flex flex-wrap gap-2 mb-8">
-              {['Gratuit pour les candidats', 'Groq · Llama 3.3 (bientôt Claude)', 'Données confidentielles'].map(tag => (
+              {['Gratuit pour les candidats', 'Groq · GPT-OSS (bientôt Claude)', 'Données confidentielles'].map(tag => (
                 <span key={tag} className="text-xs font-semibold px-3 py-1 rounded-full border border-[#1A1410]" style={{ background: KZ.cream }}>
                   {tag}
                 </span>

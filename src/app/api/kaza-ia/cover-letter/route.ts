@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth, getCurrentUser } from '@/lib/auth'
 import { getCandidateSkills } from '@/lib/queries/profiles'
 import { getJobAIContext } from '@/lib/queries/jobs'
-import { generateText } from '@/lib/ai/provider'
+import { generateText, publicAIError } from '@/lib/ai/provider'
 import { SYSTEM_PROMPTS } from '@/lib/ai/prompts'
 
 export async function POST(req: NextRequest) {
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error('[KazaIA cover-letter]', err)
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : 'Erreur serveur' },
+      { error: publicAIError(err) },
       { status: 500 }
     )
   }

@@ -217,7 +217,7 @@ export function ChatAssistantDrawer() {
             )}
           </div>
           <p className="text-[10px] text-[#6B5A4A] mt-2 text-center">
-            IA générative · Peut faire des erreurs · Basé sur Llama 3.3
+            IA générative · Peut faire des erreurs · Basé sur GPT-OSS
           </p>
         </div>
       </div>

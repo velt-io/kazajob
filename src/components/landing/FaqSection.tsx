@@ -19,7 +19,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Comment KazaIA génère-t-il les lettres de motivation ?',
-    a: 'KazaIA analyse ton profil complet (compétences, bio, expériences) et les détails de l\'offre pour rédiger une lettre personnalisée et professionnelle. Tu peux choisir le ton — professionnel, original ou concis — et modifier le résultat à ta convenance avant de l\'envoyer. Propulsé par Groq (Llama 3.3) aujourd\'hui, Claude demain.',
+    a: 'KazaIA analyse ton profil complet (compétences, bio, expériences) et les détails de l\'offre pour rédiger une lettre personnalisée et professionnelle. Tu peux choisir le ton — professionnel, original ou concis — et modifier le résultat à ta convenance avant de l\'envoyer. Propulsé par Groq (modèle open source GPT-OSS d\'OpenAI) aujourd\'hui, Claude demain.',
   },
   {
     q: 'Mes données sont-elles sécurisées ?',

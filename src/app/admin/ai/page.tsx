@@ -109,7 +109,7 @@ export default function AdminAIPage() {
               icon={<Zap size={18} color={KZ.orange} />}
               label="Coût Groq estimé"
               value={`~$${estimatedCost.toFixed(2)}`}
-              sub="Basé sur llama-3.3-70b-versatile"
+              sub="Estimation · modèle openai/gpt-oss-120b"
               color={KZ.orangeSoft}
             />
           </div>

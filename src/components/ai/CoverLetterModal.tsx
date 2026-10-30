@@ -88,8 +88,8 @@ export function CoverLetterModal({
         {/* Zone de résultat */}
         {error && (
           <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">
-            {error === 'GROQ_API_KEY manquant dans .env.local'
-              ? 'Configure ta clé Groq dans .env.local pour activer KazaIA.'
+            {error === 'KazaIA n’est pas encore configurée sur ce serveur.'
+              ? 'Configure ta clé Groq (GROQ_API_KEY) pour activer KazaIA.'
               : error}
           </div>
         )}
@@ -120,7 +120,7 @@ export function CoverLetterModal({
             <div className="flex justify-between items-center mb-2">
               <div className="text-xs font-semibold text-[#2A2018]">Lettre générée</div>
               <div className="flex gap-1.5">
-                <Badge color="violet" size="sm">Groq · Llama 3.3</Badge>
+                <Badge color="violet" size="sm">Groq · GPT-OSS</Badge>
               </div>
             </div>
             <div
