@@ -2,6 +2,7 @@
  * KAZAJOB — Migration additive « cycle de vie des offres » (idempotente, relançable).
  *
  * Ajoute à jobs : status, published_at, expires_at (+ index).
+ * Attention : en base, la date de création de jobs s'appelle "createdAt" (camelCase).
  * Reprise des données existantes :
  *   - offre active   → status 'published', expire au plus tôt dans 30 jours
  *     (aucune offre en ligne ne disparaît le jour du déploiement) ;
@@ -29,8 +30,8 @@ const STATEMENTS: string[] = [
 
   // Offres actives sans échéance → date de publication + échéance (≥ 30 jours à partir d'aujourd'hui).
   `UPDATE jobs
-      SET published_at = COALESCE(published_at, created_at),
-          expires_at   = GREATEST(created_at + interval '60 days', now() + interval '30 days')
+      SET published_at = COALESCE(published_at, "createdAt"),
+          expires_at   = GREATEST("createdAt" + interval '60 days', now() + interval '30 days')
     WHERE status = 'published' AND expires_at IS NULL`,
 
   // Resynchronisation (idempotente) : une offre réactivée par l'ancien code redevient 'published'.
