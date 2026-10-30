@@ -57,7 +57,7 @@ export default function CandidateMessagesPage() {
               return (
                 <button key={conv.id} onClick={() => openConv(conv.id)}
                   className="w-full flex items-center gap-3 p-4 border-b border-[var(--kz-line)] text-left transition-colors"
-                  style={{ background: conv.id === activeConvId ? KZ.cream2 : 'white' }}>
+                  style={{ background: conv.id === activeConvId ? KZ.cream2 : KZ.paper }}>
                   <Avatar name={other?.full_name ?? 'KZ'} src={other?.avatar_url} avatarConfig={other?.avatar_config} size={38} color={KZ.orangeSoft} />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{other?.full_name}</div>

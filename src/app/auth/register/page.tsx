@@ -125,7 +125,7 @@ function RegisterForm() {
               onClick={() => setRole(r)}
               className="flex-1 py-2.5 rounded-lg text-sm font-bold transition-all border-[1.5px]"
               style={role === r
-                ? { background: KZ.ink, color: KZ.cream, borderColor: 'var(--kz-edge)', boxShadow: '2px 2px 0 var(--kz-orange)' }
+                ? { background: KZ.inverse, color: KZ.onInverse, borderColor: 'var(--kz-edge)', boxShadow: '2px 2px 0 var(--kz-orange)' }
                 : { background: 'transparent', color: KZ.text, borderColor: 'transparent' }}
             >
               {r === 'candidate' ? 'Je cherche' : 'Je recrute'}

@@ -31,7 +31,7 @@ const ICON: Record<'yes' | 'partial' | 'no', React.ReactNode> = { yes: CHECK, pa
 
 export function EnterpriseComparisonSection() {
   return (
-    <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
+    <section className="px-4 sm:px-8 lg:px-16 py-16 lg:py-20 border-t border-[var(--kz-edge)]" style={{ background: KZ.inverse }}>
       <div className="max-w-[860px] mx-auto">
         <div className="text-center mb-10">
           <p className="kz-eyebrow mb-3" style={{ color: KZ.orange }}>Comparatif</p>

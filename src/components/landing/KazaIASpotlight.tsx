@@ -101,7 +101,7 @@ export function KazaIASpotlight() {
                   </div>
                   <span
                     className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
-                    style={{ background: f.badgeColor + '30', color: f.badgeColor }}
+                    style={{ background: `color-mix(in srgb, ${f.badgeColor} 19%, transparent)`, color: f.badgeColor }}
                   >
                     {f.badge}
                   </span>

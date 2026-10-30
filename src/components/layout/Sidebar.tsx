@@ -52,7 +52,7 @@ export function Sidebar({ items, title, footer, mobileOpen, onMobileClose }: Sid
               className={cn(
                 'flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border-[1.5px]',
                 active
-                  ? 'bg-[var(--kz-ink)] text-[var(--kz-cream)] border-[var(--kz-edge)] shadow-[2px_2px_0_var(--kz-orange)] font-bold'
+                  ? 'bg-[var(--kz-inverse)] text-[var(--kz-on-inverse)] border-[var(--kz-edge)] shadow-[2px_2px_0_var(--kz-orange)] font-bold'
                   : 'text-[var(--kz-text)] border-transparent hover:bg-[var(--kz-cream2)] hover:border-[var(--kz-line)]'
               )}
             >
@@ -82,7 +82,7 @@ export function Sidebar({ items, title, footer, mobileOpen, onMobileClose }: Sid
       {/* Mobile : overlay drawer */}
       {mobileOpen && (
         <>
-          <div className="fixed inset-0 bg-[var(--kz-ink)]/50 z-40 lg:hidden" onClick={onMobileClose} />
+          <div className="fixed inset-0 bg-[var(--kz-inverse)]/50 z-40 lg:hidden" onClick={onMobileClose} />
           <div className="fixed inset-y-0 left-0 z-50 lg:hidden" style={{ width: 224 }}>
             {content}
           </div>

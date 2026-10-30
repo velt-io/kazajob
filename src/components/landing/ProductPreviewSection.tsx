@@ -79,7 +79,7 @@ export function ProductPreviewSection() {
         {/* Maquette de l'interface */}
         <div className="relative">
           <div className="rounded-2xl border-[1.5px] border-[var(--kz-edge)] bg-[var(--kz-paper)] overflow-hidden" style={{ boxShadow: '8px 8px 0 var(--kz-shadow)' }}>
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--kz-edge)]" style={{ background: KZ.inverse }}>
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: KZ.orange }} />
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: KZ.yellow }} />
               <span className="w-2.5 h-2.5 rounded-full" style={{ background: KZ.green }} />

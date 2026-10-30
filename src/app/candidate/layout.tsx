@@ -87,14 +87,14 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
               /* ── HUD Gamification ── */
               <div
                 className="rounded-xl border-2 border-[var(--kz-edge)] overflow-hidden"
-                style={{ background: 'var(--kz-ink)', boxShadow: '3px 3px 0 ' + level.color }}
+                style={{ background: 'var(--kz-inverse)', boxShadow: '3px 3px 0 ' + level.color }}
               >
                 <div className="px-3 pt-3 pb-1">
                   <div className="flex items-center justify-between mb-1.5">
                     <div className="flex items-center gap-1.5">
                       <span className="text-base">{level.emoji}</span>
                       <div>
-                        <div className="text-[9px] font-bold opacity-50 uppercase tracking-widest" style={{ color: KZ.cream }}>NIVEAU</div>
+                        <div className="text-[9px] font-bold opacity-50 uppercase tracking-widest" style={{ color: KZ.onInverse }}>NIVEAU</div>
                         <div className="text-[11px] font-extrabold leading-none" style={{ color: level.color }}>{level.title}</div>
                       </div>
                     </div>
@@ -110,7 +110,7 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
                       style={{ width: `${gami.xpProgress}%`, background: level.color }}
                     />
                   </div>
-                  <div className="text-[9px] opacity-50 text-center pb-1" style={{ color: KZ.cream }}>
+                  <div className="text-[9px] opacity-50 text-center pb-1" style={{ color: KZ.onInverse }}>
                     {(profile.xp ?? 0).toLocaleString('fr-FR')} XP
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
               <div className="flex flex-col gap-2">
                 <div
                   className="p-3.5 rounded-xl border border-[var(--kz-edge)] flex gap-2.5 items-center"
-                  style={{ background: KZ.violet, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
+                  style={{ background: KZ.violet, color: KZ.onInverse, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
                 >
                   <div className="flex-1">
                     <div className="text-xs font-bold mb-0.5">Boost IA</div>

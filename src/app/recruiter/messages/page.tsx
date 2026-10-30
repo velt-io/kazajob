@@ -49,7 +49,7 @@ export default function RecruiterMessagesPage() {
                     key={conv.id}
                     onClick={() => setActiveConvId(conv.id)}
                     className="w-full flex items-center gap-3 p-3.5 border-b border-[var(--kz-line)] text-left"
-                    style={{ background: conv.id === activeConvId ? KZ.cream2 : 'white' }}
+                    style={{ background: conv.id === activeConvId ? KZ.cream2 : KZ.paper }}
                   >
                     <Avatar name={other?.full_name ?? 'KZ'} src={other?.avatar_url} avatarConfig={other?.avatar_config} size={38} color={KZ.violetSoft} />
                     <div className="flex-1 min-w-0">

@@ -116,12 +116,12 @@ export default async function LandingPage() {
         <div className="my-10" />
       </section>
       {/* STATS BAND — vraies données ────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-6 lg:py-8 border-y border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-6 lg:py-8 border-y border-[var(--kz-edge)]" style={{ background: KZ.inverse }}>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 max-w-[1280px] mx-auto">
           {STATS_BAND.map((s) => (
             <div key={s.l}>
               <div className="text-[32px] lg:text-[44px] font-extrabold tracking-tighter leading-none" style={{ color: KZ.orange }}>{s.v}</div>
-              <div className="text-sm opacity-70 mt-1" style={{ color: KZ.cream }}>{s.l}</div>
+              <div className="text-sm opacity-70 mt-1" style={{ color: KZ.onInverse }}>{s.l}</div>
             </div>
           ))}
         </div>
@@ -247,7 +247,7 @@ export default async function LandingPage() {
               <div key={step.n} className="kz-card p-7 relative pt-10" style={{ background: step.color }}>
                 <div
                   className="absolute -top-5 left-6 w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold border border-[var(--kz-edge)]"
-                  style={{ background: KZ.ink, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-orange)' }}
+                  style={{ background: KZ.inverse, color: KZ.onInverse, boxShadow: '3px 3px 0 var(--kz-orange)' }}
                 >
                   {step.n}
                 </div>
@@ -272,16 +272,16 @@ export default async function LandingPage() {
       <KazaIASpotlight />
 
       {/* BANNIERE RECRUTEURS ────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-12 lg:py-16 relative overflow-hidden" style={{ background: KZ.ink }}>
-        <div className="absolute top-[-20px] right-8 lg:right-16 opacity-40"><Soleil size={90} stroke={KZ.cream} color={KZ.orange} /></div>
+      <section className="px-4 sm:px-8 lg:px-16 py-12 lg:py-16 relative overflow-hidden" style={{ background: KZ.inverse }}>
+        <div className="absolute top-[-20px] right-8 lg:right-16 opacity-40"><Soleil size={90} stroke={KZ.onInverse} color={KZ.orange} /></div>
         <div className="max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 lg:gap-12 items-center relative z-10">
           <div>
             <Badge color="yellow" size="lg" className="mb-4">Recruteurs</Badge>
-            <h2 className="text-3xl lg:text-[44px] font-extrabold tracking-tight leading-tight mb-4" style={{ color: KZ.cream }}>
+            <h2 className="text-3xl lg:text-[44px] font-extrabold tracking-tight leading-tight mb-4" style={{ color: KZ.onInverse }}>
               Trouvez les meilleurs talents de l&apos;île.<br />
               <span style={{ color: KZ.orange }}>Pas de spam. Pas de bruit.</span>
             </h2>
-            <p className="text-base leading-relaxed opacity-80 mb-6 max-w-[520px]" style={{ color: KZ.cream }}>
+            <p className="text-base leading-relaxed opacity-80 mb-6 max-w-[520px]" style={{ color: KZ.onInverse }}>
               Publiez vos offres, recevez des candidats locaux triés par l&apos;IA et suivez tout votre recrutement au même endroit.{' '}
               {launchDays ? `Offre de lancement : gratuit encore ${launchDays} jours, sans carte bancaire.` : 'Essai gratuit 30 jours.'}
             </p>
@@ -290,7 +290,7 @@ export default async function LandingPage() {
                 <Button kind="primary" size="lg">Publier une offre — gratuit</Button>
               </Link>
               <Link href="/entreprise">
-                <Button kind="outline" size="lg" className="!text-[var(--kz-cream)] !border-[var(--kz-cream)] !bg-transparent">
+                <Button kind="outline" size="lg" className="!text-[var(--kz-on-inverse)] !border-[var(--kz-cream)] !bg-transparent">
                   Découvrir Kazajob Entreprises
                 </Button>
               </Link>

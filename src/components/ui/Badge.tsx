@@ -3,14 +3,15 @@ import { cn } from '@/lib/utils'
 import type { BadgeColor } from '@/lib/types'
 
 const colorMap: Record<BadgeColor, string> = {
-  orange: 'bg-[var(--kz-orange-soft)] text-[var(--kz-ink)]',
-  violet: 'bg-[var(--kz-violet-soft)] text-[var(--kz-ink)]',
-  blue:   'bg-[var(--kz-blue-soft)] text-[var(--kz-ink)]',
-  green:  'bg-[var(--kz-green-soft)] text-[var(--kz-ink)]',
-  yellow: 'bg-[var(--kz-yellow-soft)] text-[var(--kz-ink)]',
-  ink:    'bg-[var(--kz-ink)] text-[var(--kz-cream)]',
-  cream:  'bg-[var(--kz-cream2)] text-[var(--kz-ink)]',
-  paper:  'bg-[var(--kz-paper)] text-[var(--kz-ink)]',
+  // Couleurs de rareté : texte lumineux sur fond teinté + liseré
+  orange: 'bg-[rgba(251,146,60,0.14)] text-[#FDBA74] border-[#FB923C]/40',
+  violet: 'bg-[rgba(168,85,247,0.16)] text-[#D8B4FE] border-[#A855F7]/45',
+  blue:   'bg-[rgba(34,211,238,0.12)] text-[#67E8F9] border-[#22D3EE]/40',
+  green:  'bg-[rgba(74,222,128,0.12)] text-[#86EFAC] border-[#4ADE80]/40',
+  yellow: 'bg-[rgba(250,204,21,0.14)] text-[#FDE68A] border-[#FACC15]/45',
+  ink:    'bg-[#F5EEFF] text-[#1A0B2E] border-transparent',
+  cream:  'bg-[rgba(168,85,247,0.08)] text-[var(--kz-text)] border-[#C084FC]/25',
+  paper:  'bg-[rgba(168,85,247,0.08)] text-[var(--kz-ink)] border-[#C084FC]/25',
 }
 
 const sizeMap = {
@@ -39,10 +40,10 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center font-bold tracking-tight whitespace-nowrap rounded-full',
+        'inline-flex items-center font-bold uppercase tracking-[0.06em] whitespace-nowrap rounded-md',
         colorMap[color],
         sizeMap[size],
-        outline && 'border border-[var(--kz-edge)]',
+        outline && 'border',
         className
       )}
     >

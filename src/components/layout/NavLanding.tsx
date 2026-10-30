@@ -185,7 +185,7 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
       {/* Drawer mobile */}
       {drawerOpen && (
         <>
-          <div className="fixed inset-0 bg-[var(--kz-ink)]/50 z-40 lg:hidden" onClick={() => setDrawerOpen(false)} />
+          <div className="fixed inset-0 bg-[var(--kz-inverse)]/50 z-40 lg:hidden" onClick={() => setDrawerOpen(false)} />
           <div
             className="fixed top-0 right-0 bottom-0 w-[280px] z-50 flex flex-col p-6 lg:hidden border-l border-[var(--kz-edge)]"
             style={{ background: KZ.cream, boxShadow: '-4px 0 0 var(--kz-ink)' }}

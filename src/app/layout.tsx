@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Sora } from 'next/font/google'
+import { Cinzel, Exo_2 } from 'next/font/google'
 import './globals.css'
 import { Providers } from './providers'
 import { CookieConsent } from '@/components/layout/CookieConsent'
@@ -8,10 +8,17 @@ import { TrackingScripts } from '@/components/tracking/TrackingScripts'
 import { getCachedActiveIntegrations } from '@/lib/queries/cached'
 import { Analytics } from '@vercel/analytics/next'
 
-const sora = Sora({
+// Thème Quest : Cinzel pour les titres épiques, Exo 2 pour l'interface.
+const epic = Cinzel({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-  variable: '--font-sora',
+  weight: ['600', '700', '800'],
+  variable: '--font-epic',
+  display: 'swap',
+})
+
+const ui = Exo_2({
+  subsets: ['latin'],
+  variable: '--font-ui',
   display: 'swap',
 })
 
@@ -104,7 +111,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: 'var(--kz-violet)',
+  themeColor: '#0B0614',
 }
 
 const jsonLd = {
@@ -155,7 +162,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const integrations = await getCachedActiveIntegrations(environment)
 
   return (
-    <html lang="fr" className={sora.variable}>
+    <html lang="fr" className={`${epic.variable} ${ui.variable}`}>
       <head>
         <script
           type="application/ld+json"

@@ -315,7 +315,7 @@ function SaveToPoolModal({ app, onClose }: { app: Application | null; onClose: (
             {TALENT_POOL_CATEGORIES.map((c) => (
               <button key={c.id} onClick={() => setCategory(c.id)}
                 className="p-2.5 rounded-xl border-2 text-sm font-semibold text-left transition-all"
-                style={{ borderColor: category === c.id ? KZ.violet : KZ.line, background: category === c.id ? KZ.violetSoft : 'white' }}>
+                style={{ borderColor: category === c.id ? KZ.violet : KZ.line, background: category === c.id ? KZ.violetSoft : KZ.paper }}>
                 {c.label}
               </button>
             ))}

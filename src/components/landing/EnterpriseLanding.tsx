@@ -33,7 +33,7 @@ function PriceCard({ plan, isHighlight, launchDays }: { plan: typeof SUBSCRIPTIO
     <div
       className="kz-card p-6 flex flex-col relative"
       style={{
-        background: isHighlight ? KZ.violet : 'white',
+        background: isHighlight ? KZ.violet : KZ.paper,
         color: isHighlight ? 'white' : KZ.ink,
         boxShadow: isHighlight ? '6px 6px 0 var(--kz-shadow)' : '3px 3px 0 var(--kz-shadow)',
         transform: isHighlight ? 'scale(1.03)' : 'none',
@@ -269,7 +269,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
             ].map((step) => (
               <div key={step.n} className="kz-card p-6 relative pt-10 bg-[var(--kz-paper)]">
                 <div className="absolute -top-5 left-6 w-11 h-11 rounded-full flex items-center justify-center text-lg font-extrabold border border-[var(--kz-edge)]"
-                  style={{ background: KZ.ink, color: KZ.cream, boxShadow: '3px 3px 0 var(--kz-orange)' }}>
+                  style={{ background: KZ.inverse, color: KZ.onInverse, boxShadow: '3px 3px 0 var(--kz-orange)' }}>
                   {step.n}
                 </div>
                 <div className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center mb-4 text-[var(--kz-ink)]"
@@ -307,11 +307,11 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
       <QualityModerationSection />
 
       {/* GARANTIES ──────────────────────────────────────────── */}
-      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[var(--kz-edge)]" style={{ background: KZ.ink }}>
+      <section className="px-4 sm:px-8 lg:px-16 py-14 lg:py-16 border-t border-[var(--kz-edge)]" style={{ background: KZ.inverse }}>
         <div className="max-w-[1280px] mx-auto">
           <div className="text-center mb-10">
             <p className="kz-eyebrow mb-2" style={{ color: KZ.orange }}>Nos engagements</p>
-            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight" style={{ color: KZ.cream }}>
+            <h2 className="text-2xl lg:text-[32px] font-extrabold tracking-tight" style={{ color: KZ.onInverse }}>
               Ce que Kazajob garantit à chaque recruteur.
             </h2>
           </div>
@@ -331,7 +331,7 @@ export function EnterpriseLanding({ stats, launchDays }: EnterpriseLandingProps)
                   {g.icon}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold mb-1" style={{ color: KZ.cream }}>{g.title}</h3>
+                  <h3 className="text-sm font-bold mb-1" style={{ color: KZ.onInverse }}>{g.title}</h3>
                   <p className="text-xs leading-relaxed" style={{ color: 'rgba(255,247,238,0.6)' }}>{g.desc}</p>
                 </div>
               </div>

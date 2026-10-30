@@ -116,7 +116,7 @@ export function BugReportWidget({ stacked = false }: { stacked?: boolean }) {
 
             {/* Gravité */}
             <label className="flex items-center gap-2.5 cursor-pointer p-3 rounded-xl border-2"
-              style={{ borderColor: critical ? KZ.orange : KZ.line, background: critical ? KZ.orangeSoft : 'white' }}>
+              style={{ borderColor: critical ? KZ.orange : KZ.line, background: critical ? KZ.orangeSoft : KZ.paper }}>
               <input type="checkbox" checked={critical} onChange={(e) => setCritical(e.target.checked)} className="w-4 h-4 accent-[var(--kz-orange)]" />
               <AlertTriangle size={16} color={critical ? KZ.orange : KZ.mute} />
               <span className="text-sm font-semibold text-[var(--kz-ink)]">C&apos;est bloquant — je ne peux pas continuer</span>

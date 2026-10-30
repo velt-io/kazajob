@@ -48,6 +48,9 @@ export const KZ = {
   line:        'var(--kz-line)',
   edge:        'var(--kz-edge)',
   shadow:      'var(--kz-shadow)',
+  /** Fond « contrasté » (bandeaux, pied de page) et texte posé dessus. */
+  inverse:     'var(--kz-inverse)',
+  onInverse:   'var(--kz-on-inverse)',
 } as const
 
 export const REUNION_CITIES = [

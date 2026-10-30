@@ -370,7 +370,7 @@ export default function CompanyPage() {
             return (
               <div key={p.id}
                 className="flex items-center gap-3 p-3 rounded-xl border-2"
-                style={{ borderColor: isCurrent ? KZ.violet : KZ.line, background: isCurrent ? KZ.violetSoft : 'white' }}>
+                style={{ borderColor: isCurrent ? KZ.violet : KZ.line, background: isCurrent ? KZ.violetSoft : KZ.paper }}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-[var(--kz-ink)]">{p.name}</span>

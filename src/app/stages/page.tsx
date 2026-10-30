@@ -81,7 +81,7 @@ function StageCard({ job, isFav, onFav }: { job: Job; isFav: boolean; onFav: () 
         <button
           onClick={onFav}
           className="shrink-0 p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-all"
-          style={{ background: isFav ? KZ.orangeSoft : 'white' }}
+          style={{ background: isFav ? KZ.orangeSoft : KZ.paper }}
           aria-label={isFav ? 'Retirer des favoris' : 'Sauvegarder'}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill={isFav ? 'var(--kz-orange)' : 'none'} stroke="var(--kz-ink)" strokeWidth="2">
@@ -236,7 +236,7 @@ function StagesContent() {
                 className="px-3 py-1 text-xs font-semibold rounded-full border border-[var(--kz-edge)] transition-all"
                 style={
                   radius === opt.value
-                    ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)' }
+                    ? { background: 'var(--kz-inverse)', color: 'var(--kz-on-inverse)' }
                     : { background: 'var(--kz-paper)', color: 'var(--kz-ink)' }
                 }
               >

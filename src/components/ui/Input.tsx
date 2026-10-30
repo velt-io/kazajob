@@ -26,9 +26,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div
           className={cn(
-            'flex items-center gap-2 h-11 px-3.5 bg-[var(--kz-paper)] border-[1.5px] rounded-lg shadow-[2px_2px_0_var(--kz-shadow)] transition-shadow',
-            error ? 'border-[#E54E4E]' : 'border-[var(--kz-edge)]',
-            'focus-within:shadow-[3px_3px_0_var(--kz-shadow)]'
+            'flex items-center gap-2 h-11 px-3.5 bg-[rgba(12,5,24,0.7)] border rounded-xl transition-all duration-200',
+            error ? 'border-[#F87171]' : 'border-[#C084FC]/30',
+            'focus-within:border-[#E879F9] focus-within:shadow-[0_0_0_4px_rgba(232,121,249,0.18),0_0_24px_-6px_rgba(232,121,249,0.8)]'
           )}
         >
           {icon && <span className="inline-flex text-[var(--kz-mute)] shrink-0">{icon}</span>}

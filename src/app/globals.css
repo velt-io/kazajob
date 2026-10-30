@@ -2,7 +2,8 @@
 
 /* ── Kazajob Design Tokens ─────────────────────────────────── */
 @theme inline {
-  --font-sora: var(--font-sora);
+  --font-sora: var(--font-ui);
+  --font-display: var(--font-epic);
 
   /* Brand colors */
   --color-kz-orange:      var(--kz-orange);
@@ -27,31 +28,46 @@
   --color-kz-edge:        var(--kz-edge);
 }
 
-/* ── Thème (valeurs de la production actuelle) ─────────────────
- * Toute l'interface lit ces variables : un thème = un bloc :root.
- * Encre en trois rôles : texte (ink), bordures (edge), ombres cartoon (shadow). */
+/* ── Thème « Kazajob Quest » — MMORPG, violet nuit & néon ──────
+ * Raretés : légendaire = or, épique = violet, rare = cyan, soin = vert.
+ * Encre en trois rôles : texte (ink), bordures (edge, liseré néon),
+ * ombres (shadow : halo violet au lieu des ombres cartoon). */
 :root {
-  --kz-orange:      #FF6B35;
-  --kz-orange-deep: #E54E1A;
-  --kz-orange-soft: #FFE0CF;
-  --kz-violet:      #6D3BEB;
-  --kz-violet-soft: #E5DCFF;
-  --kz-blue:        #1B4FB8;
-  --kz-blue-soft:   #DCE7FB;
-  --kz-green:       #19A974;
-  --kz-green-soft:  #D6F0E0;
-  --kz-yellow:      #FFC93C;
-  --kz-yellow-soft: #FFF1C2;
-  --kz-cream:       #FFF7EE;
-  --kz-cream2:      #FBEFE0;
-  --kz-beige:       #F2E4D0;
-  --kz-ink:         #1A1410;
-  --kz-paper:       #FFFFFF;
-  --kz-text:        #2A2018;
-  --kz-mute:        #6B5A4A;
-  --kz-line:        #E8DDC9;
-  --kz-edge:        #1A1410;
-  --kz-shadow:      #1A1410;
+  color-scheme: dark;
+
+  --kz-orange:      #FB923C;
+  --kz-orange-deep: #F97316;
+  --kz-orange-soft: rgba(251, 146, 60, 0.12);
+  --kz-violet:      #A855F7;
+  --kz-violet-soft: rgba(168, 85, 247, 0.14);
+  --kz-blue:        #22D3EE;
+  --kz-blue-soft:   rgba(34, 211, 238, 0.12);
+  --kz-green:       #4ADE80;
+  --kz-green-soft:  rgba(74, 222, 128, 0.12);
+  --kz-yellow:      #FACC15;
+  --kz-yellow-soft: rgba(250, 204, 21, 0.12);
+  --kz-cream:       #0B0614;
+  --kz-cream2:      rgba(168, 85, 247, 0.07);
+  --kz-beige:       rgba(168, 85, 247, 0.13);
+  --kz-ink:         #F5EEFF;
+  --kz-paper:       rgba(24, 12, 44, 0.82);
+  --kz-text:        #DED4FF;
+  --kz-mute:        #A39AC9;
+  --kz-line:        rgba(168, 85, 247, 0.18);
+  --kz-edge:        rgba(192, 132, 252, 0.32);
+  --kz-shadow:      rgba(168, 85, 247, 0.35);
+  --kz-inverse:     #12081F;
+  --kz-on-inverse:  #F5EEFF;
+
+  /* Propres au thème */
+  --qx-neon:     #C084FC;
+  --qx-magenta:  #E879F9;
+  --qx-cyan:     #22D3EE;
+  --qx-gold:     #FACC15;
+  --qx-panel:    linear-gradient(180deg, rgba(40, 20, 72, 0.88) 0%, rgba(18, 9, 34, 0.92) 100%);
+  --qx-glow:     0 0 0 1px rgba(192, 132, 252, 0.25), 0 0 28px -6px rgba(168, 85, 247, 0.55);
+  --qx-legend:   linear-gradient(120deg, #FDE68A 0%, #FACC15 35%, #F59E0B 70%, #FDE68A 100%);
+  --qx-arcane:   linear-gradient(120deg, #22D3EE 0%, #A855F7 50%, #E879F9 100%);
 
   --background: var(--kz-cream);
   --foreground: var(--kz-ink);
@@ -68,76 +84,160 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sora), 'Segoe UI', sans-serif;
+  font-family: var(--font-ui), 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Cartoon card shadow ────────────────────────────────────── */
-.kz-card {
-  border: 1.5px solid var(--kz-edge);
-  border-radius: 10px;
-  box-shadow: 4px 4px 0 var(--kz-shadow);
+/* Ciel de nébuleuses + poussière d'étoiles (fixe) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.7), transparent 60%),
+    radial-gradient(1px 1px at 72% 12%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(1.5px 1.5px at 38% 64%, rgba(255,255,255,0.5), transparent 60%),
+    radial-gradient(1px 1px at 86% 72%, rgba(255,255,255,0.6), transparent 60%),
+    radial-gradient(1px 1px at 22% 86%, rgba(255,255,255,0.5), transparent 60%),
+    radial-gradient(55vw 45vh at 90% -5%, rgba(168, 85, 247, 0.28), transparent 60%),
+    radial-gradient(45vw 40vh at -10% 30%, rgba(34, 211, 238, 0.14), transparent 60%),
+    radial-gradient(60vw 50vh at 50% 115%, rgba(232, 121, 249, 0.18), transparent 60%);
 }
 
-.kz-card-sm {
-  border: 1.5px solid var(--kz-edge);
-  border-radius: 8px;
-  box-shadow: 3px 3px 0 var(--kz-shadow);
+::selection { background: rgba(232, 121, 249, 0.45); color: #fff; }
+
+/* Titres épiques */
+h1, h2, .kz-h1, .kz-h2 {
+  font-family: var(--font-epic), Georgia, serif;
+  letter-spacing: 0.01em;
 }
+h1 { text-shadow: 0 0 32px rgba(192, 132, 252, 0.35); }
+
+/* ── Panneaux de jeu ────────────────────────────────────────── */
+.kz-card,
+.kz-card-sm {
+  border: 1px solid var(--kz-edge);
+  border-radius: 16px;
+  box-shadow: var(--qx-glow);
+}
+.kz-card-sm { border-radius: 12px; }
+
+/* Panneau à coins ornés (dialogues, cartes de quête) */
+.qx-panel {
+  position: relative;
+  background: var(--qx-panel);
+  border: 1px solid var(--kz-edge);
+  border-radius: 18px;
+  box-shadow: var(--qx-glow), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.qx-panel::before,
+.qx-panel::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--qx-gold);
+  pointer-events: none;
+  opacity: 0.85;
+}
+.qx-panel::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; border-top-left-radius: 18px; }
+.qx-panel::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; border-bottom-right-radius: 18px; }
+
+.qx-text-legend {
+  background: var(--qx-legend);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.qx-text-arcane {
+  background: var(--qx-arcane);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.qx-glow-text { text-shadow: 0 0 18px rgba(232, 121, 249, 0.65), 0 0 2px rgba(255, 255, 255, 0.4); }
+
+/* Barre d'XP néon */
+.qx-xp {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  overflow: hidden;
+}
+.qx-xp > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--qx-arcane);
+  box-shadow: 0 0 14px rgba(232, 121, 249, 0.8);
+}
+
+/* Fonds assombris (modales, menus) */
+.qx-scrim { background: rgba(6, 2, 14, 0.72); }
+
+/* Messages d'erreur Tailwind clairs → version sombre */
+.bg-red-50 { background-color: rgba(248, 113, 113, 0.12) !important; }
+.border-red-200, .border-red-300 { border-color: rgba(248, 113, 113, 0.35) !important; }
+.border-red-400 { border-color: rgba(248, 113, 113, 0.6) !important; }
+.text-red-700, .text-red-600 { color: #FCA5A5 !important; }
+.hover\:bg-red-50:hover { background-color: rgba(248, 113, 113, 0.14) !important; }
+
+/* Pas d'inclinaisons « cartoon » */
+[class*="rotate-["], .rotate-1, .rotate-2, .rotate-3, .rotate-6, .-rotate-1, .-rotate-2, .-rotate-3, .-rotate-6 { rotate: none !important; }
 
 /* ── Typography helpers ─────────────────────────────────────── */
 .kz-eyebrow {
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
-.kz-h1 {
-  font-size: 48px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
+.kz-h1 { font-size: 52px; font-weight: 700; line-height: 1.02; }
+.kz-h2 { font-size: 34px; font-weight: 700; line-height: 1.1; }
+.kz-h3 { font-size: 22px; font-weight: 700; letter-spacing: 0.01em; }
 
-.kz-h2 {
-  font-size: 36px;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.05;
-}
-
-.kz-h3 {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.kz-mute {
-  color: var(--kz-mute);
-}
+.kz-mute { color: var(--kz-mute); }
 
 /* ── Animations ─────────────────────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-8px); }
 }
-
 @keyframes slide-up {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
-@keyframes spin-slow {
-  to { transform: rotate(360deg); }
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+@keyframes qx-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 121, 249, 0.55); }
+  50%      { box-shadow: 0 0 0 10px rgba(232, 121, 249, 0); }
+}
+@keyframes qx-shine {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+@keyframes qx-rise {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.98); filter: blur(4px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
 .animate-float     { animation: float 4s ease-in-out infinite; }
 .animate-slide-up  { animation: slide-up 0.4s ease both; }
 .animate-spin-slow { animation: spin-slow 12s linear infinite; }
+.qx-pulse          { animation: qx-pulse 2.2s ease-out infinite; }
+.qx-rise           { animation: qx-rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track  { background: var(--kz-cream2); }
-::-webkit-scrollbar-thumb  { background: var(--kz-ink); border-radius: 3px; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(168, 85, 247, 0.35); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(192, 132, 252, 0.6); }

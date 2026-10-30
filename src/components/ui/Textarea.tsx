@@ -23,8 +23,8 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={textareaId}
           className={cn(
-            'w-full px-3.5 py-3 bg-[var(--kz-paper)] border-[1.5px] rounded-lg shadow-[2px_2px_0_var(--kz-shadow)] text-sm text-[var(--kz-text)] placeholder:text-[var(--kz-mute)] outline-none resize-none focus:shadow-[3px_3px_0_var(--kz-shadow)] transition-shadow',
-            error ? 'border-[#E54E4E]' : 'border-[var(--kz-edge)]',
+            'w-full px-3.5 py-3 bg-[rgba(12,5,24,0.7)] border rounded-xl text-sm text-[var(--kz-text)] placeholder:text-[var(--kz-mute)] outline-none resize-none transition-all duration-200 focus:border-[#E879F9] focus:shadow-[0_0_0_4px_rgba(232,121,249,0.18),0_0_24px_-6px_rgba(232,121,249,0.8)]',
+            error ? 'border-[#F87171]' : 'border-[#C084FC]/30',
             className
           )}
           {...props}

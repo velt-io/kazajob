@@ -1,4 +1,5 @@
 'use client'
+import { KZ } from '@/lib/constants'
 
 import { Suspense, useState, useEffect, useRef, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -200,7 +201,7 @@ function JobsContent() {
               className="px-3 py-1 text-xs font-semibold rounded-full border border-[var(--kz-edge)] transition-all"
               style={
                 radius === opt.value
-                  ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)' }
+                  ? { background: 'var(--kz-inverse)', color: 'var(--kz-on-inverse)' }
                   : { background: 'var(--kz-paper)', color: 'var(--kz-ink)' }
               }
             >
@@ -259,7 +260,7 @@ function JobsContent() {
                   onClick={() => updateFilters({ remote: v })}
                   className="px-4 py-2 text-sm font-semibold border-[1.5px] rounded-lg border-[var(--kz-edge)] transition-all"
                   style={{
-                    background: filters.remote === v ? 'var(--kz-ink)' : 'white',
+                    background: filters.remote === v ? 'var(--kz-inverse)' : KZ.paper,
                     color: filters.remote === v ? 'var(--kz-cream)' : 'var(--kz-ink)',
                   }}
                 >

@@ -466,7 +466,7 @@ export default function CompanySetupPage() {
                   style={{ borderColor: launchSelected ? KZ.violet : KZ.line, background: launchSelected ? KZ.violetSoft : KZ.cream2 }}
                 >
                   <div className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                    style={{ background: launchSelected ? KZ.violet : 'white' }}>
+                    style={{ background: launchSelected ? KZ.violet : KZ.paper }}>
                     {launchSelected && <Check size={14} color="white" />}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -533,7 +533,7 @@ export default function CompanySetupPage() {
                         }}
                       >
                         <div className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                          style={{ background: isSelected ? KZ.violet : 'white' }}>
+                          style={{ background: isSelected ? KZ.violet : KZ.paper }}>
                           {isSelected && <Check size={14} color="white" />}
                         </div>
                         <div className="flex-1 min-w-0">

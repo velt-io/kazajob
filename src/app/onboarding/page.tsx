@@ -480,18 +480,18 @@ export default function OnboardingPage() {
 
               {/* Level card */}
               <div className="rounded-2xl border-2 border-[var(--kz-edge)] p-5 mb-5 text-left"
-                style={{ background: 'var(--kz-ink)', boxShadow: '5px 5px 0 var(--kz-mute)' }}>
+                style={{ background: 'var(--kz-inverse)', boxShadow: '5px 5px 0 var(--kz-mute)' }}>
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-3xl">🌱</span>
                     <div>
-                      <div className="text-xs opacity-50 font-bold uppercase tracking-widest" style={{ color: KZ.cream }}>NIVEAU ACTUEL</div>
+                      <div className="text-xs opacity-50 font-bold uppercase tracking-widest" style={{ color: KZ.onInverse }}>NIVEAU ACTUEL</div>
                       <div className="text-base font-extrabold" style={{ color: 'var(--kz-mute)' }}>Débutant</div>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xl font-extrabold" style={{ color: KZ.cream }}>0 <span className="text-sm opacity-50">XP</span></div>
-                    <div className="text-[10px] opacity-40" style={{ color: KZ.cream }}>→ 1 000 XP pour Niveau 2</div>
+                    <div className="text-xl font-extrabold" style={{ color: KZ.onInverse }}>0 <span className="text-sm opacity-50">XP</span></div>
+                    <div className="text-[10px] opacity-40" style={{ color: KZ.onInverse }}>→ 1 000 XP pour Niveau 2</div>
                   </div>
                 </div>
                 <div className="h-3 rounded-full border border-white/20 overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>

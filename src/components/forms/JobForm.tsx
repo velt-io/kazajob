@@ -198,7 +198,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
                 onClick={() => setRemote(v)}
                 className="flex-1 py-2.5 text-sm font-semibold border-[1.5px] rounded-lg"
                 style={remote === v
-                  ? { background: 'var(--kz-ink)', color: 'var(--kz-cream)', borderColor: 'var(--kz-edge)' }
+                  ? { background: 'var(--kz-inverse)', color: 'var(--kz-on-inverse)', borderColor: 'var(--kz-edge)' }
                   : { background: 'var(--kz-paper)', color: 'var(--kz-ink)', borderColor: 'var(--kz-edge)' }}
               >
                 {l}
@@ -292,7 +292,7 @@ export function JobForm({ job, recruiterId, companyId, admin, onSuccess }: JobFo
         }}
       >
         <div className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-          style={{ background: isAnonymous ? KZ.violet : 'white' }}>
+          style={{ background: isAnonymous ? KZ.violet : KZ.paper }}>
           <EyeOff size={16} color={isAnonymous ? 'white' : KZ.mute} />
         </div>
         <div>
