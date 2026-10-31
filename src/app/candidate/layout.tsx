@@ -13,9 +13,10 @@ import { ChatAssistantDrawer } from '@/components/ui/ChatAssistantDrawer'
 import { EmailVerifyBanner } from '@/components/auth/EmailVerifyBanner'
 import { BugReportWidget } from '@/components/feedback/BugReportWidget'
 import { useGamification, getLevel } from '@/features/gamification/useGamification'
-import { KZ } from '@/lib/constants'
 import { ActivityRings, RING_COLORS } from '@/components/os/ActivityRings'
 import { PageTransition } from '@/components/os/PageTransition'
+import { computeCvCompletion } from '@/lib/cv'
+import './os-candidate.css'
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/candidate/dashboard',    label: 'Tableau de bord', icon: <LayoutDashboard size={16} /> },
@@ -40,11 +41,8 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const gami = useGamification(profile, 0, 0)  // counts approx — dashboard a les vrais
   const level = getLevel(profile?.xp ?? 0)
-  // Anneau « Profil » : part des éléments clés renseignés
-  const profileCompletion = profile
-    ? Math.round(([profile.location, profile.bio, profile.phone, profile.cv_url || profile.cv_data, profile.avatar_config || profile.avatar_url, profile.video_pitch_url]
-        .filter(Boolean).length / 6) * 100)
-    : 0
+  // Anneau « Profil » : même calcul que la page profil et le tableau de bord
+  const profileCompletion = computeCvCompletion(profile ?? {})
 
   // Pages publiques (offres + formations) : accessibles sans connexion (SEO + visiteurs).
   const isPublicPath = ['/candidate/jobs', '/candidate/training'].some(
@@ -68,7 +66,8 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
       return (
         <div className="min-h-screen flex flex-col" >
           <NavLanding />
-          <main className="flex-1 px-4 sm:px-8 lg:px-12 py-6">{children}</main>
+          {/* --osc-sticky-top : décale les barres collantes sous la navigation publique */}
+          <main className="flex-1 px-4 sm:px-8 lg:px-12 py-6 [--osc-sticky-top:72px]">{children}</main>
           <Footer />
         </div>
       )

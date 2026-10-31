@@ -2,13 +2,15 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, Building2, Users, Check, ArrowRight, Upload, ChevronRight } from 'lucide-react'
+import { Search, Building2, Check, ArrowRight, Upload, ChevronRight, Send, BadgeCheck, Ticket, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { useAuth } from '@/features/auth/useAuth'
 import { uploadFile } from '@/features/profile/useUpload'
-import { KZ, SUBSCRIPTION_PLANS, PAID_PLANS, JOB_SECTORS, MULTIDIFFUSION_ENABLED } from '@/lib/constants'
+import { SUBSCRIPTION_PLANS, PAID_PLANS, JOB_SECTORS, MULTIDIFFUSION_ENABLED } from '@/lib/constants'
+import { ACCENT, Monogram, StatusPill, WindowBar, accentStyle, tint } from '@/components/os/recruiter/primitives'
+import { choiceStyle, stagger } from '@/components/os/recruiter/secondary-ui'
 import type { Company } from '@/lib/types'
 
 const fmtDate = (iso: string) =>
@@ -27,29 +29,47 @@ const STEPS = [
 
 function ProgressBar({ step }: { step: number }) {
   return (
-    <div className="flex items-center gap-2 mb-8">
-      {STEPS.map((s, i) => (
-        <div key={s.n} className="flex items-center gap-2 flex-1">
-          <div className="flex items-center gap-2 shrink-0">
-            <div
-              className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center text-xs font-extrabold transition-all"
-              style={{
-                background: step >= s.n ? KZ.violet : step === s.n - 1 ? KZ.cream2 : KZ.cream2,
-                color: step >= s.n ? 'white' : KZ.mute,
-              }}
-            >
-              {step > s.n ? <Check size={14} /> : s.n}
+    <ol className="flex items-center gap-2 mb-7" aria-label="Étapes de configuration">
+      {STEPS.map((s, i) => {
+        const done = step > s.n
+        const current = step === s.n
+        return (
+          <li key={s.n} className="flex items-center gap-2 flex-1 last:flex-none" aria-current={current ? 'step' : undefined}>
+            <div className="flex items-center gap-2 shrink-0">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-semibold transition-all duration-500"
+                style={{
+                  background: done ? 'var(--kz-blue)' : current ? 'white' : 'var(--osr-fill-2)',
+                  color: done ? 'white' : current ? 'black' : 'var(--kz-mute)',
+                  boxShadow: current ? '0 0 0 4px color-mix(in srgb, white 14%, transparent)' : 'none',
+                }}
+              >
+                {done ? <Check size={14} strokeWidth={2.8} /> : s.n}
+              </div>
+              <span className={`text-[12px] font-medium hidden sm:block ${current ? 'text-white' : 'text-[var(--kz-mute)]'}`}>
+                {s.label}
+              </span>
             </div>
-            <span className="text-xs font-semibold hidden sm:block" style={{ color: step >= s.n ? KZ.violet : KZ.mute }}>
-              {s.label}
-            </span>
-          </div>
-          {i < STEPS.length - 1 && (
-            <div className="flex-1 h-0.5 rounded" style={{ background: step > s.n ? KZ.violet : KZ.line }} />
-          )}
-        </div>
-      ))}
-    </div>
+            {i < STEPS.length - 1 && (
+              <div className="flex-1 h-[3px] rounded-full overflow-hidden bg-white/[0.08]">
+                <div className="h-full rounded-full transition-[width] duration-700 ease-out" style={{ width: done ? '100%' : '0%', background: 'var(--kz-blue)' }} />
+              </div>
+            )}
+          </li>
+        )
+      })}
+    </ol>
+  )
+}
+
+const SELECT_CLS = 'h-11 w-full px-3.5 rounded-xl border border-white/10 bg-white/[0.06] text-sm text-[var(--kz-text)] outline-none appearance-none cursor-pointer transition-all focus:border-[#0A84FF] focus:ring-4 focus:ring-[#0A84FF]/25 [&>option]:bg-[#1C1C22]'
+
+function Radio({ on }: { on: boolean }) {
+  return (
+    <span className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all duration-300"
+      style={{ background: on ? 'var(--kz-blue)' : 'transparent', boxShadow: on ? 'none' : 'inset 0 0 0 1.5px color-mix(in srgb, white 28%, transparent)' }}>
+      {on && <Check size={13} strokeWidth={3} color="white" />}
+    </span>
   )
 }
 
@@ -244,64 +264,61 @@ export default function CompanySetupPage() {
   const currentStep = mode === 'search' ? 1 : mode === 'join' || mode === 'create' ? 2 : mode === 'plan' ? 3 : 4
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ background: KZ.cream }}>
-      <div className="w-full max-w-[640px]">
+    <div className="min-h-[calc(100vh-180px)] flex items-center justify-center py-4 sm:py-8">
+      <div className="w-full max-w-[660px]">
         {/* Header */}
-        <div className="text-center mb-8">
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Configuration</p>
-          <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[var(--kz-ink)]">
-            Votre espace entreprise
+        <div className="text-center mb-7">
+          <p className="osr-eyebrow mb-2">Configuration</p>
+          <h1 className="osr-title">
+            Votre espace <span className="os-text-aurora">entreprise</span>
           </h1>
         </div>
 
         <ProgressBar step={currentStep} />
 
-        <div className="kz-card p-6 bg-[var(--kz-paper)]">
+        <div className="os-glass rounded-[28px] overflow-hidden shadow-[0_50px_100px_-30px_rgba(0,0,0,0.9)]">
+          <WindowBar title={STEPS[currentStep - 1]?.label} />
+          <div key={mode} className="p-5 sm:p-7 animate-slide-up">
           {/* ── ÉTAPE 1 : Recherche ──────────────────────────────────── */}
           {mode === 'search' && (
             <div>
-              <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Votre entreprise existe-t-elle déjà ?</h2>
-              <p className="text-sm text-[var(--kz-mute)] mb-5">Recherchez pour rejoindre une équipe existante ou créez votre espace.</p>
+              <h2 className="text-[22px] font-semibold tracking-[-0.025em] text-white mb-1">Votre entreprise existe-t-elle déjà ?</h2>
+              <p className="text-[14px] text-[var(--kz-mute)] mb-5">Recherchez pour rejoindre une équipe existante ou créez votre espace.</p>
 
               <Input
                 label=""
                 value={query}
                 onChange={e => handleSearch(e.target.value)}
                 placeholder="Nom de l'entreprise..."
+                aria-label="Nom de l'entreprise"
                 icon={<Search size={15} />}
+                suffix={searching ? <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" aria-label="Recherche..." /> : undefined}
               />
 
-              {searching && <p className="text-xs text-[var(--kz-mute)] mt-2">Recherche...</p>}
-
               {results.length > 0 && (
-                <div className="mt-3 flex flex-col gap-2">
-                  {results.map(c => (
+                <div className="mt-3 osr-surface p-1.5 flex flex-col">
+                  {results.map((c, i) => (
                     <button
                       key={c.id}
                       onClick={() => { setSelectedCompany(c); setMode('join'); setStep(2) }}
-                      className="flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all hover:border-[var(--kz-violet)]"
-                      style={{ borderColor: KZ.line, background: KZ.cream2 }}
+                      className="osr-row osr-in group flex items-center gap-3 p-2.5 text-left"
+                      style={stagger(i)}
                     >
-                      <div className="w-10 h-10 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center text-sm font-bold shrink-0"
-                        style={{ background: KZ.orangeSoft }}>
-                        {c.logo_url
-                          ? <img src={c.logo_url} alt="" className="w-full h-full object-cover rounded-lg" />
-                          : c.name.slice(0, 2).toUpperCase()}
-                      </div>
+                      <Monogram name={c.name} src={c.logo_url} size={40} radius={12} />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-bold text-[var(--kz-ink)] flex items-center gap-1.5">
-                          {c.name}
-                          {c.is_verified && <Check size={12} color={KZ.green} />}
+                        <div className="text-[14px] font-semibold text-white flex items-center gap-1.5 min-w-0">
+                          <span className="truncate">{c.name}</span>
+                          {c.is_verified && <BadgeCheck size={14} className="text-[var(--kz-blue)] shrink-0" />}
                         </div>
-                        <div className="text-xs text-[var(--kz-mute)]">{c.location} · {c.sector}</div>
+                        <div className="text-[12px] text-[var(--kz-mute)] truncate">{c.location} · {c.sector}</div>
                       </div>
-                      <ChevronRight size={16} className="text-[var(--kz-mute)] shrink-0" />
+                      <ChevronRight size={16} className="text-[var(--kz-mute)] shrink-0 transition-transform group-hover:translate-x-0.5" />
                     </button>
                   ))}
                 </div>
               )}
 
-              <div className="mt-5 pt-5 border-t border-[var(--kz-line)] flex flex-col gap-2">
+              <div className="mt-5 pt-5 border-t border-white/[0.06] flex flex-col gap-2">
                 <Button
                   kind="primary" size="lg" full icon={<Building2 size={15} />}
                   onClick={() => { setMode('create'); setStep(2) }}
@@ -322,9 +339,12 @@ export default function CompanySetupPage() {
             <div>
               {joinSent ? (
                 <div className="text-center py-6">
-                  <div className="text-5xl mb-4">📬</div>
-                  <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-2">Demande envoyée !</h2>
-                  <p className="text-sm text-[var(--kz-mute)] mb-6">
+                  <span className="os-pop w-16 h-16 rounded-[20px] flex items-center justify-center mx-auto mb-5 text-white"
+                    style={{ background: 'linear-gradient(145deg, var(--kz-blue), var(--osr-indigo))', boxShadow: '0 18px 40px -16px var(--kz-blue)' }}>
+                    <Send size={26} />
+                  </span>
+                  <h2 className="text-[22px] font-semibold tracking-[-0.025em] text-white mb-2">Demande envoyée</h2>
+                  <p className="text-[14px] text-[var(--kz-mute)] mb-6 leading-relaxed">
                     L&apos;administrateur de <strong>{selectedCompany.name}</strong> recevra votre demande.
                     Vous serez notifié par email lors de l&apos;approbation.
                   </p>
@@ -334,18 +354,15 @@ export default function CompanySetupPage() {
                 </div>
               ) : (
                 <div>
-                  <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Rejoindre l&apos;équipe</h2>
-                  <p className="text-sm text-[var(--kz-mute)] mb-5">
-                    Vous demandez à rejoindre <strong>{selectedCompany.name}</strong>.
+                  <h2 className="text-[22px] font-semibold tracking-[-0.025em] text-white mb-1">Rejoindre l&apos;équipe</h2>
+                  <p className="text-[14px] text-[var(--kz-mute)] mb-5">
+                    Vous demandez à rejoindre <strong className="text-white">{selectedCompany.name}</strong>.
                   </p>
-                  <div className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-line)] mb-5" style={{ background: KZ.cream2 }}>
-                    <div className="w-12 h-12 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center text-sm font-bold"
-                      style={{ background: KZ.orangeSoft }}>
-                      {selectedCompany.name.slice(0, 2).toUpperCase()}
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-[var(--kz-ink)]">{selectedCompany.name}</div>
-                      <div className="text-xs text-[var(--kz-mute)]">{selectedCompany.location}</div>
+                  <div className="flex items-center gap-3 p-3 osr-surface mb-5">
+                    <Monogram name={selectedCompany.name} size={48} radius={14} />
+                    <div className="min-w-0">
+                      <div className="text-[15px] font-semibold text-white truncate">{selectedCompany.name}</div>
+                      <div className="text-[12px] text-[var(--kz-mute)] truncate">{selectedCompany.location}</div>
                     </div>
                   </div>
                   <Textarea
@@ -370,25 +387,23 @@ export default function CompanySetupPage() {
           {/* ── ÉTAPE 2b : Créer ─────────────────────────────────────── */}
           {mode === 'create' && (
             <div>
-              <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Créer votre entreprise</h2>
-              <p className="text-sm text-[var(--kz-mute)] mb-5">Ces informations seront visibles par les candidats.</p>
+              <h2 className="text-[22px] font-semibold tracking-[-0.025em] text-white mb-1">Créer votre entreprise</h2>
+              <p className="text-[14px] text-[var(--kz-mute)] mb-5">Ces informations seront visibles par les candidats.</p>
 
               {/* Logo */}
-              <div className="flex items-center gap-4 mb-5">
-                <div className="w-16 h-16 rounded-xl border-2 border-dashed border-[var(--kz-edge)] flex items-center justify-center overflow-hidden"
-                  style={{ background: KZ.cream2 }}>
+              <label className="group flex items-center gap-4 mb-5 p-3 osr-surface cursor-pointer hover:bg-white/[0.06] transition-colors focus-within:ring-4 focus-within:ring-[#0A84FF]/40">
+                <div className="w-16 h-16 rounded-[18px] border border-dashed border-white/20 flex items-center justify-center overflow-hidden bg-white/[0.04] shrink-0 transition-transform group-hover:scale-[1.04]">
                   {logoPreview
+                    // eslint-disable-next-line @next/next/no-img-element
                     ? <img src={logoPreview} alt="" className="w-full h-full object-cover" />
-                    : <Upload size={20} color={KZ.mute} />}
+                    : <Upload size={20} className="text-[var(--kz-mute)]" />}
                 </div>
-                <div>
-                  <label className="cursor-pointer">
-                    <span className="text-sm font-bold text-[var(--kz-ink)] underline">Ajouter un logo</span>
-                    <input type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
-                  </label>
-                  <p className="text-xs text-[var(--kz-mute)]">PNG, JPG ou SVG · max 2 Mo</p>
+                <div className="min-w-0">
+                  <span className="text-[14px] font-semibold text-[var(--kz-blue)]">{logoPreview ? 'Changer le logo' : 'Ajouter un logo'}</span>
+                  <input type="file" accept="image/*" className="sr-only" onChange={handleLogoChange} />
+                  <p className="text-[12px] text-[var(--kz-mute)]">PNG, JPG ou SVG · max 2 Mo</p>
                 </div>
-              </div>
+              </label>
 
               <div className="flex flex-col gap-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -409,16 +424,16 @@ export default function CompanySetupPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Secteur</label>
-                    <select className="w-full px-3 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm bg-[var(--kz-paper)] focus:outline-none"
+                    <label htmlFor="cs-sector" className="block text-xs font-medium text-[var(--kz-mute)] mb-1.5">Secteur</label>
+                    <select id="cs-sector" className={SELECT_CLS}
                       value={form.sector} onChange={e => setForm(f => ({ ...f, sector: e.target.value }))}>
                       <option value="">Choisir...</option>
                       {JOB_SECTORS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Taille</label>
-                    <select className="w-full px-3 py-2.5 rounded-xl border-2 border-[var(--kz-edge)] text-sm bg-[var(--kz-paper)] focus:outline-none"
+                    <label htmlFor="cs-size" className="block text-xs font-medium text-[var(--kz-mute)] mb-1.5">Taille</label>
+                    <select id="cs-size" className={SELECT_CLS}
                       value={form.size} onChange={e => setForm(f => ({ ...f, size: e.target.value }))}>
                       {COMPANY_SIZES.map(s => <option key={s} value={s}>{s} employés</option>)}
                     </select>
@@ -451,8 +466,8 @@ export default function CompanySetupPage() {
           {/* ── ÉTAPE 3 : Plan ───────────────────────────────────────── */}
           {mode === 'plan' && (
             <div>
-              <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Choisissez votre forfait</h2>
-              <p className="text-sm text-[var(--kz-mute)] mb-5">
+              <h2 className="text-[22px] font-semibold tracking-[-0.025em] text-white mb-1">Choisissez votre forfait</h2>
+              <p className="text-[14px] text-[var(--kz-mute)] mb-5 leading-relaxed">
                 {launchAvailable
                   ? `Démarrez gratuitement avec ${launchElig?.campaignName ?? "notre offre de lancement"}, ou choisissez un forfait payant pour démarrer immédiatement.`
                   : "30 jours d’essai · Carte bancaire requise · 1er débit à la fin de l’essai · Annulable avant la fin."}
@@ -462,24 +477,20 @@ export default function CompanySetupPage() {
               {launchAvailable && (
                 <button
                   onClick={() => setCampaignSelected(true)}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all mb-3"
-                  style={{ borderColor: launchSelected ? KZ.violet : KZ.line, background: launchSelected ? KZ.violetSoft : KZ.cream2 }}
+                  aria-pressed={launchSelected}
+                  className="osr-glow w-full flex items-center gap-4 p-4 rounded-[18px] border text-left transition-all duration-300 mb-3 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0A84FF]/40"
+                  style={{ ...choiceStyle(launchSelected, ACCENT.violet), ...accentStyle(ACCENT.violet) }}
                 >
-                  <div className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                    style={{ background: launchSelected ? KZ.violet : KZ.paper }}>
-                    {launchSelected && <Check size={14} color="white" />}
-                  </div>
+                  <Radio on={launchSelected} />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[var(--kz-ink)]">{launchElig?.campaignName ?? 'Offre de lancement'}</span>
-                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.yellowSoft }}>
-                        Gratuit
-                      </span>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[15px] font-semibold text-white">{launchElig?.campaignName ?? 'Offre de lancement'}</span>
+                      <StatusPill accent={ACCENT.yellow}>Gratuit</StatusPill>
                     </div>
-                    <div className="text-xs text-[var(--kz-mute)]">Accès gratuit temporaire · sans carte bancaire</div>
+                    <div className="text-[12px] text-[var(--kz-mute)]">Accès gratuit temporaire · sans carte bancaire</div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-lg font-extrabold text-[var(--kz-ink)]">0€</div>
+                    <div className="text-[22px] font-semibold tracking-[-0.03em] text-white tabular-nums">0€</div>
                     {launchElig?.expiresAt && <div className="text-[10px] text-[var(--kz-mute)]">jusqu&apos;au {fmtDate(launchElig.expiresAt)}</div>}
                   </div>
                 </button>
@@ -489,67 +500,52 @@ export default function CompanySetupPage() {
               {launchAvailable && launchElig?.newSubscriptionsEnabled === false ? (
                 <div className="mb-5">
                   {/* 4 cards squelettes */}
-                  <div className="flex flex-col gap-3 mb-4">
+                  <div className="flex flex-col gap-2 mb-4" aria-hidden>
                     {[0, 1, 2, 3].map((i) => (
-                      <div key={i} className="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-[var(--kz-line)] bg-[#F5EFE4] animate-pulse">
-                        <div className="w-8 h-8 rounded-full bg-[var(--kz-line)] shrink-0" />
-                        <div className="flex-1 space-y-2">
-                          <div className="h-3 bg-[var(--kz-line)] rounded w-2/5" />
-                          <div className="h-2.5 bg-[var(--kz-line)] rounded w-3/5" />
-                        </div>
-                        <div className="text-right space-y-1">
-                          <div className="h-4 bg-[var(--kz-line)] rounded w-12" />
-                          <div className="h-2 bg-[var(--kz-line)] rounded w-8 ml-auto" />
-                        </div>
-                      </div>
+                      <div key={i} className="osr-skel w-full h-[68px] rounded-[18px]" style={{ opacity: 1 - i * 0.18 }} />
                     ))}
                   </div>
                   {/* Message informatif */}
-                  <div className="p-4 rounded-xl border border-[var(--kz-line)] bg-[#FDFAF5] text-sm text-[var(--kz-mute)] leading-relaxed">
-                    <p className="font-bold text-[var(--kz-ink)] mb-1">Les offres payantes arrivent le 6 octobre 2026</p>
+                  <div className="osr-surface p-4 text-[13px] text-[var(--kz-mute)] leading-relaxed">
+                    <p className="text-[14px] font-semibold text-white mb-1">Les offres payantes arrivent le 6 octobre 2026</p>
                     <p className="mb-2">
                       À partir de cette date, vous pourrez choisir un forfait payant adapté à vos besoins.
                       Pas de prélèvement automatique. Pas d&apos;enregistrement de carte bancaire pour le moment.
                     </p>
-                    <p className="text-xs text-[#8A7A6A]">
+                    <p className="text-[12px]">
                       Vos paiements financeront de meilleures fonctionnalités IA, des intégrations supplémentaires
                       et des améliorations continues tout au long de l&apos;année.
                     </p>
                   </div>
                 </div>
               ) : (
-                <div className="flex flex-col gap-3 mb-5">
-                  {PAID_PLANS.map(plan => {
+                <div className="flex flex-col gap-2 mb-5" role="radiogroup" aria-label="Forfaits">
+                  {PAID_PLANS.map((plan, i) => {
                     const euros = Math.floor(plan.priceCts / 100)
                     const isSelected = !campaignSelected && planId === plan.id
                     return (
                       <button
                         key={plan.id}
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => { setCampaignSelected(false); setPlanId(plan.id) }}
-                        className="w-full flex items-center gap-4 p-4 rounded-xl border-2 text-left transition-all"
-                        style={{
-                          borderColor: isSelected ? KZ.violet : KZ.line,
-                          background: isSelected ? KZ.violetSoft : KZ.cream2,
-                        }}
+                        className="osr-in w-full flex items-center gap-4 p-4 rounded-[18px] border text-left transition-all duration-300 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#0A84FF]/40"
+                        style={{ ...choiceStyle(isSelected), ...stagger(i) }}
                       >
-                        <div className="w-8 h-8 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                          style={{ background: isSelected ? KZ.violet : KZ.paper }}>
-                          {isSelected && <Check size={14} color="white" />}
-                        </div>
+                        <Radio on={isSelected} />
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-[var(--kz-ink)]">{plan.name}</span>
-                            {plan.highlight && <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]"
-                              style={{ background: KZ.yellowSoft }}>Populaire</span>}
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-[15px] font-semibold text-white">{plan.name}</span>
+                            {plan.highlight && <StatusPill accent={ACCENT.orange}>Populaire</StatusPill>}
                           </div>
-                          <div className="text-xs text-[var(--kz-mute)]">
+                          <div className="text-[12px] text-[var(--kz-mute)]">
                             {plan.maxMembers} recruteur{plan.maxMembers > 1 ? 's' : ''} ·
                             {plan.maxJobs === -1 ? ' offres illimitées' : ` ${plan.maxJobs} offres`}
                             {MULTIDIFFUSION_ENABLED && ` · ${plan.partners.length > 0 ? `${plan.partners.length} plateforme(s)` : 'Kazajob uniquement'}`}
                           </div>
                         </div>
                         <div className="text-right shrink-0">
-                          <div className="text-lg font-extrabold text-[var(--kz-ink)]">{euros}€</div>
+                          <div className="text-[22px] font-semibold tracking-[-0.03em] text-white tabular-nums">{euros}€</div>
                           <div className="text-[10px] text-[var(--kz-mute)]">/mois</div>
                         </div>
                       </button>
@@ -559,30 +555,29 @@ export default function CompanySetupPage() {
               )}
 
               {planError && (
-                <div className="mb-3 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{planError}</div>
+                <div role="alert" className="mb-3 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">{planError}</div>
               )}
 
               {launchSelected ? (
                 /* ── Écran d'information obligatoire avant activation KazaLaunch ── */
                 <div>
-                  <div className="kz-card p-4 mb-4" style={{ background: KZ.violetSoft }}>
-                    <h3 className="font-extrabold text-[var(--kz-ink)] mb-2">Votre accès gratuit avec {launchElig?.campaignName ?? 'l’offre de lancement'}</h3>
-                    <ul className="text-sm text-[var(--kz-ink)] space-y-1 mb-3">
-                      <li>• 0 € pendant toute la durée de l&apos;accès</li>
-                      <li>• Aucune carte bancaire demandée</li>
-                      <li>• Aucun prélèvement automatique</li>
-                      <li>• Offre utilisable une seule fois par entreprise</li>
-                      {launchElig?.expiresAt && <li>• Fin estimée le <b>{fmtDate(launchElig.expiresAt)}</b></li>}
+                  <div className="rounded-[18px] p-4 mb-4" style={{ background: tint(ACCENT.violet, 12), boxShadow: `inset 0 0 0 1px ${tint(ACCENT.violet, 30)}` }}>
+                    <h3 className="text-[15px] font-semibold text-white mb-2.5">Votre accès gratuit avec {launchElig?.campaignName ?? 'l’offre de lancement'}</h3>
+                    <ul className="text-[13px] text-[var(--kz-text)] space-y-1.5 mb-3">
+                      {['0 € pendant toute la durée de l’accès', 'Aucune carte bancaire demandée', 'Aucun prélèvement automatique', 'Offre utilisable une seule fois par entreprise'].map((t) => (
+                        <li key={t} className="flex items-center gap-2"><Check size={13} className="text-[var(--kz-green)] shrink-0" strokeWidth={2.8} />{t}</li>
+                      ))}
+                      {launchElig?.expiresAt && <li className="flex items-center gap-2"><Check size={13} className="text-[var(--kz-green)] shrink-0" strokeWidth={2.8} />Fin estimée le <b className="text-white">{fmtDate(launchElig.expiresAt)}</b></li>}
                     </ul>
-                    <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
+                    <p className="text-[12px] text-[var(--kz-mute)] leading-relaxed">
                       À partir de cette date, la publication et la réactivation d&apos;offres seront bloquées
                       jusqu&apos;au choix d&apos;un forfait payant. Vos candidatures et vos données resteront
                       accessibles. Aucun abonnement payant ne sera créé automatiquement.
                     </p>
                   </div>
-                  <label className="flex items-start gap-2 mb-4 cursor-pointer text-sm text-[var(--kz-ink)]">
+                  <label className="flex items-start gap-2.5 mb-4 cursor-pointer text-[13px] leading-relaxed text-[var(--kz-text)]">
                     <input type="checkbox" checked={launchConfirmed} onChange={(e) => setLaunchConfirmed(e.target.checked)}
-                      className="mt-0.5 w-4 h-4 shrink-0" />
+                      className="mt-0.5 w-[18px] h-[18px] shrink-0 accent-[var(--kz-blue)] cursor-pointer" />
                     <span>J&apos;ai compris que cet accès gratuit est temporaire, qu&apos;il ne peut être activé
                       qu&apos;une seule fois par entreprise et qu&apos;aucun paiement ne sera déclenché
                       automatiquement à son expiration.</span>
@@ -595,23 +590,27 @@ export default function CompanySetupPage() {
               ) : (
                 /* ── Forfait payant : code promo + checkout Stripe ── */
                 <div>
-                  <div className="mb-3">
-                    <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Code promo (optionnel)</label>
+                  <div className="mb-4">
+                    <label htmlFor="cs-promo" className="block text-xs font-medium text-[var(--kz-mute)] mb-1.5">Code promo (optionnel)</label>
                     <div className="flex gap-2">
-                      <Input className="flex-1" value={promoCode} placeholder="Ex : RENTREE25"
-                        onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoMsg(null) }} />
-                      <Button kind="outline" size="md" type="button" onClick={checkPromo}>Vérifier</Button>
+                      <div className="flex-1 min-w-0">
+                        <Input id="cs-promo" value={promoCode} placeholder="Ex : RENTREE25" icon={<Ticket size={15} />}
+                          onChange={(e) => { setPromoCode(e.target.value.toUpperCase()); setPromoMsg(null) }} />
+                      </div>
+                      <Button kind="soft" size="md" type="button" className="!h-11" onClick={checkPromo}>Vérifier</Button>
                     </div>
                     {promoMsg && (
-                      <p className="text-xs font-semibold mt-1.5" style={{ color: promoMsg.ok ? KZ.green : '#E54E4E' }}>{promoMsg.text}</p>
+                      <p role="status" className="os-pop text-[12px] font-semibold mt-1.5 flex items-center gap-1" style={{ color: promoMsg.ok ? ACCENT.green : ACCENT.red }}>
+                        {promoMsg.ok && <Check size={12} strokeWidth={2.8} />}{promoMsg.text}
+                      </p>
                     )}
                   </div>
                   <Button kind="primary" size="lg" full loading={planSaving} onClick={handleSelectPlan}
                     icon={<ArrowRight size={15} />}>
                     Continuer vers le paiement sécurisé
                   </Button>
-                  <p className="text-xs text-center text-[var(--kz-mute)] mt-3">
-                    Paiement sécurisé par Stripe. Aucun débit pendant les 30 jours d&apos;essai.
+                  <p className="text-[12px] text-center text-[var(--kz-mute)] mt-3 flex items-center justify-center gap-1.5">
+                    <Lock size={11} />Paiement sécurisé par Stripe. Aucun débit pendant les 30 jours d&apos;essai.
                   </p>
                 </div>
               )}
@@ -621,12 +620,15 @@ export default function CompanySetupPage() {
           {/* ── ÉTAPE 4 : Succès ─────────────────────────────────────── */}
           {mode === 'done' && (
             <div className="text-center py-6">
-              <div className="w-20 h-20 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center mx-auto mb-5"
-              style={{ background: KZ.greenSoft }}>
-              <Check size={36} color={KZ.green} />
-            </div>
-              <h2 className="text-xl font-extrabold text-[var(--kz-ink)] mb-2">Votre espace est prêt !</h2>
-              <p className="text-sm text-[var(--kz-mute)] mb-6 leading-relaxed">
+              <div className="relative w-24 h-24 mx-auto mb-6">
+                <span aria-hidden className="absolute inset-0 rounded-full blur-2xl opacity-60" style={{ background: 'var(--os-aurora)' }} />
+                <span className="os-pop relative w-24 h-24 rounded-full flex items-center justify-center text-white"
+                  style={{ background: 'linear-gradient(145deg, var(--kz-green), var(--osr-teal))' }}>
+                  <Check size={44} strokeWidth={2.6} />
+                </span>
+              </div>
+              <h2 className="text-[28px] font-semibold tracking-[-0.035em] text-white mb-2">Votre espace est prêt</h2>
+              <p className="text-[14px] text-[var(--kz-mute)] mb-6 leading-relaxed max-w-md mx-auto">
                 Votre entreprise est configurée. Vous pouvez maintenant publier des offres,
                 inviter vos collègues recruteurs et accéder à vos analytics.
               </p>
@@ -644,6 +646,7 @@ export default function CompanySetupPage() {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>

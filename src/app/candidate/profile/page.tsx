@@ -1,17 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
 import Link from 'next/link'
-import { MapPin, Phone, Mail, Edit3, Check, X, Download, ExternalLink, Palette, Camera } from 'lucide-react'
+import {
+  MapPin, Phone, Mail, Check, X, Download, ExternalLink, Palette, Camera, User, FileText, Flame, Zap, Briefcase,
+  Video, Rocket, RefreshCw, PenLine, Award,
+} from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Textarea } from '@/components/ui/Textarea'
 import { Avatar } from '@/components/ui/Avatar'
 import { AvatarBuilder } from '@/components/ui/AvatarBuilder'
 import { Modal } from '@/components/ui/Modal'
 import { hasAvatarConfig, type AvatarConfig } from '@/lib/avatar'
-import { Badge } from '@/components/ui/Badge'
-import { Progress } from '@/components/ui/Progress'
 import { FileUpload } from '@/components/ui/FileUpload'
 import dynamic from 'next/dynamic'
 import { KazaBoostButton } from '@/components/ui/KazaBoostButton'
@@ -21,16 +20,18 @@ import { KazaPortfolioSection } from '@/components/profile/KazaPortfolioSection'
 // Import dynamique ssr:false pour éviter les erreurs MediaRecorder en prod
 const VideoPitchRecorder = dynamic(
   () => import('@/components/ui/VideoPitchRecorder').then(m => ({ default: m.VideoPitchRecorder })),
-  { ssr: false, loading: () => <div className="h-24 rounded-xl bg-[var(--kz-cream2)] animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-24 rounded-2xl osc-skeleton" /> }
 )
 import { useAuth } from '@/features/auth/useAuth'
 import { useApplications } from '@/features/applications/useApplications'
 import { useAvatarUpload, useCvUpload, uploadFile } from '@/features/profile/useUpload'
-import { KZ, SOFT_SKILLS, HOBBIES } from '@/lib/constants'
+import { SOFT_SKILLS, HOBBIES } from '@/lib/constants'
 import { SkillSelector } from '@/components/skills/SkillSelector'
 import { computeCvCompletion } from '@/lib/cv'
 import type { Skill } from '@/lib/types'
 import { island } from '@/lib/island'
+import { cn } from '@/lib/utils'
+import { InsetGroup, InsetRow, Pill } from '@/components/os/candidate/primitives'
 
 async function patchProfile(patch: Record<string, unknown>): Promise<{ ok: boolean; error?: string }> {
   const res = await fetch('/api/profile', {
@@ -43,6 +44,40 @@ async function patchProfile(patch: Record<string, unknown>): Promise<{ ok: boole
     return { ok: false, error: (data as { error?: string }).error ?? 'Connexion au serveur impossible' }
   }
   return { ok: true }
+}
+
+/** Anneau de complétion autour de l'avatar (dégradé « aurora »). */
+function CompletionRing({ value, size }: { value: number; size: number }) {
+  const stroke = 4
+  const r = (size - stroke) / 2
+  const circ = 2 * Math.PI * r
+  const pct = Math.max(0, Math.min(100, value))
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="absolute inset-0 -rotate-90 pointer-events-none" aria-hidden>
+      <defs>
+        <linearGradient id="osc-profile-ring" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--kz-orange)" />
+          <stop offset="50%" stopColor="var(--kz-violet)" />
+          <stop offset="100%" stopColor="var(--kz-blue)" />
+        </linearGradient>
+      </defs>
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="var(--kz-line)" strokeWidth={stroke} />
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="url(#osc-profile-ring)" strokeWidth={stroke} strokeLinecap="round"
+        strokeDasharray={circ} strokeDashoffset={circ * (1 - pct / 100)} className="osc-ring-draw" style={{ '--osc-circ': circ } as CSSProperties} />
+    </svg>
+  )
+}
+
+/** Puce sélectionnable (édition des savoir-être / loisirs). */
+function ToggleChip({ on, label, color, onClick }: { on: boolean; label: string; color: string; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} aria-pressed={on}
+      className={cn('osc-press inline-flex items-center gap-1 h-8 px-3 rounded-full text-[13px] font-medium border transition-colors',
+        on ? 'text-white border-transparent' : 'text-[var(--kz-text)] border-[var(--kz-edge)] bg-[var(--osc-surface)] hover:bg-[var(--osc-surface-hi)]')}
+      style={on ? { background: color } : undefined}>
+      {on && <Check size={13} strokeWidth={3} />}{label}
+    </button>
+  )
 }
 
 export default function CandidateProfilePage() {
@@ -68,6 +103,8 @@ export default function CandidateProfilePage() {
 
   useEffect(() => {
     if (profile) {
+      // Logique d'origine conservée : synchronise le formulaire avec le profil chargé.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFullName(profile.full_name ?? '')
       setBio(profile.bio ?? '')
       setLocation(profile.location ?? '')
@@ -178,41 +215,51 @@ export default function CandidateProfilePage() {
   const hasCv = !!profile?.cv_url
   const hasCvBuilder = !!profile?.cv_data
 
+  const badges = [
+    (profile?.streak ?? 0) > 0 && { tone: 'orange' as const, label: `Série de ${profile!.streak} j` },
+    (profile?.xp ?? 0) >= 1000 && { tone: 'violet' as const, label: `Niveau ${Math.floor((profile!.xp) / 1000) + 1}` },
+    profileScore >= 80 && { tone: 'green' as const, label: 'Profil complet' },
+    hasCv && { tone: 'blue' as const, label: 'CV en ligne' },
+    !!profile?.video_pitch_url && { tone: 'orange' as const, label: 'Pitch vidéo' },
+    applications.length >= 5 && { tone: 'yellow' as const, label: `${applications.length} candidatures` },
+  ].filter(Boolean) as { tone: 'orange' | 'violet' | 'green' | 'blue' | 'yellow'; label: string }[]
+
+  const inputCls = 'osc-inline-input text-right'
+
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Mon profil</h1>
+    <div className="max-w-[1080px] mx-auto">
+      {/* ── Barre de titre façon Réglages : Modifier / OK ── */}
+      <header className="flex items-end justify-between gap-4 mb-7">
+        <div className="min-w-0">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[var(--kz-mute)]">Compte</p>
+          <h1 className="text-[34px] sm:text-[44px] lg:text-[52px] font-semibold tracking-[-0.05em] leading-[1.02] text-[var(--kz-ink)] mt-1">Mon profil</h1>
+        </div>
         {!editing ? (
-          <Button kind="outline" size="md" icon={<Edit3 size={15} />} onClick={() => setEditing(true)}>Modifier</Button>
+          <Button kind="outline" size="md" icon={<PenLine size={15} />} onClick={() => setEditing(true)}>Modifier</Button>
         ) : (
-          <div className="flex gap-2">
-            <Button kind="soft" size="md" onClick={() => setEditing(false)}>Annuler</Button>
-            <Button kind="primary" size="md" icon={<Check size={15} />} loading={saving} onClick={handleSave}>Sauvegarder</Button>
+          <div className="flex gap-2 osc-fade">
+            <Button kind="ghost" size="md" onClick={() => setEditing(false)}>Annuler</Button>
+            <Button kind="primary" size="md" icon={<Check size={15} />} loading={saving} onClick={handleSave}>OK</Button>
           </div>
         )}
-      </div>
+      </header>
 
-      {saveError && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2">
-          <X size={15} />{saveError}
+      {(saveError || uploadError) && (
+        <div className="osc-drop flex flex-col gap-2 mb-5">
+          {saveError && <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2"><X size={15} />{saveError}</div>}
+          {uploadError && <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2"><X size={15} />{uploadError}</div>}
         </div>
       )}
 
-      {uploadError && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2">
-          <X size={15} />{uploadError}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5">
-        {/* Colonne gauche */}
-        <div className="flex flex-col gap-4">
-          {/* Avatar avec upload */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)] text-center">
-            <div className="flex justify-center mb-4 relative">
+      <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-7 items-start">
+        {/* ── Carte identité (façon identifiant Apple) ── */}
+        <aside className="flex flex-col gap-5">
+          <div className="osc-mesh relative overflow-hidden rounded-[30px] border border-[var(--kz-edge)] p-6 text-center shadow-[var(--os-elevation)]">
+            <div className="relative mx-auto w-[132px] h-[132px] flex items-center justify-center">
+              <CompletionRing value={profileScore} size={132} />
               <div className="relative">
-                <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={96} color={KZ.orangeSoft} badge />
-                {/* Zone de click pour changer l'avatar */}
+                <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={108} color="color-mix(in srgb, var(--kz-ink) 12%, transparent)" />
+                {/* Zone de clic pour changer l'avatar */}
                 <FileUpload
                   accept="image/jpeg,image/png,image/webp"
                   maxSizeMb={5}
@@ -222,70 +269,151 @@ export default function CandidateProfilePage() {
                   className="absolute inset-0 rounded-full"
                 />
               </div>
+              <span className="absolute bottom-1 right-1 w-9 h-9 rounded-full flex items-center justify-center bg-[var(--kz-ink)] text-[var(--kz-inverse)] border-[3px] border-[var(--kz-cream)] pointer-events-none" aria-hidden>
+                <Camera size={15} />
+              </span>
             </div>
-            <div className="flex justify-center gap-2 mb-4">
+
+            <h2 className="text-[24px] font-semibold tracking-[-0.03em] text-[var(--kz-ink)] mt-4 truncate">{profile?.full_name}</h2>
+            <p className="text-[14px] text-[var(--kz-mute)] truncate">{profile?.email}</p>
+            <p className="text-[13px] text-[var(--kz-text)] mt-1 inline-flex items-center gap-1"><MapPin size={13} className="text-[var(--kz-mute)]" />{profile?.location ?? 'La Réunion'}</p>
+            {uploadingAvatar && <p className="text-[12px] text-[var(--kz-mute)] mt-2 osc-fade">Envoi de la photo…</p>}
+
+            <div className="flex justify-center mt-4">
               <Button kind="outline" size="sm" icon={<Palette size={13} />} onClick={() => setAvatarOpen(true)}>
                 {hasAvatarConfig(profile?.avatar_config) ? 'Modifier mon perso' : 'Créer mon perso'}
               </Button>
             </div>
-            {uploadingAvatar && (
-              <p className="text-xs text-[var(--kz-mute)] mb-2">Upload de la photo...</p>
-            )}
-            <div className="text-base font-bold text-[var(--kz-ink)]">{profile?.full_name}</div>
-            <div className="text-xs text-[var(--kz-mute)] mt-0.5 mb-4">{profile?.location ?? 'La Reunion'}</div>
-            <Progress value={profileScore} color={KZ.orange} label="Profil complete" />
-            <p className="text-[11px] text-[var(--kz-mute)] mt-2 flex items-center justify-center gap-1">
-              <Camera size={11} /> Clique sur l&apos;avatar pour utiliser une photo
-            </p>
+            <p className="text-[11px] text-[var(--kz-mute)] mt-3">Touche l&apos;avatar pour utiliser une photo</p>
+
+            <div className="mt-5 pt-4 border-t border-[var(--kz-line)]">
+              <div className="flex items-baseline justify-between text-[13px]">
+                <span className="text-[var(--kz-text)]">Profil complété</span>
+                <span className="font-semibold os-text-aurora tabular-nums">{profileScore} %</span>
+              </div>
+            </div>
           </div>
 
-          {/* CV */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Mon CV</h3>
+          {/* Statistiques */}
+          <div className="osc-card grid grid-cols-3 divide-x divide-[var(--osc-hairline)] py-4">
+            {[
+              { v: (profile?.xp ?? 0).toLocaleString('fr-FR'), l: 'XP', icon: <Zap size={13} />, c: 'var(--kz-violet)' },
+              { v: profile?.streak ?? 0, l: 'Jours de série', icon: <Flame size={13} />, c: 'var(--kz-orange)' },
+              { v: applications.length, l: 'Candidatures', icon: <Briefcase size={13} />, c: 'var(--kz-blue)' },
+            ].map((s) => (
+              <div key={s.l} className="text-center px-2 min-w-0">
+                <div className="inline-flex items-center justify-center" style={{ color: s.c }}>{s.icon}</div>
+                <div className="text-[22px] font-semibold tracking-[-0.04em] text-[var(--kz-ink)] tabular-nums leading-tight">{String(s.v)}</div>
+                <div className="text-[11px] text-[var(--kz-mute)] truncate">{s.l}</div>
+              </div>
+            ))}
+          </div>
 
+          {/* Badges */}
+          <InsetGroup title="Badges">
+            <div className="p-4 flex flex-wrap gap-2">
+              {badges.length > 0
+                ? badges.map((b) => <Pill key={b.label} tone={b.tone} className="h-7 text-[12px]"><Award size={12} />{b.label}</Pill>)
+                : <p className="text-[13px] text-[var(--kz-mute)]">Complète ton profil pour obtenir des badges.</p>}
+            </div>
+          </InsetGroup>
+        </aside>
+
+        {/* ── Listes groupées (façon Réglages iOS) ── */}
+        <div className="flex flex-col gap-7 min-w-0">
+          <InsetGroup title="Informations personnelles" footer={editing ? 'Les modifications seront enregistrées en touchant OK.' : undefined}>
+            <InsetRow icon={<User size={16} />} iconBg="var(--kz-blue)" label="Nom">
+              {editing
+                ? <input aria-label="Nom complet" value={fullName} onChange={(e) => setFullName(e.target.value)} className={inputCls} placeholder="Ton nom" />
+                : <span className="text-[15px] text-[var(--kz-mute)] truncate text-right">{profile?.full_name || '—'}</span>}
+            </InsetRow>
+            <InsetRow icon={<Mail size={16} />} iconBg="var(--kz-violet)" label="E-mail" value={profile?.email} />
+            <InsetRow icon={<Phone size={16} />} iconBg="var(--kz-green)" label="Téléphone">
+              {editing
+                ? <input aria-label="Téléphone" value={phone} onChange={(e) => setPhone(e.target.value)} className={inputCls} placeholder="+262 692 …" inputMode="tel" />
+                : <span className="text-[15px] text-[var(--kz-mute)] truncate text-right">{profile?.phone || '—'}</span>}
+            </InsetRow>
+            <InsetRow icon={<MapPin size={16} />} iconBg="var(--kz-orange)" label="Ville">
+              {editing
+                ? <input aria-label="Localisation" value={location} onChange={(e) => setLocation(e.target.value)} className={inputCls} placeholder="Saint-Denis" />
+                : <span className="text-[15px] text-[var(--kz-mute)] truncate text-right">{profile?.location || '—'}</span>}
+            </InsetRow>
+            <InsetRow icon={<PenLine size={16} />} iconBg="var(--kz-mute)" label="Présentation" stacked>
+              {editing
+                ? <textarea aria-label="Bio / Présentation" value={bio} onChange={(e) => setBio(e.target.value)} rows={4} placeholder="Parle de toi en quelques lignes…"
+                    className="osc-inline-input resize-none leading-relaxed" />
+                : <p className="text-[15px] leading-relaxed text-[var(--kz-text)]">{profile?.bio || <span className="text-[var(--kz-mute)]">Aucune présentation — touche Modifier</span>}</p>}
+            </InsetRow>
+          </InsetGroup>
+
+          <InsetGroup title="Compétences" clip={false} footer="Elles alimentent le score de compatibilité avec les offres.">
+            <div className="p-4">
+              <SkillSelector selected={skills} onAdd={addSkill} onRemove={removeSkill} placeholder="Rechercher React, Python, Figma…" />
+            </div>
+          </InsetGroup>
+
+          <InsetGroup title="Savoir-être" footer="Visible sur ton CV.">
+            <div className="p-4">
+              {editing ? (
+                <div className="flex flex-wrap gap-2">
+                  {SOFT_SKILLS.map(s => {
+                    const on = softSkills.includes(s)
+                    return <ToggleChip key={s} on={on} label={s} color="var(--kz-violet)" onClick={() => setSoftSkills(prev => on ? prev.filter(x => x !== s) : [...prev, s])} />
+                  })}
+                </div>
+              ) : softSkills.length === 0 ? (
+                <p className="text-[14px] text-[var(--kz-mute)]">Aucun savoir-être — touche Modifier pour en ajouter.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {softSkills.map(s => <Pill key={s} tone="violet" className="h-7 text-[12px]">{s}</Pill>)}
+                </div>
+              )}
+            </div>
+          </InsetGroup>
+
+          <InsetGroup title="Loisirs" footer="Centres d'intérêt, visibles sur ton CV.">
+            <div className="p-4">
+              {editing ? (
+                <div className="flex flex-wrap gap-2">
+                  {HOBBIES.map(h => {
+                    const on = hobbies.includes(h)
+                    return <ToggleChip key={h} on={on} label={h} color="var(--kz-green)" onClick={() => setHobbies(prev => on ? prev.filter(x => x !== h) : [...prev, h])} />
+                  })}
+                </div>
+              ) : hobbies.length === 0 ? (
+                <p className="text-[14px] text-[var(--kz-mute)]">Aucun loisir — touche Modifier pour en ajouter.</p>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {hobbies.map(h => <Pill key={h} tone="green" className="h-7 text-[12px]">{h}</Pill>)}
+                </div>
+              )}
+            </div>
+          </InsetGroup>
+
+          {/* CV */}
+          <InsetGroup title="Mon CV">
             {/* CV Builder (cv_data) */}
             {hasCvBuilder && (
-              <div className="flex flex-col gap-2 mb-3">
-                <div className="flex items-center gap-2.5 p-3 rounded-lg border border-[var(--kz-violet)] bg-[var(--kz-violet-soft)]">
-                  <Check size={16} color={KZ.violet} />
-                  <span className="text-sm font-semibold text-[var(--kz-ink)] flex-1">CV Builder — créé</span>
-                </div>
-                <div className="flex gap-2">
-                  <Link href="/onboarding/cv-builder" className="flex-1">
-                    <Button kind="violet" size="sm" full icon={<ExternalLink size={13} />}>
-                      Modifier / Télécharger
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+              <Link href="/onboarding/cv-builder" className="block">
+                <InsetRow icon={<FileText size={16} />} iconBg="var(--kz-violet)" label="CV Builder" value="Modifier / Télécharger" chevron className="hover:bg-[var(--osc-surface)]" />
+              </Link>
             )}
 
             {/* CV uploadé (cv_url) */}
             {hasCv ? (
-              <div className="flex flex-col gap-2.5">
-                <div className="flex items-center gap-2.5 p-3 rounded-lg border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
-                  <Check size={16} color={KZ.green} />
-                  <span className="text-sm font-semibold text-[var(--kz-ink)] flex-1 min-w-0 truncate">
-                    {cvFileName ?? 'CV uploadé'}
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <Button kind="soft" size="sm" full icon={<Download size={13} />} onClick={handleDownloadCv}>
-                    Télécharger
-                  </Button>
-                  <Button kind="outline" size="sm" icon={<ExternalLink size={13} />} onClick={() => setCvFileName(null)}>
-                    Changer
-                  </Button>
-                </div>
-              </div>
+              <>
+                <InsetRow icon={<Check size={16} strokeWidth={3} />} iconBg="var(--kz-green)" label={<span className="truncate">{cvFileName ?? 'CV importé'}</span>} />
+                <InsetRow icon={<Download size={16} />} iconBg="var(--kz-blue)" label="Télécharger" chevron onClick={handleDownloadCv} />
+                <InsetRow icon={<RefreshCw size={16} />} iconBg="var(--kz-mute)" label="Changer" chevron onClick={() => setCvFileName(null)} />
+              </>
             ) : !hasCvBuilder ? (
-              <div className="flex flex-col gap-2">
+              <div className="p-4 flex flex-col gap-3">
                 <Link href="/onboarding/cv-builder">
-                  <Button kind="primary" size="sm" full icon={<ExternalLink size={13} />}>
+                  <Button kind="primary" size="md" full icon={<ExternalLink size={14} />}>
                     Créer mon CV avec le Builder
                   </Button>
                 </Link>
-                <div className="text-center text-xs text-[var(--kz-mute)] py-1">ou</div>
+                <div className="flex items-center gap-3 text-[12px] text-[var(--kz-mute)]"><span className="h-px flex-1 bg-[var(--kz-line)]" />ou<span className="h-px flex-1 bg-[var(--kz-line)]" /></div>
                 <FileUpload
                   accept=".pdf,.doc,.docx"
                   maxSizeMb={10}
@@ -300,7 +428,7 @@ export default function CandidateProfilePage() {
 
             {/* Permettre un nouvel upload si on veut changer */}
             {hasCv && !cvFileName && (
-              <div className="mt-3">
+              <div className="p-4">
                 <FileUpload
                   accept=".pdf,.doc,.docx"
                   maxSizeMb={10}
@@ -311,205 +439,48 @@ export default function CandidateProfilePage() {
                 />
               </div>
             )}
-          </div>
+          </InsetGroup>
 
-          {/* Badges */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Badges obtenus</h3>
-            <div className="flex flex-wrap gap-2">
-              {(profile?.streak ?? 0) > 0  && <Badge color="orange" size="md">Streak {profile!.streak}j</Badge>}
-              {(profile?.xp ?? 0) >= 1000   && <Badge color="violet" size="md">Niveau {Math.floor((profile!.xp) / 1000) + 1}</Badge>}
-              {profileScore >= 80            && <Badge color="green"  size="md">Profil complet</Badge>}
-              {hasCv                         && <Badge color="blue"   size="md">CV uploade</Badge>}
-              {!!profile?.video_pitch_url && <Badge color="orange" size="md">Pitch video</Badge>}
-              {applications.length >= 5      && <Badge color="yellow" size="md">{applications.length} candidatures</Badge>}
-              {(profile?.streak ?? 0) === 0 && (profile?.xp ?? 0) === 0 && !hasCv && (
-                <p className="text-xs text-[var(--kz-mute)]">Complete ton profil pour obtenir des badges.</p>
-              )}
+          {/* Pitch vidéo */}
+          <InsetGroup
+            title={<span className="inline-flex items-center gap-2"><Video size={13} />Pitch vidéo <span className="normal-case tracking-normal font-medium text-[var(--kz-orange)]">60 s max</span></span>}
+            footer="Présente-toi en 60 secondes. Les recruteurs voient ton pitch directement sur ton profil : un vrai atout pour te démarquer."
+          >
+            <div className="p-4">
+              <VideoPitchRecorder
+                currentUrl={profile?.video_pitch_url ?? null}
+                onUpload={handleVideoPitchUpload}
+                onDelete={handleVideoPitchDelete}
+              />
             </div>
-          </div>
-
-          {/* Video Pitch */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <div className="flex items-center gap-2 mb-3">
-              <h3 className="text-sm font-bold text-[var(--kz-ink)]">Pitch vidéo</h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
-                style={{ background: KZ.orangeSoft, color: KZ.ink }}>
-                60s max
-              </span>
-            </div>
-            <p className="text-xs text-[var(--kz-mute)] mb-3 leading-relaxed">
-              Présente-toi en 60 secondes. Les recruteurs peuvent voir ton pitch directement sur ton profil — un vrai avantage pour te démarquer !
-            </p>
-            <VideoPitchRecorder
-              currentUrl={profile?.video_pitch_url ?? null}
-              onUpload={handleVideoPitchUpload}
-              onDelete={handleVideoPitchDelete}
-            />
-          </div>
+          </InsetGroup>
 
           {/* KazaPortfolio */}
           <KazaPortfolioSection profile={profile as unknown as Record<string, unknown> | null} onSaved={refetch} />
 
           {/* KazaBoost */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <div className="flex items-center gap-2 mb-2">
-              <h3 className="text-sm font-bold text-[var(--kz-ink)]">KazaBoost</h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
-                style={{ background: KZ.yellowSoft, color: 'var(--kz-ink)' }}>
-                48h
-              </span>
-            </div>
-            <p className="text-xs text-[var(--kz-mute)] mb-3 leading-relaxed">
-              Boostez votre profil et apparaissez en priorité dans les recherches recruteurs pendant 48h.
-            </p>
-            {profile && (
-              <KazaBoostButton
-                profileId={profile.id}
-                xp={profile.xp ?? 0}
-                boostedUntil={profile.boosted_until ?? null}
-                onBoost={refetch}
-              />
-            )}
-
-            {/* Boost premium payant (durée longue) */}
-            <div className="mt-3 pt-3 border-t border-[var(--kz-line)]">
-              <p className="text-[11px] text-[var(--kz-mute)] mb-2 leading-relaxed">
-                Pas assez d&apos;XP ou besoin de plus longtemps ? Optez pour le boost premium (7 à 30 jours).
+          <InsetGroup
+            title={<span className="inline-flex items-center gap-2"><Rocket size={13} />KazaBoost <span className="normal-case tracking-normal font-medium text-[var(--kz-yellow)]">48 h</span></span>}
+            footer="Pas assez d'XP ou besoin de plus longtemps ? Opte pour le boost premium (7 à 30 jours)."
+          >
+            <div className="p-4">
+              <p className="text-[14px] text-[var(--kz-text)] mb-3 leading-relaxed">
+                Booste ton profil et apparais en priorité dans les recherches des recruteurs pendant 48 h.
               </p>
+              {profile && (
+                <KazaBoostButton
+                  profileId={profile.id}
+                  xp={profile.xp ?? 0}
+                  boostedUntil={profile.boosted_until ?? null}
+                  onBoost={refetch}
+                />
+              )}
+            </div>
+            {/* Boost premium payant (durée longue) */}
+            <div className="p-4">
               {profile && <ProfileBoostPaid boostedUntil={profile.boosted_until ?? null} />}
             </div>
-          </div>
-        </div>
-
-        {/* Colonne droite */}
-        <div className="flex flex-col gap-4">
-          {/* Infos personnelles */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-4">Informations personnelles</h2>
-            {editing ? (
-              <div className="flex flex-col gap-4">
-                <Input label="Nom complet" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-                <Textarea label="Bio / Presentation" value={bio} onChange={(e) => setBio(e.target.value)} rows={4} placeholder="Parle de toi en quelques lignes..." />
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Input label="Localisation" value={location} onChange={(e) => setLocation(e.target.value)} icon={<MapPin size={15} />} placeholder="Saint-Denis" />
-                  <Input label="Telephone" value={phone} onChange={(e) => setPhone(e.target.value)} icon={<Phone size={15} />} placeholder="+262 692 ..." />
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                <div>
-                  <div className="text-xs text-[var(--kz-mute)] mb-0.5">Nom complet</div>
-                  <div className="text-sm font-semibold text-[var(--kz-ink)]">{profile?.full_name || '—'}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-[var(--kz-mute)] mb-0.5">Email</div>
-                  <div className="flex items-center gap-2 text-sm text-[var(--kz-ink)]"><Mail size={13} />{profile?.email}</div>
-                </div>
-                <div>
-                  <div className="text-xs text-[var(--kz-mute)] mb-0.5">Bio</div>
-                  <div className="text-sm text-[var(--kz-text)]">{profile?.bio || <span className="text-[var(--kz-mute)] italic">Aucune bio — clique sur Modifier</span>}</div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-xs text-[var(--kz-mute)] mb-0.5">Localisation</div>
-                    <div className="flex items-center gap-1 text-sm text-[var(--kz-ink)]"><MapPin size={13} />{profile?.location || '—'}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-[var(--kz-mute)] mb-0.5">Telephone</div>
-                    <div className="flex items-center gap-1 text-sm text-[var(--kz-ink)]"><Phone size={13} />{profile?.phone || '—'}</div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Compétences */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-4">Competences</h2>
-            <SkillSelector selected={skills} onAdd={addSkill} onRemove={removeSkill} placeholder="Rechercher React, Python, Figma..." />
-          </div>
-
-          {/* Soft skills */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Soft skills</h2>
-            <p className="text-xs text-[var(--kz-mute)] mb-4">Savoir-être — visible sur ton CV.</p>
-            {editing ? (
-              <div className="flex flex-wrap gap-1.5">
-                {SOFT_SKILLS.map(s => {
-                  const on = softSkills.includes(s)
-                  return (
-                    <button key={s} type="button"
-                      onClick={() => setSoftSkills(prev => on ? prev.filter(x => x !== s) : [...prev, s])}
-                      className="px-2.5 py-1 text-xs font-semibold border rounded-full transition-all"
-                      style={on ? { background: KZ.violet, color: 'white', borderColor: KZ.violet }
-                                : { background: KZ.paper, color: 'var(--kz-text)', borderColor: 'var(--kz-line)' }}>
-                      {on && '✓ '}{s}
-                    </button>
-                  )
-                })}
-              </div>
-            ) : softSkills.length === 0 ? (
-              <div className="text-sm text-[var(--kz-mute)] py-4 text-center border border-dashed border-[var(--kz-line)] rounded-lg">
-                Aucun soft skill — clique sur &quot;Modifier&quot;.
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {softSkills.map(s => (
-                  <span key={s} className="px-2.5 py-1 text-xs font-semibold border border-[var(--kz-edge)] rounded-md" style={{ background: KZ.violetSoft }}>{s}</span>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Loisirs */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-1">Loisirs</h2>
-            <p className="text-xs text-[var(--kz-mute)] mb-4">Centres d&apos;intérêt — visible sur ton CV.</p>
-            {editing ? (
-              <div className="flex flex-wrap gap-1.5">
-                {HOBBIES.map(h => {
-                  const on = hobbies.includes(h)
-                  return (
-                    <button key={h} type="button"
-                      onClick={() => setHobbies(prev => on ? prev.filter(x => x !== h) : [...prev, h])}
-                      className="px-2.5 py-1 text-xs font-semibold border rounded-full transition-all"
-                      style={on ? { background: KZ.green, color: 'white', borderColor: KZ.green }
-                                : { background: KZ.paper, color: 'var(--kz-text)', borderColor: 'var(--kz-line)' }}>
-                      {on && '✓ '}{h}
-                    </button>
-                  )
-                })}
-              </div>
-            ) : hobbies.length === 0 ? (
-              <div className="text-sm text-[var(--kz-mute)] py-4 text-center border border-dashed border-[var(--kz-line)] rounded-lg">
-                Aucun loisir — clique sur &quot;Modifier&quot;.
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {hobbies.map(h => (
-                  <span key={h} className="px-2.5 py-1 text-xs font-semibold border border-[var(--kz-edge)] rounded-md" style={{ background: KZ.greenSoft }}>{h}</span>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Statistiques */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-4">Statistiques</h2>
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { v: (profile?.xp ?? 0).toLocaleString('fr-FR'), l: 'XP total' },
-                { v: profile?.streak ?? 0, l: 'Jours streak' },
-                { v: applications.length, l: 'Candidatures' },
-              ].map((s) => (
-                <div key={s.l} className="text-center p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-                  <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{String(s.v)}</div>
-                  <div className="text-xs text-[var(--kz-mute)] mt-0.5">{s.l}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+          </InsetGroup>
         </div>
       </div>
 

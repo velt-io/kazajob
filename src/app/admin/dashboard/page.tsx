@@ -1,13 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import Link from 'next/link'
-import { Users, Briefcase, Building2, TrendingUp, Star, Bell, BookOpen, BarChart2, Sparkles, Zap } from 'lucide-react'
-import { StatCard } from '@/components/ui/StatCard'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { Users, Briefcase, Building2, TrendingUp, Star, Bell, BookOpen, BarChart2, Sparkles, Zap, ArrowUpRight, LayoutGrid } from 'lucide-react'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { KZ } from '@/lib/constants'
+import {
+  ACCENT, CountUp, EmptyPanel, Gauge, Monogram, PageHeader, StatusPill, Widget, accentStyle, tint,
+} from '@/components/os/recruiter/primitives'
 
 interface AdminStats {
   users: number
@@ -21,6 +21,8 @@ interface AdminStats {
   skills: number
   referrals: number
 }
+
+const idx = (i: number) => ({ '--i': i } as CSSProperties)
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({
@@ -61,105 +63,139 @@ export default function AdminDashboard() {
 
   if (loading) return <PageLoader />
 
+  const today = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })
+  const KPIS = [
+    { label: 'Utilisateurs', value: stats.users,        icon: <Users size={15} />,      accent: ACCENT.violet, href: '/admin/users' },
+    { label: 'Offres',       value: stats.jobs,         icon: <Briefcase size={15} />,  accent: ACCENT.orange, href: '/admin/jobs' },
+    { label: 'Entreprises',  value: stats.companies,    icon: <Building2 size={15} />,  accent: ACCENT.green,  href: '/admin/companies' },
+    { label: 'Candidatures', value: stats.applications, icon: <TrendingUp size={15} />, accent: ACCENT.blue,   href: '/admin/analytics' },
+  ]
+  const MINOR = [
+    { label: 'KazaEvents',  value: stats.events,    icon: <Star size={14} />,     accent: ACCENT.teal },
+    { label: 'Compétences', value: stats.skills,    icon: <BookOpen size={14} />, accent: ACCENT.indigo },
+    { label: 'Parrainages', value: stats.referrals, icon: <Zap size={14} />,      accent: ACCENT.yellow },
+  ]
+  const QUICK = [
+    { href: '/admin/users',         label: 'Utilisateurs', accent: ACCENT.violet, icon: <Users size={18} /> },
+    { href: '/admin/jobs',          label: 'Modération',   accent: ACCENT.orange, icon: <Briefcase size={18} /> },
+    { href: '/admin/companies',     label: 'Entreprises',  accent: ACCENT.green,  icon: <Building2 size={18} /> },
+    { href: '/admin/events',        label: 'KazaEvents',   accent: ACCENT.teal,   icon: <Star size={18} /> },
+    { href: '/admin/notifications', label: 'Notifier',     accent: ACCENT.yellow, icon: <Bell size={18} /> },
+    { href: '/admin/skills',        label: 'Compétences',  accent: ACCENT.indigo, icon: <BookOpen size={18} /> },
+    { href: '/admin/analytics',     label: 'Analytics',    accent: ACCENT.blue,   icon: <BarChart2 size={18} /> },
+    { href: '/admin/ai',            label: 'KazaIA',       accent: ACCENT.pink,   icon: <Sparkles size={18} /> },
+  ]
+
   return (
-    <div className="max-w-[1100px] mx-auto">
-      <div className="mb-7">
-        <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Administration</h1>
-        <p className="text-sm text-[var(--kz-mute)]">Vue globale · Kazajob La Reunion 974</p>
-      </div>
+    <div className="max-w-[1180px] mx-auto">
+      <PageHeader
+        eyebrow={<span className="capitalize">{today}</span>}
+        title={<>Administration <span className="os-text-aurora">Kazajob</span></>}
+        subtitle="Vue globale · La Réunion 974"
+      />
 
-      {/* KPI — ligne 1 */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-        <StatCard label="Utilisateurs"   value={stats.users.toLocaleString('fr-FR')}        color={KZ.violetSoft} icon={<Users size={16} />} />
-        <StatCard label="Offres"         value={stats.jobs.toLocaleString('fr-FR')}          color={KZ.orangeSoft} icon={<Briefcase size={16} />} />
-        <StatCard label="Entreprises"    value={stats.companies.toLocaleString('fr-FR')}     color={KZ.greenSoft}  icon={<Building2 size={16} />} />
-        <StatCard label="Candidatures"   value={stats.applications.toLocaleString('fr-FR')}  color={KZ.yellowSoft} icon={<TrendingUp size={16} />} />
-      </div>
-      {/* KPI — ligne 2 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-        <StatCard label="KazaEvents"     value={stats.events.toLocaleString('fr-FR')}        color={KZ.blueSoft}   icon={<Star size={16} />} />
-        <StatCard label="Compétences"    value={stats.skills.toLocaleString('fr-FR')}        color={KZ.cream2}     icon={<BookOpen size={16} />} />
-        <StatCard label="Parrainages"    value={stats.referrals.toLocaleString('fr-FR')}     color={KZ.yellowSoft} icon={<Zap size={16} />} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-5">
-        {/* Offres récentes */}
-        <div className="kz-card p-6 bg-[var(--kz-paper)]">
-          <div className="flex justify-between items-center mb-5">
-            <h2 className="kz-h3 text-[var(--kz-ink)]">Offres recentes</h2>
-            <Link href="/admin/jobs"><Button kind="soft" size="sm">Tout voir</Button></Link>
+      {/* KPI principaux */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+        {KPIS.map((k, i) => (
+          <div key={k.label} className="osr-in min-w-0" style={idx(i)}>
+            {/* Apparition sur l'enveloppe, inclinaison sur la carte : les deux transformations ne se gênent pas */}
+            <Link href={k.href} data-tilt
+              className="osr-glow group block h-full rounded-[24px] os-glass p-5 hover:bg-white/[0.07] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kz-blue)]"
+              style={accentStyle(k.accent)}>
+              <div className="flex items-center justify-between">
+                <span className="w-8 h-8 rounded-[10px] flex items-center justify-center text-white" style={{ background: k.accent }}>{k.icon}</span>
+                <ArrowUpRight size={16} className="text-[var(--kz-mute)] opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+              <div className="text-[30px] sm:text-[36px] font-semibold tracking-[-0.05em] text-white mt-3 leading-none">
+                <CountUp value={k.value} />
+              </div>
+              <div className="text-[13px] text-[var(--kz-mute)] mt-1.5">{k.label}</div>
+            </Link>
           </div>
+        ))}
+      </div>
+
+      {/* KPI secondaires */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+        {MINOR.map((k, i) => (
+          <div key={k.label} className="osr-in osr-panel flex items-center gap-3 px-4 py-3.5" style={idx(i + 4)}>
+            <span className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: tint(k.accent, 18), color: k.accent }}>{k.icon}</span>
+            <span className="flex-1 text-[14px] text-[var(--kz-text)]">{k.label}</span>
+            <span className="text-[20px] font-semibold tracking-[-0.03em] text-white"><CountUp value={k.value} /></span>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-4">
+        {/* Offres récentes */}
+        <Widget title="Offres récentes" sub="Dernières publications" icon={<Briefcase size={14} />} accent={ACCENT.orange}
+          href="/admin/jobs" linkLabel="Tout voir" bodyClassName="px-2 pb-2">
           {recentJobs.length === 0 ? (
-            <p className="text-sm text-[var(--kz-mute)] text-center py-6">Aucune offre publiee pour le moment.</p>
+            <EmptyPanel icon={<Briefcase size={24} />} title="Aucune offre" description="Aucune offre publiée pour le moment." accent={ACCENT.orange} className="py-10" />
           ) : (
-            <div className="flex flex-col gap-2">
-              {recentJobs.map((job) => (
-                <div key={job.id} className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+            <div className="flex flex-col">
+              {recentJobs.map((job, i) => (
+                <Link key={job.id} href="/admin/jobs" className="osr-row osr-in flex items-center gap-3 px-3 py-2.5" style={idx(i)}>
+                  <Monogram name={job.title} size={36} radius={11} gradient="linear-gradient(145deg, var(--kz-orange), var(--osr-pink))" />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{job.title}</div>
-                    <div className="text-xs text-[var(--kz-mute)]">
+                    <div className="text-[14px] font-semibold text-white truncate">{job.title}</div>
+                    <div className="osr-sub text-[12px] text-[var(--kz-mute)]">
                       {new Date(job.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                     </div>
                   </div>
-                  <Badge color={job.is_active ? 'green' : 'cream'} size="sm">
+                  <StatusPill accent={job.is_active ? ACCENT.green : ACCENT.mute} live={job.is_active}>
                     {job.is_active ? 'Active' : 'Inactive'}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Colonne droite */}
-        <div className="flex flex-col gap-4">
-          {/* Accès rapides */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h3 className="kz-h3 text-[var(--kz-ink)] mb-4">Acces rapides</h3>
-            <div className="flex flex-col gap-2">
-              {[
-                { href: '/admin/users',         label: 'Gérer les utilisateurs',  color: KZ.violetSoft, icon: <Users size={16} /> },
-                { href: '/admin/jobs',          label: 'Modérer les offres',       color: KZ.orangeSoft, icon: <Briefcase size={16} /> },
-                { href: '/admin/companies',     label: 'Valider les entreprises',  color: KZ.greenSoft,  icon: <Building2 size={16} /> },
-                { href: '/admin/events',        label: 'Gérer KazaEvents',         color: KZ.blueSoft,   icon: <Star size={16} /> },
-                { href: '/admin/notifications', label: 'Envoyer une notification', color: KZ.yellowSoft, icon: <Bell size={16} /> },
-                { href: '/admin/skills',        label: 'Référentiel compétences',  color: KZ.cream2,     icon: <BookOpen size={16} /> },
-                { href: '/admin/analytics',     label: 'Analytics & rapports',     color: KZ.violetSoft, icon: <BarChart2 size={16} /> },
-                { href: '/admin/ai',            label: 'KazaIA — Statistiques',    color: KZ.orangeSoft, icon: <Sparkles size={16} /> },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 p-3.5 rounded-xl border border-[var(--kz-edge)] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0_var(--kz-shadow)]"
-                  style={{ background: item.color, boxShadow: '2px 2px 0 var(--kz-shadow)' }}
-                >
-                  {item.icon}
-                  <span className="text-sm font-bold text-[var(--kz-ink)]">{item.label}</span>
+                  </StatusPill>
                 </Link>
               ))}
             </div>
-          </div>
+          )}
+        </Widget>
 
+        {/* Colonne droite */}
+        <div className="flex flex-col gap-4 min-w-0">
           {/* Distribution rôles — données réelles */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h3 className="kz-h3 text-[var(--kz-ink)] mb-4">Distribution des roles</h3>
+          <Widget title="Distribution des rôles" sub={`${stats.users.toLocaleString('fr-FR')} comptes`} icon={<Users size={14} />} accent={ACCENT.violet}>
             {stats.users === 0 ? (
-              <p className="text-xs text-[var(--kz-mute)] text-center py-4">Aucun utilisateur inscrit.</p>
+              <p className="text-[13px] text-[var(--kz-mute)] text-center py-4">Aucun utilisateur inscrit.</p>
             ) : (
-              <div className="flex flex-col gap-3">
-                {roleDistrib.map((r) => (
-                  <div key={r.label}>
-                    <div className="flex justify-between text-xs font-semibold mb-1">
-                      <span className="text-[var(--kz-ink)]">{r.label} <span className="text-[var(--kz-mute)] font-normal">({r.count})</span></span>
-                      <span className="text-[var(--kz-mute)]">{r.pct}%</span>
+              <div className="flex items-center gap-5 pt-1">
+                <Gauge value={roleDistrib[0].pct} size={92} stroke={10} color={ACCENT.orange} label={`Candidats ${roleDistrib[0].pct} %`}>
+                  <span className="block text-[20px] font-semibold text-white tracking-[-0.04em]">{roleDistrib[0].pct}%</span>
+                  <span className="block text-[10px] text-[var(--kz-mute)] mt-0.5">candidats</span>
+                </Gauge>
+                <div className="flex-1 min-w-0 flex flex-col gap-3">
+                  {roleDistrib.map((r, i) => (
+                    <div key={r.label}>
+                      <div className="flex justify-between text-[12px] mb-1.5">
+                        <span className="text-white font-medium">{r.label} <span className="text-[var(--kz-mute)] font-normal tabular-nums">({r.count})</span></span>
+                        <span className="text-[var(--kz-mute)] tabular-nums">{r.pct}%</span>
+                      </div>
+                      <div className="osr-bar" style={idx(i)}>
+                        <span style={{ width: `${r.pct}%`, background: r.color }} />
+                      </div>
                     </div>
-                    <div className="h-2.5 bg-[var(--kz-cream2)] border border-[var(--kz-edge)] rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${r.pct}%`, background: r.color }} />
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
-          </div>
+          </Widget>
+
+          {/* Accès rapides (grille d'apps) */}
+          <Widget title="Accès rapides" icon={<LayoutGrid size={14} />} accent={ACCENT.indigo} bodyClassName="px-3 pb-3">
+            <div className="grid grid-cols-4 gap-1">
+              {QUICK.map((item) => (
+                <Link key={item.href} href={item.href}
+                  className="group flex flex-col items-center gap-1.5 py-2.5 rounded-2xl hover:bg-white/[0.06] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kz-blue)]">
+                  <span className="w-11 h-11 rounded-[13px] flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110 group-active:scale-95"
+                    style={{ background: `linear-gradient(145deg, ${item.accent}, ${tint(item.accent, 60)})`, boxShadow: `0 10px 22px -12px ${item.accent}` }}>
+                    {item.icon}
+                  </span>
+                  <span className="text-[11px] font-medium text-[var(--kz-text)] text-center leading-tight">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+          </Widget>
         </div>
       </div>
     </div>

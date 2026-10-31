@@ -2,12 +2,11 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { Rocket, Building2, Briefcase, BookOpen, AlertTriangle, Plus } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
-import { KZ } from '@/lib/constants'
-import type { BadgeColor } from '@/lib/types'
+import { ACCENT, CountUp, EmptyPanel, PageHeader, SkeletonList, StatusPill, Widget, tint } from '@/components/os/recruiter/primitives'
+import { OSR_FIELD } from '@/components/os/recruiter/admin-ui'
 
 interface CampaignRow {
   id: string; name: string; slug: string; state: string
@@ -23,13 +22,13 @@ interface CampaignRow {
 interface Usage { companies: number; activeJobs: number; activeTrainings: number }
 interface ApiData { campaigns: CampaignRow[]; usage: Usage }
 
-const STATUS_LABEL: Record<string, { label: string; color: BadgeColor }> = {
-  draft:     { label: 'Brouillon',  color: 'cream' },
-  scheduled: { label: 'Planifiée',  color: 'blue' },
-  active:    { label: 'Active',     color: 'green' },
-  paused:    { label: 'En pause',   color: 'yellow' },
-  ended:     { label: 'Terminée',   color: 'ink' },
-  cancelled: { label: 'Annulée',    color: 'orange' },
+const STATUS_LABEL: Record<string, { label: string; accent: string }> = {
+  draft:     { label: 'Brouillon',  accent: ACCENT.mute },
+  scheduled: { label: 'Planifiée',  accent: ACCENT.blue },
+  active:    { label: 'Active',     accent: ACCENT.green },
+  paused:    { label: 'En pause',   accent: ACCENT.yellow },
+  ended:     { label: 'Terminée',   accent: ACCENT.indigo },
+  cancelled: { label: 'Annulée',    accent: ACCENT.red },
 }
 
 const QUICK_ACTIONS: Record<string, { to: string; label: string; destructive: boolean }[]> = {
@@ -52,12 +51,12 @@ function Toggle({ on, onClick, disabled }: { on: boolean; onClick: () => void; d
   return (
     <button
       type="button" onClick={onClick} disabled={disabled}
-      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors disabled:opacity-40 shrink-0"
-      style={{ background: on ? KZ.green : KZ.beige }}
+      className="relative inline-flex h-[26px] w-[44px] items-center rounded-full transition-colors duration-200 disabled:opacity-40 shrink-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--kz-blue)_40%,transparent)]"
+      style={{ background: on ? 'var(--kz-green)' : 'var(--osr-fill-3)' }}
       aria-pressed={on}
     >
-      <span className="inline-block h-4 w-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
-        style={{ transform: on ? 'translateX(22px)' : 'translateX(2px)' }} />
+      <span className="inline-block h-[22px] w-[22px] rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.35)] transition-transform duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+        style={{ transform: on ? 'translateX(20px)' : 'translateX(2px)' }} />
     </button>
   )
 }
@@ -155,35 +154,34 @@ export default function AdminLaunchPage() {
 
   return (
     <div className="max-w-[1100px] mx-auto">
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Campagne de lancement</h1>
-          <p className="text-sm text-[var(--kz-mute)] mt-1">
-            Accès gratuit temporaire, indépendant des forfaits Stripe. Jamais visible comme tarif public.
-          </p>
-        </div>
-        <Button kind="primary" size="md" icon={<Plus size={15} />} onClick={() => setShowCreate((v) => !v)}>
-          Nouvelle campagne
-        </Button>
-      </div>
+      <PageHeader
+        eyebrow="KazaLaunch"
+        title="Campagne de lancement"
+        subtitle="Accès gratuit temporaire, indépendant des forfaits Stripe. Jamais visible comme tarif public."
+        actions={
+          <Button kind="primary" size="md" icon={<Plus size={15} />} onClick={() => setShowCreate((v) => !v)}>
+            Nouvelle campagne
+          </Button>
+        }
+      />
 
       {/* Impact global — toutes campagnes confondues */}
       {data && (
-        <div className="kz-card p-4 mb-6 flex flex-wrap items-center gap-4" style={{ background: KZ.violetSoft }}>
-          <div className="flex items-center gap-2">
-            <Rocket size={20} className="text-[var(--kz-violet)]" />
-            <span className="font-extrabold text-[var(--kz-ink)]">Impact global</span>
+        <Widget title="Impact global" sub="Toutes campagnes confondues" icon={<Rocket size={14} />} accent={ACCENT.violet} className="mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {[
+              { icon: <Building2 size={15} />, value: data.usage.companies, label: 'entreprise(s) enrôlée(s)', accent: ACCENT.violet },
+              { icon: <Briefcase size={15} />, value: data.usage.activeJobs, label: 'offre(s) active(s)', accent: ACCENT.orange },
+              { icon: <BookOpen size={15} />, value: data.usage.activeTrainings, label: 'formation(s) active(s)', accent: ACCENT.teal },
+            ].map((k) => (
+              <div key={k.label} className="osr-inset flex items-center gap-3 px-3 py-2.5">
+                <span className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0" style={{ background: tint(k.accent, 18), color: k.accent }}>{k.icon}</span>
+                <span className="text-[22px] font-semibold tracking-[-0.04em] text-white"><CountUp value={k.value} /></span>
+                <span className="text-[12px] text-[var(--kz-mute)] leading-tight">{k.label}</span>
+              </div>
+            ))}
           </div>
-          <div className="flex items-center gap-1.5 text-sm text-[var(--kz-ink)]">
-            <Building2 size={15} /> <b>{data.usage.companies}</b> entreprise(s) enrôlée(s)
-          </div>
-          <div className="flex items-center gap-1.5 text-sm text-[var(--kz-ink)]">
-            <Briefcase size={15} /> <b>{data.usage.activeJobs}</b> offre(s) active(s)
-          </div>
-          <div className="flex items-center gap-1.5 text-sm text-[var(--kz-ink)]">
-            <BookOpen size={15} /> <b>{data.usage.activeTrainings}</b> formation(s) active(s)
-          </div>
-        </div>
+        </Widget>
       )}
 
       {/* ── Rappel lancement écosystème payant ── */}
@@ -193,23 +191,26 @@ export default function AdminLaunchPage() {
         const activeCampaign = data?.campaigns.find((c) => c.effective_status === 'active')
         const paidVisible = activeCampaign ? activeCampaign.new_subscriptions_enabled : true
         return (
-          <div className="kz-card p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
-            style={{ background: daysLeft <= 30 ? '#FFF3E0' : '#FFF9F0', borderColor: daysLeft <= 30 ? 'var(--kz-orange)' : 'var(--kz-line)' }}>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
+          <div className="rounded-[20px] p-4 mb-4 flex flex-col sm:flex-row sm:items-center gap-3"
+            style={{
+              background: tint(ACCENT.orange, daysLeft <= 30 ? 12 : 6),
+              border: `1px solid ${daysLeft <= 30 ? 'color-mix(in srgb, var(--kz-orange) 45%, transparent)' : 'var(--osr-hair)'}`,
+            }}>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
                 <AlertTriangle size={16} className="text-[var(--kz-orange)] shrink-0" />
-                <span className="font-extrabold text-[var(--kz-ink)] text-sm">
+                <span className="font-semibold text-white text-[14px]">
                   Lancement de l&apos;écosystème payant — 6 octobre 2026
                 </span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: 'var(--kz-orange)', color: 'white' }}>
+                <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full tabular-nums"
+                  style={{ background: 'var(--kz-orange)', color: 'black' }}>
                   J{daysLeft > 0 ? `−${daysLeft}` : ' PASSÉ'}
                 </span>
               </div>
-              <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
-                À partir de cette date, activer le toggle <b>Abonnements payants</b> sur la campagne active
+              <p className="text-[12px] text-[var(--kz-mute)] leading-relaxed">
+                À partir de cette date, activer le toggle <b className="text-white">Abonnements payants</b> sur la campagne active
                 pour que les offres payantes redeviennent visibles dans le tunnel d&apos;activation recruteur.
-                Actuellement&nbsp;: offres payantes <b>{paidVisible ? 'visibles ✓' : 'masquées (skeletons)'}</b>.
+                Actuellement&nbsp;: offres payantes <b className="text-white">{paidVisible ? 'visibles' : 'masquées (skeletons)'}</b>.
               </p>
             </div>
           </div>
@@ -218,8 +219,7 @@ export default function AdminLaunchPage() {
 
       {/* Création d'une campagne */}
       {showCreate && (
-        <div className="kz-card p-4 mb-6 bg-[var(--kz-paper)]">
-          <h2 className="font-bold text-[var(--kz-ink)] mb-3">Nouvelle campagne (créée en brouillon)</h2>
+        <Widget title="Nouvelle campagne" sub="Créée en brouillon" icon={<Plus size={14} />} accent={ACCENT.blue} className="mb-4 os-pop">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <Input label="Nom" value={createForm.name}
               onChange={(e) => setCreateForm((f) => ({ ...f, name: e.target.value }))}
@@ -229,47 +229,47 @@ export default function AdminLaunchPage() {
               placeholder="rentree-2026" />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-            <label className="text-xs text-[var(--kz-mute)]">
+            <label className="text-[12px] text-[var(--kz-mute)]">
               Ouverture des inscriptions (optionnel)
               <input type="date" value={createForm.startsAt}
                 onChange={(e) => setCreateForm((f) => ({ ...f, startsAt: e.target.value }))}
-                className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
+                className={`mt-1.5 w-full ${OSR_FIELD}`} />
             </label>
-            <label className="text-xs text-[var(--kz-mute)]">
+            <label className="text-[12px] text-[var(--kz-mute)]">
               Fermeture des inscriptions (optionnel)
               <input type="date" value={createForm.endsAt}
                 onChange={(e) => setCreateForm((f) => ({ ...f, endsAt: e.target.value }))}
-                className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
+                className={`mt-1.5 w-full ${OSR_FIELD}`} />
             </label>
           </div>
-          {createError && <p className="text-sm font-semibold mb-3" style={{ color: '#E54E4E' }}>{createError}</p>}
+          {createError && <p role="alert" className="text-[13px] font-semibold mb-3 text-[var(--osr-red)]">{createError}</p>}
           <div className="flex gap-2">
             <Button kind="primary" size="md" loading={creating} disabled={!createForm.name.trim() || !createForm.slug.trim()} onClick={submitCreate}>
               Créer la campagne
             </Button>
             <Button kind="soft" size="md" onClick={() => setShowCreate(false)}>Annuler</Button>
           </div>
-        </div>
+        </Widget>
       )}
 
       {loading ? (
-        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Chargement…</div>
+        <SkeletonList rows={2} height={220} />
       ) : !data || data.campaigns.length === 0 ? (
-        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Aucune campagne pour le moment.</div>
+        <div className="osr-panel"><EmptyPanel icon={<Rocket size={26} />} title="Aucune campagne pour le moment." accent={ACCENT.violet} /></div>
       ) : (
         <div className="space-y-4">
-          {data.campaigns.map((c) => {
+          {data.campaigns.map((c, i) => {
             const status = STATUS_LABEL[c.effective_status] ?? STATUS_LABEL.draft
             const actions = QUICK_ACTIONS[c.state] ?? []
             return (
-              <div key={c.id} className="kz-card p-4 bg-[var(--kz-paper)]">
+              <div key={c.id} className="osr-panel osr-in p-4 sm:p-5" style={{ '--i': i } as React.CSSProperties}>
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-[var(--kz-ink)]">{c.name}</span>
-                    <Badge color={status.color} size="sm">{status.label}</Badge>
-                    {c.starts_at && <span className="text-xs text-[var(--kz-mute)]">du {toLocalInput(c.starts_at)}</span>}
-                    {c.ends_at && <span className="text-xs text-[var(--kz-mute)]">au {toLocalInput(c.ends_at)}</span>}
-                    {busy === c.id && <span className="text-xs text-[var(--kz-violet)]">enregistrement…</span>}
+                  <div className="flex items-center gap-2 flex-wrap min-w-0">
+                    <span className="text-[19px] font-semibold tracking-[-0.02em] text-white">{c.name}</span>
+                    <StatusPill accent={status.accent} live={c.effective_status === 'active'}>{status.label}</StatusPill>
+                    {c.starts_at && <span className="text-[12px] text-[var(--kz-mute)] tabular-nums">du {toLocalInput(c.starts_at)}</span>}
+                    {c.ends_at && <span className="text-[12px] text-[var(--kz-mute)] tabular-nums">au {toLocalInput(c.ends_at)}</span>}
+                    {busy === c.id && <StatusPill accent={ACCENT.blue} live>Enregistrement…</StatusPill>}
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {actions.map((a) => (
@@ -281,24 +281,27 @@ export default function AdminLaunchPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 p-2.5 rounded-lg border mb-3"
-                  style={{ borderColor: c.free_publishing_enabled ? KZ.line : '#E54E4E', background: c.free_publishing_enabled ? KZ.cream2 : '#FFEAEA' }}>
-                  <div className="flex items-center gap-2">
-                    <AlertTriangle size={14} style={{ color: c.free_publishing_enabled ? KZ.mute : '#E54E4E' }} />
-                    <div>
-                      <div className="text-xs font-bold text-[var(--kz-ink)]">Arrêt d&apos;urgence</div>
-                      <div className="text-[10px] text-[var(--kz-mute)] leading-tight">Coupe l&apos;accès gratuit immédiatement, pour toutes les entreprises déjà enrôlées</div>
+                <div className="flex items-center justify-between gap-3 px-3 py-2.5 rounded-[14px] border mb-3 transition-colors"
+                  style={{
+                    borderColor: c.free_publishing_enabled ? 'var(--osr-hair)' : 'color-mix(in srgb, var(--osr-red) 50%, transparent)',
+                    background: c.free_publishing_enabled ? 'var(--osr-fill)' : tint(ACCENT.red, 12),
+                  }}>
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <AlertTriangle size={15} className="shrink-0" style={{ color: c.free_publishing_enabled ? 'var(--kz-mute)' : 'var(--osr-red)' }} />
+                    <div className="min-w-0">
+                      <div className="text-[13px] font-semibold text-white">Arrêt d&apos;urgence</div>
+                      <div className="text-[11px] text-[var(--kz-mute)] leading-tight">Coupe l&apos;accès gratuit immédiatement, pour toutes les entreprises déjà enrôlées</div>
                     </div>
                   </div>
                   <Toggle on={c.free_publishing_enabled} disabled={busy === c.id} onClick={() => toggleKillSwitch(c)} />
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-3">
+                <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 mb-4">
                   {TOGGLES.map((t) => (
-                    <div key={t.key} className="flex items-center justify-between gap-2 p-2 rounded-lg border border-[var(--kz-line)]">
-                      <div>
-                        <div className="text-xs font-bold text-[var(--kz-ink)]">{t.label}</div>
-                        <div className="text-[10px] text-[var(--kz-mute)] leading-tight">{t.help}</div>
+                    <div key={t.key} className="osr-inset flex items-center justify-between gap-2 px-3 py-2.5">
+                      <div className="min-w-0">
+                        <div className="text-[13px] font-semibold text-white">{t.label}</div>
+                        <div className="text-[11px] text-[var(--kz-mute)] leading-tight">{t.help}</div>
                       </div>
                       <Toggle on={Boolean(c[t.key])} disabled={busy === c.id}
                         onClick={() => patchConfig(c, { [t.key.replace(/_([a-z])/g, (_, l) => l.toUpperCase())]: !c[t.key] })} />
@@ -307,42 +310,42 @@ export default function AdminLaunchPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
-                  <label className="text-xs text-[var(--kz-mute)]">
+                  <label className="text-[12px] text-[var(--kz-mute)]">
                     Durée d&apos;accès par entreprise (jours)
                     <input type="number" min={1} defaultValue={c.grant_duration_days}
                       onBlur={(e) => { const v = Number(e.target.value); if (v > 0 && v !== c.grant_duration_days) patchConfig(c, { grantDurationDays: v }) }}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
+                      className={`mt-1.5 w-full ${OSR_FIELD}`} />
                   </label>
-                  <label className="text-xs text-[var(--kz-mute)]">
-                    Offres actives max / entreprise <span className="text-[#8A7A6A]">(−1 = illimité)</span>
+                  <label className="text-[12px] text-[var(--kz-mute)]">
+                    Offres actives max / entreprise <span className="opacity-70">(−1 = illimité)</span>
                     <input type="number" min={-1} defaultValue={c.max_active_jobs_per_company}
                       onBlur={(e) => { const v = Number(e.target.value); if (v >= -1 && v !== c.max_active_jobs_per_company) patchConfig(c, { maxActiveJobsPerCompany: v }) }}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
+                      className={`mt-1.5 w-full ${OSR_FIELD}`} />
                   </label>
-                  <label className="text-xs text-[var(--kz-mute)]">
-                    Formations actives max / entreprise <span className="text-[#8A7A6A]">(−1 = illimité)</span>
+                  <label className="text-[12px] text-[var(--kz-mute)]">
+                    Formations actives max / entreprise <span className="opacity-70">(−1 = illimité)</span>
                     <input type="number" min={-1} defaultValue={c.max_active_trainings_per_company}
                       onBlur={(e) => { const v = Number(e.target.value); if (v >= -1 && v !== c.max_active_trainings_per_company) patchConfig(c, { maxActiveTrainingsPerCompany: v }) }}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
+                      className={`mt-1.5 w-full ${OSR_FIELD}`} />
                   </label>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
-                  <label className="text-xs text-[var(--kz-mute)]">
+                  <label className="text-[12px] text-[var(--kz-mute)]">
                     Inscriptions ouvertes à partir du
                     <input type="date" defaultValue={toLocalInput(c.starts_at)}
                       onChange={(e) => patchConfig(c, { startsAt: e.target.value ? new Date(e.target.value).toISOString() : null })}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
+                      className={`mt-1.5 w-full ${OSR_FIELD}`} />
                   </label>
-                  <label className="text-xs text-[var(--kz-mute)]">
+                  <label className="text-[12px] text-[var(--kz-mute)]">
                     Inscriptions fermées à partir du
                     <input type="date" defaultValue={toLocalInput(c.ends_at)}
                       onChange={(e) => patchConfig(c, { endsAt: e.target.value ? new Date(e.target.value).toISOString() : null })}
-                      className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)]" />
+                      className={`mt-1.5 w-full ${OSR_FIELD}`} />
                   </label>
                 </div>
 
-                <label className="text-xs text-[var(--kz-mute)] block">
+                <label className="text-[12px] text-[var(--kz-mute)] block">
                   Message recruteur (affiché aux entreprises enrôlées — wording réutilisable)
                   <Textarea value={c.recruiter_message ?? ''} rows={2} label=""
                     onChange={(e) => setData((d) => d ? { ...d, campaigns: d.campaigns.map((x) => x.id === c.id ? { ...x, recruiter_message: e.target.value } : x) } : d)}

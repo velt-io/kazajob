@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import { Database, ExternalLink, RefreshCw, CheckCircle, AlertCircle, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { KZ } from '@/lib/constants'
+import { Tooltip } from '@/components/ui/radix'
+import { ACCENT, EmptyPanel, IconButton, PageHeader, SkeletonList, StatusPill, Widget, tint } from '@/components/os/recruiter/primitives'
 
 interface BackupResult {
   ok:          boolean
@@ -59,49 +59,23 @@ export default function AdminBackupPage() {
   }
 
   return (
-    <div className="max-w-[800px] mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Sauvegarde Supabase</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Export JSON de toutes les tables → Google Drive</p>
-      </div>
-
-      {/* Configuration requise */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
-        <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2">
-          <Database size={15} /> Configuration requise
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-          {[
-            { key: 'SUPABASE_SERVICE_ROLE_KEY', desc: 'Supabase → Settings → API' },
-            { key: 'GOOGLE_SERVICE_ACCOUNT_EMAIL', desc: 'Google Cloud → IAM → Service Accounts' },
-            { key: 'GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY', desc: 'Clé JSON → private_key' },
-            { key: 'GOOGLE_DRIVE_FOLDER_ID', desc: 'ID depuis l\'URL Drive' },
-            { key: 'CRON_SECRET', desc: 'Secret aléatoire pour cron Vercel' },
-          ].map(v => (
-            <div key={v.key} className="p-2.5 rounded-lg border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-              <code className="font-mono font-bold text-[var(--kz-ink)] text-[10px]">{v.key}</code>
-              <div className="text-[10px] text-[var(--kz-mute)] mt-0.5">{v.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+    <div className="max-w-[900px] mx-auto">
+      <PageHeader eyebrow="Données" title="Sauvegarde" subtitle="Export JSON de toutes les tables vers Google Drive" />
 
       {/* Déclencher un backup */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-          <div>
-            <h2 className="text-sm font-bold text-[var(--kz-ink)]">Sauvegarde manuelle</h2>
-            <p className="text-xs text-[var(--kz-mute)] mt-0.5">
-              Export de toutes les tables + upload sur Google Drive.<br />
-              Le cron automatique tourne chaque dimanche à 06h00 (heure Réunion).
-            </p>
-          </div>
+      <Widget title="Sauvegarde manuelle" icon={<Database size={14} />} accent={ACCENT.blue} className="mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-1">
+          <p className="text-[13px] text-[var(--kz-mute)] leading-relaxed">
+            Export de toutes les tables + upload sur Google Drive.<br />
+            Le cron automatique tourne chaque dimanche à 06h00 (heure Réunion).
+          </p>
           <Button
             kind="primary"
             size="md"
             icon={<Database size={15} />}
             loading={running}
             onClick={handleBackup}
+            className="shrink-0"
           >
             Sauvegarder maintenant
           </Button>
@@ -110,32 +84,35 @@ export default function AdminBackupPage() {
         {/* Résultat */}
         {result && (
           <div
-            className="p-4 rounded-xl border-2 border-[var(--kz-edge)]"
-            style={{ background: result.ok ? KZ.greenSoft : '#FEF2F2' }}
+            role="status"
+            className="os-pop mt-4 p-4 rounded-[16px]"
+            style={{
+              background: tint(result.ok ? ACCENT.green : ACCENT.red, 12),
+              border: `1px solid color-mix(in srgb, ${result.ok ? ACCENT.green : ACCENT.red} 35%, transparent)`,
+            }}
           >
             <div className="flex items-start gap-3">
               {result.ok
-                ? <CheckCircle size={18} color={KZ.green} className="shrink-0 mt-0.5" />
-                : <AlertCircle size={18} color="#EF4444" className="shrink-0 mt-0.5" />}
+                ? <CheckCircle size={18} className="shrink-0 mt-0.5 text-[var(--kz-green)]" />
+                : <AlertCircle size={18} className="shrink-0 mt-0.5 text-[var(--osr-red)]" />}
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-bold text-[var(--kz-ink)]">
-                  {result.ok ? 'Sauvegarde réussie !' : 'Erreur de sauvegarde'}
+                <div className="text-[14px] font-semibold text-white">
+                  {result.ok ? 'Sauvegarde réussie' : 'Erreur de sauvegarde'}
                 </div>
                 {result.ok ? (
-                  <div className="text-xs text-[var(--kz-mute)] mt-1 space-y-0.5">
-                    <div>Fichier : <strong>{result.fileName}</strong> ({result.sizeHuman})</div>
+                  <div className="text-[12px] text-[var(--kz-mute)] mt-1 space-y-0.5">
+                    <div className="break-all">Fichier : <strong className="text-[var(--kz-text)]">{result.fileName}</strong> ({result.sizeHuman})</div>
                     <div>Exporté : {result.exportedAt ? new Date(result.exportedAt).toLocaleString('fr-FR') : '—'}</div>
                   </div>
                 ) : (
-                  <div className="text-xs text-red-600 mt-1">{result.error}</div>
+                  <div className="text-[12px] text-[var(--osr-red)] mt-1 break-words">{result.error}</div>
                 )}
                 {result.webViewLink && (
                   <a
                     href={result.webViewLink}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-bold mt-2"
-                    style={{ color: KZ.violet }}
+                    className="inline-flex items-center gap-1 text-[12px] font-semibold mt-2 text-[var(--kz-blue)] hover:brightness-125"
                   >
                     <ExternalLink size={11} /> Ouvrir dans Drive
                   </a>
@@ -144,74 +121,96 @@ export default function AdminBackupPage() {
             </div>
           </div>
         )}
-      </div>
+      </Widget>
+
+      {/* Configuration requise */}
+      <Widget title="Configuration requise" sub="Variables d'environnement" className="mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+          {[
+            { key: 'SUPABASE_SERVICE_ROLE_KEY', desc: 'Supabase → Settings → API' },
+            { key: 'GOOGLE_SERVICE_ACCOUNT_EMAIL', desc: 'Google Cloud → IAM → Service Accounts' },
+            { key: 'GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY', desc: 'Clé JSON → private_key' },
+            { key: 'GOOGLE_DRIVE_FOLDER_ID', desc: 'ID depuis l\'URL Drive' },
+            { key: 'CRON_SECRET', desc: 'Secret aléatoire pour cron Vercel' },
+          ].map(v => (
+            <div key={v.key} className="osr-inset px-3 py-2.5 min-w-0">
+              <code className="font-mono font-semibold text-white text-[11px] break-all">{v.key}</code>
+              <div className="text-[11px] text-[var(--kz-mute)] mt-0.5">{v.desc}</div>
+            </div>
+          ))}
+        </div>
+      </Widget>
 
       {/* Historique */}
-      <div className="kz-card bg-[var(--kz-paper)] overflow-hidden">
-        <div className="px-5 py-4 border-b border-[var(--kz-line)] flex justify-between items-center" style={{ background: KZ.cream2 }}>
-          <h2 className="text-sm font-bold text-[var(--kz-ink)] flex items-center gap-2">
-            <Clock size={14} /> Historique des sauvegardes
-          </h2>
-          <button onClick={fetchList} className="text-[var(--kz-mute)] hover:text-[var(--kz-ink)] transition-colors">
+      <Widget
+        title="Historique des sauvegardes"
+        icon={<Clock size={14} />}
+        accent={ACCENT.indigo}
+        bodyClassName="px-2 pb-2"
+        action={
+          <IconButton label="Actualiser" onClick={fetchList}>
             <RefreshCw size={14} className={loadingList ? 'animate-spin' : ''} />
-          </button>
-        </div>
+          </IconButton>
+        }
+      >
         {loadingList ? (
-          <div className="p-4 flex flex-col gap-2">
-            {[1,2,3].map(i => <div key={i} className="h-10 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}
-          </div>
+          <SkeletonList rows={3} height={44} className="px-3 pb-2" />
         ) : backups.length === 0 ? (
-          <div className="p-8 text-center">
-            <Database size={28} className="mx-auto mb-2 opacity-30" />
-            <p className="text-sm text-[var(--kz-mute)]">
-              {process.env.NODE_ENV === 'development'
-                ? 'Aucun backup trouvé. Vérifiez les variables d\'env Google.'
-                : 'Aucune sauvegarde pour le moment.'}
-            </p>
-          </div>
+          <EmptyPanel
+            icon={<Database size={24} />}
+            title="Aucune sauvegarde"
+            description={process.env.NODE_ENV === 'development'
+              ? 'Aucun backup trouvé. Vérifiez les variables d\'env Google.'
+              : 'Aucune sauvegarde pour le moment.'}
+            accent={ACCENT.indigo}
+            className="py-10"
+          />
         ) : (
           <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead style={{ background: KZ.cream2 }}>
-              <tr>
-                <th className="text-left p-3 text-xs font-bold text-[var(--kz-ink)]">Fichier</th>
-                <th className="text-left p-3 text-xs font-bold text-[var(--kz-ink)] hidden sm:table-cell">Date</th>
-                <th className="text-right p-3 text-xs font-bold text-[var(--kz-ink)]">Taille</th>
-                <th className="p-3"/>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--kz-line)]">
-              {backups.map((b, i) => (
-                <tr key={b.id} className="hover:bg-[var(--kz-cream2)] transition-colors">
-                  <td className="p-3">
-                    <div className="flex items-center gap-2">
-                      {i === 0 && <Badge color="green" size="sm">Dernier</Badge>}
-                      <span className="text-xs font-mono text-[var(--kz-text)] truncate max-w-[200px]">{b.name}</span>
-                    </div>
-                  </td>
-                  <td className="p-3 text-xs text-[var(--kz-mute)] hidden sm:table-cell">
-                    {new Date(b.createdTime).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                  </td>
-                  <td className="p-3 text-xs text-right text-[var(--kz-mute)]">
-                    {b.size ? `${Math.round(parseInt(b.size) / 1024)} KB` : '—'}
-                  </td>
-                  <td className="p-3 text-right">
-                    <a
-                      href={`https://drive.google.com/file/d/${b.id}/view`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[var(--kz-mute)] hover:text-[var(--kz-ink)] transition-colors"
-                    >
-                      <ExternalLink size={13} />
-                    </a>
-                  </td>
+            <table className="w-full text-sm min-w-[420px]">
+              <thead>
+                <tr>
+                  <th className="text-left px-3 py-2.5 uppercase">Fichier</th>
+                  <th className="text-left px-3 py-2.5 uppercase hidden sm:table-cell">Date</th>
+                  <th className="text-right px-3 py-2.5 uppercase">Taille</th>
+                  <th className="px-3 py-2.5"><span className="sr-only">Ouvrir</span></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {backups.map((b, i) => (
+                  <tr key={b.id}>
+                    <td className="px-3 py-2.5">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {i === 0 && <StatusPill accent={ACCENT.green} live>Dernier</StatusPill>}
+                        <span className="text-[12px] font-mono text-[var(--kz-text)] truncate max-w-[220px]">{b.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-3 py-2.5 text-[12px] text-[var(--kz-mute)] hidden sm:table-cell">
+                      {new Date(b.createdTime).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                    <td className="px-3 py-2.5 text-[12px] text-right text-[var(--kz-mute)]">
+                      {b.size ? `${Math.round(parseInt(b.size) / 1024)} KB` : '—'}
+                    </td>
+                    <td className="px-2 py-1.5 text-right">
+                      <Tooltip content="Ouvrir dans Drive">
+                        <a
+                          href={`https://drive.google.com/file/d/${b.id}/view`}
+                          target="_blank"
+                          rel="noreferrer"
+                          aria-label={`Ouvrir ${b.name} dans Drive`}
+                          className="osr-icon-btn"
+                        >
+                          <ExternalLink size={13} />
+                        </a>
+                      </Tooltip>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
-      </div>
+      </Widget>
     </div>
   )
 }

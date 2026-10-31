@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { TrendingUp, Users, Star } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { KZ, SUBSCRIPTION_PLANS } from '@/lib/constants'
-import type { BadgeColor } from '@/lib/types'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { TrendingUp, Users, Star, UserMinus } from 'lucide-react'
+import { SUBSCRIPTION_PLANS } from '@/lib/constants'
+import { ACCENT, CountUp, PageHeader, StatusPill, accentStyle } from '@/components/os/recruiter/primitives'
+import { OSR_SELECT } from '@/components/os/recruiter/admin-ui'
 
 interface SubRow {
   id: string
@@ -17,8 +17,8 @@ interface SubRow {
   company: { name: string; is_verified: boolean } | null
 }
 
-const STATUS_BADGE: Record<string, BadgeColor> = {
-  trial: 'yellow', active: 'green', cancelled: 'orange', expired: 'cream',
+const STATUS_ACCENT: Record<string, string> = {
+  trial: ACCENT.yellow, active: ACCENT.green, cancelled: ACCENT.red, expired: ACCENT.mute,
 }
 
 export default function AdminSubscriptionsPage() {
@@ -68,57 +68,57 @@ export default function AdminSubscriptionsPage() {
 
   return (
     <div className="max-w-[1100px] mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Abonnements</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Gestion des forfaits entreprises</p>
-      </div>
+      <PageHeader eyebrow="Revenus" title="Abonnements" subtitle="Gestion des forfaits entreprises" />
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
         {[
-          { label: 'MRR estimé', value: `${Math.floor(mrr / 100)}€`, icon: <TrendingUp size={16} />, color: KZ.greenSoft },
-          { label: 'Essais actifs', value: trialing, icon: <Star size={16} />, color: KZ.yellowSoft },
-          { label: 'Abonnés actifs', value: actives, icon: <Users size={16} />, color: KZ.violetSoft },
-          { label: 'Résiliés', value: cancelled, icon: <Users size={16} />, color: KZ.orangeSoft },
-        ].map(k => (
-          <div key={k.label} className="kz-card p-4 bg-[var(--kz-paper)] text-center" style={{ background: k.color }}>
-            <div className="flex justify-center mb-1">{k.icon}</div>
-            <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{k.value}</div>
-            <div className="text-xs text-[var(--kz-mute)] font-semibold mt-0.5">{k.label}</div>
+          { label: 'MRR estimé', value: Math.floor(mrr / 100), suffix: ' €', icon: <TrendingUp size={15} />, accent: ACCENT.green },
+          { label: 'Essais actifs', value: trialing, icon: <Star size={15} />, accent: ACCENT.yellow },
+          { label: 'Abonnés actifs', value: actives, icon: <Users size={15} />, accent: ACCENT.violet },
+          { label: 'Résiliés', value: cancelled, icon: <UserMinus size={15} />, accent: ACCENT.red },
+        ].map((k, i) => (
+          <div key={k.label} className="osr-in osr-glow rounded-[24px] os-glass p-5 min-w-0" style={{ ...accentStyle(k.accent), '--i': i } as CSSProperties}>
+            <span className="w-8 h-8 rounded-[10px] flex items-center justify-center text-white" style={{ background: k.accent }}>{k.icon}</span>
+            <div className="text-[30px] font-semibold tracking-[-0.05em] text-white mt-3 leading-none">
+              <CountUp value={k.value} format={(n) => `${Math.round(n).toLocaleString('fr-FR')}${k.suffix ?? ''}`} />
+            </div>
+            <div className="text-[13px] text-[var(--kz-mute)] mt-1.5">{k.label}</div>
           </div>
         ))}
       </div>
 
       {/* Table */}
-      <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
-        <table className="w-full text-sm min-w-[700px]">
+      <div className="osr-table-wrap">
+        <table className="w-full text-sm min-w-[760px]">
           <thead>
-            <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Entreprise</th>
-              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Forfait</th>
-              <th className="text-center p-3 font-bold text-[var(--kz-ink)]">Statut</th>
-              <th className="text-center p-3 font-bold text-[var(--kz-ink)]">Sièges</th>
-              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Échéance</th>
-              <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Actions</th>
+            <tr>
+              <th className="text-left px-4 py-3 uppercase">Entreprise</th>
+              <th className="text-left px-4 py-3 uppercase">Forfait</th>
+              <th className="text-center px-4 py-3 uppercase">Statut</th>
+              <th className="text-center px-4 py-3 uppercase">Sièges</th>
+              <th className="text-left px-4 py-3 uppercase">Échéance</th>
+              <th className="text-left px-4 py-3 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="p-4 text-center text-[var(--kz-mute)]">Chargement...</td></tr>
+              <tr><td colSpan={6} className="p-4"><div className="osr-skel h-10" /></td></tr>
             ) : subs.length === 0 ? (
-              <tr><td colSpan={6} className="p-8 text-center text-[var(--kz-mute)]">Aucun abonnement.</td></tr>
+              <tr><td colSpan={6} className="p-10 text-center text-[var(--kz-mute)]">Aucun abonnement.</td></tr>
             ) : subs.map(sub => {
               const plan = SUBSCRIPTION_PLANS.find(p => p.id === sub.plan_id)
               const co = sub.company
               const expiry = sub.status === 'trial' ? sub.trial_ends_at : sub.current_period_end
               return (
-                <tr key={sub.id} className="border-b border-[var(--kz-line)] last:border-0 hover:bg-[var(--kz-cream2)] transition-colors">
-                  <td className="p-3">
-                    <div className="font-semibold text-[var(--kz-ink)]">{co?.name ?? '—'}</div>
+                <tr key={sub.id}>
+                  <td className="px-4 py-2.5">
+                    <div className="font-semibold text-white">{co?.name ?? '—'}</div>
                   </td>
-                  <td className="p-3">
+                  <td className="px-4 py-2.5">
                     <select
-                      className="text-xs px-2 py-1 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] focus:outline-none"
+                      className={OSR_SELECT}
+                      aria-label={`Forfait de ${co?.name ?? 'l’entreprise'}`}
                       value={sub.plan_id}
                       onChange={e => handleChangePlan(sub.id, e.target.value)}
                     >
@@ -127,20 +127,21 @@ export default function AdminSubscriptionsPage() {
                       ))}
                     </select>
                   </td>
-                  <td className="p-3 text-center">
-                    <Badge color={STATUS_BADGE[sub.status] ?? 'cream'} size="sm">
+                  <td className="px-4 py-2.5 text-center">
+                    <StatusPill accent={STATUS_ACCENT[sub.status] ?? ACCENT.mute} live={sub.status === 'active'}>
                       {sub.status === 'trial' ? 'Essai' : sub.status === 'active' ? 'Actif' : sub.status === 'cancelled' ? 'Résilié' : 'Expiré'}
-                    </Badge>
+                    </StatusPill>
                   </td>
-                  <td className="p-3 text-center text-xs font-bold text-[var(--kz-ink)]">
+                  <td className="px-4 py-2.5 text-center text-[12px] font-semibold text-white">
                     {sub.seats_used}/{plan?.maxMembers ?? '?'}
                   </td>
-                  <td className="p-3 text-xs text-[var(--kz-mute)]">
+                  <td className="px-4 py-2.5 text-[12px] text-[var(--kz-mute)]">
                     {expiry ? new Date(expiry).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: '2-digit' }) : '—'}
                   </td>
-                  <td className="p-3">
+                  <td className="px-4 py-2.5">
                     <select
-                      className="text-xs px-2 py-1 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] focus:outline-none"
+                      className={OSR_SELECT}
+                      aria-label={`Statut de ${co?.name ?? 'l’abonnement'}`}
                       value={sub.status}
                       onChange={e => handleChangeStatus(sub.id, e.target.value)}
                     >

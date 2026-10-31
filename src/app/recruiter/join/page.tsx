@@ -2,11 +2,10 @@
 
 import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { Building2, Check, ArrowRight, AlertCircle } from 'lucide-react'
+import { Building2, ArrowRight, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
-import { KZ } from '@/lib/constants'
+import { ACCENT, EmptyPanel, StatusPill, WindowBar } from '@/components/os/recruiter/primitives'
 
 interface InvitePreview {
   company: { name: string; logo_url: string | null } | null
@@ -48,44 +47,53 @@ function JoinContent() {
 
   if (error && !invite) {
     return (
-      <div className="max-w-[480px] mx-auto text-center py-16">
-        <AlertCircle size={44} className="mx-auto mb-4" style={{ color: KZ.orange }} />
-        <h1 className="text-xl font-bold text-[var(--kz-ink)] mb-2">Invitation indisponible</h1>
-        <p className="text-sm text-[var(--kz-mute)] mb-6">{error}</p>
-        <Button kind="outline" onClick={() => router.push('/recruiter/dashboard')}>Retour au tableau de bord</Button>
+      <div className="max-w-[480px] mx-auto py-10">
+        <div className="osr-panel">
+          <EmptyPanel
+            icon={<AlertCircle size={28} />}
+            accent={ACCENT.orange}
+            title="Invitation indisponible"
+            description={error}
+            action={<Button kind="outline" onClick={() => router.push('/recruiter/dashboard')}>Retour au tableau de bord</Button>}
+          />
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-[480px] mx-auto py-12">
-      <div className="kz-card p-7 bg-[var(--kz-paper)] text-center">
-        <div className="w-16 h-16 rounded-2xl border border-[var(--kz-edge)] flex items-center justify-center mx-auto mb-5"
-          style={{ background: KZ.violetSoft }}>
-          {invite?.company?.logo_url
-            ? <img src={invite.company.logo_url} alt="" className="w-full h-full object-cover rounded-2xl" />
-            : <Building2 size={26} style={{ color: KZ.violet }} />}
+    <div className="max-w-[480px] mx-auto py-8 sm:py-12">
+      <div className="os-glass rounded-[28px] overflow-hidden os-pop shadow-[0_50px_100px_-30px_rgba(0,0,0,0.9)]">
+        <WindowBar title="Invitation équipe" />
+        <div className="p-6 sm:p-7 text-center">
+          <div className="w-20 h-20 rounded-[24px] border border-white/10 flex items-center justify-center mx-auto mb-5 overflow-hidden text-white"
+            style={{ background: 'linear-gradient(145deg, var(--osr-indigo), var(--kz-violet))', boxShadow: '0 20px 44px -18px var(--kz-violet)' }}>
+            {invite?.company?.logo_url
+              // eslint-disable-next-line @next/next/no-img-element
+              ? <img src={invite.company.logo_url} alt="" className="w-full h-full object-cover" />
+              : <Building2 size={30} />}
+          </div>
+          <p className="osr-eyebrow mb-2">Invitation équipe</p>
+          <h1 className="text-[28px] font-semibold tracking-[-0.035em] leading-tight text-white mb-3">
+            Rejoindre <span className="os-text-aurora">{invite?.company?.name ?? 'l\'entreprise'}</span>
+          </h1>
+          <p className="text-[14px] text-[var(--kz-mute)] mb-6 leading-relaxed">
+            Vous êtes invité(e) à rejoindre cet espace recruteur en tant que{' '}
+            <StatusPill accent={ACCENT.violet}>{ROLE_LABEL[invite?.role ?? 'member']}</StatusPill>
+          </p>
+
+          {error && (
+            <div role="alert" className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm mb-4">{error}</div>
+          )}
+
+          <Button kind="primary" size="lg" full loading={accepting} onClick={accept} iconRight={<ArrowRight size={15} />}>
+            Accepter l&apos;invitation
+          </Button>
+          <button onClick={() => router.push('/recruiter/dashboard')}
+            className="mt-3 h-9 px-4 rounded-full text-[13px] font-medium text-[var(--kz-mute)] hover:text-white hover:bg-white/[0.06] transition-colors">
+            Plus tard
+          </button>
         </div>
-        <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Invitation équipe</p>
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)] mb-2">
-          Rejoindre {invite?.company?.name ?? 'l\'entreprise'}
-        </h1>
-        <p className="text-sm text-[var(--kz-mute)] mb-4">
-          Vous êtes invité(e) à rejoindre cet espace recruteur en tant que{' '}
-          <Badge color="violet" size="sm">{ROLE_LABEL[invite?.role ?? 'member']}</Badge>
-        </p>
-
-        {error && (
-          <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm mb-4">{error}</div>
-        )}
-
-        <Button kind="violet" size="lg" full loading={accepting} onClick={accept} iconRight={<ArrowRight size={15} />}>
-          Accepter l&apos;invitation
-        </Button>
-        <button onClick={() => router.push('/recruiter/dashboard')}
-          className="mt-3 text-xs font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)]">
-          Plus tard
-        </button>
       </div>
     </div>
   )

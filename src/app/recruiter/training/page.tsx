@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Users, Edit, Trash2, GraduationCap, ToggleLeft, ToggleRight } from 'lucide-react'
+import { Plus, Eye, Users, Edit, Trash2, GraduationCap, MapPin, CalendarDays } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/feedback/EmptyState'
+import { Switch, Tooltip } from '@/components/ui/radix'
 import { useAuth } from '@/features/auth/useAuth'
-import { KZ } from '@/lib/constants'
 import type { TrainingOffer } from '@/lib/types'
+import { ACCENT, EmptyPanel, IconButton, PageHeader, SkeletonList, StatusPill } from '@/components/os/recruiter/primitives'
+import { MiniStat, stagger } from '@/components/os/recruiter/secondary-ui'
 
 export default function RecruiterTrainingPage() {
   const { profile } = useAuth()
@@ -42,87 +42,81 @@ export default function RecruiterTrainingPage() {
   }
 
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Mes formations</h1>
-          <p className="text-sm text-[var(--kz-mute)]">{offers.length} offre{offers.length > 1 ? 's' : ''} de formation</p>
-        </div>
-        <Link href="/recruiter/training/new">
-          <Button kind="primary" size="md" icon={<Plus size={15} />}>Nouvelle formation</Button>
-        </Link>
-      </div>
+    <div className="max-w-[960px] mx-auto">
+      <PageHeader
+        eyebrow="Recrutement"
+        title="Mes formations"
+        subtitle={`${offers.length} offre${offers.length > 1 ? 's' : ''} de formation`}
+        actions={
+          <Link href="/recruiter/training/new">
+            <Button kind="primary" size="md" icon={<Plus size={15} />}>Nouvelle formation</Button>
+          </Link>
+        }
+      />
 
       {loading ? (
-        <div className="flex flex-col gap-3">
-          {[1,2,3].map(i => <div key={i} className="h-24 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />)}
-        </div>
+        <div className="osr-panel p-3"><SkeletonList rows={3} height={76} /></div>
       ) : offers.length === 0 ? (
-        <EmptyState
-          title="Aucune formation publiée"
-          description="Publiez votre première offre de formation et trouvez vos futurs stagiaires."
-          icon={<GraduationCap size={28} />}
-          action={<Link href="/recruiter/training/new"><Button kind="primary">Créer une formation</Button></Link>}
-        />
+        <div className="osr-panel">
+          <EmptyPanel
+            icon={<GraduationCap size={28} />}
+            accent={ACCENT.teal}
+            title="Aucune formation publiée"
+            description="Publiez votre première offre de formation et trouvez vos futurs stagiaires."
+            action={<Link href="/recruiter/training/new"><Button kind="primary">Créer une formation</Button></Link>}
+          />
+        </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {offers.map(offer => (
-            <div key={offer.id} className="kz-card p-4 bg-[var(--kz-paper)] flex items-center gap-4">
-              {/* Image */}
-              <div className="w-16 h-16 rounded-xl border border-[var(--kz-edge)] overflow-hidden shrink-0"
-                style={{ background: KZ.violetSoft }}>
+        <div className="osr-panel p-2 osr-sep">
+          {offers.map((offer, i) => (
+            <div key={offer.id} className="osr-row osr-in flex flex-wrap sm:flex-nowrap items-center gap-x-4 gap-y-3 px-3 py-3.5" style={stagger(i)}>
+              {/* Vignette */}
+              <div className="w-14 h-14 rounded-[15px] border border-white/10 overflow-hidden shrink-0 flex items-center justify-center text-white"
+                style={{ background: `linear-gradient(145deg, ${ACCENT.teal}, ${ACCENT.indigo})` }}>
                 {offer.image_url
+                  // eslint-disable-next-line @next/next/no-img-element
                   ? <img src={offer.image_url} alt="" className="w-full h-full object-cover" />
-                  : <div className="w-full h-full flex items-center justify-center">
-                      <GraduationCap size={24} color={KZ.violet} />
-                    </div>}
+                  : <GraduationCap size={22} />}
               </div>
 
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                  <h3 className="text-sm font-bold text-[var(--kz-ink)] truncate">{offer.title}</h3>
-                  {offer.certification_level && (
-                    <Badge color="violet" size="sm">Niv. {offer.certification_level}</Badge>
+              <div className="flex-1 min-w-0 basis-[calc(100%-72px)] sm:basis-auto">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className="text-[15px] font-semibold text-white truncate">{offer.title}</h3>
+                  {offer.certification_level && <StatusPill accent={ACCENT.violet}>Niv. {offer.certification_level}</StatusPill>}
+                  {offer.is_financed && <StatusPill accent={ACCENT.green}>Financement</StatusPill>}
+                </div>
+                <div className="text-[12px] text-[var(--kz-mute)] flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span>{offer.duration_value} {offer.duration_unit}</span>
+                  <span className="flex items-center gap-1"><MapPin size={11} />{offer.location}</span>
+                  {offer.start_date && (
+                    <span className="flex items-center gap-1"><CalendarDays size={11} />Début {new Date(offer.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
                   )}
-                  {offer.is_financed && <Badge color="green" size="sm">Financement</Badge>}
                 </div>
-                <div className="text-xs text-[var(--kz-mute)]">
-                  {offer.duration_value} {offer.duration_unit} · {offer.location}
-                  {offer.start_date && ` · Début ${new Date(offer.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}`}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="text-center">
-                  <div className="text-sm font-extrabold text-[var(--kz-ink)]">{offer.views}</div>
-                  <div className="text-[10px] text-[var(--kz-mute)] flex items-center gap-0.5"><Eye size={9} />vues</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-extrabold text-[var(--kz-ink)]">{offer.applications_count}</div>
-                  <div className="text-[10px] text-[var(--kz-mute)] flex items-center gap-0.5"><Users size={9} />dossiers</div>
-                </div>
-                <Badge color={offer.is_active ? 'green' : 'cream'} size="sm">
-                  {offer.is_active ? 'Active' : 'Inactive'}
-                </Badge>
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
-                <button onClick={() => toggleActive(offer)} title={offer.is_active ? 'Désactiver' : 'Activer'}>
-                  {offer.is_active
-                    ? <ToggleRight size={20} color={KZ.green} />
-                    : <ToggleLeft size={20} color={KZ.mute} />}
-                </button>
-                <Link href={`/recruiter/training/${offer.id}/edit`}>
-                  <button className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)]">
+                <MiniStat value={offer.views} label="vues" icon={<Eye size={9} />} />
+                <MiniStat value={offer.applications_count} label="dossiers" icon={<Users size={9} />} />
+                <StatusPill accent={offer.is_active ? ACCENT.green : ACCENT.mute} live={offer.is_active} className="ml-1">
+                  {offer.is_active ? 'Active' : 'Inactive'}
+                </StatusPill>
+              </div>
+
+              <div className="flex items-center gap-1 shrink-0 ml-auto">
+                <Tooltip content={offer.is_active ? 'Désactiver' : 'Activer'}>
+                  <span className="inline-flex mr-1.5">
+                    <Switch checked={offer.is_active} onCheckedChange={() => toggleActive(offer)}
+                      aria-label={offer.is_active ? 'Désactiver' : 'Activer'} className="scale-[0.8]" />
+                  </span>
+                </Tooltip>
+                <Tooltip content="Modifier">
+                  <Link href={`/recruiter/training/${offer.id}/edit`} aria-label="Modifier" className="osr-icon-btn">
                     <Edit size={15} />
-                  </button>
-                </Link>
-                <button
-                  onClick={() => deleteOffer(offer.id)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600"
-                >
+                  </Link>
+                </Tooltip>
+                <IconButton label="Supprimer" tone="danger" onClick={() => deleteOffer(offer.id)}>
                   <Trash2 size={15} />
-                </button>
+                </IconButton>
               </div>
             </div>
           ))}

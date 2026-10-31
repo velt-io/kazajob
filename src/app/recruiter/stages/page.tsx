@@ -2,15 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Edit, Trash2, ToggleLeft, ToggleRight, Users, ClipboardList } from 'lucide-react'
+import { Plus, Eye, Edit, Trash2, Users, ClipboardList, MapPin, Clock, ArrowUpRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/feedback/EmptyState'
+import { Switch, Tooltip } from '@/components/ui/radix'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 import type { Job } from '@/lib/types'
 import { timeAgo } from '@/lib/utils'
-import { KZ } from '@/lib/constants'
+import { ACCENT, EmptyPanel, IconButton, PageHeader, StatusPill, tint } from '@/components/os/recruiter/primitives'
+import { MiniStat, stagger } from '@/components/os/recruiter/secondary-ui'
 
 export default function RecruiterStagesPage() {
   const { profile } = useAuth()
@@ -52,91 +52,90 @@ export default function RecruiterStagesPage() {
 
   if (loading) return <PageLoader />
 
+  const activeCount = stages.filter((s) => s.is_active).length
+
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-xl font-extrabold text-[var(--kz-ink)]">Mes stages</h1>
-          <p className="text-sm text-[var(--kz-mute)] mt-0.5">{stages.length} offre{stages.length !== 1 ? 's' : ''} de stage</p>
-        </div>
-        <Link href="/recruiter/stages/new">
-          <Button kind="primary" size="md" icon={<Plus size={15} />}>Publier un stage</Button>
-        </Link>
-      </div>
+    <div className="max-w-[960px] mx-auto">
+      <PageHeader
+        eyebrow="Recrutement"
+        title="Mes stages"
+        subtitle={<>{stages.length} offre{stages.length !== 1 ? 's' : ''} de stage{stages.length > 0 && <> · <span className="text-[var(--kz-green)]">{activeCount} en ligne</span></>}</>}
+        actions={
+          <Link href="/recruiter/stages/new">
+            <Button kind="primary" size="md" icon={<Plus size={15} />}>Publier un stage</Button>
+          </Link>
+        }
+      />
 
       {stages.length === 0 ? (
-        <EmptyState
-          title="Aucun stage publié"
-          description="Publiez une offre de stage pour recevoir des candidatures d'étudiants et de personnes en reconversion à La Réunion."
-          icon={<ClipboardList size={28} />}
-          action={
-            <Link href="/recruiter/stages/new">
-              <Button kind="primary">Publier un stage</Button>
-            </Link>
-          }
-        />
+        <div className="osr-panel">
+          <EmptyPanel
+            icon={<ClipboardList size={28} />}
+            accent={ACCENT.violet}
+            title="Aucun stage publié"
+            description="Publiez une offre de stage pour recevoir des candidatures d'étudiants et de personnes en reconversion à La Réunion."
+            action={
+              <Link href="/recruiter/stages/new">
+                <Button kind="primary">Publier un stage</Button>
+              </Link>
+            }
+          />
+        </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {stages.map((stage) => (
-            <div key={stage.id} className="kz-card p-4 bg-[var(--kz-paper)]">
-              <div className="flex items-start justify-between gap-3 flex-wrap">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span
-                      className="text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
-                      style={{ background: KZ.violetSoft, color: KZ.violet }}
-                    >
-                      Stage
-                    </span>
-                    <Badge color={stage.is_active ? 'green' : 'cream'} size="sm">
-                      {stage.is_active ? 'Actif' : 'Inactif'}
-                    </Badge>
-                    {stage.internship_paid === true && (
-                      <Badge color="blue" size="sm">Gratifié</Badge>
-                    )}
-                  </div>
+        <div className="osr-panel p-2 osr-sep">
+          {stages.map((stage, i) => (
+            <div key={stage.id} className="osr-row osr-in flex flex-wrap sm:flex-nowrap items-center gap-x-4 gap-y-3 px-3 py-3.5" style={stagger(i)}>
+              <span className="w-11 h-11 rounded-[13px] flex items-center justify-center shrink-0 text-white"
+                style={{ background: stage.is_active ? `linear-gradient(145deg, ${ACCENT.violet}, ${ACCENT.indigo})` : tint(ACCENT.mute, 30) }}>
+                <ClipboardList size={18} />
+              </span>
+
+              <div className="flex-1 min-w-0 basis-[calc(100%-60px)] sm:basis-auto">
+                <div className="flex items-center gap-2 flex-wrap mb-1">
                   <Link
                     href={`/stages/${stage.id}`}
-                    className="text-base font-bold text-[var(--kz-ink)] hover:text-[var(--kz-orange)] transition-colors"
                     target="_blank"
+                    className="group/t inline-flex items-center gap-1 text-[15px] font-semibold text-white hover:text-[var(--kz-blue)] transition-colors min-w-0"
                   >
-                    {stage.title}
+                    <span className="truncate">{stage.title}</span>
+                    <ArrowUpRight size={13} className="shrink-0 opacity-0 group-hover/t:opacity-100 transition-opacity" />
                   </Link>
-                  <div className="text-xs text-[var(--kz-mute)] mt-0.5 flex flex-wrap gap-3">
-                    <span>{stage.location}</span>
-                    {stage.internship_duration && (
-                      <span>{stage.internship_duration}</span>
-                    )}
-                    <span className="flex items-center gap-1">
-                      <Users size={11} />{stage.applications_count} candidature{stage.applications_count !== 1 ? 's' : ''}
-                    </span>
-                    <span><Eye size={11} className="inline mr-1" />{stage.views} vue{stage.views !== 1 ? 's' : ''}</span>
-                    <span>Publié {timeAgo(stage.created_at)}</span>
-                  </div>
+                  <StatusPill accent={stage.is_active ? ACCENT.green : ACCENT.mute} live={stage.is_active}>
+                    {stage.is_active ? 'Actif' : 'Inactif'}
+                  </StatusPill>
+                  {stage.internship_paid === true && <StatusPill accent={ACCENT.blue}>Gratifié</StatusPill>}
                 </div>
+                <div className="text-[12px] text-[var(--kz-mute)] flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="flex items-center gap-1"><MapPin size={11} />{stage.location}</span>
+                  {stage.internship_duration && <span className="flex items-center gap-1"><Clock size={11} />{stage.internship_duration}</span>}
+                  <span>Publié {timeAgo(stage.created_at)}</span>
+                </div>
+              </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    onClick={() => toggleActive(stage)}
-                    className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-all"
-                    title={stage.is_active ? 'Mettre en pause' : 'Activer'}
-                  >
-                    {stage.is_active
-                      ? <ToggleRight size={16} color={KZ.green} />
-                      : <ToggleLeft size={16} color="var(--kz-mute)" />}
-                  </button>
-                  <Link href={`/recruiter/jobs/${stage.id}/edit`}>
-                    <button className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-all">
-                      <Edit size={15} color="var(--kz-mute)" />
-                    </button>
+              <div className="flex items-center gap-2 shrink-0">
+                <MiniStat value={stage.applications_count} label={`candidature${stage.applications_count !== 1 ? 's' : ''}`} icon={<Users size={9} />} />
+                <MiniStat value={stage.views} label={`vue${stage.views !== 1 ? 's' : ''}`} icon={<Eye size={9} />} />
+              </div>
+
+              <div className="flex items-center gap-1 shrink-0 ml-auto">
+                <Tooltip content={stage.is_active ? 'Mettre en pause' : 'Activer'}>
+                  <span className="inline-flex mr-1.5">
+                    <Switch
+                      checked={stage.is_active}
+                      onCheckedChange={() => toggleActive(stage)}
+                      aria-label={stage.is_active ? 'Mettre en pause' : 'Activer'}
+                      className="scale-[0.8]"
+                    />
+                  </span>
+                </Tooltip>
+                <Tooltip content="Modifier">
+                  <Link href={`/recruiter/jobs/${stage.id}/edit`} aria-label="Modifier" className="osr-icon-btn">
+                    <Edit size={15} />
                   </Link>
-                  <button
-                    onClick={() => deleteStage(stage.id)}
-                    className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-300 transition-all"
-                  >
-                    <Trash2 size={15} color="#E54E4E" />
-                  </button>
-                </div>
+                </Tooltip>
+                <IconButton label="Supprimer" tone="danger" onClick={() => deleteStage(stage.id)}>
+                  <Trash2 size={15} />
+                </IconButton>
               </div>
             </div>
           ))}

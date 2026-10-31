@@ -5,10 +5,8 @@ import { Ticket, Trash2, Power, CalendarClock, Zap, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
-import { Badge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
-import { KZ } from '@/lib/constants'
+import { ACCENT, EmptyPanel, IconButton, PageHeader, StatusPill, Widget } from '@/components/os/recruiter/primitives'
 
 interface Promo {
   id: string; code: string; description: string | null
@@ -91,23 +89,18 @@ export default function AdminPromosPage() {
   }
 
   const statusOf = (p: Promo) => {
-    if (!p.active) return { label: 'Désactivé', color: 'cream' as const }
-    if (p.endDate && new Date(p.endDate) < new Date()) return { label: 'Expiré', color: 'orange' as const }
-    if (p.maxRedemptions !== null && p.usedCount >= p.maxRedemptions) return { label: 'Épuisé', color: 'orange' as const }
-    return { label: 'Actif', color: 'green' as const }
+    if (!p.active) return { label: 'Désactivé', accent: ACCENT.mute }
+    if (p.endDate && new Date(p.endDate) < new Date()) return { label: 'Expiré', accent: ACCENT.orange }
+    if (p.maxRedemptions !== null && p.usedCount >= p.maxRedemptions) return { label: 'Épuisé', accent: ACCENT.orange }
+    return { label: 'Actif', accent: ACCENT.green }
   }
 
   return (
     <div className="max-w-[1000px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Marketing</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Codes promo</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Réductions sur les abonnements recruteur, synchronisées avec Stripe.</p>
-      </div>
+      <PageHeader eyebrow="Marketing" title="Codes promo" subtitle="Réductions sur les abonnements recruteur, synchronisées avec Stripe." />
 
       {/* Création */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-6">
-        <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2"><Plus size={16} />Nouveau code</h2>
+      <Widget title="Nouveau code" icon={<Plus size={14} />} accent={ACCENT.pink} className="mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <Input label="Code *" value={form.code} onChange={(e) => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} placeholder="RENTREE25" icon={<Ticket size={15} />} />
           <Select label="Type" options={[{ value: 'percent', label: 'Pourcentage (%)' }, { value: 'amount', label: 'Montant (€)' }]} value={form.discountType} onChange={(e) => setForm(f => ({ ...f, discountType: e.target.value }))} />
@@ -125,34 +118,40 @@ export default function AdminPromosPage() {
               <Input label="Fin" type="date" value={form.endDate} onChange={(e) => setForm(f => ({ ...f, endDate: e.target.value }))} />
             </>
           )}
-          <label className="flex items-center gap-2 self-end pb-2.5 cursor-pointer text-sm font-semibold text-[var(--kz-ink)]">
-            <input type="checkbox" checked={form.customDates} onChange={(e) => setForm(f => ({ ...f, customDates: e.target.checked }))} className="w-4 h-4 accent-[var(--kz-violet)]" />
+          <label className="flex items-center gap-2 self-end pb-2.5 cursor-pointer text-sm font-medium text-[var(--kz-ink)]">
+            <input type="checkbox" checked={form.customDates} onChange={(e) => setForm(f => ({ ...f, customDates: e.target.checked }))} className="w-4 h-4 accent-[var(--kz-blue)]" />
             Définir des dates précises
           </label>
           <Input label="Max utilisations" type="number" value={form.maxRedemptions} onChange={(e) => setForm(f => ({ ...f, maxRedemptions: e.target.value }))} placeholder="illimité" />
           <Input label="Description" value={form.description} onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Promo de rentrée" />
         </div>
         {error && <div className="mt-3 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
-        <Button kind="primary" size="md" className="mt-3" loading={creating} icon={<Plus size={15} />} onClick={create}>Créer le code</Button>
-      </div>
+        <Button kind="primary" size="md" className="mt-4" loading={creating} icon={<Plus size={15} />} onClick={create}>Créer le code</Button>
+      </Widget>
 
       {/* Liste */}
       {loading ? <PageLoader /> : promos.length === 0 ? (
-        <EmptyState title="Aucun code promo" description="Créez votre premier code de réduction ci-dessus." icon={<Ticket size={28} />} />
+        <div className="osr-panel">
+          <EmptyPanel title="Aucun code promo" description="Créez votre premier code de réduction ci-dessus." icon={<Ticket size={26} />} accent={ACCENT.pink} />
+        </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {promos.map((p) => {
+        <div className="osr-panel p-2 osr-sep">
+          {promos.map((p, i) => {
             const st = statusOf(p)
             const val = p.discountType === 'percent' ? `-${p.discountValue}%` : `-${Math.round(p.discountValue / 100)} €`
             return (
-              <div key={p.id} className="kz-card p-4 bg-[var(--kz-paper)] flex flex-col sm:flex-row sm:items-center gap-3">
+              <div key={p.id} className="osr-row osr-in px-3 py-3 flex flex-col sm:flex-row sm:items-center gap-3" style={{ '--i': i } as React.CSSProperties}>
+                <span className="hidden sm:flex w-14 h-11 rounded-[12px] items-center justify-center shrink-0 text-[14px] font-semibold text-white tabular-nums"
+                  style={{ background: 'linear-gradient(145deg, var(--osr-pink), var(--kz-violet))' }}>
+                  {val}
+                </span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <code className="text-sm font-extrabold text-[var(--kz-ink)]">{p.code}</code>
-                    <Badge color="violet" size="sm">{val}</Badge>
-                    <Badge color={st.color} size="sm">{st.label}</Badge>
+                    <code className="text-[15px] font-semibold tracking-[0.04em] text-white">{p.code}</code>
+                    <span className="osr-chip sm:hidden">{val}</span>
+                    <StatusPill accent={st.accent} live={st.label === 'Actif'}>{st.label}</StatusPill>
                   </div>
-                  <div className="text-xs text-[var(--kz-mute)]">
+                  <div className="osr-sub text-[12px] text-[var(--kz-mute)]">
                     {DUR[p.durationType]}{p.durationType === 'repeating' ? ` (${p.durationMonths})` : ''} ·
                     {p.startDate
                       ? ` du ${new Date(p.startDate).toLocaleDateString('fr-FR')}${p.endDate ? ` au ${new Date(p.endDate).toLocaleDateString('fr-FR')}` : ''}`
@@ -161,14 +160,14 @@ export default function AdminPromosPage() {
                     {p.description ? ` · ${p.description}` : ''}
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-1 shrink-0 flex-wrap">
                   <Button kind="soft" size="sm" icon={<CalendarClock size={13} />} onClick={() => extend(p)}>Prolonger</Button>
                   <Button kind="soft" size="sm" icon={<Zap size={13} />} onClick={() => patch(p.id, { applyActive: true })}>Appliquer aux actifs</Button>
-                  <button onClick={() => patch(p.id, { active: !p.active })} title={p.active ? 'Désactiver' : 'Activer'}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)]" style={{ color: p.active ? KZ.green : KZ.mute }}>
+                  <IconButton label={p.active ? 'Désactiver' : 'Activer'} onClick={() => patch(p.id, { active: !p.active })}
+                    className={p.active ? '!text-[var(--kz-green)]' : undefined}>
                     <Power size={15} />
-                  </button>
-                  <button onClick={() => remove(p.id)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600"><Trash2 size={15} /></button>
+                  </IconButton>
+                  <IconButton label="Supprimer" tone="danger" onClick={() => remove(p.id)}><Trash2 size={15} /></IconButton>
                 </div>
               </div>
             )

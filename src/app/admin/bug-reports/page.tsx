@@ -1,11 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Bug, AlertTriangle, Paperclip, Trash2 } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
-import { KZ } from '@/lib/constants'
+import { ACCENT, EmptyPanel, IconButton, PageHeader, Segmented, StatusPill, tint } from '@/components/os/recruiter/primitives'
+import { OSR_SELECT } from '@/components/os/recruiter/admin-ui'
 
 interface BugReport {
   id: string
@@ -20,10 +19,10 @@ interface BugReport {
   createdAt: string
 }
 
-const STATUS_LABELS: Record<string, { label: string; color: 'orange' | 'violet' | 'green' }> = {
-  open:        { label: 'Ouvert',     color: 'orange' },
-  in_progress: { label: 'En cours',   color: 'violet' },
-  resolved:    { label: 'Résolu',     color: 'green'  },
+const STATUS_LABELS: Record<string, { label: string; accent: string }> = {
+  open:        { label: 'Ouvert',     accent: ACCENT.orange },
+  in_progress: { label: 'En cours',   accent: ACCENT.violet },
+  resolved:    { label: 'Résolu',     accent: ACCENT.green  },
 }
 
 const FILTERS = [
@@ -66,71 +65,70 @@ export default function AdminBugReportsPage() {
 
   return (
     <div className="max-w-[1000px] mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-        <div>
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Support</p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Signalements de bug</h1>
-          <p className="text-sm text-[var(--kz-mute)] mt-1">
-            {openCount} ouvert{openCount > 1 ? 's' : ''}
-            {criticalCount > 0 && <span className="font-bold" style={{ color: KZ.orange }}> · {criticalCount} bloquant{criticalCount > 1 ? 's' : ''}</span>}
-          </p>
-        </div>
-        <div className="inline-flex items-center gap-0.5 p-0.5 rounded-full border border-[var(--kz-edge)] shrink-0" style={{ background: KZ.paper }}>
-          {FILTERS.map((f) => (
-            <button key={f.id} onClick={() => setFilter(f.id)}
-              className="px-3 py-1.5 rounded-full text-xs font-bold transition-all"
-              style={filter === f.id ? { background: KZ.violet, color: 'white' } : { color: KZ.mute }}>
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="Support"
+        title="Signalements de bug"
+        subtitle={<>
+          {openCount} ouvert{openCount > 1 ? 's' : ''}
+          {criticalCount > 0 && <span className="font-semibold text-[var(--kz-orange)]"> · {criticalCount} bloquant{criticalCount > 1 ? 's' : ''}</span>}
+        </>}
+        actions={
+          <Segmented ariaLabel="Filtrer par statut" value={filter} onChange={setFilter}
+            items={FILTERS.map((f) => ({ id: f.id, label: f.label }))} />
+        }
+      />
 
       {loading ? <PageLoader /> : shown.length === 0 ? (
-        <EmptyState title="Aucun signalement" description="Les bugs signalés par les candidats et recruteurs apparaîtront ici." icon={<Bug size={28} />} />
+        <div className="osr-panel">
+          <EmptyPanel title="Aucun signalement" description="Les bugs signalés par les candidats et recruteurs apparaîtront ici." icon={<Bug size={26} />} accent={ACCENT.violet} />
+        </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {shown.map((r) => (
-            <div key={r.id} className="kz-card p-4 bg-[var(--kz-paper)]"
-              style={r.severity === 'critical' && r.status !== 'resolved' ? { borderColor: KZ.orange } : undefined}>
-              <div className="flex items-start gap-3">
-                <div className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                  style={{ background: r.severity === 'critical' ? KZ.orangeSoft : KZ.violetSoft }}>
-                  {r.severity === 'critical' ? <AlertTriangle size={16} color={KZ.orange} /> : <Bug size={16} color={KZ.violet} />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap mb-1">
-                    {r.severity === 'critical' && <Badge color="orange" size="sm">Bloquant</Badge>}
-                    <code className="text-xs text-[var(--kz-ink)] font-semibold">{r.page}</code>
-                    <span className="text-[11px] text-[var(--kz-mute)]">· {new Date(r.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+        <div className="flex flex-col gap-2.5">
+          {shown.map((r, i) => {
+            const critical = r.severity === 'critical'
+            const hot = critical && r.status !== 'resolved'
+            const accent = critical ? ACCENT.orange : ACCENT.violet
+            return (
+              <div key={r.id} className="osr-panel osr-in p-4"
+                style={{ '--i': i, ...(hot ? { borderColor: 'color-mix(in srgb, var(--kz-orange) 55%, transparent)', boxShadow: '0 0 40px -18px var(--kz-orange)' } : {}) } as CSSProperties}>
+                <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+                  <div className="flex items-start gap-3 flex-1 min-w-0">
+                    <span className="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0" style={{ background: tint(accent, 18), color: accent }}>
+                      {critical ? <AlertTriangle size={16} /> : <Bug size={16} />}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        {critical && <StatusPill accent={ACCENT.orange} live={hot}>Bloquant</StatusPill>}
+                        <code className="text-[12px] text-white font-semibold break-all">{r.page}</code>
+                        <span className="text-[11px] text-[var(--kz-mute)]">· {new Date(r.createdAt).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                      </div>
+                      <p className="text-[14px] text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap break-words">{r.message}</p>
+                      <div className="flex items-center gap-3 mt-2 flex-wrap text-[12px] text-[var(--kz-mute)]">
+                        <span className="break-all">{r.reporterName ?? 'Anonyme'} ({r.reporterRole ?? '—'}) · {r.reporterEmail ?? '—'}</span>
+                        {r.attachmentUrl && (
+                          <a href={r.attachmentUrl} target="_blank" rel="noreferrer"
+                            className="flex items-center gap-1 font-semibold text-[var(--kz-blue)] hover:brightness-125">
+                            <Paperclip size={12} />Pièce jointe
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap">{r.message}</p>
-                  <div className="flex items-center gap-3 mt-2 flex-wrap text-xs text-[var(--kz-mute)]">
-                    <span>{r.reporterName ?? 'Anonyme'} ({r.reporterRole ?? '—'}) · {r.reporterEmail ?? '—'}</span>
-                    {r.attachmentUrl && (
-                      <a href={r.attachmentUrl} target="_blank" rel="noreferrer"
-                        className="flex items-center gap-1 font-semibold" style={{ color: KZ.violet }}>
-                        <Paperclip size={12} />Pièce jointe
-                      </a>
-                    )}
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-start">
+                    <StatusPill accent={STATUS_LABELS[r.status].accent}>{STATUS_LABELS[r.status].label}</StatusPill>
+                    <select value={r.status} onChange={(e) => setStatus(r.id, e.target.value)} aria-label="Changer le statut" className={OSR_SELECT}>
+                      <option value="open">Ouvert</option>
+                      <option value="in_progress">En cours</option>
+                      <option value="resolved">Résolu</option>
+                    </select>
+                    <IconButton label="Supprimer" tone="danger" onClick={() => remove(r.id)}>
+                      <Trash2 size={15} />
+                    </IconButton>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <Badge color={STATUS_LABELS[r.status].color} size="sm">{STATUS_LABELS[r.status].label}</Badge>
-                  <select value={r.status} onChange={(e) => setStatus(r.id, e.target.value)}
-                    className="text-xs font-semibold h-8 px-2 border border-[var(--kz-edge)] rounded-lg bg-[var(--kz-paper)] cursor-pointer">
-                    <option value="open">Ouvert</option>
-                    <option value="in_progress">En cours</option>
-                    <option value="resolved">Résolu</option>
-                  </select>
-                  <button onClick={() => remove(r.id)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600">
-                    <Trash2 size={15} />
-                  </button>
                 </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

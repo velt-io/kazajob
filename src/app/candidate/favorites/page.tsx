@@ -1,41 +1,44 @@
 'use client'
 
-import { Heart } from 'lucide-react'
+import { Heart, ArrowUpRight } from 'lucide-react'
 import { JobCard } from '@/components/cards/JobCard'
-import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
 import { useFavorites } from '@/features/favorites/useFavorites'
 import { useAuth } from '@/features/auth/useAuth'
+import { GlassEmpty, LargeTitle } from '@/components/os/candidate/primitives'
 
 export default function FavoritesPage() {
   const { profile } = useAuth()
   const { favorites, loading, isFavorite, toggle } = useFavorites(profile?.id)
 
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="mb-6">
-        <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Mes favoris</h1>
-        <p className="text-sm text-[var(--kz-mute)]">{favorites.length} offre(s) sauvegardee(s)</p>
-      </div>
+    <div className="max-w-[1180px] mx-auto">
+      <LargeTitle
+        eyebrow="Ma sélection"
+        title="Favoris"
+        subtitle={`${favorites.length} offre${favorites.length > 1 ? 's' : ''} sauvegardée${favorites.length > 1 ? 's' : ''}`}
+        actions={favorites.length > 0 ? <Link href="/candidate/jobs"><Button kind="outline" size="md" iconRight={<ArrowUpRight size={15} />}>Explorer</Button></Link> : undefined}
+      />
 
       {loading ? (
         <PageLoader />
       ) : favorites.length === 0 ? (
-        <EmptyState
+        <GlassEmpty
           title="Aucun favori pour l'instant"
-          description="Sauvegarde les offres qui t'interessent pour les retrouver facilement."
-          icon={<Heart size={28} />}
+          description="Touche le cœur d'une offre pour la retrouver ici en un geste."
+          icon={<Heart size={26} />}
           action={<Link href="/candidate/jobs"><Button kind="primary">Explorer les offres</Button></Link>}
         />
       ) : (
-        <div className="grid grid-cols-3 gap-4">
-          {favorites.map((fav) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {favorites.map((fav, i) => (
             fav.job && (
               <JobCard
                 key={fav.id}
                 job={fav.job}
+                index={i}
                 isFavorite={isFavorite(fav.job.id)}
                 onToggleFavorite={toggle}
               />

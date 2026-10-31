@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Star, Trash2, ExternalLink, Users, Calendar, UserCheck, Monitor, BookOpen } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
-import { EmptyState } from '@/components/feedback/EmptyState'
-import { KZ, EVENT_TYPES } from '@/lib/constants'
-import type { BadgeColor } from '@/lib/types'
+import { EVENT_TYPES } from '@/lib/constants'
+import { Tooltip } from '@/components/ui/radix'
+import { ACCENT, EmptyPanel, IconButton, PageHeader, SkeletonList, tint } from '@/components/os/recruiter/primitives'
 
 interface AdminEvent {
   id: string
@@ -21,11 +19,11 @@ interface AdminEvent {
   registrations_count: number
 }
 
-const TYPE_BADGE: Record<string, BadgeColor> = { job_dating: 'violet', webinar: 'blue', atelier: 'orange' }
+const TYPE_ACCENT: Record<string, string> = { job_dating: ACCENT.violet, webinar: ACCENT.blue, atelier: ACCENT.orange }
 const TYPE_ICONS: Record<string, React.ReactNode> = {
-  job_dating: <UserCheck size={13} />,
-  webinar:    <Monitor   size={13} />,
-  atelier:    <BookOpen  size={13} />,
+  job_dating: <UserCheck size={12} />,
+  webinar:    <Monitor   size={12} />,
+  atelier:    <BookOpen  size={12} />,
 }
 
 export default function AdminEventsPage() {
@@ -61,88 +59,88 @@ export default function AdminEventsPage() {
   }
 
   return (
-    <div className="max-w-[1000px] mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">KazaEvents</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Tous les événements publiés par les recruteurs</p>
-      </div>
+    <div className="max-w-[1100px] mx-auto">
+      <PageHeader eyebrow="Communauté" title="KazaEvents" subtitle="Tous les événements publiés par les recruteurs" />
 
       {loading ? (
-        <div className="flex flex-col gap-3">
-          {[1, 2, 3].map(i => <div key={i} className="h-20 rounded-xl bg-[var(--kz-cream2)] animate-pulse" />)}
-        </div>
+        <SkeletonList rows={3} height={72} />
       ) : events.length === 0 ? (
-        <EmptyState title="Aucun événement" icon={<Star size={24} />} />
+        <div className="osr-panel">
+          <EmptyPanel title="Aucun événement" icon={<Star size={26} />} accent={ACCENT.teal} />
+        </div>
       ) : (
-        <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
-          <table className="w-full text-sm min-w-[640px]">
+        <div className="osr-table-wrap">
+          <table className="w-full text-sm min-w-[680px]">
             <thead>
-              <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-                <th className="text-left p-3 font-bold text-[var(--kz-ink)]">Événement</th>
-                <th className="text-left p-3 font-bold text-[var(--kz-ink)] hidden md:table-cell">Organisateur</th>
-                <th className="text-left p-3 font-bold text-[var(--kz-ink)] hidden sm:table-cell">Date</th>
-                <th className="text-center p-3 font-bold text-[var(--kz-ink)]">Inscrits</th>
-                <th className="text-center p-3 font-bold text-[var(--kz-ink)]">Statut</th>
-                <th className="p-3" />
+              <tr>
+                <th className="text-left px-4 py-3 uppercase">Événement</th>
+                <th className="text-left px-4 py-3 uppercase hidden md:table-cell">Organisateur</th>
+                <th className="text-left px-4 py-3 uppercase hidden sm:table-cell">Date</th>
+                <th className="text-center px-4 py-3 uppercase">Inscrits</th>
+                <th className="text-center px-4 py-3 uppercase">Statut</th>
+                <th className="px-4 py-3"><span className="sr-only">Actions</span></th>
               </tr>
             </thead>
             <tbody>
               {events.map(evt => {
                 const typeInfo = EVENT_TYPES[evt.type] ?? { label: evt.type }
                 const isPast = new Date(evt.date) < new Date()
+                const accent = TYPE_ACCENT[evt.type] ?? ACCENT.mute
+                const fill = evt.max_participants > 0 ? Math.min(100, (evt.registrations_count / evt.max_participants) * 100) : 0
                 return (
-                  <tr key={evt.id} className="border-b border-[var(--kz-line)] last:border-0 hover:bg-[var(--kz-cream2)] transition-colors">
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        <Badge color={TYPE_BADGE[evt.type] ?? 'cream'} size="sm">
-                          <span className="flex items-center gap-1">{TYPE_ICONS[evt.type]}{typeInfo.label}</span>
-                        </Badge>
-                        <span className="font-semibold text-[var(--kz-ink)] truncate max-w-[180px]">{evt.title}</span>
+                  <tr key={evt.id}>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="inline-flex items-center gap-1 h-[22px] px-2 rounded-full text-[11px] font-semibold shrink-0"
+                          style={{ background: tint(accent, 16), color: `color-mix(in srgb, ${accent} 80%, white)` }}>
+                          {TYPE_ICONS[evt.type]}{typeInfo.label}
+                        </span>
+                        <span className="font-semibold text-white truncate max-w-[200px]">{evt.title}</span>
                       </div>
                     </td>
-                    <td className="p-3 text-[var(--kz-mute)] hidden md:table-cell">
-                      <div>{evt.organizer?.full_name ?? '—'}</div>
-                      <div className="text-[11px]">{evt.organizer?.email ?? ''}</div>
+                    <td className="px-4 py-2.5 text-[var(--kz-text)] hidden md:table-cell">
+                      <div className="text-[13px]">{evt.organizer?.full_name ?? '—'}</div>
+                      <div className="text-[11px] text-[var(--kz-mute)]">{evt.organizer?.email ?? ''}</div>
                     </td>
-                    <td className="p-3 text-[var(--kz-mute)] hidden sm:table-cell">
-                      <div className="flex items-center gap-1">
+                    <td className="px-4 py-2.5 text-[var(--kz-mute)] hidden sm:table-cell">
+                      <div className="flex items-center gap-1.5 text-[13px]">
                         <Calendar size={12} />
                         {new Date(evt.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: '2-digit' })}
                       </div>
                       {isPast && <span className="text-[11px] text-[var(--kz-mute)]">Terminé</span>}
                     </td>
-                    <td className="p-3 text-center">
-                      <span className="flex items-center justify-center gap-1 text-xs font-bold text-[var(--kz-ink)]">
-                        <Users size={12} />{evt.registrations_count}/{evt.max_participants}
-                      </span>
+                    <td className="px-4 py-2.5">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="flex items-center gap-1 text-[12px] font-semibold text-white">
+                          <Users size={12} className="text-[var(--kz-mute)]" />{evt.registrations_count}/{evt.max_participants}
+                        </span>
+                        <span className="osr-bar w-14 !h-1"><span style={{ width: `${fill}%`, background: accent }} /></span>
+                      </div>
                     </td>
-                    <td className="p-3 text-center">
-                      <button
-                        onClick={() => togglePublish(evt.id, evt.is_published)}
-                        className="text-[11px] font-bold px-2 py-1 rounded-full border border-[var(--kz-edge)] transition-colors"
-                        style={{
-                          background: evt.is_published ? KZ.greenSoft : KZ.cream2,
-                          color: evt.is_published ? KZ.green : KZ.mute,
-                        }}
-                      >
-                        {evt.is_published ? 'Publié' : 'Masqué'}
-                      </button>
-                    </td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-1.5 justify-end">
-                        {evt.jitsi_room && (
-                          <a href={`https://meet.jit.si/${evt.jitsi_room}`} target="_blank" rel="noreferrer"
-                            className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-colors">
-                            <ExternalLink size={13} />
-                          </a>
-                        )}
+                    <td className="px-4 py-2.5 text-center">
+                      <Tooltip content={evt.is_published ? 'Masquer' : 'Publier'}>
                         <button
-                          onClick={() => deleteEvent(evt.id)}
-                          disabled={deletingId === evt.id}
-                          className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 transition-colors"
+                          onClick={() => togglePublish(evt.id, evt.is_published)}
+                          aria-label={evt.is_published ? `Masquer ${evt.title}` : `Publier ${evt.title}`}
+                          className="osr-pill transition-transform active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kz-blue)]"
+                          style={{ '--osr-accent': evt.is_published ? ACCENT.green : ACCENT.mute } as React.CSSProperties}
                         >
-                          <Trash2 size={13} />
+                          {evt.is_published ? 'Publié' : 'Masqué'}
                         </button>
+                      </Tooltip>
+                    </td>
+                    <td className="px-3 py-2">
+                      <div className="flex items-center gap-0.5 justify-end">
+                        {evt.jitsi_room && (
+                          <Tooltip content="Ouvrir la salle Jitsi">
+                            <a href={`https://meet.jit.si/${evt.jitsi_room}`} target="_blank" rel="noreferrer" aria-label="Ouvrir la salle Jitsi" className="osr-icon-btn">
+                              <ExternalLink size={14} />
+                            </a>
+                          </Tooltip>
+                        )}
+                        <IconButton label="Supprimer" tone="danger" onClick={() => deleteEvent(evt.id)} disabled={deletingId === evt.id}>
+                          <Trash2 size={14} />
+                        </IconButton>
                       </div>
                     </td>
                   </tr>

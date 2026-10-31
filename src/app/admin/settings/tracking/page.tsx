@@ -6,9 +6,8 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Select } from '@/components/ui/Select'
-import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
-import { KZ } from '@/lib/constants'
+import { ACCENT, EmptyPanel, IconButton, PageHeader, SkeletonList, StatusPill, tint } from '@/components/os/recruiter/primitives'
 import type { TrackingIntegration, TrackingIntegrationVersion } from '@/lib/types'
 
 const PROVIDER_OPTIONS = [
@@ -151,45 +150,48 @@ export default function AdminTrackingPage() {
   }
 
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)] flex items-center gap-2"><Radio size={22} color={KZ.violet} /> Tracking & Ads</h1>
-          <p className="text-sm text-[var(--kz-mute)] mt-1">Scripts et pixels publicitaires — gérés sans déploiement, respectent le consentement cookies.</p>
-        </div>
-        <Button kind="primary" size="md" icon={<Plus size={14} />} onClick={openCreate}>Ajouter une intégration</Button>
-      </div>
+    <div className="max-w-[1000px] mx-auto">
+      <PageHeader
+        eyebrow="Réglages"
+        title="Tracking & Ads"
+        subtitle="Scripts et pixels publicitaires — gérés sans déploiement, respectent le consentement cookies."
+        actions={<Button kind="primary" size="md" icon={<Plus size={14} />} onClick={openCreate}>Ajouter une intégration</Button>}
+      />
 
       {loading ? (
-        <div className="flex flex-col gap-2">
-          {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}
-        </div>
+        <SkeletonList rows={3} height={64} />
       ) : integrations.length === 0 ? (
-        <div className="text-sm text-[var(--kz-mute)] py-10 text-center border border-dashed border-[var(--kz-line)] rounded-xl">
-          Aucune intégration configurée.
+        <div className="osr-panel">
+          <EmptyPanel icon={<Radio size={26} />} title="Aucune intégration configurée." accent={ACCENT.violet} />
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {integrations.map(i => (
-            <div key={i.id} className="kz-card p-4 bg-[var(--kz-paper)] flex items-center justify-between gap-3 flex-wrap">
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap mb-1">
-                  <span className="font-bold text-[var(--kz-ink)]">{i.name}</span>
-                  <Badge color={i.is_active ? 'green' : 'cream'} size="sm">{i.is_active ? 'Actif' : 'Inactif'}</Badge>
-                  <Badge color="violet" size="sm">{PROVIDER_OPTIONS.find(p => p.value === i.provider)?.label ?? i.provider}</Badge>
-                  <Badge color="blue" size="sm">{i.consent_category}</Badge>
+        <div className="osr-panel p-2 osr-sep">
+          {integrations.map((i, idx) => (
+            <div key={i.id} className="osr-row osr-in px-3 py-3 flex items-center justify-between gap-3 flex-wrap" style={{ '--i': idx } as React.CSSProperties}>
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <span className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0"
+                  style={{ background: tint(i.is_active ? ACCENT.green : ACCENT.mute, 16), color: i.is_active ? 'var(--kz-green)' : 'var(--kz-mute)' }}>
+                  <Radio size={17} />
+                </span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                    <span className="text-[15px] font-semibold text-white">{i.name}</span>
+                    <StatusPill accent={i.is_active ? ACCENT.green : ACCENT.mute} live={i.is_active}>{i.is_active ? 'Actif' : 'Inactif'}</StatusPill>
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="osr-chip">{PROVIDER_OPTIONS.find(p => p.value === i.provider)?.label ?? i.provider}</span>
+                    <span className="osr-chip">{i.consent_category}</span>
+                  </div>
+                  {i.description && <p className="osr-sub text-[12px] text-[var(--kz-mute)] mt-1">{i.description}</p>}
                 </div>
-                {i.description && <p className="text-xs text-[var(--kz-mute)]">{i.description}</p>}
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <Button kind="ghost" size="sm" icon={<History size={13} />} onClick={() => openHistory(i.id)} />
-                <Button kind={i.is_active ? 'outline' : 'primary'} size="sm" onClick={() => toggleActive(i)}>
+              <div className="flex items-center gap-1 shrink-0">
+                <IconButton label="Historique des versions" onClick={() => openHistory(i.id)}><History size={14} /></IconButton>
+                <Button kind={i.is_active ? 'soft' : 'primary'} size="sm" onClick={() => toggleActive(i)}>
                   {i.is_active ? 'Désactiver' : 'Activer'}
                 </Button>
                 <Button kind="ghost" size="sm" onClick={() => openEdit(i)}>Modifier</Button>
-                <button onClick={() => handleDelete(i)} className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 transition-colors">
-                  <Trash2 size={13} />
-                </button>
+                <IconButton label="Supprimer" tone="danger" onClick={() => handleDelete(i)}><Trash2 size={14} /></IconButton>
               </div>
             </div>
           ))}
@@ -210,9 +212,9 @@ export default function AdminTrackingPage() {
               placeholder={form.provider === 'ga4' ? 'G-XXXXXXX' : form.provider === 'gtm' ? 'GTM-XXXXXXX' : 'Identifiant fourni par le partenaire'} />
           ) : (
             <>
-              <div className="p-3 rounded-lg border flex items-start gap-2" style={{ borderColor: '#E54E4E', background: '#FFEAEA' }}>
-                <AlertTriangle size={15} color="#E54E4E" className="shrink-0 mt-0.5" />
-                <p className="text-xs text-[var(--kz-ink)]">
+              <div className="p-3 rounded-[14px] border flex items-start gap-2.5" style={{ borderColor: 'color-mix(in srgb, var(--osr-red) 50%, transparent)', background: tint(ACCENT.red, 12) }}>
+                <AlertTriangle size={15} className="shrink-0 mt-0.5 text-[var(--osr-red)]" />
+                <p className="text-[13px] text-[var(--kz-text)] leading-relaxed">
                   Un script personnalisé s&apos;exécute directement dans le navigateur des visiteurs. Toute erreur ou code malveillant
                   affecte immédiatement le site en production. Réservé aux cas où aucun fournisseur structuré ne convient.
                 </p>
@@ -220,7 +222,7 @@ export default function AdminTrackingPage() {
               <Textarea label="Code du script" value={form.customCode} onChange={e => setForm(f => ({ ...f, customCode: e.target.value }))} rows={6}
                 placeholder="<script>...</script> ou JS brut" />
               <label className="flex items-center gap-2 text-xs font-semibold text-[var(--kz-ink)] cursor-pointer">
-                <input type="checkbox" checked={confirmCustom} onChange={e => setConfirmCustom(e.target.checked)} />
+                <input type="checkbox" checked={confirmCustom} onChange={e => setConfirmCustom(e.target.checked)} className="w-4 h-4 accent-[var(--osr-red)] shrink-0" />
                 Je confirme avoir vérifié ce script et j&apos;assume le risque de son exécution en production.
               </label>
             </>
@@ -233,11 +235,11 @@ export default function AdminTrackingPage() {
           </div>
 
           <label className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-ink)] cursor-pointer">
-            <input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} />
+            <input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} className="w-4 h-4 accent-[var(--kz-green)]" />
             Activer immédiatement
           </label>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p role="alert" className="text-[13px] text-[var(--osr-red)]">{error}</p>}
 
           <div className="flex gap-2">
             <Button kind="outline" full onClick={() => setModalOpen(false)}>Annuler</Button>
@@ -252,9 +254,9 @@ export default function AdminTrackingPage() {
           {versions.length === 0 ? (
             <p className="text-sm text-[var(--kz-mute)]">Aucune version enregistrée.</p>
           ) : versions.map(v => (
-            <div key={v.id} className="p-3 rounded-lg border border-[var(--kz-line)] flex items-center justify-between gap-3">
+            <div key={v.id} className="osr-surface p-3 flex items-center justify-between gap-3">
               <div>
-                <span className="text-sm font-semibold text-[var(--kz-ink)]">Version {v.version}</span>
+                <span className="text-sm font-semibold text-white">Version {v.version}</span>
                 <p className="text-xs text-[var(--kz-mute)]">{new Date(v.created_at).toLocaleString('fr-FR')}</p>
               </div>
               <Button kind="outline" size="sm" onClick={() => handleRollback(v.id)}>Restaurer</Button>

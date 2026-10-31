@@ -1,14 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { ArrowLeft, Lock } from 'lucide-react'
+import { Lock } from 'lucide-react'
 import Link from 'next/link'
 import { JobForm } from '@/components/forms/JobForm'
 import { CompanyRequired } from '@/components/feedback/CompanyRequired'
 import { useAuth } from '@/features/auth/useAuth'
 import { Button } from '@/components/ui/Button'
 import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
-import { KZ } from '@/lib/constants'
+import { ACCENT, PageHeader, SkeletonList, accentStyle, tint } from '@/components/os/recruiter/primitives'
+import { BackLink, FormWindow } from '@/components/os/recruiter/secondary-ui'
 
 export default function NewJobPage() {
   const { profile } = useAuth()
@@ -28,26 +29,23 @@ export default function NewJobPage() {
 
   return (
     <CompanyRequired action="publier une offre d'emploi">
-    <div className="max-w-[760px] mx-auto">
-      <Link href="/recruiter/jobs" className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-6">
-        <ArrowLeft size={16} />
-        Retour aux offres
-      </Link>
+    <div className="max-w-[820px] mx-auto">
+      <BackLink href="/recruiter/jobs">Mes offres</BackLink>
 
-      <h1 className="kz-h2 text-[var(--kz-ink)] mb-6">Publier une nouvelle offre</h1>
+      <PageHeader eyebrow="Nouvelle annonce" title="Publier une nouvelle offre" subtitle="Quelques minutes suffisent. KazaIA peut vous aider à rédiger la description." />
 
       {blocked && billing ? (
-        <div className="kz-card p-8 bg-[var(--kz-paper)] text-center">
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
-            style={{ background: KZ.orangeSoft }}>
-            <Lock size={24} color={KZ.orange} />
-          </div>
-          <h2 className="text-lg font-extrabold text-[var(--kz-ink)] mb-2">Publication temporairement bloquée</h2>
-          <p className="text-sm text-[var(--kz-mute)] leading-relaxed max-w-md mx-auto mb-6">
+        <div className="osr-panel osr-glow p-8 sm:p-10 text-center" style={accentStyle(ACCENT.orange)}>
+          <span className="w-16 h-16 rounded-[20px] flex items-center justify-center mx-auto mb-5 text-white"
+            style={{ background: `linear-gradient(145deg, ${ACCENT.orange}, ${tint(ACCENT.orange, 55)})`, boxShadow: `0 18px 40px -16px ${ACCENT.orange}` }}>
+            <Lock size={26} />
+          </span>
+          <h2 className="text-[22px] font-semibold tracking-[-0.02em] text-white mb-2">Publication temporairement bloquée</h2>
+          <p className="text-[15px] text-[var(--kz-mute)] leading-relaxed max-w-md mx-auto mb-7">
             {billing.maxJobs !== -1 ? (
               <>
-                Votre entreprise utilise <strong>{billing.activeJobs}</strong> annonces actives.
-                Votre offre actuelle permet <strong>{billing.maxJobs}</strong> annonces actives.
+                Votre entreprise utilise <strong className="text-white">{billing.activeJobs}</strong> annonces actives.
+                Votre offre actuelle permet <strong className="text-white">{billing.maxJobs}</strong> annonces actives.
                 <br /><br />
                 Vos annonces existantes restent visibles, mais vous devez passer à une offre supérieure
                 ou attendre l&apos;expiration d&apos;une annonce pour publier à nouveau.
@@ -69,15 +67,15 @@ export default function NewJobPage() {
           </div>
         </div>
       ) : (
-        <div className="kz-card p-6 bg-[var(--kz-paper)]">
+        <FormWindow title="Nouvelle offre d'emploi">
           {profile && !loadingBilling && (
             <JobForm
               recruiterId={profile.id}
               companyId={profile.company_id ?? undefined}
             />
           )}
-          {loadingBilling && <div className="h-32 animate-pulse rounded-xl bg-[var(--kz-cream2)]" />}
-        </div>
+          {loadingBilling && <SkeletonList rows={3} height={48} />}
+        </FormWindow>
       )}
     </div>
     </CompanyRequired>

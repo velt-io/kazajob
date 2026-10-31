@@ -1,18 +1,30 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, MapPin, Clock, Users, Euro, Check, CalendarCheck, GraduationCap, ExternalLink } from 'lucide-react'
+import { ChevronLeft, MapPin, Clock, Users, Euro, Check, CalendarCheck, GraduationCap, BookOpen, ListChecks, KeyRound } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
 import { Textarea } from '@/components/ui/Textarea'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
-import { KZ, CERTIFICATION_LEVELS } from '@/lib/constants'
+import { CERTIFICATION_LEVELS } from '@/lib/constants'
 import type { TrainingOffer } from '@/lib/types'
+import { CompanyMark, Pill, markGradient } from '@/components/os/candidate/primitives'
 
 const certLabel = (id: string) => CERTIFICATION_LEVELS.find(c => c.id === id)?.label ?? id
+
+function Section({ icon, tint, title, children }: { icon: ReactNode; tint: string; title: string; children: ReactNode }) {
+  return (
+    <section className="osc-card p-5 sm:p-6">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0" style={{ color: tint, background: `color-mix(in srgb, ${tint} 16%, transparent)` }}>{icon}</span>
+        <h2 className="text-[19px] font-semibold tracking-[-0.02em] text-[var(--kz-ink)]">{title}</h2>
+      </div>
+      {children}
+    </section>
+  )
+}
 
 export default function TrainingDetailPage() {
   const { id }   = useParams<{ id: string }>()
@@ -70,145 +82,138 @@ export default function TrainingDetailPage() {
 
   if (loading) return <PageLoader />
   if (!offer) return (
-    <div className="text-center py-16">
-      <p className="text-[var(--kz-mute)] mb-4">Formation introuvable.</p>
+    <div className="max-w-md mx-auto text-center py-20">
+      <span className="inline-flex w-16 h-16 rounded-[20px] items-center justify-center bg-[var(--kz-line)] text-[var(--kz-mute)] mb-5"><GraduationCap size={26} /></span>
+      <p className="text-[20px] font-semibold text-[var(--kz-ink)] mb-6">Formation introuvable</p>
       <Button kind="outline" onClick={() => router.back()}>Retour</Button>
     </div>
   )
 
   const hasIC  = !!offer.info_session
   const icDate = hasIC ? new Date((offer.info_session as { date: string }).date) : null
+  const icWhen = icDate ? `${icDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })} à ${icDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}` : ''
+
+  const facts = [
+    { icon: <Clock size={13} />, label: 'Durée', val: `${offer.duration_value} ${offer.duration_unit}` },
+    { icon: <MapPin size={13} />, label: 'Lieu', val: offer.location },
+    { icon: <Users size={13} />, label: 'Places', val: `${offer.max_participants} max` },
+    ...(offer.start_date ? [{ icon: <CalendarCheck size={13} />, label: 'Début', val: new Date(offer.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }] : []),
+    ...(offer.financing_options.length > 0 ? [{ icon: <Euro size={13} />, label: 'Financement', val: offer.financing_options.join(', ') }] : []),
+  ]
+
+  const cta = applied ? (
+    <span className="osc-fade w-full inline-flex items-center justify-center gap-2 h-12 rounded-full text-[15px] font-semibold text-[var(--kz-green)] bg-[var(--kz-green-soft)] border border-[color-mix(in_srgb,var(--kz-green)_35%,transparent)]">
+      <Check size={17} strokeWidth={2.6} />Dossier envoyé
+    </span>
+  ) : (
+    <Button kind="primary" size="lg" full icon={<GraduationCap size={16} />} onClick={() => setApplyModal(true)}>
+      Postuler à la formation
+    </Button>
+  )
 
   return (
-    <div className="max-w-[900px] mx-auto">
+    <div className="max-w-[1080px] mx-auto">
       <button onClick={() => router.back()}
-        className="flex items-center gap-2 text-sm font-semibold text-[var(--kz-mute)] hover:text-[var(--kz-ink)] mb-5">
-        <ArrowLeft size={16} /> Retour aux formations
+        className="osc-press inline-flex items-center gap-0.5 -ml-1.5 mb-4 h-9 pr-3 pl-1 rounded-full text-[15px] font-medium text-[var(--kz-blue)] hover:bg-[var(--kz-blue-soft)]">
+        <ChevronLeft size={20} />Formations
       </button>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-[1fr_300px] gap-5">
-        {/* Main */}
-        <div className="flex flex-col gap-4">
-          {/* Image */}
+      {/* En-tête */}
+      <section className="relative overflow-hidden rounded-[32px] border border-[var(--kz-edge)] shadow-[var(--os-elevation)]">
+        <div className="relative h-44 sm:h-56" style={{ background: markGradient(offer.company?.name ?? offer.title) }}>
           {offer.image_url && (
-            <div className="kz-card overflow-hidden" style={{ height: 240 }}>
-              <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
-            </div>
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={offer.image_url} alt="" className="w-full h-full object-cover" />
           )}
-
-          {/* Header */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <div className="text-sm font-semibold text-[var(--kz-mute)] mb-1">{offer.company?.name ?? 'Organisme de formation'}</div>
-            <h1 className="text-xl font-extrabold text-[var(--kz-ink)] mb-3">{offer.title}</h1>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {offer.certification_level && <Badge color="violet" size="md">{certLabel(offer.certification_level)}</Badge>}
-              {offer.is_financed && <Badge color="green" size="md">Formation financée</Badge>}
-              {offer.remote && <Badge color="blue" size="md">Distanciel</Badge>}
-              {hasIC && <Badge color="green" size="md"><span className="flex items-center gap-1"><CalendarCheck size={11} /> Session IC disponible</span></Badge>}
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {[
-                { icon: <Clock size={14} />, label: 'Durée', val: `${offer.duration_value} ${offer.duration_unit}` },
-                { icon: <MapPin size={14} />, label: 'Lieu', val: offer.location },
-                { icon: <Users size={14} />, label: 'Places', val: `${offer.max_participants} max` },
-                ...(offer.start_date ? [{ icon: <CalendarCheck size={14} />, label: 'Début', val: new Date(offer.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }] : []),
-                ...(offer.financing_options.length > 0 ? [{ icon: <Euro size={14} />, label: 'Financement', val: offer.financing_options.join(', ') }] : []),
-              ].map(item => (
-                <div key={item.label} className="p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-                  <div className="flex items-center gap-1.5 text-[var(--kz-mute)] mb-0.5">{item.icon}<span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span></div>
-                  <div className="text-xs font-bold text-[var(--kz-ink)]">{item.val}</div>
-                </div>
-              ))}
-            </div>
+          <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05),color-mix(in_srgb,var(--kz-cream)_92%,transparent))]" />
+        </div>
+        <div className="relative -mt-16 px-5 sm:px-8 pb-6 sm:pb-8">
+          <CompanyMark name={offer.company?.name ?? 'Organisme'} size={72} className="ring-4 ring-[var(--kz-cream)]" />
+          <div className="text-[14px] font-medium text-[var(--kz-mute)] mt-3">{offer.company?.name ?? 'Organisme de formation'}</div>
+          <h1 className="text-[28px] sm:text-[38px] font-semibold tracking-[-0.045em] leading-[1.05] text-[var(--kz-ink)] mt-1">{offer.title}</h1>
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {offer.certification_level && <Pill tone="violet">{certLabel(offer.certification_level)}</Pill>}
+            {offer.is_financed && <Pill tone="green">Formation financée</Pill>}
+            {offer.remote && <Pill tone="blue">Distanciel</Pill>}
+            {hasIC && <Pill tone="green" dot>Session d&apos;info disponible</Pill>}
           </div>
 
-          {/* Description */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">À propos de la formation</h2>
-            <p className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{offer.description}</p>
+          <div className="osc-scroll-x mt-6 -mx-5 px-5 sm:mx-0 sm:px-0 pt-5 border-t border-[var(--kz-line)] [scroll-snap-type:none]">
+            {facts.map((f, i) => (
+              <div key={f.label} className={`shrink-0 min-w-[130px] max-w-[220px] px-4 first:pl-0 ${i > 0 ? 'border-l border-[var(--kz-line)]' : ''}`}>
+                <div className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--kz-mute)]">{f.icon}{f.label}</div>
+                <div className="text-[15px] font-semibold text-[var(--kz-ink)] mt-1.5 line-clamp-2">{f.val}</div>
+              </div>
+            ))}
           </div>
+        </div>
+      </section>
 
-          {/* Programme */}
+      <div className="flex flex-col lg:grid lg:grid-cols-[1fr_320px] gap-5 mt-5">
+        <div className="flex flex-col gap-5 min-w-0">
+          <Section icon={<BookOpen size={15} />} tint="var(--kz-blue)" title="À propos de la formation">
+            <p className="text-[15px] leading-[1.65] text-[var(--kz-text)] whitespace-pre-line">{offer.description}</p>
+          </Section>
           {offer.program && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">Programme pédagogique</h2>
-              <p className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{offer.program}</p>
-            </div>
+            <Section icon={<ListChecks size={15} />} tint="var(--kz-violet)" title="Programme pédagogique">
+              <p className="text-[15px] leading-[1.65] text-[var(--kz-text)] whitespace-pre-line">{offer.program}</p>
+            </Section>
           )}
-
-          {/* Prérequis */}
           {offer.prerequisites && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">Prérequis d&apos;accès</h2>
-              <p className="text-sm leading-relaxed text-[var(--kz-text)] whitespace-pre-line">{offer.prerequisites}</p>
-            </div>
+            <Section icon={<KeyRound size={15} />} tint="var(--kz-orange)" title="Prérequis d'accès">
+              <p className="text-[15px] leading-[1.65] text-[var(--kz-text)] whitespace-pre-line">{offer.prerequisites}</p>
+            </Section>
           )}
         </div>
 
-        {/* Sidebar */}
-        <div className="flex flex-col gap-4">
-          {/* CTA principal */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+        <aside className="flex flex-col gap-4 lg:sticky lg:top-[var(--osc-sticky-top,16px)] self-start w-full">
+          <div className="os-glass rounded-[26px] p-5 shadow-[var(--os-elevation)]">
             {offer.certification && (
-              <div className="text-base font-extrabold text-[var(--kz-ink)] mb-1">{offer.certification}</div>
+              <div className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--kz-ink)]">{offer.certification}</div>
             )}
-            <div className="text-sm text-[var(--kz-mute)] mb-4">{offer.duration_value} {offer.duration_unit} · {offer.location}</div>
-
-            {applied ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
-                <Check size={16} color={KZ.green} />
-                <span className="text-sm font-bold text-[var(--kz-ink)]">Dossier envoyé !</span>
-              </div>
-            ) : (
-              <Button kind="primary" size="lg" full onClick={() => setApplyModal(true)}>
-                <span className="flex items-center gap-2"><GraduationCap size={15} /> Postuler à la formation</span>
-              </Button>
-            )}
+            <div className="text-[13px] text-[var(--kz-mute)] mt-1 mb-5">{offer.duration_value} {offer.duration_unit} · {offer.location}</div>
+            {cta}
           </div>
 
-          {/* Session IC */}
           {hasIC && icDate && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)] border-[var(--kz-green)]" style={{ borderColor: KZ.green }}>
-              <div className="flex items-center gap-2 mb-3">
-                <CalendarCheck size={16} color={KZ.green} />
-                <h3 className="text-sm font-bold text-[var(--kz-ink)]">Session d&apos;Information Collective</h3>
+            <div className="osc-card p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-9 h-9 rounded-[11px] flex items-center justify-center text-black bg-[var(--kz-green)]"><CalendarCheck size={16} /></span>
+                <h3 className="text-[15px] font-semibold text-[var(--kz-ink)] leading-tight">Information collective</h3>
               </div>
-              <div className="text-xs text-[var(--kz-mute)] mb-1">
-                {(offer.info_session as { title: string }).title}
-              </div>
-              <div className="text-xs font-bold text-[var(--kz-ink)] mb-3">
-                {icDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                {' à '}{icDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-              </div>
+              <div className="text-[13px] text-[var(--kz-mute)]">{(offer.info_session as { title: string }).title}</div>
+              <div className="text-[14px] font-semibold text-[var(--kz-ink)] mt-1 mb-4 first-letter:uppercase">{icWhen}</div>
               {icRegistered ? (
-                <div className="flex items-center gap-2 p-2.5 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)]">
-                  <Check size={14} color={KZ.green} />
-                  <span className="text-xs font-bold text-[var(--kz-ink)]">Inscrit à la session IC</span>
-                </div>
+                <span className="w-full inline-flex items-center justify-center gap-2 h-10 rounded-full text-[13px] font-semibold text-[var(--kz-green)] bg-[var(--kz-green-soft)]">
+                  <Check size={15} strokeWidth={2.6} />Inscrit à la session
+                </span>
               ) : (
-                <Button kind="outline" size="sm" full onClick={() => setIcModal(true)}>
-                  S&apos;inscrire à la session IC
+                <Button kind="outline" size="md" full onClick={() => setIcModal(true)}>
+                  S&apos;inscrire à la session
                 </Button>
               )}
             </div>
           )}
-        </div>
+        </aside>
       </div>
 
       {/* Modal candidature */}
       <Modal open={applyModal} onClose={() => setApplyModal(false)} title="Postuler à cette formation">
-        <div className="flex flex-col gap-4">
-          <h3 className="font-bold text-[var(--kz-ink)]">{offer.title}</h3>
-          {error && <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
+        <div className="flex flex-col gap-5">
+          <div className="flex items-center gap-3">
+            <CompanyMark name={offer.company?.name ?? 'Organisme'} size={44} />
+            <h3 className="text-[16px] font-semibold text-[var(--kz-ink)] leading-snug">{offer.title}</h3>
+          </div>
+          {error && <div className="p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
           <Textarea
             label="Lettre de motivation (optionnel)"
             value={motivation}
             onChange={e => setMotivation(e.target.value)}
-            placeholder="Pourquoi souhaitez-vous suivre cette formation ? Votre projet professionnel..."
+            placeholder="Pourquoi souhaitez-vous suivre cette formation ? Votre projet professionnel…"
             rows={5}
           />
-          <div className="flex gap-2.5">
-            <Button kind="outline" size="lg" full onClick={() => setApplyModal(false)}>Annuler</Button>
+          <div className="flex flex-col-reverse sm:flex-row gap-2.5">
+            <Button kind="soft" size="lg" full onClick={() => setApplyModal(false)}>Annuler</Button>
             <Button kind="primary" size="lg" full loading={applying} onClick={handleApply}>
               Envoyer mon dossier
             </Button>
@@ -217,22 +222,19 @@ export default function TrainingDetailPage() {
       </Modal>
 
       {/* Modal IC */}
-      <Modal open={icModal} onClose={() => setIcModal(false)} title="Session d'Information Collective">
-        <div className="flex flex-col gap-4">
+      <Modal open={icModal} onClose={() => setIcModal(false)} title="Information collective">
+        <div className="flex flex-col gap-5">
           {hasIC && icDate && (
             <>
-              <div className="p-4 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.greenSoft }}>
-                <div className="text-sm font-bold text-[var(--kz-ink)] mb-1">{(offer.info_session as { title: string }).title}</div>
-                <div className="text-xs text-[var(--kz-mute)]">
-                  {icDate.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}
-                  {' à '}{icDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                </div>
+              <div className="p-4 rounded-[18px] bg-[var(--kz-green-soft)] border border-[color-mix(in_srgb,var(--kz-green)_25%,transparent)]">
+                <div className="text-[15px] font-semibold text-[var(--kz-ink)] mb-1">{(offer.info_session as { title: string }).title}</div>
+                <div className="text-[13px] text-[var(--kz-text)] first-letter:uppercase">{icWhen}</div>
               </div>
-              <p className="text-sm text-[var(--kz-text)]">
+              <p className="text-[14px] leading-relaxed text-[var(--kz-text)]">
                 Cette session vous permettra de découvrir la formation en détail, poser vos questions et rencontrer l&apos;équipe pédagogique.
               </p>
-              <div className="flex gap-2.5">
-                <Button kind="outline" size="lg" full onClick={() => setIcModal(false)}>Annuler</Button>
+              <div className="flex flex-col-reverse sm:flex-row gap-2.5">
+                <Button kind="soft" size="lg" full onClick={() => setIcModal(false)}>Annuler</Button>
                 <Button kind="primary" size="lg" full loading={applying} onClick={handleIcRegister}
                   icon={<CalendarCheck size={15} />}>
                   S&apos;inscrire

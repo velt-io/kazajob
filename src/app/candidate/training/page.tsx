@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { GraduationCap, MapPin, Clock, Euro, Search, CalendarCheck } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
-import { Input } from '@/components/ui/Input'
-import { EmptyState } from '@/components/feedback/EmptyState'
+import { GraduationCap, MapPin, Clock, Euro, Search, CalendarCheck, X } from 'lucide-react'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
-import { KZ, CERTIFICATION_LEVELS } from '@/lib/constants'
+import { CERTIFICATION_LEVELS } from '@/lib/constants'
 import type { TrainingOffer } from '@/lib/types'
+import { GlassEmpty, LargeTitle, Pill, markGradient } from '@/components/os/candidate/primitives'
 
 const certLabel = (id: string) =>
   CERTIFICATION_LEVELS.find(c => c.id === id)?.label ?? id
@@ -40,87 +38,80 @@ export default function CandidateTrainingPage() {
   if (loading) return <PageLoader />
 
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Formations</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
-          Offres de <span style={{ color: KZ.violet }}>formation</span>
-        </h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">
-          {offers.length} formation{offers.length > 1 ? 's' : ''} disponible{offers.length > 1 ? 's' : ''} à La Réunion 974
-        </p>
-      </div>
+    <div className="max-w-[1180px] mx-auto">
+      <LargeTitle
+        eyebrow="Se former à La Réunion"
+        title="Formations"
+        subtitle={`${offers.length} formation${offers.length > 1 ? 's' : ''} disponible${offers.length > 1 ? 's' : ''} en 974`}
+      />
 
-      <div className="mb-5">
-        <Input
-          label=""
+      <label className="os-glass flex items-center gap-3 h-14 px-5 mb-8 rounded-[22px] focus-within:ring-2 focus-within:ring-[color-mix(in_srgb,var(--kz-blue)_55%,transparent)] transition">
+        <Search size={18} className="text-[var(--kz-mute)] shrink-0" />
+        <input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder="Rechercher une formation, certification, ville..."
-          icon={<Search size={15} />}
+          placeholder="Formation, certification, ville…"
+          aria-label="Rechercher une formation"
+          className="flex-1 min-w-0 bg-transparent outline-none text-[16px] text-[var(--kz-ink)] placeholder:text-[var(--kz-mute)]"
         />
-      </div>
+        {search && (
+          <button type="button" onClick={() => setSearch('')} aria-label="Effacer la recherche"
+            className="osc-press osc-fade w-6 h-6 rounded-full flex items-center justify-center bg-[var(--kz-mute)] text-[var(--kz-inverse)] shrink-0">
+            <X size={13} strokeWidth={3} />
+          </button>
+        )}
+      </label>
 
       {filtered.length === 0 ? (
-        <EmptyState title="Aucune formation trouvée" icon={<GraduationCap size={28} />} />
+        <GlassEmpty title="Aucune formation trouvée" description="Essaie un autre mot-clé ou une autre ville." icon={<GraduationCap size={26} />} />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {filtered.map(offer => (
-            <Link key={offer.id} href={`/candidate/training/${offer.id}`} className="block">
-              <div className="kz-card bg-[var(--kz-paper)] hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0_var(--kz-shadow)] transition-all overflow-hidden flex flex-col">
-                {/* Image */}
-                <div className="h-36 relative overflow-hidden" style={{ background: KZ.violetSoft }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filtered.map((offer, i) => (
+            <Link key={offer.id} href={`/candidate/training/${offer.id}`} className="block group rounded-[26px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kz-blue)]">
+              <article className="osc-card osc-in osc-lift !rounded-[26px] overflow-hidden flex flex-col h-full" style={{ ['--i' as string]: i }}>
+                {/* Visuel */}
+                <div className="h-40 relative overflow-hidden" style={{ background: markGradient(offer.company?.name ?? offer.title) }}>
                   {offer.image_url ? (
-                    <img src={offer.image_url} alt={offer.title} className="w-full h-full object-cover" />
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={offer.image_url} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <GraduationCap size={48} color={KZ.violet} />
+                    <div className="w-full h-full flex items-center justify-center text-white/85">
+                      <GraduationCap size={44} strokeWidth={1.5} />
                     </div>
                   )}
-                  {/* Session IC badge */}
+                  <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,transparent_45%,rgba(0,0,0,0.55))]" />
                   {offer.info_session && (
-                    <div className="absolute top-2 right-2">
-                      <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full border border-[var(--kz-edge)] bg-[var(--kz-green-soft)]"
-                        style={{ color: KZ.green }}>
-                        <CalendarCheck size={10} /> Session IC
-                      </span>
-                    </div>
+                    <span className="absolute top-3 right-3 inline-flex items-center gap-1 h-6 px-2.5 rounded-full text-[11px] font-semibold text-black bg-[var(--kz-green)]">
+                      <CalendarCheck size={11} /> Session d&apos;info
+                    </span>
                   )}
                 </div>
 
-                <div className="p-4 flex flex-col gap-2 flex-1">
-                  {/* Centre de formation */}
-                  <div className="text-xs font-semibold text-[var(--kz-mute)]">{offer.company?.name ?? 'Organisme de formation'}</div>
+                <div className="p-5 flex flex-col gap-2.5 flex-1">
+                  <div className="text-[12px] font-medium text-[var(--kz-mute)] truncate">{offer.company?.name ?? 'Organisme de formation'}</div>
+                  <h3 className="text-[17px] font-semibold tracking-[-0.02em] text-[var(--kz-ink)] leading-snug line-clamp-2">{offer.title}</h3>
 
-                  {/* Titre */}
-                  <h3 className="text-sm font-extrabold text-[var(--kz-ink)] leading-tight line-clamp-2">{offer.title}</h3>
-
-                  {/* Badges */}
                   <div className="flex flex-wrap gap-1.5">
-                    {offer.certification_level && (
-                      <Badge color="violet" size="sm">{certLabel(offer.certification_level)}</Badge>
-                    )}
-                    {offer.is_financed && <Badge color="green" size="sm">Financé</Badge>}
-                    {offer.remote && <Badge color="blue" size="sm">Distanciel</Badge>}
+                    {offer.certification_level && <Pill tone="violet">{certLabel(offer.certification_level)}</Pill>}
+                    {offer.is_financed && <Pill tone="green">Financée</Pill>}
+                    {offer.remote && <Pill tone="blue">Distanciel</Pill>}
                   </div>
 
-                  {/* Infos */}
-                  <div className="flex flex-col gap-1 mt-auto pt-2 border-t border-[var(--kz-line)]">
-                    <div className="flex items-center gap-1.5 text-xs text-[var(--kz-mute)]">
-                      <Clock size={11} /> {offer.duration_value} {offer.duration_unit}
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-[var(--kz-mute)]">
-                      <MapPin size={11} /> {offer.location}
-                    </div>
+                  <div className="flex flex-col gap-1 mt-auto pt-3 border-t border-[var(--kz-line)] text-[12px] text-[var(--kz-text)]">
+                    <span className="flex items-center gap-1.5"><Clock size={12} className="text-[var(--kz-mute)]" />{offer.duration_value} {offer.duration_unit}</span>
+                    <span className="flex items-center gap-1.5"><MapPin size={12} className="text-[var(--kz-mute)]" />{offer.location}</span>
                     {offer.financing_options.length > 0 && (
-                      <div className="flex items-center gap-1.5 text-xs text-[var(--kz-mute)]">
-                        <Euro size={11} /> {offer.financing_options.slice(0,2).join(' · ')}
-                        {offer.financing_options.length > 2 && ` +${offer.financing_options.length - 2}`}
-                      </div>
+                      <span className="flex items-center gap-1.5 min-w-0">
+                        <Euro size={12} className="text-[var(--kz-mute)] shrink-0" />
+                        <span className="truncate">
+                          {offer.financing_options.slice(0, 2).join(' · ')}
+                          {offer.financing_options.length > 2 && ` +${offer.financing_options.length - 2}`}
+                        </span>
+                      </span>
                     )}
                   </div>
                 </div>
-              </div>
+              </article>
             </Link>
           ))}
         </div>

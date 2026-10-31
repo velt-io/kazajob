@@ -1,23 +1,21 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { CalendarPlus, Trash2, Clock, Mail, Phone, Building2, Plus } from 'lucide-react'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { CalendarPlus, Trash2, Clock, Mail, Phone, Building2, Plus, CalendarClock } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
-import { Badge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
-import type { BadgeColor } from '@/lib/types'
-import { KZ } from '@/lib/constants'
+import { ACCENT, EmptyPanel, PageHeader, StatusPill, Widget, tint } from '@/components/os/recruiter/primitives'
+import { OSR_SELECT, SectionTitle } from '@/components/os/recruiter/admin-ui'
 
 interface Slot { id: string; starts_at: string; duration_min: number; is_booked: boolean }
 interface Booking { id: string; name: string; company: string | null; email: string; phone: string | null; message: string | null; status: string; created_at: string; when: string | null }
 
-const ST: Record<string, { label: string; color: BadgeColor }> = {
-  confirmed: { label: 'Confirmé', color: 'green' },
-  cancelled: { label: 'Annulé', color: 'orange' },
-  done:      { label: 'Terminé', color: 'violet' },
+const ST: Record<string, { label: string; accent: string }> = {
+  confirmed: { label: 'Confirmé', accent: ACCENT.green },
+  cancelled: { label: 'Annulé', accent: ACCENT.red },
+  done:      { label: 'Terminé', accent: ACCENT.violet },
 }
 
 export default function AdminDemoPage() {
@@ -62,60 +60,72 @@ export default function AdminDemoPage() {
 
   return (
     <div className="max-w-[1000px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Commercial</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Démos &amp; rendez-vous</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Lien public à mettre dans vos mailings : <code>/demo</code></p>
-      </div>
+      <PageHeader
+        eyebrow="Commercial"
+        title="Démos & rendez-vous"
+        subtitle={<>Lien public à mettre dans vos mailings : <code className="osr-chip font-mono">/demo</code></>}
+      />
 
       {/* Créneaux */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-6">
-        <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2"><CalendarPlus size={16} />Ouvrir un créneau</h2>
-        <div className="flex flex-col sm:flex-row gap-2 mb-4">
-          <Input className="flex-1" type="datetime-local" value={newSlot} onChange={(e) => setNewSlot(e.target.value)} />
-          <Select className="sm:w-36" options={[{ value: '15', label: '15 min' }, { value: '30', label: '30 min' }, { value: '45', label: '45 min' }, { value: '60', label: '1 heure' }]} value={dur} onChange={(e) => setDur(e.target.value)} />
-          <Button kind="primary" size="md" icon={<Plus size={15} />} onClick={addSlot}>Ajouter</Button>
+      <Widget title="Ouvrir un créneau" icon={<CalendarPlus size={14} />} accent={ACCENT.blue} className="mb-6">
+        <div className="flex flex-col sm:flex-row gap-2 mb-4 sm:items-start">
+          <div className="flex-1"><Input type="datetime-local" value={newSlot} onChange={(e) => setNewSlot(e.target.value)} aria-label="Date et heure du créneau" /></div>
+          <div className="sm:w-36"><Select options={[{ value: '15', label: '15 min' }, { value: '30', label: '30 min' }, { value: '45', label: '45 min' }, { value: '60', label: '1 heure' }]} value={dur} onChange={(e) => setDur(e.target.value)} aria-label="Durée" /></div>
+          <Button kind="primary" size="lg" icon={<Plus size={15} />} onClick={addSlot} className="!h-11">Ajouter</Button>
         </div>
         {slots.length === 0 ? (
-          <p className="text-xs text-[var(--kz-mute)]">Aucun créneau ouvert. Ajoutez-en pour permettre la réservation en ligne.</p>
+          <p className="text-[13px] text-[var(--kz-mute)]">Aucun créneau ouvert. Ajoutez-en pour permettre la réservation en ligne.</p>
         ) : (
           <div className="flex flex-wrap gap-2">
-            {slots.map((s) => (
-              <div key={s.id} className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[var(--kz-edge)] text-xs font-semibold"
-                style={{ background: s.is_booked ? KZ.orangeSoft : KZ.greenSoft }}>
-                <Clock size={11} />{fmt(s.starts_at)} · {s.duration_min}min
-                {s.is_booked && <Badge color="orange" size="sm">Réservé</Badge>}
-                {!s.is_booked && <button onClick={() => delSlot(s.id)} className="text-[var(--kz-mute)] hover:text-red-600"><Trash2 size={12} /></button>}
-              </div>
-            ))}
+            {slots.map((s) => {
+              const accent = s.is_booked ? ACCENT.orange : ACCENT.green
+              return (
+                <div key={s.id} className="flex items-center gap-2 h-8 pl-3 pr-1.5 rounded-full text-[12px] font-semibold"
+                  style={{ background: tint(accent, 14), color: `color-mix(in srgb, ${accent} 80%, white)` }}>
+                  <Clock size={12} />{fmt(s.starts_at)} · {s.duration_min} min
+                  {s.is_booked ? (
+                    <span className="px-2 py-0.5 rounded-full text-[10px] bg-[var(--osr-fill-2)] text-white mr-0.5">Réservé</span>
+                  ) : (
+                    <button onClick={() => delSlot(s.id)} aria-label="Supprimer le créneau"
+                      className="w-6 h-6 flex items-center justify-center rounded-full text-[var(--kz-mute)] hover:text-[var(--osr-red)] hover:bg-[var(--osr-fill-2)] transition-colors">
+                      <Trash2 size={12} />
+                    </button>
+                  )}
+                </div>
+              )
+            })}
           </div>
         )}
-      </div>
+      </Widget>
 
       {/* RDV */}
-      <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3">Demandes de RDV ({bookings.length})</h2>
+      <SectionTitle icon={<CalendarClock size={16} />} aside={<span className="text-[13px] text-[var(--kz-mute)] tabular-nums">{bookings.length}</span>}>
+        Demandes de RDV
+      </SectionTitle>
       {loading ? <PageLoader /> : bookings.length === 0 ? (
-        <EmptyState title="Aucune demande" description="Les demandes de démo arriveront ici, depuis la page publique /demo." icon={<CalendarPlus size={28} />} />
+        <div className="osr-panel">
+          <EmptyPanel title="Aucune demande" description="Les demandes de démo arriveront ici, depuis la page publique /demo." icon={<CalendarPlus size={26} />} accent={ACCENT.blue} />
+        </div>
       ) : (
-        <div className="flex flex-col gap-3">
-          {bookings.map((b) => (
-            <div key={b.id} className="kz-card p-4 bg-[var(--kz-paper)]">
+        <div className="osr-panel p-2 osr-sep">
+          {bookings.map((b, i) => (
+            <div key={b.id} className="osr-row osr-in px-3 py-3" style={{ '--i': i } as CSSProperties}>
               <div className="flex items-start gap-3">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <span className="text-sm font-bold text-[var(--kz-ink)]">{b.name}</span>
-                    {b.company && <span className="text-xs text-[var(--kz-mute)] flex items-center gap-1"><Building2 size={11} />{b.company}</span>}
-                    <Badge color={ST[b.status]?.color ?? 'cream'} size="sm">{ST[b.status]?.label ?? b.status}</Badge>
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <span className="text-[15px] font-semibold text-white">{b.name}</span>
+                    {b.company && <span className="text-[12px] text-[var(--kz-mute)] flex items-center gap-1"><Building2 size={11} />{b.company}</span>}
+                    <StatusPill accent={ST[b.status]?.accent ?? ACCENT.mute}>{ST[b.status]?.label ?? b.status}</StatusPill>
                   </div>
-                  <div className="flex items-center gap-3 flex-wrap text-xs text-[var(--kz-mute)]">
-                    <a href={`mailto:${b.email}`} className="flex items-center gap-1 hover:underline"><Mail size={11} />{b.email}</a>
-                    {b.phone && <a href={`tel:${b.phone}`} className="flex items-center gap-1 hover:underline"><Phone size={11} />{b.phone}</a>}
-                    <span className="flex items-center gap-1 font-semibold" style={{ color: KZ.violet }}><Clock size={11} />{b.when ? fmt(b.when) : 'À convenir'}</span>
+                  <div className="flex items-center gap-x-3 gap-y-1 flex-wrap text-[12px] text-[var(--kz-mute)]">
+                    <a href={`mailto:${b.email}`} className="flex items-center gap-1 hover:text-white transition-colors min-w-0 break-all"><Mail size={11} />{b.email}</a>
+                    {b.phone && <a href={`tel:${b.phone}`} className="flex items-center gap-1 hover:text-white transition-colors"><Phone size={11} />{b.phone}</a>}
+                    <span className="flex items-center gap-1 font-semibold text-[var(--kz-blue)]"><Clock size={11} />{b.when ? fmt(b.when) : 'À convenir'}</span>
                   </div>
-                  {b.message && <p className="text-xs text-[var(--kz-mute)] mt-1 italic">« {b.message} »</p>}
+                  {b.message && <p className="text-[13px] text-[var(--kz-text)] mt-2 pl-3 border-l-2 border-[var(--osr-hair)]">{b.message}</p>}
                 </div>
-                <select value={b.status} onChange={(e) => setStatus(b.id, e.target.value)}
-                  className="text-xs font-semibold h-8 px-2 border border-[var(--kz-edge)] rounded-lg bg-[var(--kz-paper)] cursor-pointer shrink-0">
+                <select value={b.status} onChange={(e) => setStatus(b.id, e.target.value)} aria-label={`Statut du rendez-vous de ${b.name}`}
+                  className={`${OSR_SELECT} shrink-0`}>
                   <option value="confirmed">Confirmé</option>
                   <option value="cancelled">Annulé</option>
                   <option value="done">Terminé</option>

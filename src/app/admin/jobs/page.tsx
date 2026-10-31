@@ -3,14 +3,12 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Briefcase, Eye, EyeOff, Trash2, Plus, GraduationCap } from 'lucide-react'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
-import { EmptyState } from '@/components/feedback/EmptyState'
 import type { Job } from '@/lib/types'
-import { KZ } from '@/lib/constants'
 import { timeAgo, formatSalary } from '@/lib/utils'
 import { JOB_STATUS_META, resolveJobStatus } from '@/lib/job-lifecycle'
+import { ACCENT, BADGE_ACCENT, EmptyPanel, IconButton, PageHeader, StatusPill } from '@/components/os/recruiter/primitives'
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<Job[]>([])
@@ -52,56 +50,57 @@ export default function AdminJobsPage() {
   }
 
   return (
-    <div className="max-w-[1000px] mx-auto">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Gestion des offres</h1>
-          <p className="text-sm text-[var(--kz-mute)]">{jobs.length} offre(s) au total</p>
-        </div>
-        <div className="flex gap-2">
+    <div className="max-w-[1100px] mx-auto">
+      <PageHeader
+        eyebrow="Modération"
+        title="Gestion des offres"
+        subtitle={`${jobs.length} offre(s) au total`}
+        actions={<>
           <Link href="/admin/jobs/new"><Button kind="primary" size="md" icon={<Plus size={15} />}>Annonce emploi</Button></Link>
           <Link href="/admin/trainings/new"><Button kind="outline" size="md" icon={<GraduationCap size={15} />}>Annonce formation</Button></Link>
-        </div>
-      </div>
+        </>}
+      />
 
       {loading ? <PageLoader /> : jobs.length === 0 ? (
-        <EmptyState title="Aucune offre" icon={<Briefcase size={28} />} />
+        <div className="osr-panel">
+          <EmptyPanel icon={<Briefcase size={26} />} title="Aucune offre" accent={ACCENT.orange} />
+        </div>
       ) : (
-        <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
-          <table className="w-full min-w-[700px]">
+        <div className="osr-table-wrap">
+          <table className="w-full min-w-[760px]">
             <thead>
-              <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-                {['Titre', 'Entreprise', 'Lieu', 'Salaire', 'Statut', 'Publie', 'Actions'].map((h) => (
-                  <th key={h} className="px-4 py-3 text-left text-xs font-bold text-[var(--kz-mute)] uppercase tracking-widest">{h}</th>
+              <tr>
+                {['Titre', 'Entreprise', 'Lieu', 'Salaire', 'Statut', 'Publiée', ''].map((h, i) => (
+                  <th key={i} className="px-4 py-3 text-left uppercase">{h || <span className="sr-only">Actions</span>}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {jobs.map((job) => (
-                <tr key={job.id} className="border-b border-[var(--kz-line)] last:border-0 hover:bg-[var(--kz-cream2)] transition-colors">
-                  <td className="px-4 py-3 text-sm font-semibold text-[var(--kz-ink)] max-w-[200px] truncate">{job.title}</td>
-                  <td className="px-4 py-3 text-sm text-[var(--kz-mute)]">{job.company?.name ?? '—'}</td>
-                  <td className="px-4 py-3 text-sm text-[var(--kz-mute)]">{job.location}</td>
-                  <td className="px-4 py-3 text-sm text-[var(--kz-mute)]">{formatSalary(job.salary_min, job.salary_max)}</td>
-                  <td className="px-4 py-3">
-                    <Badge color={JOB_STATUS_META[resolveJobStatus(job)].color} size="sm">
-                      {JOB_STATUS_META[resolveJobStatus(job)].label}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-[var(--kz-mute)]">{timeAgo(job.created_at)}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-1.5">
-                      <button onClick={() => toggleActive(job)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
-                        title={job.is_active ? 'Suspendre' : 'Publier / rétablir'} aria-label={job.is_active ? 'Suspendre' : 'Publier / rétablir'}>
-                        {job.is_active ? <EyeOff size={14} /> : <Eye size={14} />}
-                      </button>
-                      <button onClick={() => deleteJob(job.id)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600">
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {jobs.map((job) => {
+                const meta = JOB_STATUS_META[resolveJobStatus(job)]
+                return (
+                  <tr key={job.id} className="group">
+                    <td className="px-4 py-2.5 text-sm font-semibold text-white max-w-[220px] truncate">{job.title}</td>
+                    <td className="px-4 py-2.5 text-[13px] text-[var(--kz-text)]">{job.company?.name ?? '—'}</td>
+                    <td className="px-4 py-2.5 text-[13px] text-[var(--kz-mute)]">{job.location}</td>
+                    <td className="px-4 py-2.5 text-[13px] text-[var(--kz-mute)]">{formatSalary(job.salary_min, job.salary_max)}</td>
+                    <td className="px-4 py-2.5">
+                      <StatusPill accent={BADGE_ACCENT[meta.color]} live={resolveJobStatus(job) === 'published'}>{meta.label}</StatusPill>
+                    </td>
+                    <td className="px-4 py-2.5 text-[12px] text-[var(--kz-mute)]">{timeAgo(job.created_at)}</td>
+                    <td className="px-3 py-2">
+                      <div className="flex gap-0.5 justify-end">
+                        <IconButton label={job.is_active ? 'Suspendre' : 'Publier / rétablir'} onClick={() => toggleActive(job)}>
+                          {job.is_active ? <EyeOff size={15} /> : <Eye size={15} />}
+                        </IconButton>
+                        <IconButton label="Supprimer" tone="danger" onClick={() => deleteJob(job.id)}>
+                          <Trash2 size={15} />
+                        </IconButton>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

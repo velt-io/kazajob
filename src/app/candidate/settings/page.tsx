@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Bell, Mail, Shield, CheckCheck, Gamepad2 } from 'lucide-react'
+import { Bell, Mail, Shield, CheckCheck, Gamepad2, Check, Zap, Clock, CalendarDays, Lock, Globe, Ban } from 'lucide-react'
 import { AccountActions } from '@/components/account/AccountActions'
 import { useGamification } from '@/features/gamification/useGamification'
 import { useApplications } from '@/features/applications/useApplications'
 import { useFavorites } from '@/features/favorites/useFavorites'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
+import { Switch } from '@/components/ui/radix'
 import { useAuth } from '@/features/auth/useAuth'
-import { KZ } from '@/lib/constants'
+import { ActivityRings, RING_COLORS } from '@/components/os/ActivityRings'
+import { InsetGroup, InsetRow, LargeTitle } from '@/components/os/candidate/primitives'
+import { cn } from '@/lib/utils'
 
 async function patchProfile(patch: Record<string, unknown>) {
   await fetch('/api/profile', {
@@ -19,31 +20,9 @@ async function patchProfile(patch: Record<string, unknown>) {
   })
 }
 
-interface ToggleProps {
-  checked: boolean
-  onChange: (v: boolean) => void
-  disabled?: boolean
-}
-
-function Toggle({ checked, onChange, disabled }: ToggleProps) {
-  return (
-    <button
-      type="button"
-      onClick={() => !disabled && onChange(!checked)}
-      disabled={disabled}
-      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors shrink-0"
-      style={{ background: checked ? KZ.green : KZ.cream2, boxShadow: '2px 2px 0 var(--kz-shadow)' }}
-    >
-      <span
-        className="inline-block w-4 h-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
-        style={{ transform: checked ? 'translateX(22px)' : 'translateX(2px)' }}
-      />
-    </button>
-  )
-}
-
 interface SettingRow {
   icon: React.ReactNode
+  iconBg: string
   title: string
   description: string
   key: string
@@ -66,6 +45,8 @@ export default function CandidateSettingsPage() {
 
   useEffect(() => {
     if (profile) {
+      // Logique d'origine conservée : synchronise les réglages avec le profil chargé.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSettings({
         email_alerts_enabled:  profile.email_alerts_enabled ?? true,
         email_alert_frequency: (profile.email_alert_frequency as 'instant' | 'daily' | 'weekly') ?? 'daily',
@@ -97,192 +78,126 @@ export default function CandidateSettingsPage() {
 
   const NOTIF_SETTINGS: SettingRow[] = [
     {
-      icon: <Bell size={18} />,
+      icon: <Bell size={16} />,
+      iconBg: 'var(--kz-orange-deep)',
       title: 'Notifications dans l\'app',
-      description: 'Alertes temps réel quand le statut de tes candidatures change ou qu\'un entretien est planifié.',
+      description: 'Alertes en temps réel quand le statut de tes candidatures change ou qu\'un entretien est planifié.',
       key: 'app_notifications',
       value: true,
       badge: 'Toujours actif',
     },
     {
-      icon: <Mail size={18} />,
-      title: 'Alertes email — offres matchantes',
-      description: 'Reçois par email les nouvelles offres qui correspondent à ton profil. Tu contrôles la fréquence ci-dessous.',
+      icon: <Mail size={16} />,
+      iconBg: 'var(--kz-blue)',
+      title: 'Alertes e-mail',
+      description: 'Reçois par e-mail les nouvelles offres qui correspondent à ton profil.',
       key: 'email_alerts_enabled',
       value: settings.email_alerts_enabled,
     },
   ]
 
   const FREQ_OPTIONS = [
-    { value: 'instant', label: 'En temps réel', desc: 'Dès qu\'une offre correspond' },
-    { value: 'daily',   label: 'Résumé quotidien', desc: 'Un email par jour max' },
-    { value: 'weekly',  label: 'Résumé hebdo', desc: 'Un email par semaine' },
+    { value: 'instant', label: 'En temps réel', desc: 'Dès qu\'une offre correspond', icon: <Zap size={16} />, bg: 'var(--kz-yellow)' },
+    { value: 'daily',   label: 'Résumé quotidien', desc: 'Un e-mail par jour maximum', icon: <Clock size={16} />, bg: 'var(--kz-blue)' },
+    { value: 'weekly',  label: 'Résumé hebdomadaire', desc: 'Un e-mail par semaine', icon: <CalendarDays size={16} />, bg: 'var(--kz-violet)' },
   ] as const
 
   return (
     <div className="max-w-[680px] mx-auto">
-      <div className="mb-7">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-1">Paramètres</h1>
-        <p className="text-sm text-[var(--kz-mute)]">Contrôle tes notifications et préférences de communication.</p>
-      </div>
+      <LargeTitle eyebrow="Compte" title="Réglages" subtitle="Notifications, préférences et confidentialité." />
 
-      {/* Notifications */}
-      <div className="kz-card bg-[var(--kz-paper)] mb-5">
-        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-          <Bell size={16} className="text-[var(--kz-mute)]" />
-          <span className="text-sm font-bold text-[var(--kz-ink)]">Notifications &amp; alertes</span>
-        </div>
-
-        <div className="divide-y divide-[#F5F0E8]">
+      <div className="flex flex-col gap-8">
+        {/* Notifications */}
+        <InsetGroup title="Notifications et alertes">
           {NOTIF_SETTINGS.map((s) => (
-            <div key={s.key} className="flex items-start gap-4 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl border border-[var(--kz-line)] flex items-center justify-center shrink-0 text-[var(--kz-mute)]" style={{ background: KZ.cream2 }}>
-                {s.icon}
-              </div>
+            <div key={s.key} className="flex items-start gap-3 px-4 py-3.5">
+              <span className="w-[30px] h-[30px] rounded-[9px] flex items-center justify-center text-white shrink-0 mt-0.5" style={{ background: s.iconBg }}>{s.icon}</span>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-sm font-bold text-[var(--kz-ink)]">{s.title}</span>
-                  {s.badge && <Badge color="cream" size="sm">{s.badge}</Badge>}
-                  {saved === s.key && <CheckCheck size={13} color={KZ.green} />}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[15px] text-[var(--kz-ink)]">{s.title}</span>
+                  {s.badge && <span className="text-[11px] font-medium text-[var(--kz-mute)]">{s.badge}</span>}
+                  {saved === s.key && <CheckCheck size={14} className="text-[var(--kz-green)] osc-fade" aria-label="Enregistré" />}
                 </div>
-                <p className="text-xs text-[var(--kz-mute)] leading-relaxed">{s.description}</p>
+                <p className="text-[12px] text-[var(--kz-mute)] leading-relaxed mt-0.5">{s.description}</p>
               </div>
-              <Toggle
+              <Switch
                 checked={s.value}
-                onChange={(v) => handleToggle(s.key, v)}
+                onCheckedChange={(v) => handleToggle(s.key, v)}
                 disabled={!!s.badge || saving === s.key}
+                aria-label={s.title}
               />
             </div>
           ))}
-        </div>
-      </div>
+        </InsetGroup>
 
-      {/* Fréquence des alertes email */}
-      {settings.email_alerts_enabled && (
-        <div className="kz-card bg-[var(--kz-paper)] mb-5">
-          <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-            <Mail size={16} className="text-[var(--kz-mute)]" />
-            <span className="text-sm font-bold text-[var(--kz-ink)]">Fréquence des alertes email</span>
-          </div>
-          <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {FREQ_OPTIONS.map((f) => {
-              const active = settings.email_alert_frequency === f.value
-              return (
-                <button
-                  key={f.value}
-                  onClick={() => handleFrequency(f.value)}
-                  className="flex flex-col items-start p-4 rounded-xl border-[1.5px] transition-all text-left"
-                  style={active
-                    ? { borderColor: KZ.orange, background: KZ.orangeSoft, boxShadow: '3px 3px 0 var(--kz-shadow)' }
-                    : { borderColor: 'var(--kz-line)', background: KZ.cream }}
-                >
-                  <div className="flex items-center justify-between w-full mb-1">
-                    <span className="text-sm font-bold text-[var(--kz-ink)]">{f.label}</span>
-                    {active && <div className="w-4 h-4 rounded-full border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.orange }}>
-                      <div className="w-2 h-2 rounded-full bg-[var(--kz-paper)]" />
-                    </div>}
-                  </div>
-                  <span className="text-xs text-[var(--kz-mute)]">{f.desc}</span>
-                </button>
-              )
-            })}
-          </div>
-          {saved === 'freq' && (
-            <div className="px-6 pb-4">
-              <p className="text-xs font-semibold" style={{ color: KZ.green }}>Préférence sauvegardée</p>
+        {/* Fréquence des alertes e-mail */}
+        {settings.email_alerts_enabled && (
+          <InsetGroup
+            className="osc-drop"
+            title="Fréquence des alertes e-mail"
+            footer={saved === 'freq' ? <span className="text-[var(--kz-green)] font-medium">Préférence enregistrée</span> : undefined}
+          >
+            <div role="radiogroup" aria-label="Fréquence des alertes e-mail" className="divide-y divide-[var(--osc-hairline)]">
+              {FREQ_OPTIONS.map((f) => {
+                const active = settings.email_alert_frequency === f.value
+                return (
+                  <button
+                    key={f.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={active}
+                    onClick={() => handleFrequency(f.value)}
+                    className="osc-row w-full flex items-center gap-3 px-4 py-3 min-h-[56px] text-left transition-colors hover:bg-[var(--osc-surface)]"
+                  >
+                    <span className="w-[30px] h-[30px] rounded-[9px] flex items-center justify-center text-black shrink-0" style={{ background: f.bg }}>{f.icon}</span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[15px] text-[var(--kz-ink)]">{f.label}</span>
+                      <span className="block text-[12px] text-[var(--kz-mute)]">{f.desc}</span>
+                    </span>
+                    <Check size={18} strokeWidth={2.6} className={cn('text-[var(--kz-blue)] shrink-0 transition-all duration-300', active ? 'opacity-100 scale-100' : 'opacity-0 scale-50')} />
+                  </button>
+                )
+              })}
             </div>
-          )}
-        </div>
-      )}
+          </InsetGroup>
+        )}
 
-      {/* Expérience — Gamification */}
-      <div className="kz-card bg-[var(--kz-paper)] mb-5">
-        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.violetSoft }}>
-          <Gamepad2 size={16} style={{ color: KZ.violet }} />
-          <span className="text-sm font-bold text-[var(--kz-ink)]">Expérience &amp; Gamification</span>
-          <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
-            style={{ background: KZ.violet, color: 'white' }}>BETA</span>
-        </div>
-        <div className="px-6 py-5">
-          {/* Toggle principal */}
-          <div className="flex items-start gap-4 mb-5">
-            <div className="w-9 h-9 rounded-xl border border-[var(--kz-line)] flex items-center justify-center shrink-0"
-              style={{ background: KZ.violetSoft, color: KZ.violet }}>
-              <Gamepad2 size={18} />
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-sm font-bold text-[var(--kz-ink)]">Mode Quête actif</span>
-                {gami.enabled && <Badge color="violet" size="sm">ON</Badge>}
-              </div>
-              <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
-                Transforme ton tableau de bord en jeu de quêtes — niveaux, XP, défis à accomplir.
-                Désactive pour retrouver l&apos;interface classique.
-              </p>
-            </div>
-            <Toggle
+        {/* Expérience — Gamification */}
+        <InsetGroup title="Expérience" footer="Anneaux d'activité, niveaux et quêtes. Désactive pour retrouver une interface épurée.">
+          <InsetRow icon={<Gamepad2 size={16} />} iconBg="var(--kz-violet)" label="Anneaux et récompenses">
+            <Switch
               checked={gami.enabled}
-              onChange={() => gami.toggle()}
+              onCheckedChange={() => gami.toggle()}
               disabled={saving === 'gami'}
+              aria-label="Anneaux et récompenses"
             />
-          </div>
-
-          {/* Aperçu du niveau quand actif */}
+          </InsetRow>
           {gami.enabled && (
-            <div
-              className="rounded-xl border-2 border-[var(--kz-edge)] p-4"
-              style={{ background: 'var(--kz-inverse)', boxShadow: '3px 3px 0 ' + gami.level.color }}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{gami.level.emoji}</span>
-                  <div>
-                    <div className="text-[10px] opacity-60 font-bold" style={{ color: KZ.onInverse }}>TON NIVEAU</div>
-                    <div className="text-sm font-extrabold" style={{ color: gami.level.color }}>{gami.level.title}</div>
-                  </div>
+            <div className="osc-drop flex items-center gap-4 px-4 py-4">
+              <ActivityRings size={64} stroke={8} gap={2} rings={[
+                { value: gami.xpProgress, ...RING_COLORS.move, label: 'Niveau' },
+              ]} />
+              <div className="flex-1 min-w-0">
+                <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--kz-mute)]">Ton niveau</div>
+                <div className="text-[17px] font-semibold text-[var(--kz-ink)] truncate">{gami.level.title}</div>
+                <div className="text-[12px] text-[var(--kz-mute)]">
+                  {gami.xp.toLocaleString('fr-FR')} XP · {gami.doneQuests.length}/{gami.quests.length} quêtes accomplies
                 </div>
-                <div className="text-right">
-                  <div className="text-base font-extrabold" style={{ color: KZ.onInverse }}>
-                    {gami.xp.toLocaleString('fr-FR')} XP
-                  </div>
-                  <div className="text-[10px] opacity-50" style={{ color: KZ.onInverse }}>
-                    {gami.doneQuests.length}/{gami.quests.length} quêtes accomplies
-                  </div>
-                </div>
-              </div>
-              {/* Mini barre XP */}
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{ width: `${gami.xpProgress}%`, background: gami.level.color }}
-                />
               </div>
             </div>
           )}
-        </div>
-      </div>
+        </InsetGroup>
 
-      {/* Confidentialité */}
-      <div className="kz-card bg-[var(--kz-paper)]">
-        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-          <Shield size={16} className="text-[var(--kz-mute)]" />
-          <span className="text-sm font-bold text-[var(--kz-ink)]">Confidentialité</span>
-        </div>
-        <div className="px-6 py-5 flex flex-col gap-3">
-          <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
-            Tes données sont hébergées en Europe, chiffrées au repos et en transit.
-            Kazajob ne revend jamais tes informations personnelles et ne t&apos;envoie
-            jamais d&apos;emails commerciaux non sollicités.
-          </p>
-          <div className="flex gap-2 flex-wrap">
-            <Badge color="green" size="sm">RGPD conforme</Badge>
-            <Badge color="blue" size="sm">Hébergé en EU</Badge>
-            <Badge color="violet" size="sm">0 revente de données</Badge>
-          </div>
-        </div>
-      </div>
+        {/* Confidentialité */}
+        <InsetGroup title="Confidentialité" footer="Kazajob ne revend jamais tes informations personnelles et ne t'envoie jamais d'e-mails commerciaux non sollicités.">
+          <InsetRow icon={<Shield size={16} />} iconBg="var(--kz-green)" label="RGPD" value="Conforme" />
+          <InsetRow icon={<Globe size={16} />} iconBg="var(--kz-blue)" label="Hébergement" value="Union européenne" />
+          <InsetRow icon={<Lock size={16} />} iconBg="var(--kz-mute)" label="Chiffrement" value="Au repos et en transit" />
+          <InsetRow icon={<Ban size={16} />} iconBg="var(--kz-violet)" label="Revente de données" value="Jamais" />
+        </InsetGroup>
 
-      <AccountActions />
+        <AccountActions />
+      </div>
     </div>
   )
 }

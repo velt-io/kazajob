@@ -2,21 +2,23 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Users, Edit, Trash2, ToggleLeft, EyeOff, User, Rocket, ArrowRight, AlertTriangle, Info, Send, Pause, Archive, Clock } from 'lucide-react'
+import { Plus, Eye, Users, Edit, Trash2, ToggleLeft, EyeOff, User, Rocket, ArrowRight, AlertTriangle, Info, Send, Pause, Archive, Clock, Briefcase, MapPin, X, Check } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
-import { EmptyState } from '@/components/feedback/EmptyState'
-import { PageLoader } from '@/components/feedback/LoadingSpinner'
+import { Tooltip } from '@/components/ui/radix'
 import { useAuth } from '@/features/auth/useAuth'
 import type { Job } from '@/lib/types'
 import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
 import { timeAgo, formatSalary } from '@/lib/utils'
-import { KZ, JOB_BOOST_OPTIONS } from '@/lib/constants'
+import { JOB_BOOST_OPTIONS } from '@/lib/constants'
+import { island } from '@/lib/island'
 import {
   JOB_STATUS_META, JOB_EXPIRY_WARNING_DAYS, daysUntilExpiry, recruiterActions, resolveJobStatus,
   type JobAction, type JobStatus,
 } from '@/lib/job-lifecycle'
+import {
+  ACCENT, BADGE_ACCENT, EmptyPanel, IconButton, Monogram, PageHeader, Segmented, SkeletonList, StatusPill, accentStyle, tint,
+} from '@/components/os/recruiter/primitives'
 
 type Filter = 'all' | JobStatus
 const FILTERS: { id: Filter; label: string }[] = [
@@ -37,6 +39,10 @@ function initialFilter(): Filter {
 
 const PUBLISH_LABEL: Partial<Record<JobStatus, string>> = {
   draft: 'Publier', paused: 'Remettre en ligne', expired: 'Republier 60 j', archived: 'Republier',
+}
+
+const ACTION_DONE: Record<JobAction, string> = {
+  publish: 'Offre en ligne', pause: 'Offre en pause', archive: 'Offre archivée', suspend: 'Offre suspendue',
 }
 
 export default function RecruiterJobsPage() {
@@ -83,6 +89,8 @@ export default function RecruiterJobsPage() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         setActionError(data.error ?? 'Action impossible. Réessayez.')
+      } else {
+        island({ title: ACTION_DONE[action], subtitle: job.title, tone: action === 'publish' ? 'success' : 'info' })
       }
     } catch {
       setActionError('Connexion impossible. Réessayez.')
@@ -112,33 +120,58 @@ export default function RecruiterJobsPage() {
     fetchJobs()
   }
 
+  const maxApps = Math.max(1, ...visibleJobs.map((j) => j.applications_count ?? 0))
+  const quotaPct = quota && quota.max > 0 ? Math.min(100, (quota.used / quota.max) * 100) : 0
+
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Mes offres</h1>
-          <p className="text-sm text-[var(--kz-mute)]">
-            {counts.all} offre(s)
-            {quota && quota.max !== -1 && ` · ${quota.used}/${quota.max} en ligne — forfait ${quota.planName}`}
-            {quota && quota.max === -1 && ` · illimité (${quota.planName})`}
-          </p>
-        </div>
-        {quota && !quota.ok ? (
-          <Button kind="primary" size="md" icon={<Plus size={16} />} onClick={() => setQuotaModal(true)}>Nouvelle offre</Button>
+    <div className="max-w-[1080px] mx-auto">
+      <PageHeader
+        eyebrow="Recrutement"
+        title="Mes offres"
+        subtitle={<>
+          <span className="text-white font-medium tabular-nums">{counts.all}</span> offre(s)
+          {quota && quota.max === -1 && ` · illimité (${quota.planName})`}
+        </>}
+        actions={quota && !quota.ok ? (
+          <Button kind="primary" size="lg" icon={<Plus size={16} />} onClick={() => setQuotaModal(true)}>Nouvelle offre</Button>
         ) : (
           <Link href="/recruiter/jobs/new">
-            <Button kind="primary" size="md" icon={<Plus size={16} />}>Nouvelle offre</Button>
+            <Button kind="primary" size="lg" icon={<Plus size={16} />}>Nouvelle offre</Button>
           </Link>
         )}
-      </div>
+      />
+
+      {/* Jauge du forfait (façon stockage macOS) */}
+      {quota && quota.max !== -1 && (
+        <div className="osr-panel flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5 px-5 py-4 mb-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <span className="w-9 h-9 rounded-[11px] flex items-center justify-center text-white shrink-0" style={{ background: quota.ok ? ACCENT.blue : ACCENT.orange }}>
+              <Briefcase size={16} />
+            </span>
+            <div className="min-w-0">
+              <div className="text-[14px] font-semibold text-white">Forfait {quota.planName}</div>
+              <div className="text-[12px] text-[var(--kz-mute)] tabular-nums">{quota.used} sur {quota.max} offre(s) en ligne</div>
+            </div>
+          </div>
+          <div className="flex-1 flex items-center gap-3 min-w-0">
+            <div className="osr-bar flex-1" role="meter" aria-valuenow={quota.used} aria-valuemin={0} aria-valuemax={quota.max} aria-label="Offres en ligne">
+              <span style={{ width: `${Math.max(2, quotaPct)}%`, background: quotaPct >= 100 ? ACCENT.orange : 'linear-gradient(90deg, var(--kz-blue), var(--kz-violet))' }} />
+            </div>
+            <span className="text-[13px] font-semibold text-white tabular-nums shrink-0">{Math.round(quotaPct)} %</span>
+          </div>
+          {!quota.ok && (
+            <Link href="/recruiter/company" className="text-[13px] font-medium text-[var(--kz-blue)] hover:brightness-125 shrink-0">Changer de forfait</Link>
+          )}
+        </div>
+      )}
 
       {/* Bannière facturation contextuelle */}
       {billingSummary && (() => {
         const s = billingSummary
         if (s.source === 'campaign' && s.message.severity === 'success') {
           return (
-            <div className="mb-4 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)] px-4 py-3 flex items-center gap-2 text-sm">
-              <Info size={15} color={KZ.green} className="shrink-0" />
+            <div className="mb-4 rounded-2xl px-4 py-3 flex items-center gap-3 text-[13px]" style={{ background: tint(ACCENT.green, 10), boxShadow: `inset 0 0 0 1px ${tint(ACCENT.green, 30)}` }}>
+              <Info size={16} style={{ color: ACCENT.green }} className="shrink-0" />
               <span className="text-[var(--kz-ink)]">
                 Phase de déploiement active : vos annonces restent publiées et les offres seront disponibles prochainement.
               </span>
@@ -147,9 +180,9 @@ export default function RecruiterJobsPage() {
         }
         if (s.isOverLimit || !s.canPublishJob) {
           return (
-            <div className="mb-4 rounded-xl border border-[var(--kz-yellow)] bg-[var(--kz-yellow-soft)] px-4 py-3 flex items-start gap-2 text-sm">
-              <AlertTriangle size={15} color="#B45309" className="shrink-0 mt-0.5" />
-              <div className="text-[var(--kz-ink)]">
+            <div className="mb-4 rounded-2xl px-4 py-3 flex items-start gap-3 text-[13px]" style={{ background: tint(ACCENT.yellow, 9), boxShadow: `inset 0 0 0 1px ${tint(ACCENT.yellow, 30)}` }}>
+              <AlertTriangle size={16} style={{ color: ACCENT.yellow }} className="shrink-0 mt-0.5" />
+              <div className="text-[var(--kz-ink)] leading-relaxed">
                 <span className="font-semibold">
                   {s.isOverLimit
                     ? 'Vous dépassez actuellement la limite de votre offre.'
@@ -157,8 +190,8 @@ export default function RecruiterJobsPage() {
                 </span>
                 {' '}Vos annonces existantes restent visibles, mais les nouvelles publications sont bloquées.{' '}
                 {s.message.primaryActionHref && s.message.primaryActionLabel && (
-                  <Link href={s.message.primaryActionHref} className="font-bold text-[var(--kz-violet)] hover:underline ml-1">
-                    {s.message.primaryActionLabel} →
+                  <Link href={s.message.primaryActionHref} className="font-semibold text-[var(--kz-blue)] hover:brightness-125 ml-1 inline-flex items-center gap-0.5">
+                    {s.message.primaryActionLabel} <ArrowRight size={13} />
                   </Link>
                 )}
               </div>
@@ -169,150 +202,137 @@ export default function RecruiterJobsPage() {
       })()}
 
       {actionError && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
+        <div className="mb-4 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2 animate-slide-up" role="alert">
           <AlertTriangle size={15} className="shrink-0 mt-0.5" />
           <span className="flex-1">{actionError}</span>
-          <button onClick={() => setActionError('')} className="font-bold" aria-label="Fermer">×</button>
+          <button onClick={() => setActionError('')} className="osr-icon-btn !w-6 !h-6" aria-label="Fermer"><X size={14} /></button>
         </div>
       )}
 
       {!loading && jobs.length > 0 && (
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-1 -mx-1 px-1" role="tablist">
-          {FILTERS.filter((f) => f.id === 'all' || counts[f.id] > 0 || filter === f.id).map((f) => {
-            const active = filter === f.id
-            return (
-              <button key={f.id} role="tab" aria-selected={active} onClick={() => setFilter(f.id)}
-                className="px-3 py-1.5 rounded-full border text-xs font-bold whitespace-nowrap transition-colors"
-                style={{ borderColor: 'var(--kz-edge)', background: active ? KZ.ink : KZ.paper, color: active ? KZ.cream : KZ.ink }}>
-                {f.label} <span className="opacity-60">{counts[f.id]}</span>
-              </button>
-            )
-          })}
+        <div className="mb-4">
+          <Segmented<Filter>
+            ariaLabel="Filtrer les offres"
+            value={filter}
+            onChange={setFilter}
+            items={FILTERS.filter((f) => f.id === 'all' || counts[f.id] > 0 || filter === f.id).map((f) => ({ id: f.id, label: f.label, count: counts[f.id] }))}
+          />
         </div>
       )}
 
-      {loading ? <PageLoader /> : jobs.length === 0 ? (
-        <EmptyState
-          title="Aucune offre pour l'instant"
-          description="Créez votre première offre d'emploi et trouvez les meilleurs talents de La Réunion."
-          icon={<Plus size={28} />}
-          action={<Link href="/recruiter/jobs/new"><Button kind="primary">Créer une offre</Button></Link>}
-        />
+      {loading ? <SkeletonList rows={5} height={84} /> : jobs.length === 0 ? (
+        <div className="os-glass rounded-[28px]">
+          <EmptyPanel
+            icon={<Plus size={28} />}
+            title="Aucune offre pour l'instant"
+            description="Créez votre première offre d'emploi et trouvez les meilleurs talents de La Réunion."
+            action={<Link href="/recruiter/jobs/new"><Button kind="primary">Créer une offre</Button></Link>}
+          />
+        </div>
       ) : visibleJobs.length === 0 ? (
         <p className="text-sm text-[var(--kz-mute)] text-center py-10">Aucune offre dans cette catégorie.</p>
       ) : (
-        <div className="flex flex-col gap-3">
-          {visibleJobs.map((job) => {
+        <div className="os-glass rounded-[26px] p-1.5 osr-sep">
+          {visibleJobs.map((job, idx) => {
             const status = resolveJobStatus(job)
             const meta = JOB_STATUS_META[status]
             const daysLeft = status === 'published' ? daysUntilExpiry(job.expires_at) : null
             const actions = recruiterActions(status)
+            const co = (job as unknown as { company?: { name: string; logo_url: string | null } }).company
+            const pub = (job as unknown as { publisher?: { full_name: string } }).publisher
+            const isPending = pending === job.id
             return (
-            <div key={job.id} className="kz-card p-4 bg-[var(--kz-paper)] flex flex-wrap sm:flex-nowrap items-center gap-x-4 gap-y-3"
-              style={{ opacity: pending === job.id ? 0.6 : 1 }}>
+            <div key={job.id} className="osr-in" style={{ ['--i' as string]: idx }}>
+            <div className={`osr-row flex flex-wrap md:flex-nowrap items-center gap-x-4 gap-y-3 px-3 py-3.5 ${isPending ? 'osr-skel' : ''}`}
+              aria-busy={isPending || undefined}
+              style={{ opacity: isPending ? 0.75 : 1 }}>
               {/* Logo entreprise */}
-              {(() => {
-                const co = (job as unknown as { company?: { name: string; logo_url: string | null } }).company
-                return co ? (
-                  <div className="w-11 h-11 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-xs font-extrabold shrink-0"
-                    style={{ background: KZ.orangeSoft }}>
-                    {co.logo_url
-                      ? <img src={co.logo_url} alt="" className="w-full h-full object-cover rounded-xl" />
-                      : co.name.slice(0, 2).toUpperCase()}
-                  </div>
-                ) : null
-              })()}
+              {co ? <Monogram name={co.name} src={co.logo_url} size={44} /> : <Monogram name={job.title} size={44} gradient={`linear-gradient(145deg, ${BADGE_ACCENT[meta.color]}, ${tint(BADGE_ACCENT[meta.color], 40)})`} />}
 
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                  <h3 className="text-sm font-bold text-[var(--kz-ink)]">{job.title}</h3>
-                  <Badge color={meta.color} size="sm">{meta.label}</Badge>
+              <div className="flex-1 min-w-0 basis-[calc(100%-60px)] md:basis-auto">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className="text-[15px] font-semibold text-white truncate max-w-full">{job.title}</h3>
+                  <StatusPill accent={BADGE_ACCENT[meta.color]} live={status === 'published'}>{meta.label}</StatusPill>
                   {daysLeft !== null && daysLeft <= JOB_EXPIRY_WARNING_DAYS && (
-                    <Badge color="yellow" size="sm"><span className="flex items-center gap-1"><Clock size={10} />Expire dans {daysLeft} j</span></Badge>
+                    <span className="osr-chip" style={{ color: ACCENT.yellow, background: tint(ACCENT.yellow, 14) }}><Clock size={11} />Expire dans {daysLeft} j</span>
                   )}
-                  {job.is_boosted && <Badge color="orange" size="sm">Boostée</Badge>}
+                  {job.is_boosted && <span className="osr-chip" style={{ color: ACCENT.orange, background: tint(ACCENT.orange, 14) }}><Rocket size={11} />Boostée</span>}
                   {(job as unknown as { is_anonymous?: boolean }).is_anonymous && (
-                    <Badge color="cream" size="sm"><span className="flex items-center gap-1"><EyeOff size={10} />Anonyme</span></Badge>
+                    <span className="osr-chip"><EyeOff size={11} />Anonyme</span>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-xs text-[var(--kz-mute)] flex-wrap">
-                  <span>{job.location} · {job.job_type} · {formatSalary(job.salary_min, job.salary_max)}</span>
-                  <span>· {timeAgo(job.created_at)}</span>
+                <div className="flex items-center gap-x-2 gap-y-1 text-[12px] text-[var(--kz-mute)] flex-wrap">
+                  <span className="inline-flex items-center gap-1"><MapPin size={11} />{job.location}</span>
+                  <span aria-hidden>·</span><span>{job.job_type}</span>
+                  <span aria-hidden>·</span><span>{formatSalary(job.salary_min, job.salary_max)}</span>
+                  <span aria-hidden>·</span><span>{timeAgo(job.created_at)}</span>
                   {daysLeft !== null && job.expires_at && daysLeft > JOB_EXPIRY_WARNING_DAYS && (
-                    <span>· en ligne jusqu&apos;au {new Date(job.expires_at).toLocaleDateString('fr-FR')}</span>
+                    <><span aria-hidden>·</span><span>en ligne jusqu&apos;au {new Date(job.expires_at).toLocaleDateString('fr-FR')}</span></>
                   )}
-                  {status === 'suspended' && <span className="font-semibold text-[#B45309]">· suspendue par la modération</span>}
+                  {status === 'suspended' && <span className="font-semibold" style={{ color: ACCENT.orange }}>· suspendue par la modération</span>}
                   {/* Auteur */}
-                  {(() => {
-                    const pub = (job as unknown as { publisher?: { full_name: string } }).publisher
-                    return pub ? (
-                      <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full border border-[var(--kz-line)]"
-                        style={{ background: KZ.cream2 }}>
-                        <User size={9} />{pub.full_name}
-                      </span>
-                    ) : null
-                  })()}
+                  {pub && <span className="osr-chip !h-5"><User size={10} />{pub.full_name}</span>}
                 </div>
               </div>
 
               {/* Analytics */}
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="text-center">
-                  <div className="text-sm font-extrabold text-[var(--kz-ink)]">{job.views}</div>
-                  <div className="text-[10px] text-[var(--kz-mute)] flex items-center gap-0.5"><Eye size={9} />vues</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-extrabold text-[var(--kz-ink)]">{job.applications_count}</div>
-                  <div className="text-[10px] text-[var(--kz-mute)] flex items-center gap-0.5"><Users size={9} />cand.</div>
-                </div>
+              <div className="flex items-center gap-4 shrink-0 md:w-[150px]">
+                <Tooltip content="Vues">
+                  <div className="text-right" tabIndex={0}>
+                    <div className="text-[15px] font-semibold text-white tabular-nums leading-none">{job.views}</div>
+                    <div className="text-[10px] text-[var(--kz-mute)] flex items-center justify-end gap-0.5 mt-1"><Eye size={10} />vues</div>
+                  </div>
+                </Tooltip>
+                <Tooltip content="Candidatures">
+                  <div className="flex-1 min-w-[64px]" tabIndex={0}>
+                    <div className="flex items-baseline justify-end gap-1">
+                      <span className="text-[15px] font-semibold text-white tabular-nums leading-none">{job.applications_count}</span>
+                      <Users size={10} className="text-[var(--kz-mute)]" />
+                    </div>
+                    <div className="osr-bar mt-1.5" style={{ height: 3 }}>
+                      <span style={{ width: `${Math.max(4, ((job.applications_count ?? 0) / maxApps) * 100)}%`, background: 'var(--os-aurora)' }} />
+                    </div>
+                  </div>
+                </Tooltip>
               </div>
 
-              <div className="flex items-center gap-1.5 shrink-0 ml-auto">
+              <div className="flex items-center gap-0.5 shrink-0 ml-auto">
                 {actions.includes('publish') && (
-                  <Button kind="primary" size="sm" icon={<Send size={13} />} disabled={pending === job.id}
+                  <Button kind="primary" size="sm" icon={<Send size={13} />} disabled={isPending} className="mr-1"
                     onClick={() => runAction(job, 'publish')}>
                     {PUBLISH_LABEL[status] ?? 'Publier'}
                   </Button>
                 )}
-                {actions.includes('pause') && (
-                  <button onClick={() => runAction(job, 'pause')} disabled={pending === job.id}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
-                    title="Mettre en pause" aria-label="Mettre en pause">
-                    <Pause size={15} />
-                  </button>
-                )}
-                {status === 'published' && (
-                  <button
-                    onClick={() => setBoostFor(job)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-orange-soft)]"
-                    style={{ color: job.is_boosted ? KZ.orange : KZ.mute }}
-                    title={job.is_boosted ? 'Prolonger la mise en avant' : 'Booster cette offre'}
-                    aria-label="Booster cette offre"
-                  >
-                    <Rocket size={16} fill={job.is_boosted ? KZ.orange : 'none'} />
-                  </button>
-                )}
-                {status !== 'suspended' && (
-                  <Link href={`/recruiter/jobs/${job.id}/edit`} title="Modifier" aria-label="Modifier"
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]">
-                    <Edit size={15} />
-                  </Link>
-                )}
-                {actions.includes('archive') && (
-                  <button onClick={() => runAction(job, 'archive')} disabled={pending === job.id}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
-                    title="Archiver" aria-label="Archiver">
-                    <Archive size={15} />
-                  </button>
-                )}
-                <button
-                  onClick={() => deleteJob(job.id)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600"
-                  title="Supprimer" aria-label="Supprimer"
-                >
-                  <Trash2 size={15} />
-                </button>
+                <div className="osr-reveal flex items-center gap-0.5">
+                  {actions.includes('pause') && (
+                    <IconButton label="Mettre en pause" onClick={() => runAction(job, 'pause')} disabled={isPending}>
+                      <Pause size={15} />
+                    </IconButton>
+                  )}
+                  {status === 'published' && (
+                    <IconButton label={job.is_boosted ? 'Prolonger la mise en avant' : 'Booster cette offre'} tone="accent" onClick={() => setBoostFor(job)}
+                      className={job.is_boosted ? '!text-[var(--kz-orange)]' : ''}>
+                      <Rocket size={16} fill={job.is_boosted ? 'currentColor' : 'none'} />
+                    </IconButton>
+                  )}
+                  {status !== 'suspended' && (
+                    <Tooltip content="Modifier">
+                      <Link href={`/recruiter/jobs/${job.id}/edit`} aria-label="Modifier" className="osr-icon-btn">
+                        <Edit size={15} />
+                      </Link>
+                    </Tooltip>
+                  )}
+                  {actions.includes('archive') && (
+                    <IconButton label="Archiver" onClick={() => runAction(job, 'archive')} disabled={isPending}>
+                      <Archive size={15} />
+                    </IconButton>
+                  )}
+                  <IconButton label="Supprimer" tone="danger" onClick={() => deleteJob(job.id)}>
+                    <Trash2 size={15} />
+                  </IconButton>
+                </div>
               </div>
+            </div>
             </div>
             )
           })}
@@ -338,8 +358,8 @@ export default function RecruiterJobsPage() {
           )}
           {quota?.reason !== 'expired' && (
             <ul className="flex flex-col gap-2 text-sm text-[var(--kz-text)]">
-              <li className="flex items-start gap-2"><ToggleLeft size={16} className="mt-0.5 shrink-0" />Mettez en pause ou archivez une offre que vous n&apos;utilisez plus (ci-dessous).</li>
-              <li className="flex items-start gap-2"><Plus size={16} className="mt-0.5 shrink-0" />Passez à un forfait supérieur pour plus d&apos;offres simultanées.</li>
+              <li className="osr-inset flex items-start gap-2.5 p-3"><ToggleLeft size={16} className="mt-0.5 shrink-0 text-[var(--kz-blue)]" />Mettez en pause ou archivez une offre que vous n&apos;utilisez plus (ci-dessous).</li>
+              <li className="osr-inset flex items-start gap-2.5 p-3"><Plus size={16} className="mt-0.5 shrink-0 text-[var(--kz-violet)]" />Passez à un forfait supérieur pour plus d&apos;offres simultanées.</li>
             </ul>
           )}
           <div className="flex flex-col sm:flex-row gap-2.5">
@@ -384,11 +404,13 @@ function BoostModal({ job, onClose }: { job: Job | null; onClose: () => void }) 
   return (
     <Modal open={!!job} onClose={onClose} title="Booster cette offre" size="md">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.orangeSoft }}>
-          <Rocket size={18} color={KZ.orange} />
-          <div>
-            <p className="text-sm font-bold text-[var(--kz-ink)]">{job?.title}</p>
-            <p className="text-xs text-[var(--kz-mute)]">Mise en avant en tête des résultats + badge « À la une ».</p>
+        <div className="osr-glow flex items-center gap-3 p-3.5 rounded-2xl" style={{ ...accentStyle(ACCENT.orange), background: tint(ACCENT.orange, 10) }}>
+          <span className="w-10 h-10 rounded-[12px] flex items-center justify-center text-white shrink-0" style={{ background: 'linear-gradient(145deg, var(--kz-orange), var(--osr-pink))' }}>
+            <Rocket size={18} />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[15px] font-semibold text-white truncate">{job?.title}</p>
+            <p className="text-[12px] text-[var(--kz-mute)]">Mise en avant en tête des résultats + badge « À la une ».</p>
           </div>
         </div>
 
@@ -398,22 +420,25 @@ function BoostModal({ job, onClose }: { job: Job | null; onClose: () => void }) 
           </p>
         )}
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" role="radiogroup" aria-label="Durée du boost">
           {JOB_BOOST_OPTIONS.map((opt) => {
             const selected = days === opt.days
             return (
-              <button key={opt.days} onClick={() => setDays(opt.days)}
-                className="flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all"
-                style={{ borderColor: selected ? KZ.orange : KZ.line, background: selected ? KZ.orangeSoft : KZ.paper }}>
-                <div className="w-7 h-7 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                  style={{ background: selected ? KZ.orange : KZ.paper }}>
-                  {selected && <Rocket size={12} color="white" />}
+              <button key={opt.days} type="button" role="radio" aria-checked={selected} onClick={() => setDays(opt.days)}
+                className="flex items-center gap-3 p-3.5 rounded-2xl text-left transition-all duration-200 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--kz-blue)_40%,transparent)]"
+                style={{
+                  background: selected ? tint(ACCENT.orange, 14) : 'var(--osr-fill)',
+                  boxShadow: selected ? `inset 0 0 0 1px ${tint(ACCENT.orange, 65)}, 0 12px 30px -18px ${ACCENT.orange}` : 'inset 0 0 0 1px var(--osr-hair)',
+                }}>
+                <span className="w-[22px] h-[22px] rounded-full flex items-center justify-center shrink-0 transition-all duration-300"
+                  style={{ background: selected ? ACCENT.orange : 'transparent', boxShadow: selected ? 'none' : 'inset 0 0 0 1.5px var(--osr-fill-3)' }}>
+                  {selected && <Check size={13} strokeWidth={3} className="text-white" />}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <span className="text-[14px] font-semibold text-white">{opt.label}</span>
+                  {opt.tag && <span className="ml-2 osr-chip !h-5" style={{ color: ACCENT.yellow, background: tint(ACCENT.yellow, 14) }}>{opt.tag}</span>}
                 </div>
-                <div className="flex-1">
-                  <span className="text-sm font-bold text-[var(--kz-ink)]">{opt.label}</span>
-                  {opt.tag && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.yellowSoft }}>{opt.tag}</span>}
-                </div>
-                <span className="text-lg font-extrabold text-[var(--kz-ink)]">{Math.floor(opt.priceCts / 100)}€</span>
+                <span className="text-[19px] font-semibold tracking-[-0.03em] text-white tabular-nums">{Math.floor(opt.priceCts / 100)} €</span>
               </button>
             )
           })}

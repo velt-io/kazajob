@@ -1,17 +1,26 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Calendar, MapPin, Users, Clock, ExternalLink, Star, UserCheck, Monitor, BookOpen } from 'lucide-react'
+import { MapPin, Users, Clock, ExternalLink, Star, UserCheck, Monitor, BookOpen, Check, Megaphone } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { EmptyState } from '@/components/feedback/EmptyState'
 import { useAuth } from '@/features/auth/useAuth'
-import { KZ, EVENT_TYPES } from '@/lib/constants'
+import { EVENT_TYPES } from '@/lib/constants'
+import { GlassEmpty, LargeTitle, Pill } from '@/components/os/candidate/primitives'
+import { cn } from '@/lib/utils'
 
 const EVENT_ICONS: Record<string, React.ReactNode> = {
-  job_dating: <UserCheck size={13} />,
-  webinar:    <Monitor   size={13} />,
-  atelier:    <BookOpen  size={13} />,
+  job_dating:      <UserCheck size={13} />,
+  webinar:         <Monitor   size={13} />,
+  atelier:         <BookOpen  size={13} />,
+  info_collective: <Megaphone size={13} />,
+}
+
+// Couleurs du thème par type (les couleurs de constants.ts sont pensées pour le thème clair)
+const EVENT_TINT: Record<string, string> = {
+  job_dating:      'var(--kz-violet)',
+  webinar:         'var(--kz-blue)',
+  atelier:         'var(--kz-orange)',
+  info_collective: 'var(--kz-green)',
 }
 
 interface KazaEvent {
@@ -52,6 +61,8 @@ export default function CandidateEventsPage() {
     setLoading(false)
   }
 
+  // Logique d'origine conservée telle quelle.
+  // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
   useEffect(() => { fetchEvents() }, [profile?.id])
 
   const handleRegister = async (eventId: string, isReg: boolean) => {
@@ -69,131 +80,114 @@ export default function CandidateEventsPage() {
   }
 
   return (
-    <div className="max-w-[800px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Événements</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
-          KazaEvents <span style={{ color: KZ.violet }}>974</span>
-        </h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">
-          Job dating en ligne, webinaires, ateliers — rencontrez les recruteurs de La Réunion.
-        </p>
-      </div>
+    <div className="max-w-[860px] mx-auto">
+      <LargeTitle
+        eyebrow="Événements"
+        title="KazaEvents"
+        accent="974"
+        subtitle="Job datings en ligne, webinaires, ateliers : rencontre les recruteurs de La Réunion."
+      />
 
       {loading ? (
         <div className="flex flex-col gap-3">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-32 rounded-2xl border border-[var(--kz-line)] bg-[var(--kz-cream2)] animate-pulse" />
-          ))}
+          {[1, 2, 3].map(i => <div key={i} className="osc-skeleton h-36 rounded-[24px] border border-[var(--kz-line)]" />)}
         </div>
       ) : events.length === 0 ? (
-        <EmptyState
+        <GlassEmpty
           title="Aucun événement à venir"
-          description="Les prochains KazaEvents seront publiés bientôt. Revenez vite !"
-          icon={<Star size={28} />}
+          description="Les prochains KazaEvents seront publiés bientôt. Reviens vite !"
+          icon={<Star size={26} />}
         />
       ) : (
         <div className="flex flex-col gap-4">
-          {events.map(evt => {
-            const typeInfo = EVENT_TYPES[evt.type] ?? { label: evt.type, color: KZ.mute, bg: KZ.cream2 }
+          {events.map((evt, i) => {
+            const typeInfo = EVENT_TYPES[evt.type] ?? { label: evt.type }
+            const tint = EVENT_TINT[evt.type] ?? 'var(--kz-mute)'
             const eventDate = new Date(evt.date)
             const isFull = evt.registrations_count >= evt.max_participants && !evt.is_registered
             const live = isEventLive(evt.date)
             const spotsLeft = evt.max_participants - evt.registrations_count
+            const fill = evt.max_participants > 0 ? Math.min(100, (evt.registrations_count / evt.max_participants) * 100) : 0
 
             return (
-              <div
+              <article
                 key={evt.id}
-                className="kz-card p-5 bg-[var(--kz-paper)] flex flex-col sm:flex-row gap-4"
-                style={live ? { borderColor: KZ.green, boxShadow: `0 0 0 2px color-mix(in srgb, ${KZ.green} 19%, transparent)` } : {}}
+                className={cn('osc-card osc-in p-5 sm:p-6 flex flex-col sm:flex-row gap-5', live && 'os-ring-aurora')}
+                style={{ ['--i' as string]: i }}
               >
-                {/* Date bloc */}
-                <div
-                  className="w-16 h-16 rounded-xl border border-[var(--kz-edge)] flex flex-col items-center justify-center shrink-0 self-start"
-                  style={{ background: typeInfo.bg }}
-                >
-                  <div className="text-xl font-extrabold text-[var(--kz-ink)] leading-none">
-                    {eventDate.getDate()}
+                {/* Pastille date façon Calendrier */}
+                <div className="w-[68px] shrink-0 self-start rounded-[18px] overflow-hidden border border-[var(--kz-edge)] text-center bg-[var(--osc-surface)]">
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.06em] py-1 text-white" style={{ background: tint }}>
+                    {eventDate.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '')}
                   </div>
-                  <div className="text-[10px] font-bold uppercase text-[var(--kz-mute)]">
-                    {eventDate.toLocaleDateString('fr-FR', { month: 'short' })}
-                  </div>
+                  <div className="text-[28px] font-semibold tracking-[-0.04em] text-[var(--kz-ink)] leading-none pt-2 tabular-nums">{eventDate.getDate()}</div>
+                  <div className="text-[10px] text-[var(--kz-mute)] pb-2 pt-1 capitalize">{eventDate.toLocaleDateString('fr-FR', { weekday: 'short' }).replace('.', '')}</div>
                 </div>
 
                 {/* Contenu */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-start gap-2 flex-wrap mb-2">
-                    <span
-                      className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
-                      style={{ background: typeInfo.bg, color: typeInfo.color }}
-                    >
-                      <span className="flex items-center gap-1">{EVENT_ICONS[evt.type]}{typeInfo.label}</span>
+                  <div className="flex items-center gap-2 flex-wrap mb-2">
+                    <span className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-[11px] font-semibold"
+                      style={{ color: tint, background: `color-mix(in srgb, ${tint} 16%, transparent)` }}>
+                      {EVENT_ICONS[evt.type]}{typeInfo.label}
                     </span>
                     {live && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-green)] bg-[var(--kz-green-soft)] text-[var(--kz-green)] animate-pulse">
-                        🔴 En direct
+                      <span className="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-[11px] font-semibold text-[var(--kz-green)] bg-[var(--kz-green-soft)]">
+                        <span className="osc-pulse w-1.5 h-1.5 rounded-full bg-[var(--kz-green)] text-[var(--kz-green)]" />En direct
                       </span>
                     )}
-                    {evt.is_registered && !live && (
-                      <Badge color="green" size="sm">Inscrit ✓</Badge>
-                    )}
+                    {evt.is_registered && !live && <Pill tone="green"><Check size={11} strokeWidth={3} />Inscrit</Pill>}
                   </div>
 
-                  <h3 className="text-base font-bold text-[var(--kz-ink)] mb-1">{evt.title}</h3>
+                  <h3 className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--kz-ink)] leading-snug">{evt.title}</h3>
                   {evt.description && (
-                    <p className="text-sm text-[var(--kz-mute)] mb-2 line-clamp-2">{evt.description}</p>
+                    <p className="text-[14px] text-[var(--kz-mute)] mt-1 line-clamp-2 leading-relaxed">{evt.description}</p>
                   )}
 
-                  <div className="flex gap-4 flex-wrap text-xs text-[var(--kz-mute)]">
-                    <span className="flex items-center gap-1">
-                      <Clock size={12} />
-                      {eventDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                      {' '}· {evt.duration_minutes}min
+                  <div className="flex gap-x-4 gap-y-1 flex-wrap text-[13px] text-[var(--kz-text)] mt-3">
+                    <span className="flex items-center gap-1.5 tabular-nums">
+                      <Clock size={13} className="text-[var(--kz-mute)]" />
+                      {eventDate.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })} · {evt.duration_minutes} min
                     </span>
-                    <span className="flex items-center gap-1">
-                      <MapPin size={12} /> {evt.location}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Users size={12} />
-                      {isFull ? (
-                        <span className="text-[var(--kz-orange)] font-semibold">Complet</span>
-                      ) : (
-                        <span><strong>{spotsLeft}</strong> places restantes</span>
-                      )}
-                    </span>
+                    <span className="flex items-center gap-1.5"><MapPin size={13} className="text-[var(--kz-mute)]" />{evt.location}</span>
+                  </div>
+
+                  {/* Jauge des places */}
+                  <div className="mt-4 max-w-[320px]">
+                    <div className="flex items-center justify-between text-[12px] mb-1.5">
+                      <span className="flex items-center gap-1.5 text-[var(--kz-mute)]"><Users size={12} />
+                        {isFull ? <span className="text-[var(--kz-orange)] font-semibold">Complet</span> : <span><strong className="text-[var(--kz-ink)]">{spotsLeft}</strong> places restantes</span>}
+                      </span>
+                      <span className="text-[var(--kz-mute)] tabular-nums">{evt.registrations_count}/{evt.max_participants}</span>
+                    </div>
+                    <div className="h-1.5 rounded-full bg-[var(--kz-line)] overflow-hidden">
+                      <div className="osc-track-fill h-full rounded-full" style={{ width: `${fill}%`, background: tint, ['--i' as string]: i }} />
+                    </div>
                   </div>
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col gap-2 shrink-0 sm:items-end justify-start">
+                <div className="flex flex-col gap-2 shrink-0 sm:items-end sm:justify-center">
                   {live && evt.is_registered && evt.jitsi_room ? (
-                    <a
-                      href={`https://meet.jit.si/${evt.jitsi_room}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <Button kind="primary" size="sm" icon={<ExternalLink size={13} />}>
-                        Rejoindre
-                      </Button>
+                    <a href={`https://meet.jit.si/${evt.jitsi_room}`} target="_blank" rel="noreferrer">
+                      <Button kind="primary" size="md" icon={<ExternalLink size={14} />}>Rejoindre</Button>
                     </a>
                   ) : (
                     <Button
                       kind={evt.is_registered ? 'soft' : isFull ? 'outline' : 'primary'}
-                      size="sm"
+                      size="md"
                       loading={registering === evt.id}
                       disabled={isFull && !evt.is_registered}
                       onClick={() => handleRegister(evt.id, evt.is_registered)}
                     >
-                      {evt.is_registered ? "Se désinscrire" : isFull ? "Complet" : "S'inscrire"}
+                      {evt.is_registered ? 'Se désinscrire' : isFull ? 'Complet' : 'S\'inscrire'}
                     </Button>
                   )}
                   {evt.is_registered && !live && (
-                    <p className="text-[11px] text-[var(--kz-mute)] text-right">
-                      Lien disponible le jour J
-                    </p>
+                    <p className="text-[11px] text-[var(--kz-mute)] sm:text-right">Lien disponible le jour J</p>
                   )}
                 </div>
-              </div>
+              </article>
             )
           })}
         </div>

@@ -12,6 +12,7 @@ import { useAuth } from '@/features/auth/useAuth'
 import { FullPageLoader } from '@/components/ui/LogoLoader'
 import { BugReportWidget } from '@/components/feedback/BugReportWidget'
 import { KZ } from '@/lib/constants'
+import './os-recruiter.css'
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/recruiter/dashboard',    label: 'Tableau de bord', icon: <LayoutDashboard size={16} /> },
@@ -73,13 +74,15 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
               {/* Sélecteur d'entreprise (multi-structures) */}
               <CompanySwitcher />
               {/* Utilisateur connecté */}
-              <div className="flex items-center gap-2.5 p-2.5 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-                <div className="w-7 h-7 rounded-full border border-[var(--kz-edge)] flex items-center justify-center text-[10px] font-extrabold shrink-0"
-                  style={{ background: KZ.violetSoft, color: KZ.violet }}>
+              <a href="/recruiter/profile" className="flex items-center gap-2.5 p-2 rounded-2xl bg-white/[0.04] border border-white/[0.06] hover:bg-white/[0.08] transition-colors">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-semibold text-white shrink-0 bg-[linear-gradient(145deg,var(--osr-indigo),var(--kz-violet))]">
                   {profile?.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
                 </div>
-                <span className="text-xs font-semibold text-[var(--kz-ink)] truncate">{profile?.full_name}</span>
-              </div>
+                <div className="min-w-0">
+                  <span className="block text-[13px] font-semibold text-[var(--kz-ink)] truncate">{profile?.full_name}</span>
+                  <span className="block text-[11px] text-[var(--kz-mute)] truncate">Recruteur</span>
+                </div>
+              </a>
               {/* CTA nouvelle offre */}
               <a
                 href="/recruiter/jobs/new"
@@ -91,7 +94,7 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
             </div>
           }
         />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+        <main className="osr-scope flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8">
           <PageTransition>{children}</PageTransition>
         </main>
       </div>

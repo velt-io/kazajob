@@ -1,14 +1,23 @@
 'use client'
 
-import { useState } from 'react'
-import { Sparkles, GraduationCap, Lightbulb, TrendingUp, Check, Target } from 'lucide-react'
+import { useState, type ReactNode } from 'react'
+import { Sparkles, GraduationCap, Lightbulb, TrendingUp, CheckCircle2, Target, ArrowUpRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Tag } from '@/components/ui/Tag'
-import { Progress } from '@/components/ui/Progress'
 import { InlineLoader } from '@/components/ui/LogoLoader'
 import { useKazaCoach } from '@/features/ai/useKazaIA'
-import { KZ } from '@/lib/constants'
+import { LargeTitle, MatchRing } from '@/components/os/candidate/primitives'
+
+function Block({ icon, tint, title, children, i }: { icon: ReactNode; tint: string; title: string; children: ReactNode; i: number }) {
+  return (
+    <section className="osc-card osc-in p-5 sm:p-6" style={{ ['--i' as string]: i }}>
+      <div className="flex items-center gap-3 mb-4">
+        <span className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0" style={{ color: tint, background: `color-mix(in srgb, ${tint} 16%, transparent)` }}>{icon}</span>
+        <h2 className="text-[18px] font-semibold tracking-[-0.02em] text-[var(--kz-ink)]">{title}</h2>
+      </div>
+      {children}
+    </section>
+  )
+}
 
 export default function KazaCoachPage() {
   const { generating, coach, raw, error, generate } = useKazaCoach()
@@ -16,100 +25,90 @@ export default function KazaCoachPage() {
 
   return (
     <div className="max-w-[760px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Assistant candidat</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">KazaCoach</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Ton coach emploi IA : il analyse ton profil et te donne un plan d&apos;action concret pour le marché 974.</p>
-      </div>
+      <LargeTitle
+        eyebrow="Assistant candidat"
+        title="KazaCoach"
+        subtitle="Ton coach emploi IA analyse ton profil et te propose un plan d'action concret pour le marché 974."
+      />
 
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
-        <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Métier visé (optionnel)</label>
-        <div className="flex flex-col sm:flex-row gap-2.5">
-          <Input className="flex-1" value={targetRole} onChange={(e) => setTargetRole(e.target.value)}
-            placeholder="Ex : Développeur web, Aide-soignant, Commercial…" icon={<Target size={15} />} />
-          <Button kind="violet" size="md" icon={<Sparkles size={15} />} loading={generating}
-            onClick={() => generate(targetRole || undefined)}>
-            Analyser mon profil
-          </Button>
-        </div>
-      </div>
+      {/* Saisie */}
+      <form
+        onSubmit={(e) => { e.preventDefault(); generate(targetRole || undefined) }}
+        className="os-glass os-ring-aurora rounded-[26px] p-2 flex flex-col sm:flex-row gap-2 mb-8 shadow-[var(--os-elevation)]"
+      >
+        <label className="flex-1 flex items-center gap-3 h-12 px-4 rounded-[20px] bg-[var(--osc-surface)] focus-within:bg-[var(--osc-surface-hi)]">
+          <Target size={17} className="text-[var(--kz-mute)] shrink-0" />
+          <input value={targetRole} onChange={(e) => setTargetRole(e.target.value)} aria-label="Métier visé (optionnel)"
+            placeholder="Métier visé (optionnel) : développeur web, aide-soignant…"
+            className="flex-1 min-w-0 bg-transparent outline-none text-[15px] text-[var(--kz-ink)] placeholder:text-[var(--kz-mute)]" />
+        </label>
+        <Button type="submit" kind="primary" size="lg" icon={<Sparkles size={15} />} loading={generating}>
+          Analyser mon profil
+        </Button>
+      </form>
 
       {generating && (
-        <div className="flex flex-col items-center gap-3 py-10">
+        <div className="flex flex-col items-center gap-3 py-10 osc-fade">
           <InlineLoader size={48} />
           <p className="text-sm text-[var(--kz-mute)]">KazaCoach analyse ton profil…</p>
         </div>
       )}
 
-      {error && <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
+      {error && <div className="p-3.5 rounded-2xl bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
 
       {coach && !generating && (
         <div className="flex flex-col gap-4">
-          {/* Compatibilité */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-[var(--kz-ink)]">Force de ton profil (974)</span>
-              <span className="text-2xl font-extrabold" style={{ color: KZ.violet }}>{coach.compatibilite}%</span>
+          {/* Force du profil */}
+          <section className="osc-mesh osc-in relative overflow-hidden rounded-[28px] border border-[var(--kz-edge)] p-6 flex items-center gap-5">
+            <MatchRing value={coach.compatibilite} size={88} stroke={8} />
+            <div className="min-w-0">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[color-mix(in_srgb,var(--kz-ink)_70%,transparent)]">Force de ton profil</p>
+              <p className="text-[26px] sm:text-[30px] font-semibold tracking-[-0.04em] text-[var(--kz-ink)] leading-tight mt-1">{coach.compatibilite} % sur le marché 974</p>
             </div>
-            <Progress value={coach.compatibilite} color={KZ.violet} />
-          </div>
+          </section>
 
           {coach.competences_manquantes?.length > 0 && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-3">
-                <GraduationCap size={16} color={KZ.orange} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Compétences à acquérir</h2>
-              </div>
+            <Block i={1} icon={<GraduationCap size={15} />} tint="var(--kz-orange)" title="Compétences à acquérir">
               <div className="flex gap-2 flex-wrap">
-                {coach.competences_manquantes.map((c, i) => <Tag key={i}>{c}</Tag>)}
+                {coach.competences_manquantes.map((c, i) => (
+                  <span key={i} className="inline-flex items-center h-8 px-3.5 rounded-full text-[13px] font-medium text-[var(--kz-ink)] bg-[var(--kz-line)]">{c}</span>
+                ))}
               </div>
-            </div>
+            </Block>
           )}
 
           {coach.experience_recommandee && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp size={16} color={KZ.green} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Expérience recommandée</h2>
-              </div>
-              <p className="text-sm text-[var(--kz-text)] leading-relaxed">{coach.experience_recommandee}</p>
-            </div>
+            <Block i={2} icon={<TrendingUp size={15} />} tint="var(--kz-green)" title="Expérience recommandée">
+              <p className="text-[15px] text-[var(--kz-text)] leading-relaxed">{coach.experience_recommandee}</p>
+            </Block>
           )}
 
           {coach.conseils?.length > 0 && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-3">
-                <Lightbulb size={16} color={KZ.violet} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Conseils de candidature</h2>
-              </div>
-              <ul className="flex flex-col gap-2">
+            <Block i={3} icon={<Lightbulb size={15} />} tint="var(--kz-violet)" title="Conseils de candidature">
+              <ul className="flex flex-col gap-3">
                 {coach.conseils.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]"><Check size={14} className="mt-0.5 shrink-0" color={KZ.green} />{c}</li>
+                  <li key={i} className="flex items-start gap-2.5 text-[15px] text-[var(--kz-text)] leading-relaxed"><CheckCircle2 size={17} className="mt-0.5 shrink-0 text-[var(--kz-green)]" />{c}</li>
                 ))}
               </ul>
-            </div>
+            </Block>
           )}
 
           {coach.ameliorations?.length > 0 && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={16} color={KZ.orange} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Pistes d&apos;amélioration</h2>
-              </div>
-              <ul className="flex flex-col gap-2">
+            <Block i={4} icon={<Sparkles size={15} />} tint="var(--kz-blue)" title="Pistes d'amélioration">
+              <ul className="flex flex-col gap-3">
                 {coach.ameliorations.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]">• {c}</li>
+                  <li key={i} className="flex items-start gap-2.5 text-[15px] text-[var(--kz-text)] leading-relaxed"><ArrowUpRight size={17} className="mt-0.5 shrink-0 text-[var(--kz-blue)]" />{c}</li>
                 ))}
               </ul>
-            </div>
+            </Block>
           )}
 
-          <p className="text-[11px] text-[var(--kz-mute)] italic text-center">Généré par KazaCoach — à titre indicatif. Complète ton profil pour des conseils plus précis.</p>
+          <p className="text-[12px] text-[var(--kz-mute)] text-center mt-2">Généré par KazaCoach, à titre indicatif. Complète ton profil pour des conseils plus précis.</p>
         </div>
       )}
 
       {raw && !coach && !generating && (
-        <div className="kz-card p-5 bg-[var(--kz-paper)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap">{raw}</div>
+        <div className="osc-card p-5 text-[15px] text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap">{raw}</div>
       )}
     </div>
   )

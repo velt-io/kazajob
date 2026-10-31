@@ -8,6 +8,7 @@ import { Sidebar, type NavItem } from '@/components/layout/Sidebar'
 import { useAuth } from '@/features/auth/useAuth'
 import { FullPageLoader } from '@/components/ui/LogoLoader'
 import { KZ } from '@/lib/constants'
+import '../recruiter/os-recruiter.css'
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/admin/dashboard',      label: 'Dashboard',        icon: <LayoutDashboard size={16} /> },
@@ -58,13 +59,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           mobileOpen={sidebarOpen}
           onMobileClose={() => setSidebarOpen(false)}
           footer={
-            <div className="p-3 rounded-xl border border-[var(--kz-edge)] flex items-center gap-2" style={{ background: KZ.yellowSoft }}>
-              <Shield size={16} />
-              <span className="text-xs font-bold text-[var(--kz-ink)]">Super Admin</span>
+            <div className="flex items-center gap-2.5 p-2 rounded-2xl bg-white/[0.04] border border-white/[0.06]">
+              <span className="w-8 h-8 rounded-[10px] flex items-center justify-center text-black shrink-0 bg-[linear-gradient(145deg,var(--kz-yellow),var(--kz-orange))]">
+                <Shield size={15} />
+              </span>
+              <div className="min-w-0">
+                <span className="block text-[13px] font-semibold text-[var(--kz-ink)] truncate">Super Admin</span>
+                <span className="block text-[11px] text-[var(--kz-mute)] truncate">{profile.full_name}</span>
+              </div>
             </div>
           }
         />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+        <main className="osr-scope flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8">
           {children}
         </main>
       </div>

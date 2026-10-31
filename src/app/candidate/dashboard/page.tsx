@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth/useAuth'
 import { useApplications } from '@/features/applications/useApplications'
 import { useFavorites } from '@/features/favorites/useFavorites'
 import { useGamification } from '@/features/gamification/useGamification'
+import { computeCvCompletion } from '@/lib/cv'
 import { TodayDashboard } from '@/components/os/TodayDashboard'
 
 export default function CandidateDashboard() {
@@ -25,8 +26,7 @@ export default function CandidateDashboard() {
       .finally(() => setJobsLoading(false))
   }, [profile?.id])
 
-  const profileFields = [profile?.full_name, profile?.bio, profile?.location, profile?.phone, profile?.cv_url, profile?.avatar_url || (profile?.avatar_config ? 'avatar' : null)]
-  const profileScore = Math.round((profileFields.filter(Boolean).length / profileFields.length) * 100)
+  const profileScore = computeCvCompletion(profile ?? {})
 
   if (!profile) return null
 

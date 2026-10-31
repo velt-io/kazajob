@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Sparkles, ExternalLink, Zap, MessageCircle, FileText, Brain, Info } from 'lucide-react'
-import { KZ } from '@/lib/constants'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { Sparkles, ExternalLink, Zap, MessageCircle, FileText, Brain, Info, LayoutGrid } from 'lucide-react'
+import { ACCENT, CountUp, PageHeader, SkeletonList, Widget, accentStyle, tint } from '@/components/os/recruiter/primitives'
 
 interface AIStats {
   totalApplications: number
@@ -22,18 +22,18 @@ const COST_PER = {
   chat:          0.0005,
 }
 
-function StatBlock({ icon, label, value, sub, color }: {
-  icon: React.ReactNode; label: string; value: string | number; sub: string; color: string
+function StatBlock({ icon, label, value, format, sub, accent, i }: {
+  icon: React.ReactNode; label: string; value: number; format?: (n: number) => string; sub: string; accent: string; i: number
 }) {
   return (
-    <div className="kz-card p-5 bg-[var(--kz-paper)] flex items-start gap-4">
-      <div className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: color }}>
+    <div className="osr-in osr-glow rounded-[24px] os-glass p-5 flex items-start gap-4 min-w-0" style={{ ...accentStyle(accent), '--i': i } as CSSProperties}>
+      <span className="w-10 h-10 rounded-[12px] flex items-center justify-center shrink-0 text-white" style={{ background: accent }}>
         {icon}
-      </div>
-      <div>
-        <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{value}</div>
-        <div className="text-sm font-bold text-[var(--kz-ink)]">{label}</div>
-        <div className="text-xs text-[var(--kz-mute)]">{sub}</div>
+      </span>
+      <div className="min-w-0">
+        <div className="text-[30px] font-semibold tracking-[-0.05em] leading-none text-white"><CountUp value={value} format={format} /></div>
+        <div className="text-[14px] font-medium text-white mt-1.5">{label}</div>
+        <div className="text-[12px] text-[var(--kz-mute)]">{sub}</div>
       </div>
     </div>
   )
@@ -83,117 +83,119 @@ export default function AdminAIPage() {
 
   const totalRequests = stats.coverLettersEstimated + stats.interviewPrepsEstimated + stats.chatsEstimated
 
+  const rows = [
+    {
+      icon: <FileText size={16} />,
+      label: 'Lettres de motivation',
+      count: stats.coverLettersEstimated,
+      cost: stats.coverLettersEstimated * COST_PER.coverLetter,
+      desc: `${stats.applicationsWithCoverLetter} candidatures avec lettre`,
+      accent: ACCENT.violet,
+    },
+    {
+      icon: <Brain size={16} />,
+      label: 'Préparations entretien',
+      count: stats.interviewPrepsEstimated,
+      cost: stats.interviewPrepsEstimated * COST_PER.interviewPrep,
+      desc: `~15% des ${stats.totalApplications} candidatures`,
+      accent: ACCENT.blue,
+    },
+    {
+      icon: <MessageCircle size={16} />,
+      label: 'Messages Chat Assistant',
+      count: stats.chatsEstimated,
+      cost: stats.chatsEstimated * COST_PER.chat,
+      desc: `${stats.totalConversations} conversations · ~3 msg/conv`,
+      accent: ACCENT.green,
+    },
+  ]
+  const maxCount = Math.max(1, ...rows.map((r) => r.count))
+
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">KazaIA — Statistiques</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Usage de l&apos;IA et estimation des coûts Groq</p>
-      </div>
+    <div className="max-w-[1000px] mx-auto">
+      <PageHeader eyebrow="Intelligence" title={<>Kaza<span className="os-text-aurora">IA</span> — Statistiques</>} subtitle="Usage de l'IA et estimation des coûts Groq" />
 
       {loading ? (
-        <div className="grid grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />)}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <SkeletonList rows={1} height={110} />
+          <SkeletonList rows={1} height={110} />
         </div>
       ) : (
         <>
           {/* KPIs principaux */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-            <StatBlock
-              icon={<Sparkles size={18} color={KZ.violet} />}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+            <StatBlock i={0}
+              icon={<Sparkles size={18} />}
               label="Requêtes IA estimées"
-              value={totalRequests.toLocaleString('fr-FR')}
+              value={totalRequests}
               sub="Lettres + entretiens + chats"
-              color={KZ.violetSoft}
+              accent={ACCENT.violet}
             />
-            <StatBlock
-              icon={<Zap size={18} color={KZ.orange} />}
+            <StatBlock i={1}
+              icon={<Zap size={18} />}
               label="Coût Groq estimé"
-              value={`~$${estimatedCost.toFixed(2)}`}
+              value={estimatedCost}
+              format={(n) => `~$${n.toFixed(2)}`}
               sub="Estimation · modèle openai/gpt-oss-120b"
-              color={KZ.orangeSoft}
+              accent={ACCENT.orange}
             />
           </div>
 
           {/* Détail par feature */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
-            <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Détail par fonctionnalité</h2>
-            <div className="flex flex-col gap-4">
-              {[
-                {
-                  icon: <FileText size={16} color={KZ.violet} />,
-                  label: 'Lettres de motivation',
-                  count: stats.coverLettersEstimated,
-                  cost: stats.coverLettersEstimated * COST_PER.coverLetter,
-                  desc: `${stats.applicationsWithCoverLetter} candidatures avec lettre`,
-                  color: KZ.violetSoft,
-                },
-                {
-                  icon: <Brain size={16} color={KZ.blue} />,
-                  label: 'Préparations entretien',
-                  count: stats.interviewPrepsEstimated,
-                  cost: stats.interviewPrepsEstimated * COST_PER.interviewPrep,
-                  desc: `~15% des ${stats.totalApplications} candidatures`,
-                  color: KZ.blueSoft,
-                },
-                {
-                  icon: <MessageCircle size={16} color={KZ.green} />,
-                  label: 'Messages Chat Assistant',
-                  count: stats.chatsEstimated,
-                  cost: stats.chatsEstimated * COST_PER.chat,
-                  desc: `${stats.totalConversations} conversations · ~3 msg/conv`,
-                  color: KZ.greenSoft,
-                },
-              ].map(row => (
-                <div key={row.label} className="flex items-center gap-4 p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-                  <div className="w-8 h-8 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: row.color }}>
+          <Widget title="Détail par fonctionnalité" icon={<LayoutGrid size={14} />} accent={ACCENT.indigo} className="mb-4" bodyClassName="px-2 pb-2">
+            <div className="flex flex-col">
+              {rows.map((row, i) => (
+                <div key={row.label} className="osr-row flex items-center gap-3 sm:gap-4 px-3 py-3">
+                  <span className="w-9 h-9 rounded-[11px] flex items-center justify-center shrink-0" style={{ background: tint(row.accent, 18), color: row.accent }}>
                     {row.icon}
-                  </div>
+                  </span>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-[var(--kz-ink)]">{row.label}</div>
-                    <div className="text-xs text-[var(--kz-mute)]">{row.desc}</div>
+                    <div className="text-[14px] font-semibold text-white">{row.label}</div>
+                    <div className="text-[12px] text-[var(--kz-mute)] truncate">{row.desc}</div>
+                    <div className="osr-bar !h-1 mt-2" style={{ '--i': i } as CSSProperties}>
+                      <span style={{ width: `${(row.count / maxCount) * 100}%`, background: row.accent }} />
+                    </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-lg font-extrabold text-[var(--kz-ink)]">{row.count.toLocaleString('fr-FR')}</div>
-                    <div className="text-[11px] text-[var(--kz-mute)]">~${row.cost.toFixed(3)}</div>
+                    <div className="text-[18px] font-semibold tracking-[-0.03em] text-white tabular-nums">{row.count.toLocaleString('fr-FR')}</div>
+                    <div className="text-[11px] text-[var(--kz-mute)] tabular-nums">~${row.cost.toFixed(3)}</div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+          </Widget>
 
           {/* Note + liens */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-2 flex items-center gap-1.5"><Info size={14} /> Note sur les estimations</h3>
-              <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
-                Ces chiffres sont des <strong>estimations</strong> basées sur les données Supabase (candidatures, conversations).
+            <Widget title="Note sur les estimations" icon={<Info size={14} />} accent={ACCENT.blue}>
+              <p className="text-[13px] text-[var(--kz-mute)] leading-relaxed">
+                Ces chiffres sont des <strong className="text-white font-semibold">estimations</strong> basées sur les données Supabase (candidatures, conversations).
                 Pour un suivi exact, activez les logs IA dans les routes API ({' '}
-                <code className="bg-[var(--kz-cream2)] px-1 rounded text-[10px]">/api/kaza-ia/*</code>).
+                <code className="osr-chip font-mono !h-5 !text-[10px]">/api/kaza-ia/*</code>).
               </p>
-            </div>
+            </Widget>
 
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Tableaux de bord fournisseurs</h3>
-              <div className="flex flex-col gap-2">
+            <Widget title="Tableaux de bord fournisseurs" bodyClassName="px-2 pb-2">
+              <div className="flex flex-col">
                 {[
-                  { label: 'Console Groq', url: 'https://console.groq.com', color: KZ.orangeSoft },
-                  { label: 'Supabase Studio', url: 'https://supabase.com/dashboard', color: KZ.greenSoft },
-                  { label: 'Resend (emails)', url: 'https://resend.com/emails', color: KZ.violetSoft },
+                  { label: 'Console Groq', url: 'https://console.groq.com', accent: ACCENT.orange },
+                  { label: 'Supabase Studio', url: 'https://supabase.com/dashboard', accent: ACCENT.green },
+                  { label: 'Resend (emails)', url: 'https://resend.com/emails', accent: ACCENT.violet },
                 ].map(link => (
                   <a
                     key={link.label}
                     href={link.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-2.5 p-2.5 rounded-xl border border-[var(--kz-edge)] text-sm font-semibold text-[var(--kz-ink)] transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
-                    style={{ background: link.color }}
+                    className="osr-row group flex items-center gap-3 px-3 py-2.5 text-[14px] font-medium text-white"
                   >
-                    <ExternalLink size={13} className="shrink-0" />
-                    {link.label}
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: link.accent, boxShadow: `0 0 8px ${link.accent}` }} />
+                    <span className="flex-1">{link.label}</span>
+                    <ExternalLink size={13} className="shrink-0 text-[var(--kz-mute)] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>
                 ))}
               </div>
-            </div>
+            </Widget>
           </div>
         </>
       )}

@@ -4,7 +4,10 @@ import { useEffect, useState } from 'react'
 import { Copy, Check, Gift, Users, Share2, Link as LinkIcon, Smartphone, Info } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/features/auth/useAuth'
-import { KZ, SITE_URL } from '@/lib/constants'
+import { SITE_URL } from '@/lib/constants'
+import { island } from '@/lib/island'
+import { LargeTitle } from '@/components/os/candidate/primitives'
+import { cn } from '@/lib/utils'
 
 interface ReferralStats {
   count: number
@@ -32,6 +35,7 @@ export default function ReferralPage() {
     if (!referralLink) return
     await navigator.clipboard.writeText(referralLink)
     setCopied(true)
+    island({ title: 'Lien copié', subtitle: 'Colle-le où tu veux', tone: 'success' })
     setTimeout(() => setCopied(false), 2000)
   }
 
@@ -52,110 +56,83 @@ export default function ReferralPage() {
   const XP_PER_REFERRAL = 200
 
   return (
-    <div className="max-w-[640px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Communauté</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">
-          Parrainage <span style={{ color: KZ.violet }}>974</span>
-        </h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">
-          Invitez vos proches à rejoindre Kazajob et gagnez des XP tous les deux.
-        </p>
-      </div>
+    <div className="max-w-[680px] mx-auto">
+      <LargeTitle
+        eyebrow="Communauté"
+        title="Parrainage"
+        accent="974"
+        subtitle="Invite tes proches à rejoindre Kazajob et gagnez des XP tous les deux."
+      />
 
-      {/* Comment ça marche */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-4">
-        <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Comment ça marche ?</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[
-            { icon: <LinkIcon size={20} />, step: '1', text: 'Copiez votre lien de parrainage unique' },
-            { icon: <Smartphone size={20} />, step: '2', text: 'Partagez-le à vos amis ou sur les réseaux' },
-            { icon: <Gift size={20} />, step: '3', text: `+${XP_PER_REFERRAL} XP pour vous ET votre filleul à l'inscription` },
-          ].map(s => (
-            <div key={s.step} className="flex flex-col items-center text-center gap-2 p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-              <div className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.violetSoft, color: KZ.violet }}>{s.icon}</div>
-              <div className="w-6 h-6 rounded-full border border-[var(--kz-edge)] flex items-center justify-center text-xs font-extrabold" style={{ background: KZ.orangeSoft }}>
-                {s.step}
-              </div>
-              <p className="text-xs text-[var(--kz-text)] font-medium">{s.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Votre code */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-4">
-        <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Votre lien de parrainage</h2>
+      {/* Carte « invitation » */}
+      <section className="osc-mesh relative overflow-hidden rounded-[30px] border border-[var(--kz-edge)] p-6 sm:p-8 mb-6 shadow-[var(--os-elevation)]">
+        <div className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[color-mix(in_srgb,var(--kz-ink)_70%,transparent)]">Ton lien de parrainage</div>
         {referralCode ? (
           <>
-            {/* Code visuel */}
-            <div
-              className="flex items-center justify-center p-4 rounded-xl border-2 border-dashed border-[var(--kz-edge)] mb-4"
-              style={{ background: KZ.violetSoft }}
-            >
-              <span className="text-2xl font-extrabold tracking-[0.25em]" style={{ color: KZ.violet }}>
-                {referralCode}
+            <div className="mt-3 text-[34px] sm:text-[44px] font-semibold tracking-[0.18em] text-[var(--kz-ink)] leading-none font-mono break-all">{referralCode}</div>
+
+            <button type="button" onClick={handleCopy} aria-label="Copier le lien de parrainage"
+              className="osc-press mt-6 w-full flex items-center gap-3 h-12 pl-4 pr-1.5 rounded-full bg-[color-mix(in_srgb,var(--kz-cream)_55%,transparent)] border border-[var(--kz-edge)] text-left hover:bg-[color-mix(in_srgb,var(--kz-cream)_40%,transparent)]">
+              <LinkIcon size={15} className="text-[var(--kz-mute)] shrink-0" />
+              <span className="flex-1 min-w-0 text-[13px] text-[var(--kz-text)] truncate font-mono">{referralLink}</span>
+              <span className={cn('w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300', copied ? 'bg-[var(--kz-green)] text-black' : 'bg-[var(--kz-ink)] text-[var(--kz-inverse)]')}>
+                {copied ? <Check size={16} strokeWidth={3} /> : <Copy size={15} />}
               </span>
-            </div>
+            </button>
 
-            {/* Lien complet */}
-            <div className="flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-line)] mb-4" style={{ background: KZ.cream2 }}>
-              <span className="flex-1 text-xs text-[var(--kz-mute)] truncate font-mono">{referralLink}</span>
-              <button
-                onClick={handleCopy}
-                className="p-1.5 rounded-lg border border-[var(--kz-edge)] transition-colors hover:bg-[var(--kz-violet-soft)] shrink-0"
-                style={{ background: copied ? KZ.greenSoft : KZ.paper }}
-                title="Copier le lien"
-              >
-                {copied ? <Check size={14} color={KZ.green} /> : <Copy size={14} />}
-              </button>
-            </div>
-
-            {/* Boutons de partage */}
-            <div className="flex gap-2 flex-wrap">
-              <Button kind="primary" size="sm" icon={<Copy size={13} />} onClick={handleCopy} full>
-                {copied ? 'Lien copié !' : 'Copier le lien'}
+            <div className="grid grid-cols-2 gap-2.5 mt-3">
+              <Button kind="primary" size="lg" icon={<Copy size={15} />} onClick={handleCopy} full>
+                {copied ? 'Copié' : 'Copier'}
               </Button>
-              <Button kind="outline" size="sm" icon={<Share2 size={13} />} onClick={handleWhatsApp} full>
+              <Button kind="outline" size="lg" icon={<Share2 size={15} />} onClick={handleWhatsApp} full>
                 WhatsApp
               </Button>
             </div>
           </>
         ) : (
-          <div className="text-center py-4">
-            <p className="text-sm text-[var(--kz-mute)] mb-3">Vous n&apos;avez pas encore de code de parrainage.</p>
-            <Button kind="primary" size="md" icon={<Gift size={15} />} loading={generating} onClick={generateCode}>
+          <div className="mt-4">
+            <p className="text-[15px] text-[var(--kz-text)] mb-5">Tu n&apos;as pas encore de code de parrainage.</p>
+            <Button kind="primary" size="lg" icon={<Gift size={16} />} loading={generating} onClick={generateCode}>
               Générer mon code
             </Button>
           </div>
         )}
-      </div>
+      </section>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="kz-card p-5 bg-[var(--kz-paper)] text-center">
-          <div className="text-3xl font-extrabold text-[var(--kz-ink)] mb-1">{stats.count}</div>
-          <div className="text-xs text-[var(--kz-mute)] font-medium flex items-center justify-center gap-1">
-            <Users size={12} /> Filleuls inscrits
-          </div>
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        <div className="osc-card p-5">
+          <span className="w-8 h-8 rounded-[10px] flex items-center justify-center text-[var(--kz-blue)] bg-[var(--kz-blue-soft)]"><Users size={15} /></span>
+          <div className="text-[34px] font-semibold tracking-[-0.05em] text-[var(--kz-ink)] mt-3 leading-none tabular-nums">{stats.count}</div>
+          <div className="text-[12px] text-[var(--kz-mute)] mt-1.5">Filleuls inscrits</div>
         </div>
-        <div className="kz-card p-5 bg-[var(--kz-paper)] text-center">
-          <div className="text-3xl font-extrabold mb-1" style={{ color: KZ.violet }}>
-            +{stats.rewarded * XP_PER_REFERRAL}
-          </div>
-          <div className="text-xs text-[var(--kz-mute)] font-medium flex items-center justify-center gap-1">
-            <Gift size={12} /> XP gagnés
-          </div>
+        <div className="osc-card p-5">
+          <span className="w-8 h-8 rounded-[10px] flex items-center justify-center text-[var(--kz-violet)] bg-[var(--kz-violet-soft)]"><Gift size={15} /></span>
+          <div className="text-[34px] font-semibold tracking-[-0.05em] mt-3 leading-none tabular-nums os-text-aurora">+{stats.rewarded * XP_PER_REFERRAL}</div>
+          <div className="text-[12px] text-[var(--kz-mute)] mt-1.5">XP gagnés</div>
         </div>
       </div>
 
+      {/* Comment ça marche */}
+      <h2 className="text-[13px] font-semibold uppercase tracking-[0.06em] text-[var(--kz-mute)] px-4 mb-2">Comment ça marche</h2>
+      <ol className="osc-card !rounded-[20px] divide-y divide-[var(--osc-hairline)] mb-6">
+        {[
+          { icon: <LinkIcon size={16} />, bg: 'var(--kz-blue)', text: 'Copie ton lien de parrainage unique' },
+          { icon: <Smartphone size={16} />, bg: 'var(--kz-green)', text: 'Partage-le à tes amis ou sur les réseaux' },
+          { icon: <Gift size={16} />, bg: 'var(--kz-violet)', text: `+${XP_PER_REFERRAL} XP pour toi et ton filleul à l'inscription` },
+        ].map((s, i) => (
+          <li key={i} className="flex items-center gap-3 px-4 py-3.5">
+            <span className="w-[30px] h-[30px] rounded-[9px] flex items-center justify-center text-white shrink-0" style={{ background: s.bg }}>{s.icon}</span>
+            <span className="flex-1 text-[15px] text-[var(--kz-ink)]">{s.text}</span>
+            <span className="text-[13px] font-semibold text-[var(--kz-mute)] tabular-nums">{i + 1}</span>
+          </li>
+        ))}
+      </ol>
+
       {/* Note */}
-      <div
-        className="p-4 rounded-xl border border-[var(--kz-edge)] text-sm text-[var(--kz-text)] leading-relaxed"
-        style={{ background: KZ.yellowSoft }}
-      >
-        <strong className="flex items-center gap-1.5 mb-1"><Info size={14} /> Note :</strong> Les XP sont crédités lorsque votre filleul complète son profil à plus de 50%.
-        Les parrainages sont limités à des profils réels — tout abus entraîne la suspension du compte.
+      <div className="flex gap-3 p-4 rounded-[20px] text-[13px] text-[var(--kz-text)] leading-relaxed bg-[var(--kz-yellow-soft)] border border-[color-mix(in_srgb,var(--kz-yellow)_22%,transparent)]">
+        <Info size={16} className="shrink-0 mt-0.5 text-[var(--kz-yellow)]" />
+        <p>Les XP sont crédités lorsque ton filleul complète son profil à plus de 50 %. Les parrainages sont limités à des profils réels : tout abus entraîne la suspension du compte.</p>
       </div>
     </div>
   )
