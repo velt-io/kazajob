@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { useAuth } from '@/features/auth/useAuth'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 import { KZ } from '@/lib/constants'
 import type { TrainingOffer } from '@/lib/types'
 
@@ -43,19 +44,22 @@ export default function RecruiterTrainingPage() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Mes formations</h1>
-          <p className="text-sm text-[var(--kz-mute)]">{offers.length} offre{offers.length > 1 ? 's' : ''} de formation</p>
-        </div>
-        <Link href="/recruteur/formations/nouvelle">
-          <Button kind="primary" size="md" icon={<Plus size={15} />}>Nouvelle formation</Button>
-        </Link>
-      </div>
+      <QuestHeader
+        eyebrow="Formations"
+        icon={<GraduationCap size={18} />}
+        tone="var(--qx-gold)"
+        title={<>L&apos;<span className="qx-text-arcane">académie</span> de la guilde</>}
+        subtitle={`${offers.length} offre${offers.length > 1 ? 's' : ''} de formation`}
+        actions={
+          <Link href="/recruteur/formations/nouvelle">
+            <Button kind="primary" size="md" icon={<Plus size={15} />}>Nouvelle formation</Button>
+          </Link>
+        }
+      />
 
       {loading ? (
         <div className="flex flex-col gap-3">
-          {[1,2,3].map(i => <div key={i} className="h-24 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />)}
+          {[1,2,3].map(i => <div key={i} className="h-24 qxr-skeleton" />)}
         </div>
       ) : offers.length === 0 ? (
         <EmptyState
@@ -67,7 +71,7 @@ export default function RecruiterTrainingPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {offers.map(offer => (
-            <div key={offer.id} className="kz-card p-4 bg-[var(--kz-paper)] flex items-center gap-4">
+            <div key={offer.id} className="qx-panel p-4 flex flex-wrap sm:flex-nowrap items-center gap-4">
               {/* Image */}
               <div className="w-16 h-16 rounded-xl border border-[var(--kz-edge)] overflow-hidden shrink-0"
                 style={{ background: KZ.violetSoft }}>

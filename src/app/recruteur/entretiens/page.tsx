@@ -13,6 +13,7 @@ import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { useInterviews, type Interview } from '@/features/interviews/useInterviews'
 import { KZ } from '@/lib/constants'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 
 const TYPE_OPTIONS = [
   { value: 'video',  label: 'Visioconférence' },
@@ -55,35 +56,33 @@ export default function RecruiterAgendaPage() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.violet }}>
-            <Calendar size={20} color="white" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)]">Agenda entretiens</h1>
-            <p className="text-sm text-[var(--kz-mute)]">{upcoming.length} entretien(s) à venir</p>
-          </div>
-        </div>
-        <Badge color="violet" size="md">Planifiez depuis une candidature</Badge>
-      </div>
+      <QuestHeader
+        eyebrow="Agenda entretiens"
+        icon={<Calendar size={18} />}
+        tone="var(--qx-cyan)"
+        title={<>Les <span className="qx-text-arcane">épreuves</span> à venir</>}
+        subtitle={`${upcoming.length} entretien(s) à venir`}
+        actions={<Badge color="violet" size="md">Planifiez depuis une candidature</Badge>}
+      />
 
       {upcoming.length === 0 ? (
-        <EmptyState
-          title="Aucun entretien planifié"
-          description="Planifiez des entretiens depuis la page Candidatures en changeant le statut d'une candidature."
-          icon={<Calendar size={28} />}
-        />
+        <div className="qx-panel">
+          <EmptyState
+            title="Aucun entretien planifié"
+            description="Planifiez des entretiens depuis la page Candidatures en changeant le statut d'une candidature."
+            icon={<Calendar size={28} />}
+          />
+        </div>
       ) : (
         <div className="flex flex-col gap-4">
           {Object.entries(byDate)
             .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
             .map(([date, ivs]) => (
               <div key={date}>
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="h-px flex-1 bg-[var(--kz-line)]" />
-                  <span className="text-xs font-bold text-[var(--kz-mute)] px-2 capitalize">{date}</span>
-                  <div className="h-px flex-1 bg-[var(--kz-line)]" />
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(250,204,21,0.45))]" />
+                  <span className="text-[13px] font-bold text-[var(--qx-gold)] px-2 capitalize font-[family-name:var(--font-epic)] tracking-wide">{date}</span>
+                  <div className="h-px flex-1 bg-[linear-gradient(90deg,rgba(250,204,21,0.45),transparent)]" />
                 </div>
 
                 {ivs.filter(iv => iv.status !== 'cancelled').map((iv) => {
@@ -93,21 +92,21 @@ export default function RecruiterAgendaPage() {
                   const candidate = iv.candidate
 
                   return (
-                    <div key={iv.id} className="kz-card p-5 bg-[var(--kz-paper)] mb-3"
-                      style={isToday ? { borderColor: KZ.orange, boxShadow: `4px 4px 0 ${KZ.orange}` } : {}}>
+                    <div key={iv.id} className="qx-panel p-4 sm:p-5 mb-3 qx-rise"
+                      style={isToday ? { borderColor: 'var(--qx-gold)', boxShadow: '0 0 0 1px rgba(250,204,21,0.25), 0 0 36px -10px var(--qx-gold)' } : undefined}>
 
-                      <div className="flex items-start gap-4">
+                      <div className="flex items-start gap-3 sm:gap-4">
                         {/* Heure */}
-                        <div className="w-14 h-14 rounded-xl border border-[var(--kz-edge)] flex flex-col items-center justify-center shrink-0 text-white font-extrabold"
-                          style={{ background: isToday ? KZ.orange : KZ.violet }}>
-                          <div className="text-xl leading-none">{d.getHours().toString().padStart(2,'0')}:{d.getMinutes().toString().padStart(2,'0')}</div>
-                          <div className="text-[10px] opacity-80">{iv.duration_min}min</div>
+                        <div className="w-16 h-16 rounded-xl border flex flex-col items-center justify-center shrink-0 font-extrabold bg-[rgba(12,5,24,0.6)]"
+                          style={{ borderColor: isToday ? 'var(--qx-gold)' : 'color-mix(in srgb, var(--qx-cyan) 50%, transparent)', boxShadow: `0 0 20px -8px ${isToday ? 'var(--qx-gold)' : 'var(--qx-cyan)'}` }}>
+                          <div className="text-lg leading-none text-white tabular-nums">{d.getHours().toString().padStart(2,'0')}:{d.getMinutes().toString().padStart(2,'0')}</div>
+                          <div className="text-[10px] mt-1" style={{ color: isToday ? 'var(--qx-gold)' : 'var(--qx-cyan)' }}>{iv.duration_min}min</div>
                         </div>
 
                         {/* Infos */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
-                            <span className="text-base font-bold text-[var(--kz-ink)]">{iv.job?.title ?? 'Entretien'}</span>
+                            <span className="text-base font-bold text-white">{iv.job?.title ?? 'Entretien'}</span>
                             <Badge color={STATUS_COLOR[iv.status] ?? 'cream'} size="sm">
                               {iv.status === 'pending' ? 'En attente' : iv.status === 'confirmed' ? 'Confirmé' : iv.status === 'done' ? 'Terminé' : 'Annulé'}
                             </Badge>
@@ -116,10 +115,10 @@ export default function RecruiterAgendaPage() {
 
                           {/* Candidat */}
                           {candidate && (
-                            <div className="flex items-center gap-2 mb-2">
+                            <div className="flex items-center gap-x-2 gap-y-0.5 mb-2 flex-wrap">
                               <Avatar name={candidate.full_name} src={candidate.avatar_url} avatarConfig={candidate.avatar_config} size={24} color={KZ.orangeSoft} />
                               <span className="text-sm font-semibold text-[var(--kz-ink)]">{candidate.full_name}</span>
-                              <span className="text-xs text-[var(--kz-mute)]">{candidate.email}</span>
+                              <span className="text-xs text-[var(--kz-mute)] break-all">{candidate.email}</span>
                             </div>
                           )}
 
@@ -134,7 +133,7 @@ export default function RecruiterAgendaPage() {
                           {iv.visio_link && (
                             <div className="mt-1 text-xs text-[var(--kz-mute)] flex items-center gap-1.5">
                               <ExternalLink size={11} />
-                              <a href={iv.visio_link} target="_blank" rel="noreferrer" className="hover:underline" style={{ color: KZ.violet }}>
+                              <a href={iv.visio_link} target="_blank" rel="noreferrer" className="hover:underline break-all text-[var(--qx-magenta)]">
                                 {iv.visio_link}
                               </a>
                             </div>

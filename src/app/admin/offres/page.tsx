@@ -55,7 +55,7 @@ export default function AdminJobsPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Gestion des offres</h1>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight mb-1">Gestion des offres</h1>
           <p className="text-sm text-[var(--kz-mute)]">{jobs.length} offre(s) au total</p>
         </div>
         <div className="flex gap-2">
@@ -67,7 +67,7 @@ export default function AdminJobsPage() {
       {loading ? <PageLoader /> : jobs.length === 0 ? (
         <EmptyState title="Aucune offre" icon={<Briefcase size={28} />} />
       ) : (
-        <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
+        <div className="qxr-table-wrap">
           <table className="w-full min-w-[700px]">
             <thead>
               <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>

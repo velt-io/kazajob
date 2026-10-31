@@ -1,33 +1,34 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles, GraduationCap, Lightbulb, TrendingUp, Check, Target } from 'lucide-react'
+import { Sparkles, GraduationCap, Lightbulb, TrendingUp, Check, Target, Compass, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import { Tag } from '@/components/ui/Tag'
-import { Progress } from '@/components/ui/Progress'
 import { InlineLoader } from '@/components/ui/LogoLoader'
 import { useKazaCoach } from '@/features/ai/useKazaIA'
-import { KZ } from '@/lib/constants'
+import { PanelTitle, QuestPageHeader } from '@/components/quest/candidat/QuestKit'
 
 export default function KazaCoachPage() {
   const { generating, coach, raw, error, generate } = useKazaCoach()
   const [targetRole, setTargetRole] = useState('')
 
   return (
-    <div className="max-w-[760px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Assistant candidat</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">KazaCoach</h1>
-        <p className="text-sm text-[var(--kz-mute)] mt-1">Ton coach emploi IA : il analyse ton profil et te donne un plan d&apos;action concret pour le marché 974.</p>
-      </div>
+    <div className="max-w-[820px] mx-auto">
+      <QuestPageHeader
+        eyebrow="Mentor de la guilde"
+        title="KazaCoach"
+        icon={<Compass size={20} />}
+        subtitle={<>Ton coach emploi IA : il analyse ton profil et te donne un plan d&apos;action concret pour le marché 974.</>}
+      />
 
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
-        <label className="block text-sm font-semibold text-[var(--kz-ink)] mb-1.5">Métier visé (optionnel)</label>
+      <div className="qx-panel p-5 sm:p-6 mb-5 qx-rise" style={{ animationDelay: '0.08s' }}>
+        <label htmlFor="coach-target" className="block text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--qx-gold)] mb-2">Métier visé (optionnel)</label>
         <div className="flex flex-col sm:flex-row gap-2.5">
-          <Input className="flex-1" value={targetRole} onChange={(e) => setTargetRole(e.target.value)}
-            placeholder="Ex : Développeur web, Aide-soignant, Commercial…" icon={<Target size={15} />} />
-          <Button kind="violet" size="md" icon={<Sparkles size={15} />} loading={generating}
+          <div className="flex-1 min-w-0">
+            <Input id="coach-target" value={targetRole} onChange={(e) => setTargetRole(e.target.value)}
+              placeholder="Ex : Développeur web, Aide-soignant, Commercial…" icon={<Target size={15} />} />
+          </div>
+          <Button kind="primary" size="md" className="h-11" icon={<Sparkles size={15} />} loading={generating}
             onClick={() => generate(targetRole || undefined)}>
             Analyser mon profil
           </Button>
@@ -35,70 +36,62 @@ export default function KazaCoachPage() {
       </div>
 
       {generating && (
-        <div className="flex flex-col items-center gap-3 py-10">
+        <div className="flex flex-col items-center gap-3 py-10" role="status">
           <InlineLoader size={48} />
-          <p className="text-sm text-[var(--kz-mute)]">KazaCoach analyse ton profil…</p>
+          <p className="text-sm text-[var(--kz-mute)]">KazaCoach consulte les astres de ton profil…</p>
         </div>
       )}
 
-      {error && <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
+      {error && <div role="alert" className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
 
       {coach && !generating && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 qxc-stagger">
           {/* Compatibilité */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-bold text-[var(--kz-ink)]">Force de ton profil (974)</span>
-              <span className="text-2xl font-extrabold" style={{ color: KZ.violet }}>{coach.compatibilite}%</span>
+          <div className="qxc-card qxc-legend p-5 sm:p-6" style={{ ['--r' as string]: 'var(--qx-magenta)' }}>
+            <div className="flex items-center justify-between mb-3 gap-3">
+              <span className="text-sm font-bold text-white font-[family-name:var(--font-epic)] tracking-wide">Puissance de ton profil (974)</span>
+              <span className="text-[30px] font-bold qx-text-arcane font-[family-name:var(--font-epic)] tabular-nums leading-none">{coach.compatibilite}%</span>
             </div>
-            <Progress value={coach.compatibilite} color={KZ.violet} />
+            <div className="qx-xp" role="progressbar" aria-valuenow={coach.compatibilite} aria-valuemin={0} aria-valuemax={100} aria-label="Puissance du profil"><span style={{ width: `${coach.compatibilite}%` }} /></div>
           </div>
 
           {coach.competences_manquantes?.length > 0 && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-3">
-                <GraduationCap size={16} color={KZ.orange} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Compétences à acquérir</h2>
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                {coach.competences_manquantes.map((c, i) => <Tag key={i}>{c}</Tag>)}
-              </div>
+            <div className="qx-panel p-5">
+              <PanelTitle icon={<GraduationCap size={13} />} color="#FB923C">Talents à acquérir</PanelTitle>
+              <ul className="flex gap-2 flex-wrap">
+                {coach.competences_manquantes.map((c, i) => (
+                  <li key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-md text-white border border-dashed border-[#FB923C]/50 bg-[rgba(251,146,60,0.08)]">
+                    <span className="qxc-gem" style={{ ['--r' as string]: '#FB923C' }} aria-hidden />{c}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
           {coach.experience_recommandee && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp size={16} color={KZ.green} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Expérience recommandée</h2>
-              </div>
+            <div className="qx-panel p-5">
+              <PanelTitle icon={<TrendingUp size={13} />} color="#4ADE80">Expérience recommandée</PanelTitle>
               <p className="text-sm text-[var(--kz-text)] leading-relaxed">{coach.experience_recommandee}</p>
             </div>
           )}
 
           {coach.conseils?.length > 0 && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-3">
-                <Lightbulb size={16} color={KZ.violet} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Conseils de candidature</h2>
-              </div>
+            <div className="qx-panel p-5">
+              <PanelTitle icon={<Lightbulb size={13} />} color="var(--qx-neon)">Conseils de candidature</PanelTitle>
               <ul className="flex flex-col gap-2">
                 {coach.conseils.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]"><Check size={14} className="mt-0.5 shrink-0" color={KZ.green} />{c}</li>
+                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]"><Check size={14} className="mt-0.5 shrink-0 text-[#86EFAC]" aria-hidden />{c}</li>
                 ))}
               </ul>
             </div>
           )}
 
           {coach.ameliorations?.length > 0 && (
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
-              <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={16} color={KZ.orange} />
-                <h2 className="text-base font-bold text-[var(--kz-ink)]">Pistes d&apos;amélioration</h2>
-              </div>
+            <div className="qx-panel p-5">
+              <PanelTitle icon={<Sparkles size={13} />}>Pistes d&apos;amélioration</PanelTitle>
               <ul className="flex flex-col gap-2">
                 {coach.ameliorations.map((c, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]">• {c}</li>
+                  <li key={i} className="flex items-start gap-2 text-sm text-[var(--kz-text)]"><ChevronRight size={14} className="mt-0.5 shrink-0 text-[var(--qx-gold)]" aria-hidden />{c}</li>
                 ))}
               </ul>
             </div>
@@ -109,7 +102,7 @@ export default function KazaCoachPage() {
       )}
 
       {raw && !coach && !generating && (
-        <div className="kz-card p-5 bg-[var(--kz-paper)] text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap">{raw}</div>
+        <div className="qx-panel p-5 text-sm text-[var(--kz-text)] leading-relaxed whitespace-pre-wrap">{raw}</div>
       )}
     </div>
   )

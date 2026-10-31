@@ -48,7 +48,7 @@ function JoinContent() {
 
   if (error && !invite) {
     return (
-      <div className="max-w-[480px] mx-auto text-center py-16">
+      <div className="qx-panel max-w-[480px] mx-auto text-center py-12 px-6">
         <AlertCircle size={44} className="mx-auto mb-4" style={{ color: KZ.orange }} />
         <h1 className="text-xl font-bold text-[var(--kz-ink)] mb-2">Invitation indisponible</h1>
         <p className="text-sm text-[var(--kz-mute)] mb-6">{error}</p>
@@ -59,15 +59,15 @@ function JoinContent() {
 
   return (
     <div className="max-w-[480px] mx-auto py-12">
-      <div className="kz-card p-7 bg-[var(--kz-paper)] text-center">
-        <div className="w-16 h-16 rounded-2xl border border-[var(--kz-edge)] flex items-center justify-center mx-auto mb-5"
+      <div className="qx-panel p-7 text-center qx-rise" style={{ boxShadow: '0 0 50px -16px var(--qx-gold)' }}>
+        <div className="w-16 h-16 rounded-2xl border border-[#FACC15]/50 flex items-center justify-center mx-auto mb-5 overflow-hidden shadow-[0_0_26px_-8px_rgba(250,204,21,0.9)]"
           style={{ background: KZ.violetSoft }}>
           {invite?.company?.logo_url
             ? <img src={invite.company.logo_url} alt="" className="w-full h-full object-cover rounded-2xl" />
             : <Building2 size={26} style={{ color: KZ.violet }} />}
         </div>
-        <p className="kz-eyebrow mb-2" style={{ color: KZ.violet }}>Invitation équipe</p>
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)] mb-2">
+        <p className="kz-eyebrow mb-2 text-[var(--qx-gold)]">Invitation équipe · Un sceau vous attend</p>
+        <h1 className="text-2xl font-bold text-white mb-2">
           Rejoindre {invite?.company?.name ?? 'l\'entreprise'}
         </h1>
         <p className="text-sm text-[var(--kz-mute)] mb-4">
@@ -79,7 +79,7 @@ function JoinContent() {
           <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm mb-4">{error}</div>
         )}
 
-        <Button kind="violet" size="lg" full loading={accepting} onClick={accept} iconRight={<ArrowRight size={15} />}>
+        <Button kind="dark" size="lg" full loading={accepting} onClick={accept} iconRight={<ArrowRight size={15} />}>
           Accepter l&apos;invitation
         </Button>
         <button onClick={() => router.push('/recruteur/tableau-de-bord')}

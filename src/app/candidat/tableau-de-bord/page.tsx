@@ -1,15 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, Eye, Briefcase, Sparkles, Star, Flame, Gamepad2 } from 'lucide-react'
-import { StatCard } from '@/components/ui/StatCard'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
-import { Progress } from '@/components/ui/Progress'
+import { ArrowRight, Eye, Briefcase, Sparkles, Star, Flame, Gamepad2, Compass, Castle, ScrollText, Swords, Heart } from 'lucide-react'
 import { Avatar } from '@/components/ui/Avatar'
 import { JobCard } from '@/components/cards/JobCard'
 import { ApplicationCard } from '@/components/cards/ApplicationCard'
-import { EmptyState } from '@/components/feedback/EmptyState'
 import { useAuth } from '@/features/auth/useAuth'
 import { useApplications } from '@/features/applications/useApplications'
 import { useState, useEffect } from 'react'
@@ -17,20 +12,21 @@ import type { Job } from '@/lib/types'
 import { useFavorites } from '@/features/favorites/useFavorites'
 import { useGamification } from '@/features/gamification/useGamification'
 import { GameDashboard } from '@/components/gamification/GameDashboard'
-import { KZ } from '@/lib/constants'
-import { Soleil } from '@/components/illustrations/Tropical'
+import { JourneyBanner } from '@/components/quest/candidat/JourneyBanner'
+import { ghostLink, PanelTitle, QuestEmpty, QuestPageHeader, SPELL_LINK } from '@/components/quest/candidat/QuestKit'
 
 function QuizBanner() {
   return (
-    <Link href="/candidat/quiz" className="block mb-5">
-      <div className="kz-card p-4 flex items-center gap-4 transition-all hover:translate-x-[-1px] hover:translate-y-[-1px]"
-        style={{ background: KZ.violetSoft, boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
-        <div className="text-3xl shrink-0">🎮</div>
+    <Link href="/candidat/quiz" className="group block mb-5 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#22D3EE]/40 rounded-[18px]">
+      <div className="qxc-card p-4 flex items-center gap-4" style={{ ['--r' as string]: 'var(--qx-cyan)' }}>
+        <span className="qxc-crest w-12 h-12 text-[var(--qx-cyan)]" style={{ ['--r' as string]: 'var(--qx-cyan)' }} aria-hidden>
+          <span className="qxc-crest-frame" /><span><Compass size={18} /></span>
+        </span>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-extrabold text-[var(--kz-ink)]">Découvre ton profil en 2 min</div>
-          <div className="text-xs text-[var(--kz-mute)]">Un mini-quiz ludique — les recruteurs verront ton style de travail.</div>
+          <div className="text-sm font-bold text-white font-[family-name:var(--font-epic)] tracking-wide">Découvre ta classe de héros en 2 min</div>
+          <div className="text-xs text-[var(--kz-mute)]">Un mini-quiz — les recruteurs verront ton style de travail.</div>
         </div>
-        <ArrowRight size={18} className="shrink-0" style={{ color: KZ.violet }} />
+        <ArrowRight size={18} className="shrink-0 text-[var(--qx-cyan)] transition-transform group-hover:translate-x-1" aria-hidden />
       </div>
     </Link>
   )
@@ -61,9 +57,14 @@ export default function CandidateDashboard() {
   const pendingApps   = applications.filter(a => a.status === 'pending').length
   const interviewApps = applications.filter(a => a.status === 'interview').length
 
+  const journey = (
+    <JourneyBanner profile={profile} applications={applications} favoritesCount={favorites.length} skillsCount={gami.skillsCount} />
+  )
+
   if (gami.enabled && profile) {
     return (
       <div className="max-w-[1100px] mx-auto">
+        {journey}
         {!profile.quiz_result && <QuizBanner />}
         <GameDashboard
           profile={profile}
@@ -78,81 +79,81 @@ export default function CandidateDashboard() {
     )
   }
 
+  const xp = profile?.xp ?? 0
+  const kpis = [
+    { label: 'Candidatures', value: applications.length, delta: pendingApps > 0 ? `${pendingApps} en attente` : undefined, icon: Briefcase, color: '#C084FC' },
+    { label: 'Entretiens',   value: interviewApps, delta: interviewApps > 0 ? 'En cours' : undefined, icon: Swords, color: '#E879F9' },
+    { label: 'Favoris',      value: favorites.length, icon: Star, color: '#22D3EE' },
+    { label: 'Profil',       value: `${profileScore}%`, delta: profileScore < 100 ? 'A completer' : 'Complet', icon: Eye, color: '#FACC15' },
+  ]
+
   return (
     <div className="max-w-[1100px] mx-auto">
+      <QuestPageHeader
+        eyebrow={`Bonzour ${profile?.full_name?.split(' ')[0] ?? 'toi'} · ${today}`}
+        title={recommendedJobs.length > 0 ? `${recommendedJobs.length} prime${recommendedJobs.length > 1 ? 's' : ''}` : 'Bienvenue au'}
+        accent={recommendedJobs.length > 0 ? 'pour ton héros.' : 'QG du héros'}
+        icon={<Castle size={20} />}
+      >
+        <button
+          type="button"
+          onClick={() => gami.toggle()}
+          className="inline-flex items-center gap-2 h-10 px-3.5 rounded-xl border border-[#E879F9]/50 text-xs font-bold uppercase tracking-[0.08em] text-[#F5D0FE] bg-[rgba(232,121,249,0.1)] hover:bg-[rgba(232,121,249,0.2)] hover:shadow-[0_0_20px_-6px_rgba(232,121,249,0.9)] transition"
+          title="Activer le mode Quête"
+        >
+          <Gamepad2 size={14} aria-hidden /> Mode Quête
+        </button>
+        <Link href="/candidat/offres" className={SPELL_LINK}>Voir les offres <ArrowRight size={15} aria-hidden /></Link>
+      </QuestPageHeader>
+
+      {journey}
       {!profile?.quiz_result && <QuizBanner />}
-      {/* Greeting */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-        <div>
-          <p className="kz-eyebrow mb-1.5" style={{ color: KZ.orange }}>
-            Bonzour {profile?.full_name?.split(' ')[0] ?? 'toi'} · <span className="capitalize">{today}</span>
-          </p>
-          <h1 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)]">
-            {recommendedJobs.length > 0
-              ? <>{recommendedJobs.length} offre{recommendedJobs.length > 1 ? 's' : ''} <span style={{ color: KZ.orange }}>matchent</span> ton profil.</>
-              : <>Bienvenue sur <span style={{ color: KZ.orange }}>Kazajob</span> !</>
-            }
-          </h1>
-        </div>
-        <div className="flex gap-2 items-center shrink-0">
-          <button
-            onClick={() => gami.toggle()}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl border border-[var(--kz-edge)] text-xs font-bold transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
-            style={{ background: KZ.violetSoft, color: KZ.violet }}
-            title="Activer le mode Quête"
-          >
-            <Gamepad2 size={14} /> Mode Quête
-          </button>
-          <Link href="/candidat/offres" className="shrink-0">
-            <Button kind="primary" size="md" iconRight={<ArrowRight size={15} />}>Voir les offres</Button>
-          </Link>
-        </div>
+
+      {/* Compteurs — 2 colonnes sur mobile, 4 sur desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5 qxc-stagger">
+        {kpis.map((k) => (
+          <div key={k.label} className="qxc-card p-4" style={{ ['--r' as string]: k.color }}>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--kz-mute)]">{k.label}</span>
+              <k.icon size={15} style={{ color: k.color }} aria-hidden />
+            </div>
+            <div className="text-[28px] font-bold text-white leading-none font-[family-name:var(--font-epic)] tabular-nums">{k.value}</div>
+            {k.delta && <div className="text-[11px] mt-1.5 font-semibold" style={{ color: k.color }}>{k.delta}</div>}
+          </div>
+        ))}
       </div>
 
-      {/* KPI cards — 2 cols sur mobile, 4 sur desktop */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-5">
-        <StatCard label="Candidatures" value={applications.length} delta={pendingApps > 0 ? `${pendingApps} en attente` : undefined} color={KZ.orangeSoft} icon={<Briefcase size={15} />} />
-        <StatCard label="Entretiens"   value={interviewApps} delta={interviewApps > 0 ? 'En cours' : undefined}    color={KZ.greenSoft}  icon={<Sparkles size={15} />} />
-        <StatCard label="Favoris"      value={favorites.length}                                                      color={KZ.violetSoft} icon={<Star size={15} />} />
-        <StatCard label="Profil"       value={`${profileScore}%`} delta={profileScore < 100 ? 'A completer' : 'Complet'} color={KZ.yellowSoft} icon={<Eye size={15} />} />
-      </div>
-
-      {/* Layout 2 colonnes sur lg, 1 colonne sur mobile */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1.7fr_1fr] gap-5">
-        {/* Colonne principale */}
-        <div className="flex flex-col gap-5">
-          {/* Profil */}
-          <div className="kz-card p-4 md:p-5 bg-[var(--kz-paper)] flex gap-4 items-center">
-            <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={64} color={KZ.orangeSoft} badge />
+      {/* 2 colonnes sur lg, 1 colonne sur mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.7fr)_minmax(0,1fr)] gap-5">
+        <div className="flex flex-col gap-5 min-w-0">
+          {/* Héros */}
+          <div className="qx-panel p-4 md:p-5 flex gap-4 items-center">
+            <Avatar name={profile?.full_name ?? 'KZ'} src={profile?.avatar_url} avatarConfig={profile?.avatar_config} size={64} color="var(--kz-violet-soft)" badge />
             <div className="flex-1 min-w-0">
-              <div className="text-base font-bold text-[var(--kz-ink)] truncate">{profile?.full_name}</div>
+              <div className="text-base font-bold text-white truncate font-[family-name:var(--font-epic)]">{profile?.full_name}</div>
               <div className="text-xs text-[var(--kz-mute)] mb-2 truncate">
                 {profile?.bio ? profile.bio.slice(0, 50) + '…' : 'Complete ton profil'}
                 {profile?.location ? ` · ${profile.location}` : ''}
               </div>
-              <Progress value={profileScore} color={KZ.orange} />
+              <div className="qx-xp" role="progressbar" aria-valuenow={profileScore} aria-valuemin={0} aria-valuemax={100} aria-label="Profil complété"><span style={{ width: `${Math.max(profileScore, 3)}%` }} /></div>
             </div>
-            <Link href="/candidat/profil" className="shrink-0">
-              <Button kind="outline" size="sm">Editer</Button>
-            </Link>
+            <Link href="/candidat/profil" className={`${ghostLink('sm')} shrink-0`}>Editer</Link>
           </div>
 
-          {/* Offres recommandées */}
+          {/* Primes recommandées */}
           <div>
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-base font-bold flex items-center gap-2 text-[var(--kz-ink)]">
-                <Sparkles size={18} color={KZ.violet} />Offres pour toi
-              </h3>
-              <Link href="/candidat/offres" className="text-sm font-bold" style={{ color: KZ.orange }}>Tout voir →</Link>
-            </div>
+            <PanelTitle icon={<Sparkles size={13} />} color="var(--qx-magenta)"
+              extra={<Link href="/candidat/offres" className="text-sm font-bold text-[var(--qx-gold)] hover:text-white">Tout voir →</Link>}>
+              Primes pour toi
+            </PanelTitle>
             {jobsLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="kz-card h-32 bg-[var(--kz-cream2)] animate-pulse" />)}
+                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="qxc-card h-36 animate-pulse" />)}
               </div>
             ) : recommendedJobs.length === 0 ? (
-              <EmptyState title="Aucune offre disponible" icon={<Briefcase size={24} />} />
+              <QuestEmpty title="Aucune offre disponible" icon={<Briefcase size={24} />} />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 qxc-stagger">
                 {recommendedJobs.slice(0, 4).map((job) => (
                   <JobCard key={job.id} job={job} compact />
                 ))}
@@ -161,21 +162,24 @@ export default function CandidateDashboard() {
           </div>
 
           {/* Candidatures */}
-          <div className="kz-card p-4 md:p-5 bg-[var(--kz-paper)]">
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="text-base font-bold text-[var(--kz-ink)]">Mes candidatures</h3>
-              {applications.length > 0 && <Badge color="orange" size="sm">{applications.length}</Badge>}
-            </div>
+          <div className="qx-panel p-4 md:p-5">
+            <PanelTitle icon={<ScrollText size={13} />}
+              extra={applications.length > 0 ? <span className="qxc-count">{applications.length}</span> : null}>
+              Quêtes en cours
+            </PanelTitle>
             {appsLoading ? (
               <div className="flex flex-col gap-2">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-12 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}</div>
             ) : applications.length === 0 ? (
-              <EmptyState title="Aucune candidature" icon={<Briefcase size={20} />} action={<Link href="/candidat/offres"><Button kind="soft" size="sm">Voir les offres</Button></Link>} />
+              <div className="text-center py-6">
+                <p className="text-sm text-[var(--kz-mute)] mb-3">Aucune candidature</p>
+                <Link href="/candidat/offres" className={ghostLink('sm')}>Voir les offres</Link>
+              </div>
             ) : (
               <>
                 {applications.slice(0, 4).map((app) => <ApplicationCard key={app.id} application={app} showActions />)}
                 {applications.length > 4 && (
-                  <div className="mt-3 pt-3 border-t border-[var(--kz-line)]">
-                    <Link href="/candidat/candidatures"><Button kind="soft" size="sm" full>Voir tout</Button></Link>
+                  <div className="mt-3 pt-3 border-t border-[#C084FC]/20">
+                    <Link href="/candidat/candidatures" className={`${ghostLink('sm')} w-full`}>Voir tout</Link>
                   </div>
                 )}
               </>
@@ -183,41 +187,44 @@ export default function CandidateDashboard() {
           </div>
         </div>
 
-        {/* Colonne droite — masquée partiellement sur mobile */}
-        <div className="flex flex-col gap-4">
-          {/* Streak */}
-          <div className="p-4 rounded-xl border border-[var(--kz-edge)] relative overflow-hidden" style={{ background: KZ.orange, boxShadow: '4px 4px 0 var(--kz-shadow)' }}>
-            <div className="absolute -top-3 -right-3"><Soleil size={70} /></div>
-            <Flame size={28} color={KZ.ink} />
-            <div className="mt-1 text-4xl font-extrabold leading-none text-[var(--kz-ink)]">
-              {profile?.streak ?? 0}<span className="text-base opacity-70">j</span>
+        {/* Colonne droite */}
+        <div className="flex flex-col gap-4 min-w-0">
+          {/* Série */}
+          <div className="qxc-card p-5 overflow-hidden" style={{ ['--r' as string]: '#FB923C' }}>
+            <div aria-hidden className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-[radial-gradient(closest-side,rgba(251,146,60,0.35),transparent)]" />
+            <Flame size={28} className="relative text-[#FB923C] drop-shadow-[0_0_10px_rgba(251,146,60,0.8)]" aria-hidden />
+            <div className="relative mt-1 text-4xl font-bold leading-none text-white font-[family-name:var(--font-epic)]">
+              {profile?.streak ?? 0}<span className="text-base text-[var(--kz-mute)]">j</span>
             </div>
-            <div className="text-sm font-semibold mt-1 text-[var(--kz-ink)]">Streak actif</div>
-            <div className="text-xs mt-1 opacity-85 text-[var(--kz-ink)]">
+            <div className="relative text-sm font-semibold mt-1 text-white">Série active</div>
+            <div className="relative text-xs mt-1 text-[var(--kz-mute)]">
               {(profile?.streak ?? 0) > 0 ? `${profile!.streak} jours — continue !` : 'Connecte-toi chaque jour.'}
             </div>
           </div>
 
           {/* XP */}
-          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+          <div className="qx-panel p-4">
             <div className="kz-eyebrow text-[var(--kz-mute)] mb-1.5">Experience totale</div>
-            <div className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-2">
-              {(profile?.xp ?? 0).toLocaleString('fr-FR')} xp
+            <div className="text-2xl font-bold tracking-tight mb-2 qx-text-legend font-[family-name:var(--font-epic)]">
+              {xp.toLocaleString('fr-FR')} xp
             </div>
-            <Progress value={((profile?.xp ?? 0) % 1000) / 10} color={KZ.orange} label={`Niveau ${Math.floor((profile?.xp ?? 0) / 1000) + 1}`} />
+            <div className="flex items-center justify-between text-[11px] text-[var(--kz-mute)] mb-1.5">
+              <span>Niveau {Math.floor(xp / 1000) + 1}</span><span className="tabular-nums">{Math.round((xp % 1000) / 10)} %</span>
+            </div>
+            <div className="qx-xp"><span style={{ width: `${Math.max((xp % 1000) / 10, 3)}%` }} /></div>
           </div>
 
-          {/* Stats */}
-          <div className="kz-card p-4 bg-[var(--kz-paper)]">
-            <h4 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Ton activite</h4>
+          {/* Activité */}
+          <div className="qx-panel p-4">
+            <h4 className="text-sm font-bold text-white mb-3 font-[family-name:var(--font-epic)] tracking-wide">Ton activité</h4>
             {[
-              { label: 'Candidatures', value: applications.length, color: KZ.orange },
-              { label: 'Entretiens',   value: interviewApps,       color: KZ.green },
-              { label: 'Favoris',      value: favorites.length,    color: KZ.violet },
+              { label: 'Candidatures', value: applications.length, color: '#C084FC', icon: Briefcase },
+              { label: 'Entretiens',   value: interviewApps,       color: '#E879F9', icon: Swords },
+              { label: 'Favoris',      value: favorites.length,    color: '#22D3EE', icon: Heart },
             ].map((s) => (
-              <div key={s.label} className="flex justify-between items-center py-2 border-b border-[var(--kz-line)] last:border-0">
-                <span className="text-xs text-[var(--kz-mute)]">{s.label}</span>
-                <span className="text-sm font-bold" style={{ color: s.color }}>{s.value}</span>
+              <div key={s.label} className="flex justify-between items-center py-2 border-b border-[#C084FC]/15 last:border-0">
+                <span className="flex items-center gap-2 text-xs text-[var(--kz-mute)]"><s.icon size={12} style={{ color: s.color }} aria-hidden />{s.label}</span>
+                <span className="text-sm font-bold tabular-nums" style={{ color: s.color }}>{s.value}</span>
               </div>
             ))}
           </div>

@@ -127,7 +127,7 @@ export default function AdminSkillsPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Référentiel compétences</h1>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Référentiel compétences</h1>
           <p className="text-sm text-[var(--kz-mute)] mt-1">
             {skills.length} compétences · catalogue global
             {pendingCount > 0 && <span className="ml-2 font-semibold" style={{ color: KZ.orange }}>· {pendingCount} en attente</span>}
@@ -156,7 +156,7 @@ export default function AdminSkillsPage() {
         {/* Liste */}
         <div className="flex flex-col gap-4">
           {/* Ajouter */}
-          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+          <div className="qx-panel p-4">
             <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2">
               <Plus size={15} color={KZ.violet} /> Ajouter une compétence
             </h2>
@@ -187,7 +187,7 @@ export default function AdminSkillsPage() {
           </div>
 
           {/* Onglets statut + recherche + liste */}
-          <div className="kz-card bg-[var(--kz-paper)] overflow-hidden">
+          <div className="qx-panel overflow-hidden">
             <div className="p-4 border-b border-[var(--kz-line)] flex flex-col gap-3">
               <div className="flex gap-1.5 flex-wrap">
                 {STATUS_TABS.map(tab => (
@@ -210,7 +210,7 @@ export default function AdminSkillsPage() {
             </div>
             {loading ? (
               <div className="p-4 flex flex-col gap-2">
-                {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-10 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}
+                {[1, 2, 3, 4, 5].map(i => <div key={i} className="h-10 qxr-skeleton" />)}
               </div>
             ) : (
               <div className="max-h-[500px] overflow-auto">
@@ -287,7 +287,7 @@ export default function AdminSkillsPage() {
 
         {/* Stats sidebar */}
         <div className="flex flex-col gap-4">
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+          <div className="qx-panel p-5">
             <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-4 flex items-center gap-2">
               <BookOpen size={15} /> Top catégories
             </h3>
@@ -313,7 +313,7 @@ export default function AdminSkillsPage() {
             )}
           </div>
 
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+          <div className="qx-panel p-5">
             <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Top 5 compétences</h3>
             <div className="flex flex-col gap-2">
               {skills.slice(0, 5).map((s, i) => (

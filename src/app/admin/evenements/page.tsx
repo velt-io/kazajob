@@ -63,18 +63,18 @@ export default function AdminEventsPage() {
   return (
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">KazaEvents</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">KazaEvents</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">Tous les événements publiés par les recruteurs</p>
       </div>
 
       {loading ? (
         <div className="flex flex-col gap-3">
-          {[1, 2, 3].map(i => <div key={i} className="h-20 rounded-xl bg-[var(--kz-cream2)] animate-pulse" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-20 qxr-skeleton" />)}
         </div>
       ) : events.length === 0 ? (
         <EmptyState title="Aucun événement" icon={<Star size={24} />} />
       ) : (
-        <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
+        <div className="qxr-table-wrap">
           <table className="w-full text-sm min-w-[640px]">
             <thead>
               <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>

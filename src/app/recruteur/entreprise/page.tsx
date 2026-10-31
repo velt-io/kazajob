@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Building2, Users, ArrowRight, Edit3, Globe, Star, Landmark, Target, Briefcase, Search, Rss, CreditCard, Check, RefreshCw, XCircle, AlertTriangle, CheckCircle2, Info, ShieldAlert } from 'lucide-react'
+import { Building2, Crown, Users, ArrowRight, Edit3, Globe, Star, Landmark, Target, Briefcase, Search, Rss, CreditCard, Check, RefreshCw, XCircle, AlertTriangle, CheckCircle2, Info, ShieldAlert } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
 import { useAuth } from '@/features/auth/useAuth'
 import { KZ, SUBSCRIPTION_PLANS, PARTNERS, MULTIDIFFUSION_ENABLED } from '@/lib/constants'
 import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
+import { QuestHeader, PanelTitle, toneStyle } from '@/components/quest/recruteur/QuestChrome'
 
 const PARTNER_ICONS: Record<string, React.ReactNode> = {
   Landmark:  <Landmark  size={12} />,
@@ -28,7 +29,7 @@ const SEVERITY_ICON: Record<string, React.ReactNode> = {
 const SEVERITY_COLORS: Record<string, { bg: string; text: string }> = {
   success: { bg: KZ.greenSoft,  text: KZ.green  },
   info:    { bg: KZ.blueSoft,   text: KZ.blue   },
-  warning: { bg: KZ.yellowSoft, text: '#B45309' },
+  warning: { bg: KZ.yellowSoft, text: KZ.yellow },
   danger:  { bg: KZ.orangeSoft, text: KZ.orange },
 }
 
@@ -78,8 +79,8 @@ export default function CompanyPage() {
 
   if (!profile?.company_id) {
     return (
-      <div className="max-w-[600px] mx-auto text-center py-20">
-        <Building2 size={48} className="mx-auto mb-4 opacity-30" />
+      <div className="qx-panel max-w-[600px] mx-auto text-center py-16 px-6">
+        <Building2 size={48} className="mx-auto mb-4 text-[var(--qx-gold)] opacity-70" />
         <h2 className="text-xl font-bold text-[var(--kz-ink)] mb-2">Aucune entreprise configurée</h2>
         <p className="text-sm text-[var(--kz-mute)] mb-5">Configurez votre espace entreprise pour commencer à recruter.</p>
         <Link href="/recruteur/creation-entreprise">
@@ -89,7 +90,7 @@ export default function CompanyPage() {
     )
   }
 
-  if (loading) return <div className="h-64 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />
+  if (loading) return <div className="max-w-[800px] mx-auto h-64 qxr-skeleton" />
 
   const isOwner = company?.owner_id === profile?.id
 
@@ -139,15 +140,17 @@ export default function CompanyPage() {
 
   return (
     <div className="max-w-[800px] mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Mon entreprise</p>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">{company?.name}</h1>
-        </div>
-        <Link href="/recruteur/entreprise/equipe">
-          <Button kind="outline" size="md" icon={<Users size={14} />}>Gérer l&apos;équipe</Button>
-        </Link>
-      </div>
+      <QuestHeader
+        eyebrow="Mon entreprise · Le blason de la guilde"
+        icon={<Building2 size={18} />}
+        tone="var(--qx-gold)"
+        title={company?.name ?? 'Mon entreprise'}
+        actions={
+          <Link href="/recruteur/entreprise/equipe">
+            <Button kind="outline" size="md" icon={<Users size={14} />}>Gérer l&apos;équipe</Button>
+          </Link>
+        }
+      />
 
       {/* Retour Stripe */}
       {billingBanner === 'success' && (
@@ -171,8 +174,8 @@ export default function CompanyPage() {
         const maxLabel = billingSummary.maxJobs === -1 ? '∞' : String(billingSummary.maxJobs)
         const pct = billingSummary.maxJobs === -1 ? 0 : Math.min(100, Math.round((billingSummary.activeJobs / billingSummary.maxJobs) * 100))
         return (
-          <div className="kz-card p-5 mb-5 bg-[var(--kz-paper)]">
-            <p className="text-xs font-extrabold uppercase tracking-wide text-[var(--kz-mute)] mb-3">Mon abonnement</p>
+          <div className="qx-panel p-5 mb-5">
+            <PanelTitle icon={<Crown size={16} />} title="Mon abonnement" />
 
             {/* Carte statut */}
             <div className="rounded-xl border p-3 flex items-start gap-3 mb-4"
@@ -205,9 +208,8 @@ export default function CompanyPage() {
                 </span>
               </div>
               {billingSummary.maxJobs !== -1 && (
-                <div className="h-2 rounded-full overflow-hidden" style={{ background: KZ.beige }}>
-                  <div className="h-full rounded-full transition-all"
-                    style={{ width: `${pct}%`, background: billingSummary.isOverLimit ? KZ.orange : KZ.green }} />
+                <div className="qxr-xp-mini h-2" style={toneStyle(billingSummary.isOverLimit ? 'var(--kz-orange)' : 'var(--kz-green)')}>
+                  <span className="transition-all" style={{ width: `${pct}%` }} />
                 </div>
               )}
             </div>
@@ -278,15 +280,15 @@ export default function CompanyPage() {
             ? { v: plan?.partners.length ?? 0, l: 'Partenaires', color: KZ.blueSoft }
             : { v: billingSummary?.maxJobs === -1 ? '∞' : (billingSummary?.maxJobs ?? 0), l: 'Offres max', color: KZ.blueSoft },
         ].map(s => (
-          <div key={s.l} className="kz-card p-4 text-center bg-[var(--kz-paper)]" style={{ background: s.color }}>
-            <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{s.v}</div>
-            <div className="text-xs text-[var(--kz-mute)] font-semibold mt-0.5">{s.l}</div>
+          <div key={s.l} className="qx-panel p-3 sm:p-4 text-center" style={{ backgroundImage: `linear-gradient(${s.color}, ${s.color}), var(--qx-panel)` }}>
+            <div className="text-2xl font-extrabold qx-text-legend tabular-nums">{s.v}</div>
+            <div className="text-[10.5px] sm:text-xs uppercase tracking-[0.08em] text-[var(--kz-mute)] font-semibold mt-1">{s.l}</div>
           </div>
         ))}
       </div>
 
       {/* Infos entreprise */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+      <div className="qx-panel p-5 mb-5">
         <div className="flex items-start gap-4 mb-4">
           <div className="w-16 h-16 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-lg font-extrabold shrink-0"
             style={{ background: KZ.orangeSoft }}>
@@ -319,7 +321,7 @@ export default function CompanyPage() {
             <div>
               <span className="text-xs text-[var(--kz-mute)]">Site web</span>
               <a href={company.website} target="_blank" rel="noreferrer"
-                className="font-semibold flex items-center gap-1" style={{ color: KZ.violet }}>
+                className="font-semibold flex items-center gap-1 break-all text-[var(--qx-magenta)] hover:underline">
                 <Globe size={12} />{company.website.replace('https://', '')}
               </a>
             </div>
@@ -335,7 +337,7 @@ export default function CompanyPage() {
 
       {/* Canaux de diffusion inclus au forfait (multidiffusion — masqué tant que OFF) */}
       {MULTIDIFFUSION_ENABLED && plan && plan.partners.length > 0 && (
-        <div className="kz-card p-5 bg-[var(--kz-paper)]">
+        <div className="qx-panel p-5">
           <div className="flex items-center gap-2 mb-3">
             <h3 className="text-sm font-bold text-[var(--kz-ink)]">Canaux de diffusion inclus</h3>
             <Badge color="violet" size="sm">Bientôt</Badge>
@@ -369,8 +371,8 @@ export default function CompanyPage() {
             const isCurrent = p.id === sub?.plan_id
             return (
               <div key={p.id}
-                className="flex items-center gap-3 p-3 rounded-xl border-2"
-                style={{ borderColor: isCurrent ? KZ.violet : KZ.line, background: isCurrent ? KZ.violetSoft : KZ.paper }}>
+                className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-3 rounded-xl border"
+                style={{ borderColor: isCurrent ? 'var(--qx-magenta)' : KZ.line, background: isCurrent ? KZ.violetSoft : 'rgba(12,5,24,0.5)', boxShadow: isCurrent ? '0 0 20px -8px var(--qx-magenta)' : 'none' }}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-[var(--kz-ink)]">{p.name}</span>

@@ -69,7 +69,7 @@ export default function AdminSubscriptionsPage() {
   return (
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Abonnements</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Abonnements</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">Gestion des forfaits entreprises</p>
       </div>
 
@@ -81,7 +81,7 @@ export default function AdminSubscriptionsPage() {
           { label: 'Abonnés actifs', value: actives, icon: <Users size={16} />, color: KZ.violetSoft },
           { label: 'Résiliés', value: cancelled, icon: <Users size={16} />, color: KZ.orangeSoft },
         ].map(k => (
-          <div key={k.label} className="kz-card p-4 bg-[var(--kz-paper)] text-center" style={{ background: k.color }}>
+          <div key={k.label} className="qx-panel p-4 text-center" style={{ background: k.color }}>
             <div className="flex justify-center mb-1">{k.icon}</div>
             <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{k.value}</div>
             <div className="text-xs text-[var(--kz-mute)] font-semibold mt-0.5">{k.label}</div>
@@ -90,7 +90,7 @@ export default function AdminSubscriptionsPage() {
       </div>
 
       {/* Table */}
-      <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
+      <div className="qxr-table-wrap">
         <table className="w-full text-sm min-w-[700px]">
           <thead>
             <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>

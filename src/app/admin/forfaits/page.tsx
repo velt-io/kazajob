@@ -6,7 +6,7 @@
  * Toute modification est auditée côté serveur.
  */
 import { useEffect, useState } from 'react'
-import { Copy, Archive, ChevronDown, ChevronUp, Edit2, Check, X } from 'lucide-react'
+import { Copy, Archive, ChevronDown, ChevronUp, Edit2, Check, X, AlertTriangle } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { KZ } from '@/lib/constants'
@@ -126,20 +126,20 @@ export default function AdminPlansPage() {
   return (
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Monétisation · Forfaits</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Monétisation · Forfaits</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">
           Activez, masquez, planifiez ou modifiez les forfaits. Les modifications sont auditées.
         </p>
       </div>
 
       {loading ? (
-        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Chargement…</div>
+        <div className="qx-panel p-8 text-center text-[var(--kz-mute)]">Chargement…</div>
       ) : !data ? (
-        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Accès refusé ou erreur.</div>
+        <div className="qx-panel p-8 text-center text-[var(--kz-mute)]">Accès refusé ou erreur.</div>
       ) : (
         <div className="space-y-3">
           {data.plans.map((plan) => (
-            <div key={plan.id} className="kz-card bg-[var(--kz-paper)] overflow-hidden">
+            <div key={plan.id} className="qx-panel overflow-hidden">
               {/* En-tête */}
               <div className="p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
@@ -224,10 +224,10 @@ export default function AdminPlansPage() {
                           className="mt-1 w-full px-2 py-1.5 rounded-lg border border-[var(--kz-line)] bg-[var(--kz-paper)] text-[var(--kz-ink)] font-mono text-xs" />
                       </label>
                     </div>
-                    <p className="text-[10px] text-[var(--kz-mute)] mt-1">
+                    <p className="text-[10px] text-[var(--kz-mute)] mt-1 flex items-center gap-1">
                       {plan.stripe_product_id && plan.stripe_price_id
-                        ? '✅ Stripe configuré'
-                        : '⚠️ Stripe non configuré — le checkout ne sera pas disponible pour ce forfait.'}
+                        ? <><Check size={11} className="text-[var(--kz-green)] shrink-0" aria-hidden />Stripe configuré</>
+                        : <><AlertTriangle size={11} className="text-[var(--kz-orange)] shrink-0" aria-hidden />Stripe non configuré — le checkout ne sera pas disponible pour ce forfait.</>}
                     </p>
                   </div>
 

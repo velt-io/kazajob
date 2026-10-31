@@ -66,7 +66,7 @@ export default function AdventurePage() {
             L&apos;aventure de <span className="qx-text-arcane">{profile?.full_name?.split(' ')[0] ?? 'héros'}</span>
           </h1>
           <p className="text-[15px] text-[var(--kz-mute)] mt-2">
-            Chapitre {Math.min(summary.done + 1, summary.total)} sur {summary.total} · du lagon au sommet du Piton.
+            {summary.done} chapitres sur {summary.total} accomplis · du lagon au sommet du Piton.
           </p>
         </div>
         <div className="qx-panel px-5 py-4 min-w-[300px]">

@@ -1,15 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Bell, Mail, Shield, CheckCheck, Gamepad2 } from 'lucide-react'
+import { Bell, Mail, Shield, CheckCheck, Gamepad2, Settings, Crown } from 'lucide-react'
 import { AccountActions } from '@/components/account/AccountActions'
 import { useGamification } from '@/features/gamification/useGamification'
 import { useApplications } from '@/features/applications/useApplications'
 import { useFavorites } from '@/features/favorites/useFavorites'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
 import { useAuth } from '@/features/auth/useAuth'
-import { KZ } from '@/lib/constants'
+import { QuestPageHeader } from '@/components/quest/candidat/QuestKit'
 
 async function patchProfile(patch: Record<string, unknown>) {
   await fetch('/api/profile', {
@@ -23,19 +21,25 @@ interface ToggleProps {
   checked: boolean
   onChange: (v: boolean) => void
   disabled?: boolean
+  label: string
 }
 
-function Toggle({ checked, onChange, disabled }: ToggleProps) {
+/** Interrupteur « rune » : allumé = dégradé néon. */
+function Toggle({ checked, onChange, disabled, label }: ToggleProps) {
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
       onClick={() => !disabled && onChange(!checked)}
       disabled={disabled}
-      className="relative inline-flex h-6 w-11 items-center rounded-full border border-[var(--kz-edge)] transition-colors shrink-0"
-      style={{ background: checked ? KZ.green : KZ.cream2, boxShadow: '2px 2px 0 var(--kz-shadow)' }}
+      className={`relative inline-flex h-[28px] w-[48px] items-center rounded-full border transition-all shrink-0 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E879F9]/40 disabled:opacity-50 ${checked
+        ? 'border-[#F0ABFC]/70 bg-[linear-gradient(120deg,#7C3AED,#E879F9)] shadow-[0_0_16px_-4px_rgba(232,121,249,0.9)]'
+        : 'border-[#C084FC]/40 bg-[rgba(168,85,247,0.2)]'}`}
     >
       <span
-        className="inline-block w-4 h-4 rounded-full bg-[var(--kz-paper)] border border-[var(--kz-edge)] transition-transform"
+        className="inline-block w-[22px] h-[22px] rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.4)] transition-transform"
         style={{ transform: checked ? 'translateX(22px)' : 'translateX(2px)' }}
       />
     </button>
@@ -49,6 +53,19 @@ interface SettingRow {
   key: string
   value: boolean
   badge?: string
+}
+
+function SectionHead({ icon, children, extra, color = 'var(--qx-gold)' }: { icon: React.ReactNode; children: React.ReactNode; extra?: React.ReactNode; color?: string }) {
+  return (
+    <div className="px-5 sm:px-6 py-4 border-b border-[#C084FC]/20 flex items-center gap-2.5">
+      <span aria-hidden className="w-7 h-7 rounded-md rotate-45 grid place-items-center shrink-0 border"
+        style={{ color, borderColor: `color-mix(in srgb, ${color} 55%, transparent)`, background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
+        <span className="-rotate-45 inline-flex">{icon}</span>
+      </span>
+      <h2 className="text-[15px] font-bold text-white font-[family-name:var(--font-epic)] tracking-wide">{children}</h2>
+      {extra && <div className="ml-auto">{extra}</div>}
+    </div>
+  )
 }
 
 export default function CandidateSettingsPage() {
@@ -120,34 +137,33 @@ export default function CandidateSettingsPage() {
   ] as const
 
   return (
-    <div className="max-w-[680px] mx-auto">
-      <div className="mb-7">
-        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)] mb-1">Paramètres</h1>
-        <p className="text-sm text-[var(--kz-mute)]">Contrôle tes notifications et préférences de communication.</p>
-      </div>
+    <div className="max-w-[760px] mx-auto">
+      <QuestPageHeader
+        eyebrow="Réglages du héros"
+        title="Paramètres"
+        icon={<Settings size={20} />}
+        subtitle="Contrôle tes notifications et préférences de communication."
+      />
 
       {/* Notifications */}
-      <div className="kz-card bg-[var(--kz-paper)] mb-5">
-        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-          <Bell size={16} className="text-[var(--kz-mute)]" />
-          <span className="text-sm font-bold text-[var(--kz-ink)]">Notifications &amp; alertes</span>
-        </div>
-
-        <div className="divide-y divide-[#F5F0E8]">
+      <section className="qx-panel mb-5">
+        <SectionHead icon={<Bell size={13} />}>Notifications &amp; alertes</SectionHead>
+        <div className="divide-y divide-[#C084FC]/15">
           {NOTIF_SETTINGS.map((s) => (
-            <div key={s.key} className="flex items-start gap-4 px-6 py-4">
-              <div className="w-9 h-9 rounded-xl border border-[var(--kz-line)] flex items-center justify-center shrink-0 text-[var(--kz-mute)]" style={{ background: KZ.cream2 }}>
+            <div key={s.key} className="flex items-start gap-4 px-5 sm:px-6 py-4">
+              <div className="w-9 h-9 rounded-xl border border-[#C084FC]/25 flex items-center justify-center shrink-0 text-[var(--qx-neon)] bg-[rgba(168,85,247,0.1)]" aria-hidden>
                 {s.icon}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <span className="text-sm font-bold text-[var(--kz-ink)]">{s.title}</span>
-                  {s.badge && <Badge color="cream" size="sm">{s.badge}</Badge>}
-                  {saved === s.key && <CheckCheck size={13} color={KZ.green} />}
+                <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                  <span className="text-sm font-bold text-white">{s.title}</span>
+                  {s.badge && <span className="text-[9px] font-bold uppercase tracking-[0.12em] px-1.5 py-0.5 rounded-md text-[var(--kz-text)] border border-[#C084FC]/25 bg-[rgba(168,85,247,0.08)]">{s.badge}</span>}
+                  {saved === s.key && <CheckCheck size={13} className="text-[#86EFAC]" aria-label="Enregistré" />}
                 </div>
                 <p className="text-xs text-[var(--kz-mute)] leading-relaxed">{s.description}</p>
               </div>
               <Toggle
+                label={s.title}
                 checked={s.value}
                 onChange={(v) => handleToggle(s.key, v)}
                 disabled={!!s.badge || saving === s.key}
@@ -155,32 +171,29 @@ export default function CandidateSettingsPage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* Fréquence des alertes email */}
       {settings.email_alerts_enabled && (
-        <div className="kz-card bg-[var(--kz-paper)] mb-5">
-          <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-            <Mail size={16} className="text-[var(--kz-mute)]" />
-            <span className="text-sm font-bold text-[var(--kz-ink)]">Fréquence des alertes email</span>
-          </div>
-          <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <section className="qx-panel mb-5">
+          <SectionHead icon={<Mail size={13} />} color="var(--qx-cyan)">Fréquence des alertes email</SectionHead>
+          <div className="p-5 sm:p-6 grid grid-cols-1 sm:grid-cols-3 gap-3" role="radiogroup" aria-label="Fréquence des alertes email">
             {FREQ_OPTIONS.map((f) => {
               const active = settings.email_alert_frequency === f.value
               return (
                 <button
                   key={f.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
                   onClick={() => handleFrequency(f.value)}
-                  className="flex flex-col items-start p-4 rounded-xl border-[1.5px] transition-all text-left"
-                  style={active
-                    ? { borderColor: KZ.orange, background: KZ.orangeSoft, boxShadow: '3px 3px 0 var(--kz-shadow)' }
-                    : { borderColor: 'var(--kz-line)', background: KZ.cream }}
+                  className={`flex flex-col items-start p-4 rounded-xl border transition-all text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#E879F9]/40 ${active
+                    ? 'border-[#FACC15]/70 bg-[rgba(250,204,21,0.1)] shadow-[0_0_22px_-8px_rgba(250,204,21,0.9)]'
+                    : 'border-[#C084FC]/25 bg-[rgba(12,5,24,0.5)] hover:border-[#E879F9]/50'}`}
                 >
-                  <div className="flex items-center justify-between w-full mb-1">
-                    <span className="text-sm font-bold text-[var(--kz-ink)]">{f.label}</span>
-                    {active && <div className="w-4 h-4 rounded-full border border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.orange }}>
-                      <div className="w-2 h-2 rounded-full bg-[var(--kz-paper)]" />
-                    </div>}
+                  <div className="flex items-center justify-between w-full mb-1 gap-2">
+                    <span className="text-sm font-bold text-white">{f.label}</span>
+                    <span aria-hidden className={`w-3.5 h-3.5 rotate-45 rounded-[3px] border shrink-0 ${active ? 'bg-[#FACC15] border-[#FEF3C7] shadow-[0_0_8px_rgba(250,204,21,0.9)]' : 'border-[#C084FC]/50'}`} />
                   </div>
                   <span className="text-xs text-[var(--kz-mute)]">{f.desc}</span>
                 </button>
@@ -188,32 +201,28 @@ export default function CandidateSettingsPage() {
             })}
           </div>
           {saved === 'freq' && (
-            <div className="px-6 pb-4">
-              <p className="text-xs font-semibold" style={{ color: KZ.green }}>Préférence sauvegardée</p>
+            <div className="px-6 pb-4" role="status">
+              <p className="text-xs font-semibold text-[#86EFAC]">Préférence sauvegardée</p>
             </div>
           )}
-        </div>
+        </section>
       )}
 
       {/* Expérience — Gamification */}
-      <div className="kz-card bg-[var(--kz-paper)] mb-5">
-        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.violetSoft }}>
-          <Gamepad2 size={16} style={{ color: KZ.violet }} />
-          <span className="text-sm font-bold text-[var(--kz-ink)]">Expérience &amp; Gamification</span>
-          <span className="ml-auto text-[10px] font-bold px-2 py-0.5 rounded-full border border-[var(--kz-edge)]"
-            style={{ background: KZ.violet, color: 'white' }}>BETA</span>
-        </div>
-        <div className="px-6 py-5">
-          {/* Toggle principal */}
+      <section className="qx-panel mb-5">
+        <SectionHead icon={<Gamepad2 size={13} />} color="var(--qx-magenta)"
+          extra={<span className="text-[9px] font-bold uppercase tracking-[0.14em] px-1.5 py-0.5 rounded-md text-[#D8B4FE] border border-[#A855F7]/45 bg-[rgba(168,85,247,0.16)]">Beta</span>}>
+          Expérience &amp; mode quête
+        </SectionHead>
+        <div className="px-5 sm:px-6 py-5">
           <div className="flex items-start gap-4 mb-5">
-            <div className="w-9 h-9 rounded-xl border border-[var(--kz-line)] flex items-center justify-center shrink-0"
-              style={{ background: KZ.violetSoft, color: KZ.violet }}>
+            <div className="w-9 h-9 rounded-xl border border-[#E879F9]/35 flex items-center justify-center shrink-0 text-[var(--qx-magenta)] bg-[rgba(232,121,249,0.1)]" aria-hidden>
               <Gamepad2 size={18} />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-sm font-bold text-[var(--kz-ink)]">Mode Quête actif</span>
-                {gami.enabled && <Badge color="violet" size="sm">ON</Badge>}
+                <span className="text-sm font-bold text-white">Mode Quête actif</span>
+                {gami.enabled && <span className="text-[9px] font-bold uppercase tracking-[0.12em] px-1.5 py-0.5 rounded-md text-[#1A0B2E] bg-[#E879F9]">ON</span>}
               </div>
               <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
                 Transforme ton tableau de bord en jeu de quêtes — niveaux, XP, défis à accomplir.
@@ -221,6 +230,7 @@ export default function CandidateSettingsPage() {
               </p>
             </div>
             <Toggle
+              label="Mode Quête"
               checked={gami.enabled}
               onChange={() => gami.toggle()}
               disabled={saving === 'gami'}
@@ -229,58 +239,45 @@ export default function CandidateSettingsPage() {
 
           {/* Aperçu du niveau quand actif */}
           {gami.enabled && (
-            <div
-              className="rounded-xl border-2 border-[var(--kz-edge)] p-4"
-              style={{ background: 'var(--kz-inverse)', boxShadow: '3px 3px 0 ' + gami.level.color }}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-xl">{gami.level.emoji}</span>
-                  <div>
-                    <div className="text-[10px] opacity-60 font-bold" style={{ color: KZ.onInverse }}>TON NIVEAU</div>
-                    <div className="text-sm font-extrabold" style={{ color: gami.level.color }}>{gami.level.title}</div>
+            <div className="rounded-xl border border-[#FACC15]/35 p-4 bg-[radial-gradient(120%_100%_at_0%_0%,rgba(250,204,21,0.12),transparent_60%),rgba(12,5,24,0.6)] qx-rise">
+              <div className="flex items-center justify-between gap-3 mb-2.5">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span aria-hidden className="w-8 h-8 rounded-md rotate-45 grid place-items-center shrink-0 bg-[linear-gradient(135deg,#FDE68A,#FACC15,#F59E0B)] shadow-[0_0_12px_rgba(250,204,21,0.6)]">
+                    <Crown size={14} className="-rotate-45 text-[#1A0B2E]" />
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--kz-mute)]">Ton niveau</div>
+                    <div className="text-sm font-bold text-white font-[family-name:var(--font-epic)] truncate">{gami.level.title}</div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-base font-extrabold" style={{ color: KZ.onInverse }}>
-                    {gami.xp.toLocaleString('fr-FR')} XP
-                  </div>
-                  <div className="text-[10px] opacity-50" style={{ color: KZ.onInverse }}>
-                    {gami.doneQuests.length}/{gami.quests.length} quêtes accomplies
-                  </div>
+                <div className="text-right shrink-0">
+                  <div className="text-base font-bold qx-text-legend">{gami.xp.toLocaleString('fr-FR')} XP</div>
+                  <div className="text-[10px] text-[var(--kz-mute)]">{gami.doneQuests.length}/{gami.quests.length} quêtes accomplies</div>
                 </div>
               </div>
-              {/* Mini barre XP */}
-              <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{ width: `${gami.xpProgress}%`, background: gami.level.color }}
-                />
-              </div>
+              <div className="qx-xp"><span style={{ width: `${Math.max(gami.xpProgress, 3)}%` }} /></div>
             </div>
           )}
         </div>
-      </div>
+      </section>
 
       {/* Confidentialité */}
-      <div className="kz-card bg-[var(--kz-paper)]">
-        <div className="px-6 py-4 border-b border-[var(--kz-line)] flex items-center gap-2" style={{ background: KZ.cream2 }}>
-          <Shield size={16} className="text-[var(--kz-mute)]" />
-          <span className="text-sm font-bold text-[var(--kz-ink)]">Confidentialité</span>
-        </div>
-        <div className="px-6 py-5 flex flex-col gap-3">
+      <section className="qx-panel mb-5">
+        <SectionHead icon={<Shield size={13} />} color="#4ADE80">Confidentialité</SectionHead>
+        <div className="px-5 sm:px-6 py-5 flex flex-col gap-3">
           <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
             Tes données sont hébergées en Europe, chiffrées au repos et en transit.
             Kazajob ne revend jamais tes informations personnelles et ne t&apos;envoie
             jamais d&apos;emails commerciaux non sollicités.
           </p>
           <div className="flex gap-2 flex-wrap">
-            <Badge color="green" size="sm">RGPD conforme</Badge>
-            <Badge color="blue" size="sm">Hébergé en EU</Badge>
-            <Badge color="violet" size="sm">0 revente de données</Badge>
+            {[['RGPD conforme', '#4ADE80'], ['Hébergé en EU', '#22D3EE'], ['0 revente de données', '#C084FC']].map(([l, c]) => (
+              <span key={l} className="text-[10px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded-md border"
+                style={{ color: `color-mix(in srgb, ${c} 75%, white)`, borderColor: `color-mix(in srgb, ${c} 45%, transparent)`, background: `color-mix(in srgb, ${c} 12%, transparent)` }}>{l}</span>
+            ))}
           </div>
         </div>
-      </div>
+      </section>
 
       <AccountActions />
     </div>

@@ -82,13 +82,13 @@ export default function AdminNotificationsPage() {
   return (
     <div className="max-w-[800px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Notifications</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Notifications</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">Envoyer une notification push à vos utilisateurs</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-5">
         {/* Formulaire */}
-        <div className="kz-card p-5 bg-[var(--kz-paper)] flex flex-col gap-4">
+        <div className="qx-panel p-5 flex flex-col gap-4">
           <h2 className="text-sm font-bold text-[var(--kz-ink)] flex items-center gap-2">
             <Bell size={16} color={KZ.violet} /> Nouvelle notification
           </h2>
@@ -164,7 +164,7 @@ export default function AdminNotificationsPage() {
         </div>
 
         {/* Historique de session */}
-        <div className="kz-card p-5 bg-[var(--kz-paper)]">
+        <div className="qx-panel p-5">
           <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Historique (session)</h2>
           {history.length === 0 ? (
             <div className="text-center py-8">

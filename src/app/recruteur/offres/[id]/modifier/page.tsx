@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ScrollText } from 'lucide-react'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 import Link from 'next/link'
 import { JobForm } from '@/components/forms/JobForm'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
@@ -34,8 +35,8 @@ export default function EditJobPage() {
         <ArrowLeft size={16} />
         Retour aux offres
       </Link>
-      <h1 className="kz-h2 text-[var(--kz-ink)] mb-6">Modifier l&apos;offre</h1>
-      <div className="kz-card p-6 bg-[var(--kz-paper)]">
+      <QuestHeader eyebrow="Modifier l'offre" icon={<ScrollText size={18} />} title={<>Réviser le <span className="qx-text-arcane">parchemin</span></>} />
+      <div className="qx-panel p-6">
         {profile && job && <JobForm job={job} recruiterId={profile.id} />}
       </div>
     </div>

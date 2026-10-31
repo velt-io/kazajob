@@ -12,6 +12,7 @@ import { useAuth } from '@/features/auth/useAuth'
 import { FullPageLoader } from '@/components/ui/LogoLoader'
 import { BugReportWidget } from '@/components/feedback/BugReportWidget'
 import { KZ } from '@/lib/constants'
+import './qx-recruteur.css'
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/recruteur/tableau-de-bord',    label: 'Tableau de bord', icon: <LayoutDashboard size={16} /> },
@@ -91,7 +92,7 @@ export default function RecruiterLayout({ children }: { children: React.ReactNod
             </div>
           }
         />
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+        <main className="qxr-scope flex-1 min-w-0 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8">
           <PageTransition>{children}</PageTransition>
         </main>
       </div>

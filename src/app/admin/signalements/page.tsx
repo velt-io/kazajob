@@ -68,8 +68,8 @@ export default function AdminBugReportsPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div>
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Support</p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Signalements de bug</h1>
+          <p className="kz-eyebrow mb-1 text-[var(--qx-gold)]">Support</p>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Signalements de bug</h1>
           <p className="text-sm text-[var(--kz-mute)] mt-1">
             {openCount} ouvert{openCount > 1 ? 's' : ''}
             {criticalCount > 0 && <span className="font-bold" style={{ color: KZ.orange }}> · {criticalCount} bloquant{criticalCount > 1 ? 's' : ''}</span>}
@@ -91,7 +91,7 @@ export default function AdminBugReportsPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {shown.map((r) => (
-            <div key={r.id} className="kz-card p-4 bg-[var(--kz-paper)]"
+            <div key={r.id} className="qx-panel p-4"
               style={r.severity === 'critical' && r.status !== 'resolved' ? { borderColor: KZ.orange } : undefined}>
               <div className="flex items-start gap-3">
                 <div className="w-9 h-9 rounded-lg border border-[var(--kz-edge)] flex items-center justify-center shrink-0"

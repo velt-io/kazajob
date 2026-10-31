@@ -63,13 +63,13 @@ export default function AdminDemoPage() {
   return (
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Commercial</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Démos &amp; rendez-vous</h1>
+        <p className="kz-eyebrow mb-1 text-[var(--qx-gold)]">Commercial</p>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Démos &amp; rendez-vous</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">Lien public à mettre dans vos mailings : <code>/demo</code></p>
       </div>
 
       {/* Créneaux */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-6">
+      <div className="qx-panel p-5 mb-6">
         <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2"><CalendarPlus size={16} />Ouvrir un créneau</h2>
         <div className="flex flex-col sm:flex-row gap-2 mb-4">
           <Input className="flex-1" type="datetime-local" value={newSlot} onChange={(e) => setNewSlot(e.target.value)} />
@@ -99,7 +99,7 @@ export default function AdminDemoPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {bookings.map((b) => (
-            <div key={b.id} className="kz-card p-4 bg-[var(--kz-paper)]">
+            <div key={b.id} className="qx-panel p-4">
               <div className="flex items-start gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-0.5">

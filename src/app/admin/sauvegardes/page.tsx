@@ -61,12 +61,12 @@ export default function AdminBackupPage() {
   return (
     <div className="max-w-[800px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Sauvegarde Supabase</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Sauvegarde Supabase</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">Export JSON de toutes les tables → Google Drive</p>
       </div>
 
       {/* Configuration requise */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+      <div className="qx-panel p-5 mb-5">
         <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2">
           <Database size={15} /> Configuration requise
         </h2>
@@ -87,7 +87,7 @@ export default function AdminBackupPage() {
       </div>
 
       {/* Déclencher un backup */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+      <div className="qx-panel p-5 mb-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
             <h2 className="text-sm font-bold text-[var(--kz-ink)]">Sauvegarde manuelle</h2>
@@ -111,7 +111,7 @@ export default function AdminBackupPage() {
         {result && (
           <div
             className="p-4 rounded-xl border-2 border-[var(--kz-edge)]"
-            style={{ background: result.ok ? KZ.greenSoft : '#FEF2F2' }}
+            style={{ background: result.ok ? KZ.greenSoft : 'rgba(248,113,113,0.12)' }}
           >
             <div className="flex items-start gap-3">
               {result.ok
@@ -147,7 +147,7 @@ export default function AdminBackupPage() {
       </div>
 
       {/* Historique */}
-      <div className="kz-card bg-[var(--kz-paper)] overflow-hidden">
+      <div className="qx-panel overflow-hidden">
         <div className="px-5 py-4 border-b border-[var(--kz-line)] flex justify-between items-center" style={{ background: KZ.cream2 }}>
           <h2 className="text-sm font-bold text-[var(--kz-ink)] flex items-center gap-2">
             <Clock size={14} /> Historique des sauvegardes
@@ -158,7 +158,7 @@ export default function AdminBackupPage() {
         </div>
         {loadingList ? (
           <div className="p-4 flex flex-col gap-2">
-            {[1,2,3].map(i => <div key={i} className="h-10 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}
+            {[1,2,3].map(i => <div key={i} className="h-10 qxr-skeleton" />)}
           </div>
         ) : backups.length === 0 ? (
           <div className="p-8 text-center">

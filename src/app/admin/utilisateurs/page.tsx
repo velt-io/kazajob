@@ -47,7 +47,7 @@ export default function AdminUsersPage() {
     <div className="max-w-[900px] mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Utilisateurs</h1>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight mb-1">Utilisateurs</h1>
           <p className="text-sm text-[var(--kz-mute)]">{users.length} compte(s)</p>
         </div>
         <Input
@@ -60,7 +60,7 @@ export default function AdminUsersPage() {
       </div>
 
       {loading ? <PageLoader /> : (
-        <div className="kz-card bg-[var(--kz-paper)] overflow-x-auto">
+        <div className="qxr-table-wrap">
           <table className="w-full min-w-[640px]">
             <thead>
               <tr className="border-b border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>

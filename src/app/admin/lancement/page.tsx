@@ -157,7 +157,7 @@ export default function AdminLaunchPage() {
     <div className="max-w-[1100px] mx-auto">
       <div className="mb-6 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Campagne de lancement</h1>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Campagne de lancement</h1>
           <p className="text-sm text-[var(--kz-mute)] mt-1">
             Accès gratuit temporaire, indépendant des forfaits Stripe. Jamais visible comme tarif public.
           </p>
@@ -194,7 +194,7 @@ export default function AdminLaunchPage() {
         const paidVisible = activeCampaign ? activeCampaign.new_subscriptions_enabled : true
         return (
           <div className="kz-card p-4 mb-6 flex flex-col sm:flex-row sm:items-center gap-3"
-            style={{ background: daysLeft <= 30 ? '#FFF3E0' : '#FFF9F0', borderColor: daysLeft <= 30 ? 'var(--kz-orange)' : 'var(--kz-line)' }}>
+            style={{ background: daysLeft <= 30 ? KZ.orangeSoft : KZ.yellowSoft, borderColor: daysLeft <= 30 ? 'var(--kz-orange)' : 'var(--kz-line)' }}>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <AlertTriangle size={16} className="text-[var(--kz-orange)] shrink-0" />
@@ -218,7 +218,7 @@ export default function AdminLaunchPage() {
 
       {/* Création d'une campagne */}
       {showCreate && (
-        <div className="kz-card p-4 mb-6 bg-[var(--kz-paper)]">
+        <div className="qx-panel p-4 mb-6">
           <h2 className="font-bold text-[var(--kz-ink)] mb-3">Nouvelle campagne (créée en brouillon)</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
             <Input label="Nom" value={createForm.name}
@@ -253,16 +253,16 @@ export default function AdminLaunchPage() {
       )}
 
       {loading ? (
-        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Chargement…</div>
+        <div className="qx-panel p-8 text-center text-[var(--kz-mute)]">Chargement…</div>
       ) : !data || data.campaigns.length === 0 ? (
-        <div className="kz-card p-8 text-center text-[var(--kz-mute)] bg-[var(--kz-paper)]">Aucune campagne pour le moment.</div>
+        <div className="qx-panel p-8 text-center text-[var(--kz-mute)]">Aucune campagne pour le moment.</div>
       ) : (
         <div className="space-y-4">
           {data.campaigns.map((c) => {
             const status = STATUS_LABEL[c.effective_status] ?? STATUS_LABEL.draft
             const actions = QUICK_ACTIONS[c.state] ?? []
             return (
-              <div key={c.id} className="kz-card p-4 bg-[var(--kz-paper)]">
+              <div key={c.id} className="qx-panel p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2">
                     <span className="font-extrabold text-[var(--kz-ink)]">{c.name}</span>

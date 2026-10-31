@@ -100,13 +100,13 @@ export default function AdminPromosPage() {
   return (
     <div className="max-w-[1000px] mx-auto">
       <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Marketing</p>
-        <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Codes promo</h1>
+        <p className="kz-eyebrow mb-1 text-[var(--qx-gold)]">Marketing</p>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Codes promo</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">Réductions sur les abonnements recruteur, synchronisées avec Stripe.</p>
       </div>
 
       {/* Création */}
-      <div className="kz-card p-5 bg-[var(--kz-paper)] mb-6">
+      <div className="qx-panel p-5 mb-6">
         <h2 className="text-base font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2"><Plus size={16} />Nouveau code</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <Input label="Code *" value={form.code} onChange={(e) => setForm(f => ({ ...f, code: e.target.value.toUpperCase() }))} placeholder="RENTREE25" icon={<Ticket size={15} />} />
@@ -145,7 +145,7 @@ export default function AdminPromosPage() {
             const st = statusOf(p)
             const val = p.discountType === 'percent' ? `-${p.discountValue}%` : `-${Math.round(p.discountValue / 100)} €`
             return (
-              <div key={p.id} className="kz-card p-4 bg-[var(--kz-paper)] flex flex-col sm:flex-row sm:items-center gap-3">
+              <div key={p.id} className="qx-panel p-4 flex flex-col sm:flex-row sm:items-center gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-0.5">
                     <code className="text-sm font-extrabold text-[var(--kz-ink)]">{p.code}</code>

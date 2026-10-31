@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { Map as MapIcon, LayoutDashboard, Search, Heart, Briefcase, MessageCircle, User, Sparkles, Calendar, Settings, Star, Users, Flame, Gamepad2, GraduationCap, Compass } from 'lucide-react'
 import { TopBar } from '@/components/layout/TopBar'
@@ -15,6 +16,8 @@ import { BugReportWidget } from '@/components/feedback/BugReportWidget'
 import { useGamification, getLevel } from '@/features/gamification/useGamification'
 import { KZ } from '@/lib/constants'
 import { PageTransition } from '@/components/quest/PageTransition'
+// Styles propres aux pages candidat (thème Quest : primes, parchemins, sceaux…)
+import './qx-candidat.css'
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/candidat/tableau-de-bord',    label: 'QG du héros',      icon: <LayoutDashboard size={16} /> },
@@ -86,63 +89,53 @@ export default function CandidateLayout({ children }: { children: React.ReactNod
           onMobileClose={() => setSidebarOpen(false)}
           footer={
             gami.enabled ? (
-              /* ── HUD Gamification ── */
-              <div
-                className="rounded-xl border-2 border-[var(--kz-edge)] overflow-hidden"
-                style={{ background: 'var(--kz-inverse)', boxShadow: '3px 3px 0 ' + level.color }}
-              >
-                <div className="px-3 pt-3 pb-1">
-                  <div className="flex items-center justify-between mb-1.5">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-base">{level.emoji}</span>
-                      <div>
-                        <div className="text-[9px] font-bold opacity-50 uppercase tracking-widest" style={{ color: KZ.onInverse }}>NIVEAU</div>
-                        <div className="text-[11px] font-extrabold leading-none" style={{ color: level.color }}>{level.title}</div>
+              /* ── HUD du héros (mode quête) ── */
+              <div className="qx-panel overflow-hidden">
+                <Link href="/candidat/quetes" className="block px-3 pt-3 pb-2 rounded-t-[18px] hover:bg-[rgba(232,121,249,0.06)] transition-colors" aria-label={`Niveau ${level.level}, ${level.title} — ouvrir mon aventure`}>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span aria-hidden className="w-7 h-7 rounded-md rotate-45 grid place-items-center shrink-0 bg-[linear-gradient(135deg,#FDE68A,#FACC15,#F59E0B)] shadow-[0_0_12px_rgba(250,204,21,0.6)]">
+                        <span className="-rotate-45 text-[11px] font-bold text-[#1A0B2E]">{level.level}</span>
+                      </span>
+                      <div className="min-w-0">
+                        <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--kz-mute)]">Niveau</div>
+                        <div className="text-[12px] font-bold leading-none text-white truncate font-[family-name:var(--font-epic)]">{level.title}</div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Flame size={11} color={KZ.yellow} fill={KZ.yellow} />
-                      <span className="text-[10px] font-bold" style={{ color: KZ.yellow }}>{profile.streak ?? 0}j</span>
+                    <div className="flex items-center gap-1 shrink-0" title="Série de connexions">
+                      <Flame size={11} className="text-[#FB923C]" fill="#FB923C" aria-hidden />
+                      <span className="text-[10px] font-bold text-[#FDBA74]">{profile.streak ?? 0}j</span>
                     </div>
                   </div>
-                  {/* Mini XP bar */}
-                  <div className="h-1.5 rounded-full overflow-hidden mb-2" style={{ background: 'rgba(255,255,255,0.1)' }}>
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: `${gami.xpProgress}%`, background: level.color }}
-                    />
+                  {/* Barre d'XP */}
+                  <div className="qx-xp h-[7px]"><span style={{ width: `${Math.max(gami.xpProgress, 3)}%` }} /></div>
+                  <div className="flex items-center justify-between text-[9px] mt-1.5">
+                    <span className="font-bold text-[var(--qx-gold)]">{(profile.xp ?? 0).toLocaleString('fr-FR')} XP</span>
+                    <span className="text-[var(--kz-mute)]">{gami.xpProgress} %</span>
                   </div>
-                  <div className="text-[9px] opacity-50 text-center pb-1" style={{ color: KZ.onInverse }}>
-                    {(profile.xp ?? 0).toLocaleString('fr-FR')} XP
-                  </div>
-                </div>
+                </Link>
                 <button
                   onClick={() => gami.toggle()}
-                  className="w-full px-3 py-1.5 text-[10px] font-bold border-t border-white/10 flex items-center justify-center gap-1 hover:bg-white/5 transition-colors"
-                  style={{ color: 'rgba(255,247,238,0.5)' }}
+                  className="w-full px-3 py-1.5 text-[10px] font-bold border-t border-[#C084FC]/20 flex items-center justify-center gap-1 text-[var(--kz-mute)] hover:text-white hover:bg-[rgba(168,85,247,0.1)] transition-colors"
                 >
-                  <Gamepad2 size={10} /> Désactiver le mode quête
+                  <Gamepad2 size={10} aria-hidden /> Désactiver le mode quête
                 </button>
               </div>
             ) : (
               /* ── Footer normal ── */
               <div className="flex flex-col gap-2">
-                <div
-                  className="p-3.5 rounded-xl border border-[var(--kz-edge)] flex gap-2.5 items-center"
-                  style={{ background: KZ.violet, color: KZ.onInverse, boxShadow: '3px 3px 0 var(--kz-shadow)' }}
-                >
+                <div className="qx-panel p-3.5 flex gap-2.5 items-center">
                   <div className="flex-1">
-                    <div className="text-xs font-bold mb-0.5">Boost IA</div>
-                    <div className="text-[10px] opacity-80">Niveau {Math.floor((profile.xp ?? 0) / 1000) + 1}</div>
+                    <div className="text-xs font-bold mb-0.5 text-white">Boost IA</div>
+                    <div className="text-[10px] text-[var(--kz-mute)]">Niveau {Math.floor((profile.xp ?? 0) / 1000) + 1}</div>
                   </div>
-                  <Sparkles size={18} />
+                  <Sparkles size={18} className="text-[var(--qx-magenta)]" aria-hidden />
                 </div>
                 <button
                   onClick={() => gami.toggle()}
-                  className="flex items-center justify-center gap-1.5 p-2 rounded-xl border border-[var(--kz-edge)] text-[11px] font-bold transition-all hover:shadow-[2px_2px_0_var(--kz-shadow)]"
-                  style={{ background: KZ.violetSoft, color: KZ.violet }}
+                  className="flex items-center justify-center gap-1.5 p-2 rounded-xl border border-[#E879F9]/45 text-[11px] font-bold text-[#F5D0FE] bg-[rgba(232,121,249,0.1)] hover:bg-[rgba(232,121,249,0.2)] hover:shadow-[0_0_18px_-6px_rgba(232,121,249,0.9)] transition-all"
                 >
-                  <Gamepad2 size={12} /> Mode Quête
+                  <Gamepad2 size={12} aria-hidden /> Mode Quête
                 </button>
               </div>
             )

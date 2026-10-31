@@ -26,7 +26,7 @@ function StatBlock({ icon, label, value, sub, color }: {
   icon: React.ReactNode; label: string; value: string | number; sub: string; color: string
 }) {
   return (
-    <div className="kz-card p-5 bg-[var(--kz-paper)] flex items-start gap-4">
+    <div className="qx-panel p-5 flex items-start gap-4">
       <div className="w-10 h-10 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center shrink-0" style={{ background: color }}>
         {icon}
       </div>
@@ -86,13 +86,13 @@ export default function AdminAIPage() {
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">KazaIA — Statistiques</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">KazaIA — Statistiques</h1>
         <p className="text-sm text-[var(--kz-mute)] mt-1">Usage de l&apos;IA et estimation des coûts Groq</p>
       </div>
 
       {loading ? (
         <div className="grid grid-cols-2 gap-4">
-          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />)}
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 qxr-skeleton" />)}
         </div>
       ) : (
         <>
@@ -115,7 +115,7 @@ export default function AdminAIPage() {
           </div>
 
           {/* Détail par feature */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+          <div className="qx-panel p-5 mb-5">
             <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Détail par fonctionnalité</h2>
             <div className="flex flex-col gap-4">
               {[
@@ -163,7 +163,7 @@ export default function AdminAIPage() {
 
           {/* Note + liens */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <div className="qx-panel p-5">
               <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-2 flex items-center gap-1.5"><Info size={14} /> Note sur les estimations</h3>
               <p className="text-xs text-[var(--kz-mute)] leading-relaxed">
                 Ces chiffres sont des <strong>estimations</strong> basées sur les données Supabase (candidatures, conversations).
@@ -172,7 +172,7 @@ export default function AdminAIPage() {
               </p>
             </div>
 
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <div className="qx-panel p-5">
               <h3 className="text-sm font-bold text-[var(--kz-ink)] mb-3">Tableaux de bord fournisseurs</h3>
               <div className="flex flex-col gap-2">
                 {[

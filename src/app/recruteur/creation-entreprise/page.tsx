@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, Building2, Users, Check, ArrowRight, Upload, ChevronRight } from 'lucide-react'
+import { Search, Building2, Users, Check, ArrowRight, Upload, ChevronRight, Mail } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { useAuth } from '@/features/auth/useAuth'
 import { uploadFile } from '@/features/profile/useUpload'
+import { Sigil } from '@/components/quest/recruteur/QuestChrome'
 import { KZ, SUBSCRIPTION_PLANS, PAID_PLANS, JOB_SECTORS, MULTIDIFFUSION_ENABLED } from '@/lib/constants'
 import type { Company } from '@/lib/types'
 
@@ -247,16 +248,16 @@ export default function CompanySetupPage() {
     <div className="min-h-screen flex items-center justify-center px-4 py-8" style={{ background: KZ.cream }}>
       <div className="w-full max-w-[640px]">
         {/* Header */}
-        <div className="text-center mb-8">
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Configuration</p>
-          <h1 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[var(--kz-ink)]">
-            Votre espace entreprise
+        <div className="text-center mb-8 qx-rise">
+          <p className="kz-eyebrow mb-1.5 text-[var(--qx-gold)]">Configuration · Fondation de la guilde</p>
+          <h1 className="text-[26px] lg:text-[34px] font-bold text-white leading-tight">
+            Votre espace <span className="qx-text-arcane">entreprise</span>
           </h1>
         </div>
 
         <ProgressBar step={currentStep} />
 
-        <div className="kz-card p-6 bg-[var(--kz-paper)]">
+        <div className="qx-panel p-6">
           {/* ── ÉTAPE 1 : Recherche ──────────────────────────────────── */}
           {mode === 'search' && (
             <div>
@@ -322,7 +323,7 @@ export default function CompanySetupPage() {
             <div>
               {joinSent ? (
                 <div className="text-center py-6">
-                  <div className="text-5xl mb-4">📬</div>
+                  <div className="flex justify-center mb-4"><Sigil tone="var(--qx-gold)"><Mail size={18} /></Sigil></div>
                   <h2 className="text-lg font-bold text-[var(--kz-ink)] mb-2">Demande envoyée !</h2>
                   <p className="text-sm text-[var(--kz-mute)] mb-6">
                     L&apos;administrateur de <strong>{selectedCompany.name}</strong> recevra votre demande.

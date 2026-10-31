@@ -1,6 +1,7 @@
 'use client'
 
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ClipboardList } from 'lucide-react'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 import Link from 'next/link'
 import { StageForm } from '@/components/forms/StageForm'
 import { CompanyRequired } from '@/components/feedback/CompanyRequired'
@@ -16,7 +17,7 @@ export default function NewStagePage() {
           <ArrowLeft size={16} />
           Retour aux stages
         </Link>
-        <h1 className="kz-h2 text-[var(--kz-ink)] mb-6">Publier un stage</h1>
+        <QuestHeader eyebrow="Publier un stage" icon={<ClipboardList size={18} />} tone="var(--qx-cyan)" title={<>Nouvelle quête d&apos;<span className="qx-text-arcane">apprenti</span></>} />
         <StageForm companyId={profile?.company_id ?? undefined} />
       </div>
     </CompanyRequired>

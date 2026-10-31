@@ -117,7 +117,7 @@ export default function AdminAnalyticsPage() {
     <div className="max-w-[1100px] mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Analytics & Rapports</h1>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Analytics & Rapports</h1>
           <p className="text-sm text-[var(--kz-mute)] mt-1">Données des 8 dernières semaines</p>
         </div>
         <Button kind="outline" size="md" icon={<Download size={15} />} onClick={exportCSV}>
@@ -133,7 +133,7 @@ export default function AdminAnalyticsPage() {
           { label: 'Candidatures total',  value: totals.apps,  icon: <FileText size={16} />, color: KZ.yellowSoft },
           { label: 'Entreprises total',   value: totals.companies, icon: <TrendingUp size={16} />, color: KZ.greenSoft },
         ].map(k => (
-          <div key={k.label} className="kz-card p-4 bg-[var(--kz-paper)] text-center" style={{ background: k.color }}>
+          <div key={k.label} className="qx-panel p-4 text-center" style={{ background: k.color }}>
             <div className="flex items-center justify-center mb-1">{k.icon}</div>
             <div className="text-2xl font-extrabold text-[var(--kz-ink)]">{k.value.toLocaleString('fr-FR')}</div>
             <div className="text-[11px] text-[var(--kz-mute)] font-semibold mt-0.5">{k.label}</div>
@@ -142,7 +142,7 @@ export default function AdminAnalyticsPage() {
       </div>
 
       {loading ? (
-        <div className="h-64 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />
+        <div className="h-64 qxr-skeleton" />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5">
           {/* Graphiques semaine par semaine */}
@@ -152,7 +152,7 @@ export default function AdminAnalyticsPage() {
               { label: 'Nouvelles offres / semaine',       key: 'jobs',  color: KZ.orange, max: maxJobs },
               { label: 'Candidatures / semaine',           key: 'apps',  color: KZ.green,  max: maxApps },
             ].map(({ label, key, color, max }) => (
-              <div key={key} className="kz-card p-5 bg-[var(--kz-paper)]">
+              <div key={key} className="qx-panel p-5">
                 <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">{label}</h2>
                 <div className="flex flex-col gap-2">
                   {weeks.map(w => (
@@ -168,7 +168,7 @@ export default function AdminAnalyticsPage() {
 
           {/* Top villes + secteurs */}
           <div className="flex flex-col gap-4">
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <div className="qx-panel p-5">
               <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Top villes (offres)</h2>
               <div className="flex flex-col gap-2.5">
                 {topCities.length === 0 ? (
@@ -182,7 +182,7 @@ export default function AdminAnalyticsPage() {
               </div>
             </div>
 
-            <div className="kz-card p-5 bg-[var(--kz-paper)]">
+            <div className="qx-panel p-5">
               <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-4">Top secteurs (offres)</h2>
               <div className="flex flex-col gap-2.5">
                 {topSectors.length === 0 ? (

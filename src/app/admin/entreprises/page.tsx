@@ -37,7 +37,7 @@ export default function AdminCompaniesPage() {
   return (
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6">
-        <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Entreprises</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight mb-1">Entreprises</h1>
         <p className="text-sm text-[var(--kz-mute)]">{companies.length} entreprise(s)</p>
       </div>
 
@@ -46,7 +46,7 @@ export default function AdminCompaniesPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {companies.map((company) => (
-            <div key={company.id} className="kz-card p-5 bg-[var(--kz-paper)] flex items-center gap-5">
+            <div key={company.id} className="qx-panel p-5 flex items-center gap-5">
               <div className="w-12 h-12 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center font-bold text-[var(--kz-ink)] shrink-0" style={{ background: KZ.cream2 }}>
                 {company.name.slice(0, 2).toUpperCase()}
               </div>

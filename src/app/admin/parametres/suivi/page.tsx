@@ -154,7 +154,7 @@ export default function AdminTrackingPage() {
     <div className="max-w-[900px] mx-auto">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)] flex items-center gap-2"><Radio size={22} color={KZ.violet} /> Tracking & Ads</h1>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight flex items-center gap-2"><Radio size={22} color={KZ.violet} /> Tracking & Ads</h1>
           <p className="text-sm text-[var(--kz-mute)] mt-1">Scripts et pixels publicitaires — gérés sans déploiement, respectent le consentement cookies.</p>
         </div>
         <Button kind="primary" size="md" icon={<Plus size={14} />} onClick={openCreate}>Ajouter une intégration</Button>
@@ -162,7 +162,7 @@ export default function AdminTrackingPage() {
 
       {loading ? (
         <div className="flex flex-col gap-2">
-          {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-lg bg-[var(--kz-cream2)] animate-pulse" />)}
+          {[1, 2, 3].map(i => <div key={i} className="h-16 qxr-skeleton" />)}
         </div>
       ) : integrations.length === 0 ? (
         <div className="text-sm text-[var(--kz-mute)] py-10 text-center border border-dashed border-[var(--kz-line)] rounded-xl">
@@ -171,7 +171,7 @@ export default function AdminTrackingPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {integrations.map(i => (
-            <div key={i.id} className="kz-card p-4 bg-[var(--kz-paper)] flex items-center justify-between gap-3 flex-wrap">
+            <div key={i.id} className="qx-panel p-4 flex items-center justify-between gap-3 flex-wrap">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap mb-1">
                   <span className="font-bold text-[var(--kz-ink)]">{i.name}</span>

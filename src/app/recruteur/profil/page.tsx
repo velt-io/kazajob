@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CheckCheck } from 'lucide-react'
+import { CheckCheck, UserRound } from 'lucide-react'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Avatar } from '@/components/ui/Avatar'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { AccountActions } from '@/components/account/AccountActions'
 import { useAuth } from '@/features/auth/useAuth'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 import { KZ } from '@/lib/constants'
 
 export default function RecruiterProfilePage() {
@@ -36,12 +37,10 @@ export default function RecruiterProfilePage() {
 
   return (
     <div className="max-w-[680px] mx-auto">
-      <div className="mb-6">
-        <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Mon compte</p>
-        <h1 className="text-2xl font-extrabold tracking-tight text-[var(--kz-ink)]">Profil recruteur</h1>
-      </div>
+      <QuestHeader eyebrow="Mon compte" icon={<UserRound size={18} />} title={<>Profil du <span className="qx-text-arcane">maître de guilde</span></>}
+        subtitle="Profil recruteur : vos informations personnelles." />
 
-      <div className="kz-card bg-[var(--kz-paper)] p-6 mb-5">
+      <div className="qx-panel p-6 mb-5">
         <div className="flex items-center gap-4 mb-6">
           <Avatar name={profile.full_name} src={profile.avatar_url} avatarConfig={profile.avatar_config} size={56} color={KZ.violetSoft} />
           <div className="min-w-0">

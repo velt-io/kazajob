@@ -37,8 +37,8 @@ export default function AdminTrafficPage() {
     <div className="max-w-[1000px] mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div>
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Analytics</p>
-          <h1 className="text-2xl lg:text-[32px] font-extrabold tracking-tight text-[var(--kz-ink)]">Trafic du site</h1>
+          <p className="kz-eyebrow mb-1 text-[var(--qx-gold)]">Analytics</p>
+          <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Trafic du site</h1>
           <p className="text-sm text-[var(--kz-mute)] mt-1">Pages vues anonymes (sans cookie). Pour le détail (sources, pays, visiteurs uniques) : dashboard Vercel.</p>
         </div>
         <div className="inline-flex items-center gap-0.5 p-0.5 rounded-full border border-[var(--kz-edge)] shrink-0" style={{ background: KZ.paper }}>
@@ -67,7 +67,7 @@ export default function AdminTrafficPage() {
           </div>
 
           {/* Vues par jour */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+          <div className="qx-panel p-5 mb-5">
             <h2 className="text-base font-bold text-[var(--kz-ink)] mb-4">Vues par jour</h2>
             <div className="flex items-end gap-1.5 h-40 overflow-x-auto">
               {data.daily.map((d) => (
@@ -83,7 +83,7 @@ export default function AdminTrafficPage() {
           </div>
 
           {/* Pages les plus consultées */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
+          <div className="qx-panel p-5">
             <h2 className="text-base font-bold text-[var(--kz-ink)] mb-4">Pages les plus consultées</h2>
             <div className="flex flex-col gap-2.5">
               {data.top.map((t) => (

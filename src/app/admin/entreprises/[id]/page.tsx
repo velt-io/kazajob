@@ -15,7 +15,7 @@ import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
 const SEVERITY_STYLE: Record<string, { bg: string; border: string; icon: React.ReactNode }> = {
   success: { bg: KZ.greenSoft,  border: KZ.green,  icon: <CheckCircle2 size={16} style={{ color: KZ.green }} /> },
   info:    { bg: KZ.blueSoft,   border: KZ.blue,   icon: <Info         size={16} style={{ color: KZ.blue  }} /> },
-  warning: { bg: KZ.yellowSoft, border: KZ.yellow, icon: <AlertTriangle size={16} style={{ color: '#B45309' }} /> },
+  warning: { bg: KZ.yellowSoft, border: KZ.yellow, icon: <AlertTriangle size={16} style={{ color: KZ.yellow }} /> },
   danger:  { bg: KZ.orangeSoft, border: KZ.orange, icon: <ShieldAlert  size={16} style={{ color: KZ.orange }} /> },
 }
 
@@ -68,7 +68,7 @@ export default function AdminCompanyDetailPage() {
     setSaving(false)
   }
 
-  if (loading) return <div className="h-48 rounded-2xl bg-[var(--kz-cream2)] animate-pulse max-w-[800px] mx-auto" />
+  if (loading) return <div className="h-48 max-w-[800px] mx-auto qxr-skeleton" />
 
   const style = summary ? SEVERITY_STYLE[summary.message.severity] ?? SEVERITY_STYLE.info : SEVERITY_STYLE.info
 
@@ -80,13 +80,13 @@ export default function AdminCompanyDetailPage() {
             <ArrowLeft size={16} />
           </button>
         </Link>
-        <h1 className="text-xl font-extrabold text-[var(--kz-ink)]">Fiche entreprise — Abonnement &amp; Usage</h1>
+        <h1 className="text-[24px] sm:text-[30px] font-bold text-white leading-tight">Fiche entreprise — Abonnement &amp; Usage</h1>
       </div>
 
       {summary && (
         <>
           {/* ── Carte statut ── */}
-          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+          <div className="qx-panel p-4">
             <h2 className="text-sm font-extrabold text-[var(--kz-ink)] mb-3 uppercase tracking-wide">Statut facturation</h2>
             <div className="rounded-xl border p-3 flex items-start gap-3 mb-4"
               style={{ background: style.bg, borderColor: style.border }}>
@@ -121,14 +121,14 @@ export default function AdminCompanyDetailPage() {
               <div className="rounded-lg border border-[var(--kz-line)] p-2">
                 <div className="text-[var(--kz-mute)]">Dépassement</div>
                 <div className="font-bold" style={{ color: summary.isOverLimit ? KZ.orange : KZ.green }}>
-                  {summary.isOverLimit ? 'Oui ⚠️' : 'Non ✅'}
+                  <span className="inline-flex items-center gap-1">{summary.isOverLimit ? <><AlertTriangle size={12} aria-hidden />Oui</> : <><CheckCircle2 size={12} aria-hidden />Non</>}</span>
                 </div>
               </div>
             </div>
           </div>
 
           {/* ── Dérogation admin ── */}
-          <div className="kz-card p-4 bg-[var(--kz-paper)]">
+          <div className="qx-panel p-4">
             <h2 className="text-sm font-extrabold text-[var(--kz-ink)] mb-3 uppercase tracking-wide">Dérogation admin</h2>
 
             <div className="flex items-center gap-3 mb-4">

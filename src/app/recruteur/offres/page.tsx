@@ -2,10 +2,10 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { Plus, Eye, Users, Edit, Trash2, ToggleLeft, EyeOff, User, Rocket, ArrowRight, AlertTriangle, Info, Send, Pause, Archive, Clock } from 'lucide-react'
+import { Plus, Eye, Users, Edit, Trash2, ToggleLeft, EyeOff, User, Rocket, ArrowRight, AlertTriangle, Info, Send, Pause, Archive, Hourglass, ScrollText, Crown, MapPin, X } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
 import { Modal } from '@/components/ui/Modal'
+import { Tooltip } from '@/components/ui/radix'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
@@ -13,10 +13,14 @@ import type { Job } from '@/lib/types'
 import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
 import { timeAgo, formatSalary } from '@/lib/utils'
 import { KZ, JOB_BOOST_OPTIONS } from '@/lib/constants'
+import { island } from '@/lib/island'
 import {
-  JOB_STATUS_META, JOB_EXPIRY_WARNING_DAYS, daysUntilExpiry, recruiterActions, resolveJobStatus,
+  JOB_STATUS_META, JOB_EXPIRY_WARNING_DAYS, JOB_DURATION_DAYS, daysUntilExpiry, recruiterActions, resolveJobStatus,
   type JobAction, type JobStatus,
 } from '@/lib/job-lifecycle'
+import { QuestHeader, Rune, toneStyle } from '@/components/quest/recruteur/QuestChrome'
+import { sparkBurst } from '@/components/quest/recruteur/effects'
+import { QUEST_STATUS_LORE, QUEST_STATUS_TONE } from '@/components/quest/recruteur/hero'
 
 type Filter = 'all' | JobStatus
 const FILTERS: { id: Filter; label: string }[] = [
@@ -70,10 +74,12 @@ export default function RecruiterJobsPage() {
 
   useEffect(() => { if (profile) fetchJobs() }, [profile])
 
-  const runAction = async (job: Job, action: JobAction) => {
-    if (action === 'archive' && !confirm('Archiver cette offre ? Elle ne sera plus visible des candidats ; vous pourrez la republier plus tard.')) return
+  /** Renvoie true si l'action a abouti (utilisé pour la bannière de récompense). */
+  const runAction = async (job: Job, action: JobAction): Promise<boolean> => {
+    if (action === 'archive' && !confirm('Archiver cette offre ? Elle ne sera plus visible des candidats ; vous pourrez la republier plus tard.')) return false
     setPending(job.id)
     setActionError('')
+    let ok = false
     try {
       const res = await fetch(`/api/recruiter/jobs/${job.id}`, {
         method: 'PATCH',
@@ -83,12 +89,20 @@ export default function RecruiterJobsPage() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         setActionError(data.error ?? 'Action impossible. Réessayez.')
-      }
+      } else ok = true
     } catch {
       setActionError('Connexion impossible. Réessayez.')
     }
     setPending(null)
     fetchJobs()
+    return ok
+  }
+
+  const publish = async (job: Job, origin: Element | null) => {
+    if (await runAction(job, 'publish')) {
+      sparkBurst(origin)
+      island({ title: 'Quête affichée au tableau', subtitle: job.title, tone: 'success' })
+    }
   }
 
   const counts = useMemo(() => {
@@ -112,32 +126,44 @@ export default function RecruiterJobsPage() {
     fetchJobs()
   }
 
+  const quotaPct = quota && quota.max > 0 ? Math.min(100, Math.round((quota.used / quota.max) * 100)) : null
+
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Mes offres</h1>
-          <p className="text-sm text-[var(--kz-mute)]">
+    <div className="max-w-[1000px] mx-auto">
+      <QuestHeader
+        eyebrow="Mes offres"
+        icon={<ScrollText size={18} />}
+        title={<>Quêtes <span className="qx-text-arcane">publiées</span></>}
+        subtitle={
+          <>
             {counts.all} offre(s)
             {quota && quota.max !== -1 && ` · ${quota.used}/${quota.max} en ligne — forfait ${quota.planName}`}
             {quota && quota.max === -1 && ` · illimité (${quota.planName})`}
-          </p>
-        </div>
-        {quota && !quota.ok ? (
+            {quotaPct !== null && (
+              <span className="block mt-2 max-w-[260px]">
+                <span className="qxr-xp-mini block" style={toneStyle(quotaPct >= 100 ? 'var(--kz-orange)' : 'var(--qx-gold)')}
+                  role="progressbar" aria-label="Emplacements de quête utilisés" aria-valuenow={quotaPct} aria-valuemin={0} aria-valuemax={100}>
+                  <span style={{ width: `${Math.max(quotaPct, 3)}%` }} />
+                </span>
+              </span>
+            )}
+          </>
+        }
+        actions={quota && !quota.ok ? (
           <Button kind="primary" size="md" icon={<Plus size={16} />} onClick={() => setQuotaModal(true)}>Nouvelle offre</Button>
         ) : (
           <Link href="/recruteur/offres/nouvelle">
             <Button kind="primary" size="md" icon={<Plus size={16} />}>Nouvelle offre</Button>
           </Link>
         )}
-      </div>
+      />
 
       {/* Bannière facturation contextuelle */}
       {billingSummary && (() => {
         const s = billingSummary
         if (s.source === 'campaign' && s.message.severity === 'success') {
           return (
-            <div className="mb-4 rounded-xl border border-[var(--kz-green)] bg-[var(--kz-green-soft)] px-4 py-3 flex items-center gap-2 text-sm">
+            <div className="mb-4 rounded-xl border border-[#4ADE80]/45 bg-[var(--kz-green-soft)] px-4 py-3 flex items-center gap-2 text-sm">
               <Info size={15} color={KZ.green} className="shrink-0" />
               <span className="text-[var(--kz-ink)]">
                 Phase de déploiement active : vos annonces restent publiées et les offres seront disponibles prochainement.
@@ -147,8 +173,8 @@ export default function RecruiterJobsPage() {
         }
         if (s.isOverLimit || !s.canPublishJob) {
           return (
-            <div className="mb-4 rounded-xl border border-[var(--kz-yellow)] bg-[var(--kz-yellow-soft)] px-4 py-3 flex items-start gap-2 text-sm">
-              <AlertTriangle size={15} color="#B45309" className="shrink-0 mt-0.5" />
+            <div className="mb-4 rounded-xl border border-[#FACC15]/45 bg-[var(--kz-yellow-soft)] px-4 py-3 flex items-start gap-2 text-sm">
+              <AlertTriangle size={15} color={KZ.yellow} className="shrink-0 mt-0.5" />
               <div className="text-[var(--kz-ink)]">
                 <span className="font-semibold">
                   {s.isOverLimit
@@ -157,7 +183,7 @@ export default function RecruiterJobsPage() {
                 </span>
                 {' '}Vos annonces existantes restent visibles, mais les nouvelles publications sont bloquées.{' '}
                 {s.message.primaryActionHref && s.message.primaryActionLabel && (
-                  <Link href={s.message.primaryActionHref} className="font-bold text-[var(--kz-violet)] hover:underline ml-1">
+                  <Link href={s.message.primaryActionHref} className="font-bold text-[var(--qx-magenta)] hover:underline ml-1">
                     {s.message.primaryActionLabel} →
                   </Link>
                 )}
@@ -169,22 +195,21 @@ export default function RecruiterJobsPage() {
       })()}
 
       {actionError && (
-        <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
+        <div role="alert" className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
           <AlertTriangle size={15} className="shrink-0 mt-0.5" />
           <span className="flex-1">{actionError}</span>
-          <button onClick={() => setActionError('')} className="font-bold" aria-label="Fermer">×</button>
+          <button onClick={() => setActionError('')} className="font-bold" aria-label="Fermer"><X size={14} /></button>
         </div>
       )}
 
       {!loading && jobs.length > 0 && (
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-1 -mx-1 px-1" role="tablist">
+        <div className="qxr-tabs mb-4" role="tablist" aria-label="Filtrer les offres">
           {FILTERS.filter((f) => f.id === 'all' || counts[f.id] > 0 || filter === f.id).map((f) => {
             const active = filter === f.id
             return (
-              <button key={f.id} role="tab" aria-selected={active} onClick={() => setFilter(f.id)}
-                className="px-3 py-1.5 rounded-full border text-xs font-bold whitespace-nowrap transition-colors"
-                style={{ borderColor: 'var(--kz-edge)', background: active ? KZ.ink : KZ.paper, color: active ? KZ.cream : KZ.ink }}>
-                {f.label} <span className="opacity-60">{counts[f.id]}</span>
+              <button key={f.id} role="tab" aria-selected={active} onClick={() => setFilter(f.id)} className="qxr-tab">
+                {f.id !== 'all' && <span className="qxr-column-gem" style={toneStyle(QUEST_STATUS_TONE[f.id])} aria-hidden />}
+                {f.label} <span className="qxr-tab-count">{counts[f.id]}</span>
               </button>
             )
           })}
@@ -192,131 +217,146 @@ export default function RecruiterJobsPage() {
       )}
 
       {loading ? <PageLoader /> : jobs.length === 0 ? (
-        <EmptyState
-          title="Aucune offre pour l'instant"
-          description="Créez votre première offre d'emploi et trouvez les meilleurs talents de La Réunion."
-          icon={<Plus size={28} />}
-          action={<Link href="/recruteur/offres/nouvelle"><Button kind="primary">Créer une offre</Button></Link>}
-        />
+        <div className="qx-panel">
+          <EmptyState
+            title="Aucune offre pour l'instant"
+            description="Créez votre première offre d'emploi et trouvez les meilleurs talents de La Réunion."
+            icon={<Plus size={28} />}
+            action={<Link href="/recruteur/offres/nouvelle"><Button kind="primary">Créer une offre</Button></Link>}
+          />
+        </div>
       ) : visibleJobs.length === 0 ? (
         <p className="text-sm text-[var(--kz-mute)] text-center py-10">Aucune offre dans cette catégorie.</p>
       ) : (
-        <div className="flex flex-col gap-3">
-          {visibleJobs.map((job) => {
+        <ul className="flex flex-col gap-3">
+          {visibleJobs.map((job, idx) => {
             const status = resolveJobStatus(job)
             const meta = JOB_STATUS_META[status]
+            const tone = QUEST_STATUS_TONE[status]
             const daysLeft = status === 'published' ? daysUntilExpiry(job.expires_at) : null
+            const urgent = daysLeft !== null && daysLeft <= JOB_EXPIRY_WARNING_DAYS
             const actions = recruiterActions(status)
+            const co = (job as unknown as { company?: { name: string; logo_url: string | null } }).company
+            const pub = (job as unknown as { publisher?: { full_name: string } }).publisher
+            const anonymous = (job as unknown as { is_anonymous?: boolean }).is_anonymous
+            const legend = job.is_boosted && status === 'published'
             return (
-            <div key={job.id} className="kz-card p-4 bg-[var(--kz-paper)] flex flex-wrap sm:flex-nowrap items-center gap-x-4 gap-y-3"
-              style={{ opacity: pending === job.id ? 0.6 : 1 }}>
-              {/* Logo entreprise */}
-              {(() => {
-                const co = (job as unknown as { company?: { name: string; logo_url: string | null } }).company
-                return co ? (
-                  <div className="w-11 h-11 rounded-xl border border-[var(--kz-edge)] flex items-center justify-center text-xs font-extrabold shrink-0"
-                    style={{ background: KZ.orangeSoft }}>
-                    {co.logo_url
-                      ? <img src={co.logo_url} alt="" className="w-full h-full object-cover rounded-xl" />
-                      : co.name.slice(0, 2).toUpperCase()}
-                  </div>
-                ) : null
-              })()}
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                  <h3 className="text-sm font-bold text-[var(--kz-ink)]">{job.title}</h3>
-                  <Badge color={meta.color} size="sm">{meta.label}</Badge>
-                  {daysLeft !== null && daysLeft <= JOB_EXPIRY_WARNING_DAYS && (
-                    <Badge color="yellow" size="sm"><span className="flex items-center gap-1"><Clock size={10} />Expire dans {daysLeft} j</span></Badge>
-                  )}
-                  {job.is_boosted && <Badge color="orange" size="sm">Boostée</Badge>}
-                  {(job as unknown as { is_anonymous?: boolean }).is_anonymous && (
-                    <Badge color="cream" size="sm"><span className="flex items-center gap-1"><EyeOff size={10} />Anonyme</span></Badge>
-                  )}
-                </div>
-                <div className="flex items-center gap-2 text-xs text-[var(--kz-mute)] flex-wrap">
-                  <span>{job.location} · {job.job_type} · {formatSalary(job.salary_min, job.salary_max)}</span>
-                  <span>· {timeAgo(job.created_at)}</span>
-                  {daysLeft !== null && job.expires_at && daysLeft > JOB_EXPIRY_WARNING_DAYS && (
-                    <span>· en ligne jusqu&apos;au {new Date(job.expires_at).toLocaleDateString('fr-FR')}</span>
-                  )}
-                  {status === 'suspended' && <span className="font-semibold text-[#B45309]">· suspendue par la modération</span>}
-                  {/* Auteur */}
-                  {(() => {
-                    const pub = (job as unknown as { publisher?: { full_name: string } }).publisher
-                    return pub ? (
-                      <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full border border-[var(--kz-line)]"
-                        style={{ background: KZ.cream2 }}>
-                        <User size={9} />{pub.full_name}
+              <li key={job.id} className="qxr-scroll qx-rise p-4 pl-5" data-legend={legend}
+                style={toneStyle(tone, { animationDelay: `${Math.min(idx, 8) * 0.04}s` })}
+                aria-busy={pending === job.id}>
+                <div className="flex flex-col md:flex-row md:items-center gap-4 transition-opacity" style={{ opacity: pending === job.id ? 0.6 : 1 }}>
+                  <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                    {/* Blason de l'entreprise */}
+                    {co && (
+                      <span aria-hidden className="w-11 h-11 shrink-0 hidden min-[420px]:flex items-center justify-center rounded-xl border overflow-hidden bg-[#160B2A] text-[11px] font-extrabold text-white"
+                        style={{ borderColor: `color-mix(in srgb, ${tone} 55%, transparent)`, boxShadow: `0 0 16px -6px ${tone}` }}>
+                        {co.logo_url ? <img src={co.logo_url} alt="" className="w-full h-full object-cover" /> : co.name.slice(0, 2).toUpperCase()}
                       </span>
-                    ) : null
-                  })()}
-                </div>
-              </div>
+                    )}
 
-              {/* Analytics */}
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="text-center">
-                  <div className="text-sm font-extrabold text-[var(--kz-ink)]">{job.views}</div>
-                  <div className="text-[10px] text-[var(--kz-mute)] flex items-center gap-0.5"><Eye size={9} />vues</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm font-extrabold text-[var(--kz-ink)]">{job.applications_count}</div>
-                  <div className="text-[10px] text-[var(--kz-mute)] flex items-center gap-0.5"><Users size={9} />cand.</div>
-                </div>
-              </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-1 flex-wrap">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em] px-2 py-0.5 rounded-md border"
+                          style={{ color: tone, borderColor: `color-mix(in srgb, ${tone} 50%, transparent)`, background: `color-mix(in srgb, ${tone} 10%, transparent)` }}>
+                          <span className="qxr-column-gem w-1.5 h-1.5" aria-hidden />{meta.label}
+                        </span>
+                        {job.is_boosted && (
+                          <span className="qxr-rarity" style={toneStyle('var(--qx-gold)')}><Crown size={10} aria-hidden />Boostée</span>
+                        )}
+                        {anonymous && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.08em] text-[var(--kz-mute)] px-1.5 py-0.5 rounded-md border border-[#C084FC]/25">
+                            <EyeOff size={10} aria-hidden />Anonyme
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-[15px] sm:text-base font-bold text-white leading-snug break-words">{job.title}</h3>
+                      <div className="flex items-center gap-x-2 gap-y-1 text-xs text-[var(--kz-mute)] flex-wrap mt-0.5">
+                        <span className="inline-flex items-center gap-1"><MapPin size={11} aria-hidden />{job.location}</span>
+                        <span>· {job.job_type}</span>
+                        <span>· {formatSalary(job.salary_min, job.salary_max)}</span>
+                        <span>· {timeAgo(job.created_at)}</span>
+                        {pub && (
+                          <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                            <User size={9} aria-hidden />{pub.full_name}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[11px] italic mt-1" style={{ color: status === 'suspended' ? '#FCA5A5' : 'var(--kz-mute)' }}>
+                        {status === 'suspended' ? 'Suspendue par la modération' : QUEST_STATUS_LORE[status]}
+                      </p>
 
-              <div className="flex items-center gap-1.5 shrink-0 ml-auto">
-                {actions.includes('publish') && (
-                  <Button kind="primary" size="sm" icon={<Send size={13} />} disabled={pending === job.id}
-                    onClick={() => runAction(job, 'publish')}>
-                    {PUBLISH_LABEL[status] ?? 'Publier'}
-                  </Button>
-                )}
-                {actions.includes('pause') && (
-                  <button onClick={() => runAction(job, 'pause')} disabled={pending === job.id}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
-                    title="Mettre en pause" aria-label="Mettre en pause">
-                    <Pause size={15} />
-                  </button>
-                )}
-                {status === 'published' && (
-                  <button
-                    onClick={() => setBoostFor(job)}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-orange-soft)]"
-                    style={{ color: job.is_boosted ? KZ.orange : KZ.mute }}
-                    title={job.is_boosted ? 'Prolonger la mise en avant' : 'Booster cette offre'}
-                    aria-label="Booster cette offre"
-                  >
-                    <Rocket size={16} fill={job.is_boosted ? KZ.orange : 'none'} />
-                  </button>
-                )}
-                {status !== 'suspended' && (
-                  <Link href={`/recruteur/offres/${job.id}/modifier`} title="Modifier" aria-label="Modifier"
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]">
-                    <Edit size={15} />
-                  </Link>
-                )}
-                {actions.includes('archive') && (
-                  <button onClick={() => runAction(job, 'archive')} disabled={pending === job.id}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--kz-cream2)] text-[var(--kz-mute)] hover:text-[var(--kz-ink)]"
-                    title="Archiver" aria-label="Archiver">
-                    <Archive size={15} />
-                  </button>
-                )}
-                <button
-                  onClick={() => deleteJob(job.id)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 text-[var(--kz-mute)] hover:text-red-600"
-                  title="Supprimer" aria-label="Supprimer"
-                >
-                  <Trash2 size={15} />
-                </button>
-              </div>
-            </div>
+                      {/* Sablier d'expiration */}
+                      {daysLeft !== null && (
+                        <div className="mt-2.5 max-w-[340px]" style={toneStyle(urgent ? 'var(--kz-orange)' : 'var(--kz-green)')}>
+                          <div className="flex items-center justify-between text-[11px] mb-1">
+                            <span className={`inline-flex items-center gap-1 font-semibold ${urgent ? 'text-[#FDBA74]' : 'text-[var(--kz-text)]'}`}>
+                              <Hourglass size={11} aria-hidden />
+                              {urgent ? `Expire dans ${daysLeft} j` : `${daysLeft} j restants`}
+                            </span>
+                            {job.expires_at && <span className="text-[var(--kz-mute)]">jusqu&apos;au {new Date(job.expires_at).toLocaleDateString('fr-FR')}</span>}
+                          </div>
+                          <div className="qxr-hourglass" aria-hidden>
+                            <span style={{ width: `${Math.max(3, Math.min(100, (daysLeft / JOB_DURATION_DAYS) * 100))}%` }} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Runes + actions */}
+                  <div className="flex items-center justify-between md:justify-end gap-3 shrink-0 pt-3 md:pt-0 border-t md:border-t-0 border-[#C084FC]/15">
+                    <div className="flex items-center gap-2">
+                      <Rune value={job.views} label="vues" icon={<Eye size={9} />} />
+                      <Rune value={job.applications_count} label="cand." icon={<Users size={9} />} tone="var(--qx-gold)" />
+                    </div>
+                    <div className="flex items-center gap-1 flex-wrap justify-end">
+                      {actions.includes('publish') && (
+                        <Button kind="primary" size="sm" icon={<Send size={13} />} disabled={pending === job.id}
+                          onClick={(e) => publish(job, e.currentTarget.closest('li'))}>
+                          {PUBLISH_LABEL[status] ?? 'Publier'}
+                        </Button>
+                      )}
+                      {actions.includes('pause') && (
+                        <Tooltip content="Mettre en pause">
+                          <button onClick={() => runAction(job, 'pause')} disabled={pending === job.id} className="qxr-icon-btn" aria-label="Mettre en pause">
+                            <Pause size={15} />
+                          </button>
+                        </Tooltip>
+                      )}
+                      {status === 'published' && (
+                        <Tooltip content={job.is_boosted ? 'Prolonger la mise en avant' : 'Booster cette offre'}>
+                          <button onClick={() => setBoostFor(job)} className="qxr-icon-btn" aria-label="Booster cette offre"
+                            style={{ color: job.is_boosted ? 'var(--qx-gold)' : undefined }}>
+                            <Rocket size={16} fill={job.is_boosted ? 'currentColor' : 'none'} />
+                          </button>
+                        </Tooltip>
+                      )}
+                      {status !== 'suspended' && (
+                        <Tooltip content="Modifier">
+                          <Link href={`/recruteur/offres/${job.id}/modifier`} aria-label="Modifier" className="qxr-icon-btn">
+                            <Edit size={15} />
+                          </Link>
+                        </Tooltip>
+                      )}
+                      {actions.includes('archive') && (
+                        <Tooltip content="Archiver">
+                          <button onClick={() => runAction(job, 'archive')} disabled={pending === job.id} className="qxr-icon-btn" aria-label="Archiver">
+                            <Archive size={15} />
+                          </button>
+                        </Tooltip>
+                      )}
+                      <Tooltip content="Supprimer">
+                        <button onClick={() => deleteJob(job.id)} className="qxr-icon-btn" data-danger aria-label="Supprimer">
+                          <Trash2 size={15} />
+                        </button>
+                      </Tooltip>
+                    </div>
+                  </div>
+                </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
       )}
 
       {/* Modal boost */}
@@ -384,8 +424,8 @@ function BoostModal({ job, onClose }: { job: Job | null; onClose: () => void }) 
   return (
     <Modal open={!!job} onClose={onClose} title="Booster cette offre" size="md">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.orangeSoft }}>
-          <Rocket size={18} color={KZ.orange} />
+        <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[#FACC15]/40 shadow-[0_0_24px_-12px_rgba(250,204,21,0.9)]" style={{ background: KZ.yellowSoft }}>
+          <Crown size={18} className="text-[var(--qx-gold)] shrink-0" aria-hidden />
           <div>
             <p className="text-sm font-bold text-[var(--kz-ink)]">{job?.title}</p>
             <p className="text-xs text-[var(--kz-mute)]">Mise en avant en tête des résultats + badge « À la une ».</p>
@@ -398,22 +438,26 @@ function BoostModal({ job, onClose }: { job: Job | null; onClose: () => void }) 
           </p>
         )}
 
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2" role="radiogroup" aria-label="Durée du boost">
           {JOB_BOOST_OPTIONS.map((opt) => {
             const selected = days === opt.days
             return (
-              <button key={opt.days} onClick={() => setDays(opt.days)}
-                className="flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all"
-                style={{ borderColor: selected ? KZ.orange : KZ.line, background: selected ? KZ.orangeSoft : KZ.paper }}>
-                <div className="w-7 h-7 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center shrink-0"
-                  style={{ background: selected ? KZ.orange : KZ.paper }}>
-                  {selected && <Rocket size={12} color="white" />}
-                </div>
+              <button key={opt.days} type="button" role="radio" aria-checked={selected} onClick={() => setDays(opt.days)}
+                className="flex items-center gap-3 p-3 rounded-xl border text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FACC15]/60"
+                style={{
+                  borderColor: selected ? 'var(--qx-gold)' : KZ.line,
+                  background: selected ? KZ.yellowSoft : 'rgba(12,5,24,0.5)',
+                  boxShadow: selected ? '0 0 22px -8px var(--qx-gold)' : 'none',
+                }}>
+                <span className="w-7 h-7 rotate-45 rounded-md border flex items-center justify-center shrink-0"
+                  style={{ borderColor: selected ? 'var(--qx-gold)' : KZ.edge, background: selected ? 'var(--qx-gold)' : 'transparent' }}>
+                  {selected && <Rocket size={12} color="#1A0B2E" className="-rotate-45" />}
+                </span>
                 <div className="flex-1">
                   <span className="text-sm font-bold text-[var(--kz-ink)]">{opt.label}</span>
-                  {opt.tag && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-[var(--kz-edge)]" style={{ background: KZ.yellowSoft }}>{opt.tag}</span>}
+                  {opt.tag && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded-md border border-[#FACC15]/40 text-[#FDE68A]" style={{ background: KZ.yellowSoft }}>{opt.tag}</span>}
                 </div>
-                <span className="text-lg font-extrabold text-[var(--kz-ink)]">{Math.floor(opt.priceCts / 100)}€</span>
+                <span className="text-lg font-extrabold qx-text-legend">{Math.floor(opt.priceCts / 100)}€</span>
               </button>
             )
           })}
@@ -421,7 +465,7 @@ function BoostModal({ job, onClose }: { job: Job | null; onClose: () => void }) 
 
         {error && <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
 
-        <Button kind="primary" size="lg" full loading={loading} icon={<Rocket size={15} />} onClick={handleBoost}>
+        <Button kind="dark" size="lg" full loading={loading} icon={<Rocket size={15} />} onClick={handleBoost}>
           Payer et activer le boost
         </Button>
         <p className="text-[11px] text-center text-[var(--kz-mute)]">Paiement unique sécurisé par Stripe. Sans abonnement.</p>

@@ -8,6 +8,8 @@ import { CompanyRequired } from '@/components/feedback/CompanyRequired'
 import { useAuth } from '@/features/auth/useAuth'
 import { Button } from '@/components/ui/Button'
 import type { CompanyBillingSummary } from '@/lib/queries/billing-summary'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
+import { ScrollText } from 'lucide-react'
 import { KZ } from '@/lib/constants'
 
 export default function NewJobPage() {
@@ -34,10 +36,11 @@ export default function NewJobPage() {
         Retour aux offres
       </Link>
 
-      <h1 className="kz-h2 text-[var(--kz-ink)] mb-6">Publier une nouvelle offre</h1>
+      <QuestHeader eyebrow="Nouvelle offre" icon={<ScrollText size={18} />} title={<>Rédiger une <span className="qx-text-arcane">quête</span></>}
+        subtitle="Publier une nouvelle offre : décrivez la mission, les héros viendront à vous." />
 
       {blocked && billing ? (
-        <div className="kz-card p-8 bg-[var(--kz-paper)] text-center">
+        <div className="qx-panel p-8 text-center">
           <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
             style={{ background: KZ.orangeSoft }}>
             <Lock size={24} color={KZ.orange} />
@@ -69,7 +72,7 @@ export default function NewJobPage() {
           </div>
         </div>
       ) : (
-        <div className="kz-card p-6 bg-[var(--kz-paper)]">
+        <div className="qx-panel p-6">
           {profile && !loadingBilling && (
             <JobForm
               recruiterId={profile.id}

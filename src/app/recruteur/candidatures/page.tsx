@@ -1,27 +1,32 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Users, Calendar, Video, Phone, MapPin, MessageCircle, Sparkles, Lock, Check, AlertTriangle, Rocket, Bookmark } from 'lucide-react'
+import { Users, Calendar, MessageCircle, Sparkles, Lock, Check, AlertTriangle, Rocket, Bookmark, ChevronsRight, UserRound, Crown, Swords, ChevronDown, FileText, Play } from 'lucide-react'
 import { InlineLoader } from '@/components/ui/LogoLoader'
 import { Tag } from '@/components/ui/Tag'
 import { Progress } from '@/components/ui/Progress'
 import { useApplicationSummaryAI } from '@/features/ai/useKazaIA'
-import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { Select } from '@/components/ui/Select'
 import { Input } from '@/components/ui/Input'
 import { Textarea } from '@/components/ui/Textarea'
 import { Modal } from '@/components/ui/Modal'
+import { Tooltip } from '@/components/ui/radix'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 import { useInterviews } from '@/features/interviews/useInterviews'
 import { useStartConversation } from '@/features/messages/useMessages'
-import type { Application, BadgeColor } from '@/lib/types'
+import type { Application } from '@/lib/types'
 import { APPLICATION_STATUSES, KZ, TALENT_POOL_CATEGORIES } from '@/lib/constants'
 import { timeAgo } from '@/lib/utils'
+import { island } from '@/lib/island'
+import { QuestHeader, toneStyle } from '@/components/quest/recruteur/QuestChrome'
+import { HeroPortrait, RarityTag } from '@/components/quest/recruteur/HeroPortrait'
+import { sparkBurst } from '@/components/quest/recruteur/effects'
+import { heroRank, isAdvance, RARITY_TONE, nextStage, PIPELINE_CLOSED, PIPELINE_ORDER, STAGE_META, type AppStatus } from '@/components/quest/recruteur/hero'
 
 export default function RecruiterApplicationsPage() {
   const { profile } = useAuth()
@@ -40,6 +45,12 @@ export default function RecruiterApplicationsPage() {
   const { create: createInterview } = useInterviews()
   const startConversation = useStartConversation()
   const router = useRouter()
+  // Présentation : carte mise en lumière après une promotion, colonne « hors quête » repliable
+  const [promotedId, setPromotedId] = useState<string | null>(null)
+  const [showClosed, setShowClosed] = useState(false)
+  const promoteTimer = useRef<number | null>(null)
+
+  useEffect(() => () => { if (promoteTimer.current) window.clearTimeout(promoteTimer.current) }, [])
 
   const handleMessage = async (candidateId: string, jobId: string) => {
     if (!profile?.id) return
@@ -93,117 +104,128 @@ export default function RecruiterApplicationsPage() {
     setApplications((prev) => prev.map((a) => a.id === id ? { ...a, status } : a))
   }
 
+  /** Changement de statut (même appel qu'avant) + récompense visuelle si le héros progresse. */
+  const changeStatus = (app: Application, status: AppStatus, origin?: Element | null) => {
+    if (status === app.status) return
+    if (isAdvance(app.status, status)) {
+      sparkBurst(origin)
+      setPromotedId(app.id)
+      if (promoteTimer.current) window.clearTimeout(promoteTimer.current)
+      promoteTimer.current = window.setTimeout(() => setPromotedId(null), 2600)
+      const name = app.candidate?.full_name ?? 'Le candidat'
+      island(status === 'hired'
+        ? { title: 'Un héros rejoint la guilde !', subtitle: `${name} · ${APPLICATION_STATUSES.hired.label}`, tone: 'success' }
+        : { title: `${name} progresse`, subtitle: `Nouvelle étape : ${APPLICATION_STATUSES[status].label}`, tone: 'info' })
+    }
+    updateStatus(app.id, status)
+  }
+
   const STATUS_OPTIONS = [
     { value: '', label: 'Tous les statuts' },
     ...Object.entries(APPLICATION_STATUSES).map(([k, v]) => ({ value: k, label: v.label })),
   ]
 
+  // Colonnes affichées : toute la progression, ou la seule étape filtrée
+  const filtered = filterStatus as AppStatus | ''
+  const columns: AppStatus[] = filtered ? [filtered] : PIPELINE_ORDER
+  const closedApps = filtered ? [] : applications.filter((a) => PIPELINE_CLOSED.includes(a.status))
+  const byStatus = (s: AppStatus) => applications.filter((a) => a.status === s)
+
+  const jumpTo = (s: AppStatus) => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    document.getElementById(`etape-${s}`)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'start', block: 'nearest' })
+  }
+
+  const cardProps = {
+    promotedId, messagingId,
+    onStatus: changeStatus,
+    onSummary: (a: Application) => setSummaryFor(a),
+    onMessage: handleMessage,
+    onSchedule: (a: Application) => setScheduleFor(a),
+    onPool: (a: Application) => setPoolFor(a),
+  }
+
   return (
-    <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Candidatures recues</h1>
-          <p className="text-sm text-[var(--kz-mute)]">{applications.length} candidature(s)</p>
-        </div>
-        <Select
-          options={STATUS_OPTIONS}
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="w-48"
-        />
-      </div>
+    <div className="max-w-[1500px] mx-auto">
+      <QuestHeader
+        eyebrow="Candidatures reçues"
+        icon={<Swords size={18} />}
+        title={<>Le hall des <span className="qx-text-arcane">recrues</span></>}
+        subtitle={<>{applications.length} candidature(s) · faites progresser vos héros d&apos;étape en étape.</>}
+        actions={
+          <Select
+            aria-label="Filtrer par statut"
+            options={STATUS_OPTIONS}
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="w-full sm:w-52"
+          />
+        }
+      />
 
       {loading ? <PageLoader /> : applications.length === 0 ? (
-        <EmptyState
-          title="Aucune candidature"
-          description="Publiez des offres pour commencer a recevoir des candidatures."
-          icon={<Users size={28} />}
-        />
-      ) : (
-        <div className="flex flex-col gap-3">
-          {applications.map((app) => {
-            const statusInfo = APPLICATION_STATUSES[app.status] ?? { label: app.status, color: 'cream' }
-            const candidate = app.candidate
-            const initials = candidate?.full_name?.split(' ').map((n: string) => n[0]).join('') ?? 'CA'
-
-            return (
-              <div key={app.id} className="kz-card p-5 bg-[var(--kz-paper)] flex items-center gap-5">
-                <div className="w-12 h-12 rounded-full border border-[var(--kz-edge)] flex items-center justify-center font-bold text-sm shrink-0" style={{ background: KZ.orangeSoft }}>
-                  {initials}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-base font-bold text-[var(--kz-ink)]">{candidate?.full_name}</span>
-                    {(() => {
-                      const bu = (candidate as unknown as { boosted_until?: string | null })?.boosted_until
-                      return bu && new Date(bu) > new Date() ? (
-                        <Badge color="orange" size="sm"><span className="flex items-center gap-1"><Rocket size={10} />Mis en avant</span></Badge>
-                      ) : null
-                    })()}
-                  </div>
-                  <div className="text-sm text-[var(--kz-mute)]">
-                    {app.job?.title} · {app.job?.company?.name} · {timeAgo(app.created_at)}
-                  </div>
-                  {app.cover_letter && (
-                    <p className="text-xs text-[var(--kz-mute)] mt-1 line-clamp-1">{app.cover_letter}</p>
-                  )}
-                  {(() => {
-                    const ans = (app as unknown as { prequal_answers?: { label: string; value: string }[] }).prequal_answers
-                    return ans && ans.some((a) => a.value) ? (
-                      <div className="flex flex-wrap gap-1.5 mt-1.5">
-                        {ans.filter((a) => a.value).map((a, i) => (
-                          <span key={i} className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
-                            {a.label} : <strong className="text-[var(--kz-ink)]">{a.value}</strong>
-                          </span>
-                        ))}
-                      </div>
-                    ) : null
-                  })()}
-                </div>
-
-                <div className="flex items-center gap-3 shrink-0">
-                  <Badge color={statusInfo.color as BadgeColor}>{statusInfo.label}</Badge>
-                  <select
-                    value={app.status}
-                    onChange={(e) => updateStatus(app.id, e.target.value as Application['status'])}
-                    className="text-xs font-semibold h-8 px-2 border border-[var(--kz-edge)] rounded-lg bg-[var(--kz-paper)] cursor-pointer"
-                  >
-                    {Object.entries(APPLICATION_STATUSES).map(([k, v]) => (
-                      <option key={k} value={k}>{v.label}</option>
-                    ))}
-                  </select>
-                  <Button kind="violet" size="sm" icon={<Sparkles size={13} />}
-                    onClick={() => setSummaryFor(app)}>
-                    Synthèse IA
-                  </Button>
-                  {candidate && (
-                    <Button kind="soft" size="sm" icon={<MessageCircle size={13} />}
-                      loading={messagingId === candidate.id}
-                      onClick={() => handleMessage(candidate.id, app.job_id)}>
-                      Message
-                    </Button>
-                  )}
-                  {candidate && (
-                    <Button kind="soft" size="sm" icon={<Calendar size={13} />} onClick={() => setScheduleFor(app)}>
-                      Entretien
-                    </Button>
-                  )}
-                  {candidate && (
-                    <Button kind="soft" size="sm" icon={<Bookmark size={13} />} onClick={() => setPoolFor(app)}>
-                      Vivier
-                    </Button>
-                  )}
-                  {candidate && (
-                    <Link href={`/recruteur/candidats/${candidate.id}`}>
-                      <Button kind="soft" size="sm">Profil</Button>
-                    </Link>
-                  )}
-                </div>
-              </div>
-            )
-          })}
+        <div className="qx-panel">
+          <EmptyState
+            title="Aucune candidature"
+            description="Publiez des offres pour commencer a recevoir des candidatures."
+            icon={<Users size={28} />}
+          />
         </div>
+      ) : (
+        <>
+          {/* Navigation rapide entre étapes (utile au doigt sur mobile) */}
+          {columns.length > 1 && (
+            <nav aria-label="Étapes du pipeline" className="qxr-tabs mb-3 lg:hidden">
+              {columns.map((s) => (
+                <button key={s} type="button" className="qxr-tab" onClick={() => jumpTo(s)}>
+                  <span className="qxr-column-gem" style={toneStyle(STAGE_META[s].tone)} aria-hidden />
+                  {APPLICATION_STATUSES[s].label}
+                  <span className="qxr-tab-count">{byStatus(s).length}</span>
+                </button>
+              ))}
+            </nav>
+          )}
+
+          <div className="qxr-board" role="list" aria-label="Pipeline de recrutement">
+            {columns.map((s) => {
+              const list = byStatus(s)
+              return (
+                <div key={s} id={`etape-${s}`} role="listitem" aria-label={`${APPLICATION_STATUSES[s].label} : ${list.length}`}
+                  className="qxr-column" style={toneStyle(STAGE_META[s].tone)}>
+                  <header className="qxr-column-head">
+                    <div className="flex items-center gap-2">
+                      <span className="qxr-column-gem" aria-hidden />
+                      <h2 className="text-[13px] font-bold text-white tracking-wide flex-1 truncate font-[family-name:var(--font-epic)]">{APPLICATION_STATUSES[s].label}</h2>
+                      <span className="text-[12px] font-extrabold tabular-nums px-2 py-0.5 rounded-md bg-[rgba(12,5,24,0.6)]" style={{ color: STAGE_META[s].tone }}>{list.length}</span>
+                    </div>
+                    <p className="text-[10.5px] uppercase tracking-[0.12em] text-[var(--kz-mute)] mt-1 pl-[18px]">{STAGE_META[s].lore}</p>
+                  </header>
+                  <div className="flex flex-col gap-3 p-3">
+                    {list.length === 0 ? (
+                      <p className="text-[12px] text-[var(--kz-mute)] text-center py-6 border border-dashed border-[#C084FC]/20 rounded-xl">Aucun héros à cette étape.</p>
+                    ) : list.map((app) => <HeroApplicationCard key={app.id} app={app} {...cardProps} />)}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {/* Hors quête : refusées / retirées */}
+          {closedApps.length > 0 && (
+            <section className="mt-5">
+              <button type="button" onClick={() => setShowClosed((v) => !v)} aria-expanded={showClosed} aria-controls="hors-quete"
+                className="flex items-center gap-2 text-[13px] font-bold text-[var(--kz-mute)] hover:text-white transition-colors">
+                <ChevronDown size={15} className={`transition-transform ${showClosed ? 'rotate-180' : ''}`} aria-hidden />
+                Hors quête <span className="text-[11px] font-semibold">({closedApps.length} refusée(s) ou retirée(s))</span>
+              </button>
+              {showClosed && (
+                <div id="hors-quete" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mt-3">
+                  {closedApps.map((app) => <HeroApplicationCard key={app.id} app={app} {...cardProps} />)}
+                </div>
+              )}
+            </section>
+          )}
+        </>
       )}
 
       {/* Modal planification entretien */}
@@ -219,7 +241,7 @@ export default function RecruiterApplicationsPage() {
           <Input label="Date et heure *" type="datetime-local" value={scheduleData.scheduledAt}
             onChange={e => setScheduleData(d => ({ ...d, scheduledAt: e.target.value }))} required />
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Select label="Durée" options={[
               { value: '30', label: '30 min' }, { value: '45', label: '45 min' },
               { value: '60', label: '1 heure' }, { value: '90', label: '1h30' },
@@ -260,10 +282,10 @@ export default function RecruiterApplicationsPage() {
             Les deux parties recevront un email de confirmation avec tous les détails.
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <Button kind="soft" size="lg" full onClick={() => setScheduleFor(null)}>Annuler</Button>
             <Button kind="primary" size="lg" full loading={scheduling} onClick={handleSchedule}
-              disabled={!scheduleData.scheduledAt}>
+              disabled={!scheduleData.scheduledAt} className="whitespace-normal">
               Planifier et envoyer les invitations
             </Button>
           </div>
@@ -276,6 +298,154 @@ export default function RecruiterApplicationsPage() {
       {/* Modal sauvegarde dans le vivier */}
       <SaveToPoolModal app={poolFor} onClose={() => setPoolFor(null)} />
     </div>
+  )
+}
+
+// ── Carte de héros (candidature) ───────────────────────────────
+
+function HeroApplicationCard({ app, promotedId, messagingId, onStatus, onSummary, onMessage, onSchedule, onPool }: {
+  app: Application
+  promotedId: string | null
+  messagingId: string | null
+  onStatus: (app: Application, status: AppStatus, origin?: Element | null) => void
+  onSummary: (app: Application) => void
+  onMessage: (candidateId: string, jobId: string) => void
+  onSchedule: (app: Application) => void
+  onPool: (app: Application) => void
+}) {
+  const candidate = app.candidate
+  const rank = heroRank(candidate?.xp)
+  const rarity = rank?.rarity ?? 'commune'
+  const next = nextStage(app.status)
+  const boostedUntil = candidate?.boosted_until
+  const boosted = !!boostedUntil && new Date(boostedUntil) > new Date()
+  const answers = (app as unknown as { prequal_answers?: { label: string; value: string }[] }).prequal_answers?.filter((a) => a.value) ?? []
+  const name = candidate?.full_name ?? 'Candidat'
+  const closed = PIPELINE_CLOSED.includes(app.status)
+
+  return (
+    <article className={`qxr-hero p-3.5 ${closed ? 'opacity-75' : 'qx-rise'}`} data-promoted={promotedId === app.id}
+      style={toneStyle(RARITY_TONE[rarity])}
+      aria-label={`${name}, ${APPLICATION_STATUSES[app.status]?.label ?? app.status}`}>
+      {/* Rang */}
+      <div className="flex items-center justify-between gap-2 mb-2.5">
+        <div className="flex items-center gap-1.5 min-w-0">
+          {rank ? <RarityTag rarity={rarity} /> : <span className="text-[10px] uppercase tracking-[0.12em] text-[var(--kz-mute)]">Héros</span>}
+          {rank && <span className="text-[11px] font-bold text-white whitespace-nowrap">Niv. {rank.level}</span>}
+        </div>
+        <span className="text-[10.5px] text-[var(--kz-mute)] whitespace-nowrap">{timeAgo(app.created_at)}</span>
+      </div>
+
+      {/* Identité */}
+      <div className="flex items-center gap-3">
+        <HeroPortrait name={name} src={candidate?.avatar_url} avatarConfig={candidate?.avatar_config} size={54} rarity={rarity} />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-1.5">
+            <h3 className="text-[14px] font-bold text-white truncate">{name}</h3>
+            {boosted && (
+              <Tooltip content="Profil mis en avant par le candidat">
+                <span className="shrink-0 inline-flex items-center gap-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em] text-[#FDBA74] px-1.5 py-0.5 rounded border border-[#FB923C]/45 bg-[rgba(251,146,60,0.12)]">
+                  <Rocket size={9} aria-hidden />Avant
+                </span>
+              </Tooltip>
+            )}
+          </div>
+          <p className="text-[11.5px] text-[var(--kz-text)] truncate">{app.job?.title}</p>
+          <p className="text-[11px] text-[var(--kz-mute)] truncate">{app.job?.company?.name}{candidate?.location ? ` · ${candidate.location}` : ''}</p>
+        </div>
+      </div>
+
+      {/* XP réelle vers le palier suivant */}
+      {rank && (
+        <div className="mt-3">
+          <div className="flex items-center justify-between text-[10px] text-[var(--kz-mute)] mb-1">
+            <span className="uppercase tracking-[0.1em]">{rank.title}</span>
+            <span className="tabular-nums">{rank.xp.toLocaleString('fr-FR')} XP</span>
+          </div>
+          <div className="qxr-xp-mini" role="progressbar" aria-label={`Progression vers ${rank.nextTitle}`} aria-valuenow={rank.progress} aria-valuemin={0} aria-valuemax={100}>
+            <span style={{ width: `${Math.max(rank.progress, 3)}%` }} />
+          </div>
+        </div>
+      )}
+
+      {/* Artefacts & lettre */}
+      {(candidate?.cv_url || candidate?.video_pitch_url) && (
+        <div className="flex flex-wrap gap-1.5 mt-2.5">
+          {candidate?.cv_url && <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--qx-cyan)] px-1.5 py-0.5 rounded border border-[#22D3EE]/30"><FileText size={10} aria-hidden />CV</span>}
+          {candidate?.video_pitch_url && <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[var(--qx-magenta)] px-1.5 py-0.5 rounded border border-[#E879F9]/30"><Play size={10} aria-hidden />Pitch vidéo</span>}
+        </div>
+      )}
+      {app.cover_letter && (
+        <p className="text-[11.5px] text-[var(--kz-mute)] mt-2.5 line-clamp-2 italic">« {app.cover_letter} »</p>
+      )}
+      {answers.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 mt-2">
+          {answers.map((a, i) => (
+            <span key={i} className="text-[10px] font-semibold px-2 py-0.5 rounded-full border border-[var(--kz-line)] text-[var(--kz-text)]" style={{ background: KZ.cream2 }}>
+              {a.label} : <strong className="text-white">{a.value}</strong>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* Progression */}
+      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[#C084FC]/15">
+        <select
+          aria-label={`Statut de la candidature de ${name}`}
+          value={app.status}
+          onChange={(e) => onStatus(app, e.target.value as AppStatus, e.currentTarget.closest('article'))}
+          className="qxr-select flex-1"
+        >
+          {Object.entries(APPLICATION_STATUSES).map(([k, v]) => (
+            <option key={k} value={k}>{v.label}</option>
+          ))}
+        </select>
+        {next && (
+          <Tooltip content={`Faire passer à « ${APPLICATION_STATUSES[next].label} »`}>
+            <button type="button" onClick={(e) => onStatus(app, next, e.currentTarget.closest('article'))}
+              aria-label={`Promouvoir ${name} : ${APPLICATION_STATUSES[next].label}`}
+              className="h-8 px-2.5 inline-flex items-center gap-1 rounded-[10px] text-[11px] font-bold uppercase tracking-[0.06em] text-[#1A0B2E] border border-[#FDE68A] bg-[linear-gradient(120deg,#FDE68A,#FACC15_50%,#F59E0B)] shadow-[0_0_16px_-4px_rgba(250,204,21,0.8)] hover:-translate-y-0.5 active:scale-95 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FACC15]/70">
+              {next === 'hired' ? <Crown size={13} aria-hidden /> : <ChevronsRight size={14} aria-hidden />}
+              <span className="hidden min-[380px]:inline">{next === 'hired' ? 'Recruter' : 'Promouvoir'}</span>
+            </button>
+          </Tooltip>
+        )}
+      </div>
+
+      {/* Actions rapides */}
+      <div className="flex items-center justify-between gap-1 mt-2">
+        <Tooltip content="Synthèse IA">
+          <button type="button" className="qxr-icon-btn text-[var(--qx-magenta)]" aria-label={`Synthèse IA de la candidature de ${name}`} onClick={() => onSummary(app)}>
+            <Sparkles size={15} />
+          </button>
+        </Tooltip>
+        {candidate && (
+          <>
+            <Tooltip content="Envoyer un message">
+              <button type="button" className="qxr-icon-btn" aria-label={`Envoyer un message à ${name}`} disabled={messagingId === candidate.id}
+                onClick={() => onMessage(candidate.id, app.job_id)}>
+                {messagingId === candidate.id ? <span className="h-3.5 w-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" /> : <MessageCircle size={15} />}
+              </button>
+            </Tooltip>
+            <Tooltip content="Planifier un entretien">
+              <button type="button" className="qxr-icon-btn" aria-label={`Planifier un entretien avec ${name}`} onClick={() => onSchedule(app)}>
+                <Calendar size={15} />
+              </button>
+            </Tooltip>
+            <Tooltip content="Sauvegarder dans le vivier">
+              <button type="button" className="qxr-icon-btn" aria-label={`Sauvegarder ${name} dans le vivier`} onClick={() => onPool(app)}>
+                <Bookmark size={15} />
+              </button>
+            </Tooltip>
+            <Tooltip content="Fiche du héros">
+              <Link href={`/recruteur/candidats/${candidate.id}`} className="qxr-icon-btn" aria-label={`Voir le profil de ${name}`}>
+                <UserRound size={15} />
+              </Link>
+            </Tooltip>
+          </>
+        )}
+      </div>
+    </article>
   )
 }
 
@@ -301,21 +471,22 @@ function SaveToPoolModal({ app, onClose }: { app: Application | null; onClose: (
   return (
     <Modal open={!!app} onClose={handleClose} title="Sauvegarder dans le vivier" size="sm">
       {done ? (
-        <div className="flex flex-col items-center gap-3 py-6 text-center">
-          <div className="w-14 h-14 rounded-full border-2 border-[var(--kz-edge)] flex items-center justify-center" style={{ background: KZ.greenSoft }}>
-            <Check size={24} color={KZ.green} />
+        <div className="flex flex-col items-center gap-3 py-6 text-center qx-rise">
+          <div className="w-14 h-14 rounded-xl rotate-45 border border-[#4ADE80]/60 flex items-center justify-center shadow-[0_0_24px_-6px_rgba(74,222,128,0.9)]" style={{ background: KZ.greenSoft }}>
+            <Check size={24} color={KZ.green} className="-rotate-45" />
           </div>
-          <p className="text-sm font-bold text-[var(--kz-ink)]">{candidate?.full_name} ajouté au vivier.</p>
+          <p className="text-sm font-bold text-[var(--kz-ink)] mt-1">{candidate?.full_name} ajouté au vivier.</p>
+          <p className="text-xs text-[var(--kz-mute)]">Retrouvez-le dans le Registre des héros.</p>
           <Button kind="primary" size="md" onClick={handleClose}>Fermer</Button>
         </div>
       ) : (
         <div className="flex flex-col gap-4">
           <p className="text-sm text-[var(--kz-mute)]">Classez <strong className="text-[var(--kz-ink)]">{candidate?.full_name}</strong> pour le retrouver facilement.</p>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Catégorie">
             {TALENT_POOL_CATEGORIES.map((c) => (
-              <button key={c.id} onClick={() => setCategory(c.id)}
-                className="p-2.5 rounded-xl border-2 text-sm font-semibold text-left transition-all"
-                style={{ borderColor: category === c.id ? KZ.violet : KZ.line, background: category === c.id ? KZ.violetSoft : KZ.paper }}>
+              <button key={c.id} type="button" role="radio" aria-checked={category === c.id} onClick={() => setCategory(c.id)}
+                className="p-2.5 rounded-xl border text-sm font-semibold text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E879F9]/60"
+                style={{ borderColor: category === c.id ? 'var(--qx-magenta)' : KZ.line, background: category === c.id ? KZ.violetSoft : 'rgba(12,5,24,0.5)', boxShadow: category === c.id ? '0 0 18px -6px var(--qx-magenta)' : 'none' }}>
                 {c.label}
               </button>
             ))}
@@ -335,7 +506,7 @@ function SaveToPoolModal({ app, onClose }: { app: Application | null; onClose: (
 function recoFromScore(score: number): { label: string; bg: string; color: string } {
   if (score >= 80) return { label: 'À contacter',       bg: KZ.greenSoft,  color: KZ.green }
   if (score >= 60) return { label: 'Profil intéressant', bg: KZ.violetSoft, color: KZ.violet }
-  if (score >= 40) return { label: 'À étudier',          bg: KZ.yellowSoft, color: '#B7791F' }
+  if (score >= 40) return { label: 'À étudier',          bg: KZ.yellowSoft, color: KZ.yellow }
   return                  { label: 'Peu prioritaire',    bg: KZ.cream2,     color: KZ.mute }
 }
 
@@ -354,7 +525,7 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
     <Modal open={!!app} onClose={handleClose} title="Synthèse IA de la candidature" size="lg">
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2.5 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
-          <Sparkles size={18} color={KZ.violet} />
+          <Sparkles size={18} color={KZ.violet} aria-hidden />
           <p className="text-sm font-semibold text-[var(--kz-ink)]">
             {candidate?.full_name ? `Analyse de ${candidate.full_name}` : 'KazaIA analyse cette candidature'} — {app?.job?.title}
           </p>
@@ -387,9 +558,9 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
             {(() => {
               const r = recoFromScore(summary.adequation)
               return (
-                <div className="p-4 rounded-xl border-2 border-[var(--kz-edge)] flex items-center gap-3"
-                  style={{ background: r.bg, boxShadow: '3px 3px 0 var(--kz-shadow)' }}>
-                  <Sparkles size={20} color={r.color} />
+                <div className="p-4 rounded-xl border flex items-center gap-3"
+                  style={{ background: r.bg, borderColor: `color-mix(in srgb, ${r.color} 55%, transparent)`, boxShadow: `0 0 26px -10px ${r.color}` }}>
+                  <Sparkles size={20} color={r.color} aria-hidden />
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--kz-mute)]">Recommandation KazaIA</p>
                     <p className="text-lg font-extrabold text-[var(--kz-ink)]">{r.label}</p>
@@ -402,9 +573,9 @@ function ApplicationSummaryModal({ app, onClose }: { app: Application | null; on
             <div className="p-4 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-[var(--kz-ink)]">Taux d&apos;adéquation</span>
-                <span className="text-2xl font-extrabold" style={{ color: KZ.violet }}>{summary.adequation}%</span>
+                <span className="text-2xl font-extrabold qx-text-arcane">{summary.adequation}%</span>
               </div>
-              <Progress value={summary.adequation} color={KZ.violet} />
+              <Progress value={summary.adequation} color="var(--qx-arcane)" />
             </div>
 
             <div>

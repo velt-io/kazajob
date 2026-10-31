@@ -10,6 +10,7 @@ import { PageLoader } from '@/components/feedback/LoadingSpinner'
 import { useAuth } from '@/features/auth/useAuth'
 import type { Job } from '@/lib/types'
 import { timeAgo } from '@/lib/utils'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 import { KZ } from '@/lib/constants'
 
 export default function RecruiterStagesPage() {
@@ -54,15 +55,18 @@ export default function RecruiterStagesPage() {
 
   return (
     <div className="max-w-[900px] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-xl font-extrabold text-[var(--kz-ink)]">Mes stages</h1>
-          <p className="text-sm text-[var(--kz-mute)] mt-0.5">{stages.length} offre{stages.length !== 1 ? 's' : ''} de stage</p>
-        </div>
-        <Link href="/recruteur/stages/nouveau">
-          <Button kind="primary" size="md" icon={<Plus size={15} />}>Publier un stage</Button>
-        </Link>
-      </div>
+      <QuestHeader
+        eyebrow="Stages"
+        icon={<ClipboardList size={18} />}
+        tone="var(--qx-cyan)"
+        title={<>Les quêtes d&apos;<span className="qx-text-arcane">apprentis</span></>}
+        subtitle={`${stages.length} offre${stages.length !== 1 ? 's' : ''} de stage`}
+        actions={
+          <Link href="/recruteur/stages/nouveau">
+            <Button kind="primary" size="md" icon={<Plus size={15} />}>Publier un stage</Button>
+          </Link>
+        }
+      />
 
       {stages.length === 0 ? (
         <EmptyState
@@ -78,7 +82,7 @@ export default function RecruiterStagesPage() {
       ) : (
         <div className="flex flex-col gap-3">
           {stages.map((stage) => (
-            <div key={stage.id} className="kz-card p-4 bg-[var(--kz-paper)]">
+            <div key={stage.id} className="qx-panel p-4">
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">

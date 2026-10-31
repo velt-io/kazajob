@@ -9,6 +9,7 @@ import { Select } from '@/components/ui/Select'
 import { Avatar } from '@/components/ui/Avatar'
 import { useAuth } from '@/features/auth/useAuth'
 import { KZ } from '@/lib/constants'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 import type { CompanyMember, CompanyJoinRequest, CompanyInvitation } from '@/lib/types'
 import type { BadgeColor } from '@/lib/types'
 
@@ -161,19 +162,19 @@ export default function CompanyTeamPage() {
 
   return (
     <div className="max-w-[700px] mx-auto">
-      <div className="flex items-start justify-between gap-3 mb-6">
-        <div>
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Mon entreprise</p>
-          <h1 className="text-2xl font-extrabold text-[var(--kz-ink)]">Gestion de l&apos;équipe</h1>
-        </div>
-        {myMembership && !isOwner && (
+      <QuestHeader
+        eyebrow="Mon entreprise"
+        icon={<Users size={18} />}
+        title={<>La <span className="qx-text-arcane">compagnie</span></>}
+        subtitle="Gestion de l'équipe : membres, rôles et invitations."
+        actions={myMembership && !isOwner ? (
           <Button kind="outline" size="sm" icon={<LogOut size={14} />} onClick={handleLeave}>Quitter</Button>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       {/* Demandes en attente */}
       {requests.length > 0 && (
-        <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+        <div className="qx-panel p-5 mb-5">
           <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-3 flex items-center gap-2">
             <UserPlus size={15} color={KZ.orange} />
             Demandes d&apos;adhésion ({requests.length})
@@ -187,16 +188,16 @@ export default function CompanyTeamPage() {
                   <Avatar name={p?.full_name ?? '?'} size={36} />
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-bold text-[var(--kz-ink)]">{p?.full_name ?? '—'}</div>
-                    <div className="text-xs text-[var(--kz-mute)]">{p?.email}</div>
+                    <div className="text-xs text-[var(--kz-mute)] truncate">{p?.email}</div>
                     {req.message && <p className="text-xs text-[var(--kz-text)] mt-1 italic">&quot;{req.message}&quot;</p>}
                   </div>
                   {isOwnerOrAdmin && (
                     <div className="flex gap-1.5 shrink-0">
-                      <button onClick={() => handleRequest(req, true)} disabled={processingId === req.id}
+                      <button onClick={() => handleRequest(req, true)} disabled={processingId === req.id} aria-label="Accepter la demande"
                         className="w-8 h-8 rounded-lg border border-[var(--kz-green)] flex items-center justify-center hover:bg-[var(--kz-green-soft)]">
                         <Check size={15} color={KZ.green} />
                       </button>
-                      <button onClick={() => handleRequest(req, false)} disabled={processingId === req.id}
+                      <button onClick={() => handleRequest(req, false)} disabled={processingId === req.id} aria-label="Refuser la demande"
                         className="w-8 h-8 rounded-lg border border-red-300 flex items-center justify-center hover:bg-red-50">
                         <X size={15} color="#EF4444" />
                       </button>
@@ -211,7 +212,7 @@ export default function CompanyTeamPage() {
 
       {/* Inviter un recruteur */}
       {isOwnerOrAdmin && (
-        <div className="kz-card p-5 bg-[var(--kz-paper)] mb-5">
+        <div className="qx-panel p-5 mb-5">
           <h2 className="text-sm font-bold text-[var(--kz-ink)] mb-1 flex items-center gap-2">
             <Link2 size={15} color={KZ.violet} /> Inviter un recruteur
           </h2>
@@ -238,7 +239,7 @@ export default function CompanyTeamPage() {
           {inviteLink && (
             <div className="mt-3 flex items-center gap-2 p-3 rounded-xl border border-[var(--kz-edge)]" style={{ background: KZ.violetSoft }}>
               <code className="flex-1 min-w-0 text-[11px] text-[var(--kz-ink)] truncate">{inviteLink}</code>
-              <button onClick={copyLink} className="flex items-center gap-1 text-xs font-bold shrink-0" style={{ color: KZ.violet }}>
+              <button onClick={copyLink} className="flex items-center gap-1 text-xs font-bold shrink-0 text-[var(--qx-magenta)]">
                 {copied ? <Check size={13} /> : <Copy size={13} />}{copied ? 'Copié' : 'Copier'}
               </button>
             </div>
@@ -255,7 +256,7 @@ export default function CompanyTeamPage() {
                     <div className="text-[10px] text-[var(--kz-mute)]">Rôle : {inv.role === 'admin' ? 'Admin' : 'Recruteur'}</div>
                   </div>
                   <button onClick={() => handleRevoke(inv.id)} disabled={processingId === inv.id}
-                    className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 transition-colors" title="Révoquer">
+                    className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 transition-colors" title="Révoquer" aria-label="Révoquer l'invitation">
                     <Trash2 size={13} />
                   </button>
                 </div>
@@ -266,13 +267,13 @@ export default function CompanyTeamPage() {
       )}
 
       {/* Membres actifs */}
-      <div className="kz-card bg-[var(--kz-paper)] overflow-hidden">
+      <div className="qx-panel overflow-hidden">
         <div className="p-4 border-b border-[var(--kz-line)] flex justify-between items-center">
-          <h2 className="text-sm font-bold text-[var(--kz-ink)]">Membres ({members.length})</h2>
+          <h2 className="text-[15px] font-bold text-white font-[family-name:var(--font-epic)] tracking-wide">Membres ({members.length})</h2>
         </div>
         {loading ? (
           <div className="p-4 flex flex-col gap-2">
-            {[1, 2].map(i => <div key={i} className="h-14 rounded-xl bg-[var(--kz-cream2)] animate-pulse" />)}
+            {[1, 2].map(i => <div key={i} className="h-14 qxr-skeleton" />)}
           </div>
         ) : (
           <div className="divide-y divide-[var(--kz-line)]">
@@ -281,14 +282,14 @@ export default function CompanyTeamPage() {
               const isSelf = m.recruiter_id === profile?.id
               const memberIsOwner = m.role === 'owner'
               return (
-                <div key={m.id} className="flex items-center gap-3 p-4 hover:bg-[var(--kz-cream2)] transition-colors">
+                <div key={m.id} className="flex flex-wrap sm:flex-nowrap items-center gap-3 p-4 hover:bg-[rgba(168,85,247,0.08)] transition-colors">
                   <Avatar name={p?.full_name ?? '?'} src={p?.avatar_url ?? null} avatarConfig={p?.avatar_config} size={36} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold text-[var(--kz-ink)]">{p?.full_name ?? '—'}</span>
+                      <span className="text-sm font-bold text-white truncate">{p?.full_name ?? '—'}</span>
                       {isSelf && <Badge color="cream" size="sm">Vous</Badge>}
                     </div>
-                    <div className="text-xs text-[var(--kz-mute)]">{p?.email}</div>
+                    <div className="text-xs text-[var(--kz-mute)] truncate">{p?.email}</div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     <Badge color={ROLE_BADGE[m.role] ?? 'cream'} size="sm">
@@ -300,7 +301,7 @@ export default function CompanyTeamPage() {
                         onClick={() => handleTransfer(m.id, p?.full_name ?? 'ce membre')}
                         disabled={processingId === m.id}
                         className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-orange)] text-xs transition-colors"
-                        title="Transférer la propriété"
+                        title="Transférer la propriété" aria-label="Transférer la propriété"
                       >
                         <Crown size={12} />
                       </button>
@@ -311,7 +312,7 @@ export default function CompanyTeamPage() {
                           onClick={() => handleChangeRole(m.id, m.role === 'admin' ? 'member' : 'admin')}
                           disabled={processingId === m.id}
                           className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-violet)] text-xs transition-colors"
-                          title={m.role === 'admin' ? 'Rétrograder' : 'Promouvoir admin'}
+                          title={m.role === 'admin' ? 'Rétrograder' : 'Promouvoir admin'} aria-label={m.role === 'admin' ? 'Rétrograder' : 'Promouvoir admin'}
                         >
                           <Shield size={12} />
                         </button>
@@ -319,7 +320,7 @@ export default function CompanyTeamPage() {
                           onClick={() => handleRemoveMember(m.id)}
                           disabled={processingId === m.id}
                           className="p-1.5 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 text-xs transition-colors"
-                          title="Retirer"
+                          title="Retirer" aria-label="Retirer le membre"
                         >
                           <X size={12} />
                         </button>

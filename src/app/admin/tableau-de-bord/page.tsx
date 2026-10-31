@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Users, Briefcase, Building2, TrendingUp, Star, Bell, BookOpen, BarChart2, Sparkles, Zap } from 'lucide-react'
-import { StatCard } from '@/components/ui/StatCard'
+import { Users, Briefcase, Building2, TrendingUp, Star, Bell, BookOpen, BarChart2, Sparkles, Zap, Castle, ScrollText, Compass, ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { PageLoader } from '@/components/feedback/LoadingSpinner'
-import { KZ } from '@/lib/constants'
+import { QuestHeader, PanelTitle, Sigil, toneStyle } from '@/components/quest/recruteur/QuestChrome'
+import { TrophyStat } from '@/components/quest/recruteur/TrophyStat'
 
 interface AdminStats {
   users: number
@@ -54,49 +54,70 @@ export default function AdminDashboard() {
   // Distribution réelle des rôles
   const total = stats.users || 1
   const roleDistrib = [
-    { label: 'Candidats',   count: stats.candidates, pct: Math.round((stats.candidates / total) * 100), color: KZ.orange },
-    { label: 'Recruteurs',  count: stats.recruiters,  pct: Math.round((stats.recruiters / total) * 100),  color: KZ.violet },
-    { label: 'Admins',      count: stats.admins,      pct: Math.round((stats.admins / total) * 100),      color: KZ.green },
+    { label: 'Candidats',   count: stats.candidates, pct: Math.round((stats.candidates / total) * 100), color: 'var(--qx-cyan)' },
+    { label: 'Recruteurs',  count: stats.recruiters,  pct: Math.round((stats.recruiters / total) * 100),  color: 'var(--qx-neon)' },
+    { label: 'Admins',      count: stats.admins,      pct: Math.round((stats.admins / total) * 100),      color: 'var(--qx-gold)' },
   ]
 
   if (loading) return <PageLoader />
 
+  const QUICK = [
+    { href: '/admin/utilisateurs',  label: 'Gérer les utilisateurs',  tone: 'var(--qx-neon)',    icon: <Users size={14} /> },
+    { href: '/admin/offres',        label: 'Modérer les offres',      tone: 'var(--kz-orange)',  icon: <Briefcase size={14} /> },
+    { href: '/admin/entreprises',   label: 'Valider les entreprises', tone: 'var(--kz-green)',   icon: <Building2 size={14} /> },
+    { href: '/admin/evenements',    label: 'Gérer KazaEvents',        tone: 'var(--qx-cyan)',    icon: <Star size={14} /> },
+    { href: '/admin/notifications', label: 'Envoyer une notification', tone: 'var(--qx-gold)',   icon: <Bell size={14} /> },
+    { href: '/admin/competences',   label: 'Référentiel compétences', tone: '#A3A3B8',           icon: <BookOpen size={14} /> },
+    { href: '/admin/statistiques',  label: 'Analytics & rapports',    tone: 'var(--qx-neon)',    icon: <BarChart2 size={14} /> },
+    { href: '/admin/ia',            label: 'KazaIA — Statistiques',   tone: 'var(--qx-magenta)', icon: <Sparkles size={14} /> },
+  ]
+
   return (
-    <div className="max-w-[1100px] mx-auto">
-      <div className="mb-7">
-        <h1 className="kz-h2 text-[var(--kz-ink)] mb-1">Administration</h1>
-        <p className="text-sm text-[var(--kz-mute)]">Vue globale · Kazajob La Reunion 974</p>
-      </div>
+    <div className="max-w-[1180px] mx-auto">
+      <QuestHeader
+        eyebrow="Administration · Vue globale"
+        icon={<Castle size={18} />}
+        tone="var(--qx-gold)"
+        title={<>La <span className="qx-text-legend">Citadelle</span></>}
+        subtitle="Kazajob La Réunion 974 — l'état du royaume en un coup d'œil."
+      />
 
       {/* KPI — ligne 1 */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
-        <StatCard label="Utilisateurs"   value={stats.users.toLocaleString('fr-FR')}        color={KZ.violetSoft} icon={<Users size={16} />} />
-        <StatCard label="Offres"         value={stats.jobs.toLocaleString('fr-FR')}          color={KZ.orangeSoft} icon={<Briefcase size={16} />} />
-        <StatCard label="Entreprises"    value={stats.companies.toLocaleString('fr-FR')}     color={KZ.greenSoft}  icon={<Building2 size={16} />} />
-        <StatCard label="Candidatures"   value={stats.applications.toLocaleString('fr-FR')}  color={KZ.yellowSoft} icon={<TrendingUp size={16} />} />
-      </div>
+      <section aria-label="Indicateurs principaux" className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
+        <TrophyStat label="Utilisateurs"  value={stats.users.toLocaleString('fr-FR')}        tone="var(--qx-neon)"    icon={<Users size={14} />} />
+        <TrophyStat label="Offres"        value={stats.jobs.toLocaleString('fr-FR')}         tone="var(--kz-orange)"  icon={<Briefcase size={14} />} delay={0.05} />
+        <TrophyStat label="Entreprises"   value={stats.companies.toLocaleString('fr-FR')}    tone="var(--kz-green)"   icon={<Building2 size={14} />} delay={0.1} />
+        <TrophyStat label="Candidatures"  value={stats.applications.toLocaleString('fr-FR')} tone="var(--qx-gold)"    icon={<TrendingUp size={14} />} delay={0.15} />
+      </section>
       {/* KPI — ligne 2 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-        <StatCard label="KazaEvents"     value={stats.events.toLocaleString('fr-FR')}        color={KZ.blueSoft}   icon={<Star size={16} />} />
-        <StatCard label="Compétences"    value={stats.skills.toLocaleString('fr-FR')}        color={KZ.cream2}     icon={<BookOpen size={16} />} />
-        <StatCard label="Parrainages"    value={stats.referrals.toLocaleString('fr-FR')}     color={KZ.yellowSoft} icon={<Zap size={16} />} />
-      </div>
+      <section aria-label="Indicateurs secondaires" className="grid grid-cols-1 min-[420px]:grid-cols-3 gap-3 mb-6">
+        {[
+          { label: 'KazaEvents',  value: stats.events,    tone: 'var(--qx-cyan)',    icon: <Star size={13} /> },
+          { label: 'Compétences', value: stats.skills,    tone: '#A3A3B8',           icon: <BookOpen size={13} /> },
+          { label: 'Parrainages', value: stats.referrals, tone: 'var(--qx-magenta)', icon: <Zap size={13} /> },
+        ].map((k, i) => (
+          <div key={k.label} className="qx-panel px-4 py-3 flex items-center gap-3 qx-rise" style={{ animationDelay: `${0.2 + i * 0.05}s` }}>
+            <Sigil tone={k.tone} size="sm">{k.icon}</Sigil>
+            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--kz-mute)] flex-1">{k.label}</span>
+            <span className="text-xl font-extrabold qx-text-legend tabular-nums">{k.value.toLocaleString('fr-FR')}</span>
+          </div>
+        ))}
+      </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-5">
         {/* Offres récentes */}
-        <div className="kz-card p-6 bg-[var(--kz-paper)]">
-          <div className="flex justify-between items-center mb-5">
-            <h2 className="kz-h3 text-[var(--kz-ink)]">Offres recentes</h2>
-            <Link href="/admin/offres"><Button kind="soft" size="sm">Tout voir</Button></Link>
-          </div>
+        <section className="qx-panel p-5 sm:p-6 min-w-0 qx-rise" style={{ animationDelay: '0.2s' }}>
+          <PanelTitle icon={<ScrollText size={16} />} title="Offres récentes"
+            action={<Link href="/admin/offres"><Button kind="soft" size="sm">Tout voir</Button></Link>} />
           {recentJobs.length === 0 ? (
-            <p className="text-sm text-[var(--kz-mute)] text-center py-6">Aucune offre publiee pour le moment.</p>
+            <p className="text-sm text-[var(--kz-mute)] text-center py-6">Aucune offre publiée pour le moment.</p>
           ) : (
-            <div className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-2">
               {recentJobs.map((job) => (
-                <div key={job.id} className="flex items-center gap-3 p-3 rounded-xl border border-[var(--kz-line)]" style={{ background: KZ.cream2 }}>
+                <li key={job.id} className="flex items-center gap-3 p-3 rounded-xl border border-[#C084FC]/15 bg-[rgba(12,5,24,0.45)]">
+                  <span aria-hidden className="qxr-column-gem" style={toneStyle(job.is_active ? 'var(--kz-green)' : '#8B7FB0')} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-bold text-[var(--kz-ink)] truncate">{job.title}</div>
+                    <div className="text-sm font-bold text-white truncate">{job.title}</div>
                     <div className="text-xs text-[var(--kz-mute)]">
                       {new Date(job.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
                     </div>
@@ -104,44 +125,32 @@ export default function AdminDashboard() {
                   <Badge color={job.is_active ? 'green' : 'cream'} size="sm">
                     {job.is_active ? 'Active' : 'Inactive'}
                   </Badge>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
-        </div>
+        </section>
 
         {/* Colonne droite */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5 min-w-0">
           {/* Accès rapides */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h3 className="kz-h3 text-[var(--kz-ink)] mb-4">Acces rapides</h3>
-            <div className="flex flex-col gap-2">
-              {[
-                { href: '/admin/utilisateurs',         label: 'Gérer les utilisateurs',  color: KZ.violetSoft, icon: <Users size={16} /> },
-                { href: '/admin/offres',          label: 'Modérer les offres',       color: KZ.orangeSoft, icon: <Briefcase size={16} /> },
-                { href: '/admin/entreprises',     label: 'Valider les entreprises',  color: KZ.greenSoft,  icon: <Building2 size={16} /> },
-                { href: '/admin/evenements',        label: 'Gérer KazaEvents',         color: KZ.blueSoft,   icon: <Star size={16} /> },
-                { href: '/admin/notifications', label: 'Envoyer une notification', color: KZ.yellowSoft, icon: <Bell size={16} /> },
-                { href: '/admin/competences',        label: 'Référentiel compétences',  color: KZ.cream2,     icon: <BookOpen size={16} /> },
-                { href: '/admin/statistiques',     label: 'Analytics & rapports',     color: KZ.violetSoft, icon: <BarChart2 size={16} /> },
-                { href: '/admin/ia',            label: 'KazaIA — Statistiques',    color: KZ.orangeSoft, icon: <Sparkles size={16} /> },
-              ].map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 p-3.5 rounded-xl border border-[var(--kz-edge)] transition-all hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[3px_3px_0_var(--kz-shadow)]"
-                  style={{ background: item.color, boxShadow: '2px 2px 0 var(--kz-shadow)' }}
-                >
-                  {item.icon}
-                  <span className="text-sm font-bold text-[var(--kz-ink)]">{item.label}</span>
+          <section className="qx-panel p-5 qx-rise" style={{ animationDelay: '0.25s' }}>
+            <PanelTitle icon={<Compass size={16} />} title="Accès rapides" as="h2" />
+            <nav aria-label="Accès rapides" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-1.5">
+              {QUICK.map((item) => (
+                <Link key={item.href} href={item.href}
+                  className="group flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent hover:border-[#C084FC]/30 hover:bg-[rgba(168,85,247,0.1)] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E879F9]/60">
+                  <Sigil tone={item.tone} size="sm">{item.icon}</Sigil>
+                  <span className="text-sm font-semibold text-[var(--kz-ink)] flex-1">{item.label}</span>
+                  <ArrowRight size={13} aria-hidden className="text-[var(--kz-mute)] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition" />
                 </Link>
               ))}
-            </div>
-          </div>
+            </nav>
+          </section>
 
           {/* Distribution rôles — données réelles */}
-          <div className="kz-card p-5 bg-[var(--kz-paper)]">
-            <h3 className="kz-h3 text-[var(--kz-ink)] mb-4">Distribution des roles</h3>
+          <section className="qx-panel p-5 qx-rise" style={{ animationDelay: '0.3s' }}>
+            <PanelTitle icon={<Users size={16} />} title="Distribution des rôles" as="h2" />
             {stats.users === 0 ? (
               <p className="text-xs text-[var(--kz-mute)] text-center py-4">Aucun utilisateur inscrit.</p>
             ) : (
@@ -150,16 +159,16 @@ export default function AdminDashboard() {
                   <div key={r.label}>
                     <div className="flex justify-between text-xs font-semibold mb-1">
                       <span className="text-[var(--kz-ink)]">{r.label} <span className="text-[var(--kz-mute)] font-normal">({r.count})</span></span>
-                      <span className="text-[var(--kz-mute)]">{r.pct}%</span>
+                      <span className="text-[var(--kz-mute)] tabular-nums">{r.pct}%</span>
                     </div>
-                    <div className="h-2.5 bg-[var(--kz-cream2)] border border-[var(--kz-edge)] rounded-full overflow-hidden">
-                      <div className="h-full rounded-full transition-all duration-500" style={{ width: `${r.pct}%`, background: r.color }} />
+                    <div className="qxr-xp-mini h-2.5" style={toneStyle(r.color)}>
+                      <span className="transition-all duration-500" style={{ width: `${r.pct}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </div>
+          </section>
         </div>
       </div>
     </div>

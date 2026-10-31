@@ -9,6 +9,7 @@ import { Modal } from '@/components/ui/Modal'
 import { Badge } from '@/components/ui/Badge'
 import { EmptyState } from '@/components/feedback/EmptyState'
 import { useAuth } from '@/features/auth/useAuth'
+import { QuestHeader } from '@/components/quest/recruteur/QuestChrome'
 import { KZ, EVENT_TYPES } from '@/lib/constants'
 import type { BadgeColor } from '@/lib/types'
 
@@ -93,19 +94,22 @@ export default function RecruiterEventsPage() {
 
   return (
     <div className="max-w-[800px] mx-auto">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
-        <div>
-          <p className="kz-eyebrow mb-1" style={{ color: KZ.violet }}>Événements</p>
-          <h1 className="text-2xl lg:text-[28px] font-extrabold tracking-tight text-[var(--kz-ink)]">KazaEvents</h1>
-        </div>
-        <Button kind="primary" size="md" icon={<Plus size={15} />} onClick={() => setModal(true)}>
-          Créer un événement
-        </Button>
-      </div>
+      <QuestHeader
+        eyebrow="Événements"
+        icon={<Star size={18} />}
+        tone="var(--qx-magenta)"
+        title={<>Kaza<span className="qx-text-arcane">Events</span></>}
+        subtitle="Job datings, webinaires et ateliers : rassemblez les héros autour de votre guilde."
+        actions={
+          <Button kind="primary" size="md" icon={<Plus size={15} />} onClick={() => setModal(true)}>
+            Créer un événement
+          </Button>
+        }
+      />
 
       {loading ? (
         <div className="flex flex-col gap-3">
-          {[1, 2].map(i => <div key={i} className="h-28 rounded-2xl bg-[var(--kz-cream2)] animate-pulse" />)}
+          {[1, 2].map(i => <div key={i} className="h-28 qxr-skeleton" />)}
         </div>
       ) : events.length === 0 ? (
         <EmptyState
@@ -121,13 +125,13 @@ export default function RecruiterEventsPage() {
             const isPast = eventDate < new Date()
 
             return (
-              <div key={evt.id} className="kz-card p-5 bg-[var(--kz-paper)] flex items-start gap-4">
+              <div key={evt.id} className="qx-panel p-4 sm:p-5 flex items-start gap-3 sm:gap-4 qx-rise">
                 {/* Date */}
                 <div
                   className="w-14 h-14 rounded-xl border border-[var(--kz-edge)] flex flex-col items-center justify-center shrink-0"
                   style={{ background: typeInfo.bg, opacity: isPast ? 0.6 : 1 }}
                 >
-                  <div className="text-lg font-extrabold text-[var(--kz-ink)] leading-none">{eventDate.getDate()}</div>
+                  <div className="text-xl font-bold text-white leading-none font-[family-name:var(--font-epic)]">{eventDate.getDate()}</div>
                   <div className="text-[10px] font-bold uppercase text-[var(--kz-mute)]">
                     {eventDate.toLocaleDateString('fr-FR', { month: 'short' })}
                   </div>
@@ -160,14 +164,14 @@ export default function RecruiterEventsPage() {
                 <div className="flex gap-2 shrink-0">
                   {evt.jitsi_room && (
                     <a href={`https://meet.jit.si/${evt.jitsi_room}`} target="_blank" rel="noreferrer">
-                      <button className="p-2 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-colors" title="Rejoindre la salle">
+                      <button className="p-2 rounded-lg border border-[var(--kz-line)] hover:border-[var(--kz-edge)] transition-colors" title="Rejoindre la salle" aria-label="Rejoindre la salle">
                         <ExternalLink size={14} />
                       </button>
                     </a>
                   )}
                   <button
                     className="p-2 rounded-lg border border-[var(--kz-line)] hover:border-red-400 hover:text-red-500 transition-colors"
-                    title="Supprimer"
+                    title="Supprimer" aria-label="Supprimer l’événement"
                     onClick={() => handleDelete(evt.id)}
                     disabled={deletingId === evt.id}
                   >
@@ -262,7 +266,7 @@ export default function RecruiterEventsPage() {
             className="p-3 rounded-xl border border-[var(--kz-edge)] text-xs text-[var(--kz-text)]"
             style={{ background: KZ.violetSoft }}
           >
-            💡 Un lien Jitsi Meet sera automatiquement généré et partagé avec les inscrits le jour J.
+            Un lien Jitsi Meet sera automatiquement généré et partagé avec les inscrits le jour J.
           </div>
 
           <div className="flex gap-2.5">
