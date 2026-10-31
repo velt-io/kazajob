@@ -35,8 +35,8 @@ export async function POST(req: NextRequest) {
     }],
     metadata: meta,
     payment_intent_data: { metadata: meta },
-    success_url: `${APP_URL}/recruiter/jobs?boost=success`,
-    cancel_url: `${APP_URL}/recruiter/jobs?boost=cancel`,
+    success_url: `${APP_URL}/recruteur/offres?boost=success`,
+    cancel_url: `${APP_URL}/recruteur/offres?boost=cancel`,
   })
 
   return NextResponse.json({ url: checkout.url })

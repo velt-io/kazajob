@@ -42,7 +42,7 @@ export function TodayDashboard({ profile, gami, applications, appsLoading, recom
             Bonzour, <span className="os-text-aurora">{firstName || 'toi'}</span>
           </h1>
         </div>
-        <Link href="/candidate/jobs">
+        <Link href="/candidat/offres">
           <span className="inline-flex items-center gap-2 h-11 px-5 rounded-full text-[15px] font-semibold text-white bg-[linear-gradient(120deg,#FF9F0A,#FF375F_45%,#BF5AF2)] shadow-[0_10px_30px_-10px_rgba(255,55,95,0.7)] hover:brightness-110 transition">
             Explorer les offres <ArrowRight size={16} />
           </span>
@@ -90,10 +90,10 @@ export function TodayDashboard({ profile, gami, applications, appsLoading, recom
 
         {/* Chiffres */}
         {[
-          { icon: <Briefcase size={16} />, color: '#FF9F0A', label: 'Candidatures', value: activeApps.length, href: '/candidate/applications' },
-          { icon: <CalendarCheck size={16} />, color: '#30D158', label: 'Entretiens', value: interviews, href: '/candidate/agenda' },
-          { icon: <Heart size={16} />, color: '#FF375F', label: 'Favoris', value: favoritesCount, href: '/candidate/favorites' },
-          { icon: <Flame size={16} />, color: '#FFD60A', label: 'Jours de série', value: profile.streak ?? 0, href: '/candidate/profile' },
+          { icon: <Briefcase size={16} />, color: '#FF9F0A', label: 'Candidatures', value: activeApps.length, href: '/candidat/candidatures' },
+          { icon: <CalendarCheck size={16} />, color: '#30D158', label: 'Entretiens', value: interviews, href: '/candidat/entretiens' },
+          { icon: <Heart size={16} />, color: '#FF375F', label: 'Favoris', value: favoritesCount, href: '/candidat/favoris' },
+          { icon: <Flame size={16} />, color: '#FFD60A', label: 'Jours de série', value: profile.streak ?? 0, href: '/candidat/profil' },
         ].map((s) => (
           <Link key={s.label} href={s.href} data-tilt className="lg:col-span-3 group rounded-[24px] os-glass p-5 hover:bg-white/[0.08] transition-colors">
             <div className="flex items-center justify-between">
@@ -107,14 +107,14 @@ export function TodayDashboard({ profile, gami, applications, appsLoading, recom
 
         {/* Offres recommandées */}
         <section className="lg:col-span-7 rounded-[28px] os-glass p-2">
-          <WidgetHeader title="Pour toi" href="/candidate/jobs" link="Tout voir" />
+          <WidgetHeader title="Pour toi" href="/candidat/offres" link="Tout voir" />
           {jobsLoading ? (
             <SkeletonRows />
           ) : recommendedJobs.length === 0 ? (
             <p className="px-4 pb-5 text-sm text-[var(--kz-mute)]">Ajoute des compétences à ton profil pour recevoir des recommandations.</p>
           ) : (
             recommendedJobs.slice(0, 4).map((job) => (
-              <Link key={job.id} href={`/candidate/jobs/${job.id}`} className="flex items-center gap-3 px-4 py-3 rounded-[18px] hover:bg-white/[0.06] transition-colors">
+              <Link key={job.id} href={`/candidat/offres/${job.id}`} className="flex items-center gap-3 px-4 py-3 rounded-[18px] hover:bg-white/[0.06] transition-colors">
                 <span className="w-11 h-11 rounded-[13px] flex items-center justify-center text-[13px] font-semibold text-white shrink-0 bg-[linear-gradient(145deg,#5E5CE6,#BF5AF2)]">
                   {(job.company?.name ?? 'CO').slice(0, 2).toUpperCase()}
                 </span>
@@ -161,7 +161,7 @@ export function TodayDashboard({ profile, gami, applications, appsLoading, recom
 
         {/* Candidatures récentes */}
         <section className="lg:col-span-7 rounded-[28px] os-glass p-2">
-          <WidgetHeader title="Candidatures récentes" href="/candidate/applications" link="Suivre" />
+          <WidgetHeader title="Candidatures récentes" href="/candidat/candidatures" link="Suivre" />
           {appsLoading ? <SkeletonRows /> : activeApps.length === 0 ? (
             <p className="px-4 pb-5 text-sm text-[var(--kz-mute)]">Aucune candidature pour l’instant. Ta première est à un geste.</p>
           ) : activeApps.slice(0, 4).map((a) => {
@@ -184,7 +184,7 @@ export function TodayDashboard({ profile, gami, applications, appsLoading, recom
           <div className="flex-1 min-w-0">
             <div className="text-[17px] font-semibold text-white truncate">{profile.full_name}</div>
             <div className="text-[13px] text-[var(--kz-mute)] truncate">{profile.location ?? 'Ajoute ta ville'}</div>
-            <Link href={showQuiz ? '/candidate/quiz' : '/candidate/profile'} className="inline-flex items-center gap-1 mt-2 text-[13px] font-semibold text-[#0A84FF] hover:brightness-125">
+            <Link href={showQuiz ? '/candidat/quiz' : '/candidat/profil'} className="inline-flex items-center gap-1 mt-2 text-[13px] font-semibold text-[#0A84FF] hover:brightness-125">
               {showQuiz ? 'Découvrir mon style de travail (2 min)' : 'Améliorer mon profil'} <ArrowRight size={13} />
             </Link>
           </div>

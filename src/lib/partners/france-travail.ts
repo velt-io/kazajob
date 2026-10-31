@@ -57,7 +57,7 @@ function toFranceTravailPayload(job: PartnerJob) {
     } : undefined,
     origineOffre: {
       origine:        '2',     // Code partenaire
-      urlOrigine:     `https://kazajob.re/candidate/jobs/${job.id}`,
+      urlOrigine:     `https://kazajob.re/candidat/offres/${job.id}`,
     },
   }
 }

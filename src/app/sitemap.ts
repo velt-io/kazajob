@@ -9,10 +9,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: base,                         lastModified: now, changeFrequency: 'daily',   priority: 1.0 },
     { url: `${base}/entreprise`,         lastModified: now, changeFrequency: 'weekly',  priority: 0.9 },
-    { url: `${base}/candidate/jobs`,     lastModified: now, changeFrequency: 'hourly',  priority: 0.9 },
+    { url: `${base}/candidat/offres`,     lastModified: now, changeFrequency: 'hourly',  priority: 0.9 },
     { url: `${base}/radar-emploi`,       lastModified: now, changeFrequency: 'daily',   priority: 0.8 },
     { url: `${base}/demo`,               lastModified: now, changeFrequency: 'monthly', priority: 0.6 },
-    { url: `${base}/candidate/training`, lastModified: now, changeFrequency: 'daily',   priority: 0.8 },
+    { url: `${base}/candidat/formations`, lastModified: now, changeFrequency: 'daily',   priority: 0.8 },
   ]
 
   let dynamicPages: MetadataRoute.Sitemap = []
@@ -20,13 +20,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const [jobs, trainings] = await Promise.all([getSitemapJobs(), getSitemapTrainings()])
     dynamicPages = [
       ...jobs.map((j) => ({
-        url: `${base}/candidate/jobs/${j.id}`,
+        url: `${base}/candidat/offres/${j.id}`,
         lastModified: new Date(j.updated_at),
         changeFrequency: 'weekly' as const,
         priority: 0.8,
       })),
       ...trainings.map((t) => ({
-        url: `${base}/candidate/training/${t.id}`,
+        url: `${base}/candidat/formations/${t.id}`,
         lastModified: new Date(t.updated_at),
         changeFrequency: 'weekly' as const,
         priority: 0.7,

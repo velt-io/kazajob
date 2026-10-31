@@ -191,7 +191,7 @@ export function GameDashboard({
             <LevelPill level={gami.level} xp={gami.xp} />
           </div>
         </div>
-        <Link href="/candidate/jobs" className="shrink-0">
+        <Link href="/candidat/offres" className="shrink-0">
           <Button kind="primary" size="md" iconRight={<ArrowRight size={15} />}>Explorer les offres</Button>
         </Link>
       </div>
@@ -247,7 +247,7 @@ export function GameDashboard({
                 <Target size={17} color={KZ.orange} />
                 Missions disponibles
               </h2>
-              <Link href="/candidate/jobs" className="text-sm font-bold" style={{ color: KZ.orange }}>Tout voir →</Link>
+              <Link href="/candidat/offres" className="text-sm font-bold" style={{ color: KZ.orange }}>Tout voir →</Link>
             </div>
             {jobsLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -282,7 +282,7 @@ export function GameDashboard({
                   applications.slice(0, 3).map(app => <ApplicationCard key={app.id} application={app} />)
                 )}
                 {applications.length > 3 && (
-                  <Link href="/candidate/applications">
+                  <Link href="/candidat/candidatures">
                     <Button kind="soft" size="sm" full>Voir tout ({applications.length})</Button>
                   </Link>
                 )}
@@ -320,7 +320,7 @@ export function GameDashboard({
                   </div>
                 </div>
               </div>
-              <Link href="/candidate/profile">
+              <Link href="/candidat/profil">
                 <Button kind="primary" size="sm" full>Améliorer mon profil +XP</Button>
               </Link>
             </div>

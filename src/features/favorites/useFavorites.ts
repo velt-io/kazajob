@@ -27,7 +27,7 @@ export function useFavorites(candidateId?: string) {
     // Visiteur non connecté → invitation à se connecter (au lieu d'un clic sans effet).
     if (!candidateId) {
       if (typeof window !== 'undefined') {
-        window.location.href = `/auth/login?next=${encodeURIComponent(window.location.pathname)}`
+        window.location.href = `/connexion?next=${encodeURIComponent(window.location.pathname)}`
       }
       return
     }

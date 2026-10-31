@@ -296,8 +296,8 @@ export function interviewInviteEmail(
     </tr>` : ''
 
   const ctaHref = isCandidate
-    ? 'https://kazajob.re/candidate/agenda'
-    : 'https://kazajob.re/recruiter/agenda'
+    ? 'https://kazajob.re/candidat/entretiens'
+    : 'https://kazajob.re/recruteur/entretiens'
 
   const body = `
     <!-- Badge type -->
@@ -414,7 +414,7 @@ export function applicationWithdrawnEmail(data: {
       </tr>
       <tr>
         <td style="padding:4px 32px 28px;text-align:center;">
-          ${ctaButton('Voir mes candidatures', 'https://kazajob.re/recruiter/applications')}
+          ${ctaButton('Voir mes candidatures', 'https://kazajob.re/recruteur/candidatures')}
         </td>
       </tr>
     </table>`
@@ -480,8 +480,8 @@ export function welcomeEmail(data: {
   const subject = `Bienvenue sur Kazajob 974, ${data.fullName.split(' ')[0]} !`
   const headerBg = isCandidate ? C.orange : C.violet
   const dashboardUrl = isCandidate
-    ? 'https://kazajob.re/candidate/dashboard'
-    : 'https://kazajob.re/recruiter/company-setup'
+    ? 'https://kazajob.re/candidat/tableau-de-bord'
+    : 'https://kazajob.re/recruteur/creation-entreprise'
 
   const stepsCandidate = `
     ${stepBlock('1', 'Complète ton profil', 'Photo, CV, compétences — un profil complet est vu 3× plus.', C.orangeSoft)}
@@ -593,7 +593,7 @@ export function newApplicationEmail(data: {
       </tr>
       <tr>
         <td style="padding:4px 32px 28px;text-align:center;">
-          ${ctaButton('Voir la candidature', `https://kazajob.re/recruiter/applications`)}
+          ${ctaButton('Voir la candidature', `https://kazajob.re/recruteur/candidatures`)}
         </td>
       </tr>
     </table>`
@@ -641,7 +641,7 @@ export function jobAlertEmail(data: {
                 </p>
               </td>
               <td style="padding-left:8px;text-align:right;white-space:nowrap;">
-                <a href="https://kazajob.re/candidate/jobs/${job.id}"
+                <a href="https://kazajob.re/candidat/offres/${job.id}"
                   style="display:inline-block;background-color:${C.orangeSoft};border:1.5px solid ${C.ink};
                   border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;color:${C.ink};
                   text-decoration:none;font-family:Arial,sans-serif;">Voir &rarr;</a>
@@ -684,14 +684,14 @@ export function jobAlertEmail(data: {
       </tr>
       <tr>
         <td style="padding:4px 32px 28px;text-align:center;">
-          ${ctaButton('Voir toutes les offres', 'https://kazajob.re/candidate/jobs', C.violet, '#FFFFFF')}
+          ${ctaButton('Voir toutes les offres', 'https://kazajob.re/candidat/offres', C.violet, '#FFFFFF')}
         </td>
       </tr>
       <tr>
         <td style="padding:0 32px 16px;">
           <p style="margin:0;font-size:11px;color:${C.mute};text-align:center;font-family:Arial,sans-serif;">
             Vous recevez ces alertes car vous les avez activées dans vos
-            <a href="https://kazajob.re/candidate/settings" style="color:${C.orange};text-decoration:none;">paramètres</a>.
+            <a href="https://kazajob.re/candidat/parametres" style="color:${C.orange};text-decoration:none;">paramètres</a>.
             Pour les désactiver, rendez-vous dans Paramètres → Alertes email.
           </p>
         </td>
@@ -714,8 +714,8 @@ export function newMessageEmail(data: {
 }): { subject: string; html: string } {
   const subject = `Nouveau message de ${data.senderName} — Kazajob`
   const link = data.role === 'candidate'
-    ? 'https://kazajob.re/candidate/messages'
-    : 'https://kazajob.re/recruiter/messages'
+    ? 'https://kazajob.re/candidat/messages'
+    : 'https://kazajob.re/recruteur/messages'
 
   const preview = data.messagePreview.length > 120
     ? data.messagePreview.slice(0, 120) + '…'
@@ -821,7 +821,7 @@ export function joinRequestEmail(data: {
       </tr>
       <tr>
         <td style="padding:4px 32px 28px;text-align:center;">
-          ${ctaButton("Gérer l'équipe", 'https://kazajob.re/recruiter/company/team', C.violet, '#FFFFFF')}
+          ${ctaButton("Gérer l'équipe", 'https://kazajob.re/recruteur/entreprise/equipe', C.violet, '#FFFFFF')}
         </td>
       </tr>
     </table>`
@@ -874,8 +874,8 @@ export function joinResponseEmail(data: {
       <tr>
         <td style="padding:4px 32px 28px;text-align:center;">
           ${data.approved
-            ? ctaButton("Accéder à l'espace entreprise", 'https://kazajob.re/recruiter/company', C.green, '#FFFFFF')
-            : ctaButton("Chercher une entreprise", 'https://kazajob.re/recruiter/company-setup')}
+            ? ctaButton("Accéder à l'espace entreprise", 'https://kazajob.re/recruteur/entreprise', C.green, '#FFFFFF')
+            : ctaButton("Chercher une entreprise", 'https://kazajob.re/recruteur/creation-entreprise')}
         </td>
       </tr>
     </table>`
@@ -1018,7 +1018,7 @@ export function trialReminderEmail(data: {
       </tr>
       <tr>
         <td style="padding:4px 32px 16px;text-align:center;">
-          ${ctaButton('Gérer mon abonnement', 'https://kazajob.re/recruiter/company', accent, isToday ? C.ink : '#FFFFFF')}
+          ${ctaButton('Gérer mon abonnement', 'https://kazajob.re/recruteur/entreprise', accent, isToday ? C.ink : '#FFFFFF')}
         </td>
       </tr>
       <tr>
@@ -1102,7 +1102,7 @@ export function bugReportEmail(data: {
       </tr>` : ''}
       <tr>
         <td style="padding:0 32px 28px;text-align:center;">
-          ${ctaButton('Ouvrir le suivi des bugs', 'https://kazajob.re/admin/bug-reports')}
+          ${ctaButton('Ouvrir le suivi des bugs', 'https://kazajob.re/admin/signalements')}
         </td>
       </tr>
     </table>`
@@ -1178,7 +1178,7 @@ export function demoBookingEmail(data: {
         <td style="padding:4px 32px 28px;text-align:center;">
           ${isProspect
             ? ctaButton('Découvrir Kazajob', 'https://kazajob.re', C.violet, '#FFFFFF')
-            : ctaButton('Voir les demandes', 'https://kazajob.re/admin/demo', C.violet, '#FFFFFF')}
+            : ctaButton('Voir les demandes', 'https://kazajob.re/admin/demos', C.violet, '#FFFFFF')}
         </td>
       </tr>
     </table>`
@@ -1310,7 +1310,7 @@ export function applicationStatusEmail(data: {
       </tr>
       <tr>
         <td style="padding:4px 32px 28px;text-align:center;">
-          ${ctaButton('Voir ma candidature', 'https://kazajob.re/candidate/applications')}
+          ${ctaButton('Voir ma candidature', 'https://kazajob.re/candidat/candidatures')}
         </td>
       </tr>
     </table>`

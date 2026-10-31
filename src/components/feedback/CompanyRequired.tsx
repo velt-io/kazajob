@@ -50,7 +50,7 @@ export function CompanyRequired({ children, action = 'effectuer cette action' }:
 
         {/* Actions */}
         <div className="flex flex-col gap-3">
-          <Link href="/recruiter/company-setup">
+          <Link href="/recruteur/creation-entreprise">
             <Button
               kind="primary"
               size="lg"
@@ -62,7 +62,7 @@ export function CompanyRequired({ children, action = 'effectuer cette action' }:
             </Button>
           </Link>
 
-          <Link href="/recruiter/dashboard">
+          <Link href="/recruteur/tableau-de-bord">
             <Button kind="soft" size="md" full icon={<Clock size={14} />}>
               Retour au tableau de bord
             </Button>

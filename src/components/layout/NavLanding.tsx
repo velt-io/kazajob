@@ -14,15 +14,15 @@ type View = 'candidat' | 'entreprise'
 
 const LINKS: Record<View, { href: string; label: string }[]> = {
   candidat: [
-    { href: '/candidate/jobs',     label: 'Offres' },
+    { href: '/candidat/offres',     label: 'Offres' },
     { href: '/stages',             label: 'Stages' },
-    { href: '/candidate/training', label: 'Formations' },
+    { href: '/candidat/formations', label: 'Formations' },
     { href: '#comment',            label: 'Comment ça marche' },
     { href: '#faq',                label: 'FAQ' },
   ],
   entreprise: [
     { href: '#tarifs-pro',     label: 'Tarifs' },
-    { href: '/candidate/jobs', label: 'Voir les offres' },
+    { href: '/candidat/offres', label: 'Voir les offres' },
   ],
 }
 
@@ -89,11 +89,11 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
   }
 
   const dashboardPath = profile?.role === 'recruiter'
-    ? '/recruiter/dashboard'
+    ? '/recruteur/tableau-de-bord'
     : profile?.role === 'admin'
-      ? '/admin/dashboard'
-      : '/candidate/dashboard'
-  const profilePath = profile?.role === 'recruiter' ? '/recruiter/profile' : '/candidate/profile'
+      ? '/admin/tableau-de-bord'
+      : '/candidat/tableau-de-bord'
+  const profilePath = profile?.role === 'recruiter' ? '/recruteur/profil' : '/candidat/profil'
 
   return (
     <header className="h-[60px] lg:h-[64px] px-4 md:px-8 lg:px-10 os-glass !border-x-0 !border-t-0 !bg-[rgba(8,8,11,0.62)] flex items-center gap-4 sticky top-0 z-50">
@@ -147,7 +147,7 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
                       Mon profil
                     </Link>
                     {profile.role === 'candidate' && (
-                      <Link href="/candidate/ia" onClick={() => setProfileOpen(false)}
+                      <Link href="/candidat/ia" onClick={() => setProfileOpen(false)}
                         className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold text-[var(--kz-ink)] hover:bg-[var(--kz-cream2)] transition-colors">
                         <Sparkles size={15} color={KZ.violet} />
                         KazaIA
@@ -167,10 +167,10 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
         ) : (
           /* ── Non connecté : boutons adaptés à l'audience ── */
           <>
-            <Link href="/auth/login" className="hidden md:block">
+            <Link href="/connexion" className="hidden md:block">
               <Button kind="ghost" size="md">Connexion</Button>
             </Link>
-            <Link href={isPro ? '/auth/register?role=recruiter' : '/auth/register'}>
+            <Link href={isPro ? '/inscription?role=recruiter' : '/inscription'}>
               <Button kind={isPro ? 'violet' : 'primary'} size="sm" className="lg:!text-sm lg:!h-9" iconRight={<ArrowRight size={14} />}>
                 <span className="hidden sm:inline">{isPro ? 'Essai gratuit' : 'Alon comencé'}</span>
                 <span className="sm:hidden">{isPro ? 'Essai' : 'S\'inscrire'}</span>
@@ -235,10 +235,10 @@ export function NavLanding({ view = 'candidat' }: { view?: View }) {
                 </>
               ) : (
                 <>
-                  <Link href="/auth/login" onClick={() => setDrawerOpen(false)}>
+                  <Link href="/connexion" onClick={() => setDrawerOpen(false)}>
                     <Button kind="outline" size="lg" full>Connexion</Button>
                   </Link>
-                  <Link href={isPro ? '/auth/register?role=recruiter' : '/auth/register'} onClick={() => setDrawerOpen(false)}>
+                  <Link href={isPro ? '/inscription?role=recruiter' : '/inscription'} onClick={() => setDrawerOpen(false)}>
                     <Button kind={isPro ? 'violet' : 'primary'} size="lg" full>
                       {isPro ? 'Démarrer l\'essai gratuit' : 'Créer mon compte'}
                     </Button>

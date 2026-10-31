@@ -88,8 +88,8 @@ export async function POST(req: NextRequest) {
       },
       metadata: { companyId: ctx.company.id, planId: plan.id, ...(discount ? { promoCode: String(promoCode).trim().toUpperCase() } : {}) },
       ...(discount ? { discounts: [discount] } : { allow_promotion_codes: true }),
-      success_url: `${APP_URL}/recruiter/company?billing=success`,
-      cancel_url: `${APP_URL}/recruiter/company?billing=cancel`,
+      success_url: `${APP_URL}/recruteur/entreprise?billing=success`,
+      cancel_url: `${APP_URL}/recruteur/entreprise?billing=cancel`,
     })
 
     if (!checkout.url) return NextResponse.json({ error: 'Session Stripe créée sans URL de redirection.' }, { status: 500 })

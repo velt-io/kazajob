@@ -26,7 +26,7 @@ export async function POST() {
   const stripe = getStripe()
   const portal = await stripe.billingPortal.sessions.create({
     customer: ctx.subscription.stripeCustomerId,
-    return_url: `${APP_URL}/recruiter/company`,
+    return_url: `${APP_URL}/recruteur/entreprise`,
   })
 
   return NextResponse.json({ url: portal.url })

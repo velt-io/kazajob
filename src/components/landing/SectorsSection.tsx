@@ -22,13 +22,13 @@ const COPY = {
     eyebrow: 'Tous les métiers du 974',
     title: <>Du chantier à l&apos;hôtel,<br />ton prochain job est ici.</>,
     text: 'Hôtellerie, BTP, commerce, santé, logistique… Kazajob rassemble les offres de toute l’île, de Saint-Denis à Saint-Pierre. Choisis ton secteur et découvre qui recrute.',
-    cta: { href: '/candidate/jobs', label: 'Voir toutes les offres' },
+    cta: { href: '/candidat/offres', label: 'Voir toutes les offres' },
   },
   entreprise: {
     eyebrow: 'Tous secteurs, toute l’île',
     title: <>Les talents qu&apos;il vous faut,<br />quel que soit votre métier.</>,
     text: 'Hôtel à Saint-Gilles, chantier au Port, commerce à Saint-Pierre : Kazajob réunit des candidats locaux, disponibles et motivés, dans tous les secteurs qui font vivre La Réunion.',
-    cta: { href: '/auth/register?role=recruiter', label: 'Publier une offre' },
+    cta: { href: '/inscription?role=recruiter', label: 'Publier une offre' },
   },
 } as const
 
@@ -54,7 +54,7 @@ export function SectorsSection({ variant }: { variant: 'candidat' | 'entreprise'
                   </span>
                 )
                 return variant === 'candidat'
-                  ? <Link key={sector} href={`/candidate/jobs?sector=${encodeURIComponent(sector)}`} aria-label={`Offres ${sector}`}>{icon}</Link>
+                  ? <Link key={sector} href={`/candidat/offres?sector=${encodeURIComponent(sector)}`} aria-label={`Offres ${sector}`}>{icon}</Link>
                   : <span key={sector}>{icon}</span>
               })}
               {/* Dossier « + » */}

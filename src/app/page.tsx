@@ -91,7 +91,7 @@ export default async function LandingPage() {
           <div className="flex gap-2 flex-wrap items-center justify-center mb-14 os-pop" style={{ animationDelay: '0.2s' }}>
             <span className="text-xs text-[var(--kz-mute)]">Populaire :</span>
             {['Développeur', 'BTP', 'Tourisme', 'Comptable', 'Infirmier'].map((k) => (
-              <Link key={k} href={`/candidate/jobs?q=${k}`}>
+              <Link key={k} href={`/candidat/offres?q=${k}`}>
                 <Tag color="cream">{k}</Tag>
               </Link>
             ))}
@@ -136,7 +136,7 @@ export default async function LandingPage() {
               <p className="kz-eyebrow mb-2" style={{ color: KZ.orange }}>Offres du moment</p>
               <h2 className="text-2xl lg:text-[36px] font-extrabold tracking-tight text-[var(--kz-ink)] max-w-[600px]">Des opportunités fraîches, mises à jour chaque jour.</h2>
             </div>
-            <Link href="/candidate/jobs" className="shrink-0">
+            <Link href="/candidat/offres" className="shrink-0">
               <Button kind="outline" iconRight={<ArrowRight size={14} />}>Toutes les offres</Button>
             </Link>
           </div>
@@ -147,8 +147,8 @@ export default async function LandingPage() {
               <p className="text-lg font-bold text-[var(--kz-ink)] mb-2">Les offres arrivent bientôt</p>
               <p className="text-sm text-[var(--kz-mute)] mb-6">Crée ton profil dès maintenant : tu seras parmi les premiers à être contactés.</p>
               <div className="flex gap-3 justify-center">
-                <Link href="/auth/register"><Button kind="primary">Créer un compte</Button></Link>
-                <Link href="/auth/register?role=recruiter"><Button kind="outline">Publier une offre</Button></Link>
+                <Link href="/inscription"><Button kind="primary">Créer un compte</Button></Link>
+                <Link href="/inscription?role=recruiter"><Button kind="outline">Publier une offre</Button></Link>
               </div>
             </div>
           ) : (
@@ -159,7 +159,7 @@ export default async function LandingPage() {
                 const jobSkills = job.skills?.map((s) => s.skill?.name).filter(Boolean).slice(0, 3) ?? []
 
                 return (
-                  <Link key={job.id} href={`/candidate/jobs/${job.id}`} className="block">
+                  <Link key={job.id} href={`/candidat/offres/${job.id}`} className="block">
                     <div className="kz-card p-5 flex flex-col gap-3.5 relative bg-[var(--kz-paper)] hover:-translate-y-1 hover:bg-white/[0.07] transition-all duration-300">
                       {isNew && (
                         <div className="absolute -top-3 right-4 rotate-6">
@@ -263,7 +263,7 @@ export default async function LandingPage() {
               {launchDays ? `Offre de lancement : gratuit encore ${launchDays} jours, sans carte bancaire.` : 'Essai gratuit 30 jours.'}
             </p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/auth/register?role=recruiter">
+              <Link href="/inscription?role=recruiter">
                 <Button kind="primary" size="lg">Publier une offre — gratuit</Button>
               </Link>
               <Link href="/entreprise">
@@ -292,10 +292,10 @@ export default async function LandingPage() {
         text="3 minutes pour créer ton profil. 0 € pour postuler. Ton prochain job t'attend quelque part sur l'île."
         actions={
           <>
-            <Link href="/auth/register">
+            <Link href="/inscription">
               <Button kind="primary" size="lg" className="w-full sm:w-auto">Créer mon profil — gratuit</Button>
             </Link>
-            <Link href="/candidate/jobs">
+            <Link href="/candidat/offres">
               <Button kind="outline" size="lg" className="w-full sm:w-auto">Parcourir les offres</Button>
             </Link>
           </>

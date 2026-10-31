@@ -51,7 +51,7 @@ export function PricingSection() {
             <p className="mt-3 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full" style={{ background: KZ.violetSoft, color: KZ.violet }}>
               <Badge color="orange" size="sm">Campagne en cours</Badge>
               {campaignName} : accès gratuit temporaire pour les entreprises éligibles, sans carte bancaire.
-              <Link href="/recruiter/company" className="underline">En savoir plus</Link>
+              <Link href="/recruteur/entreprise" className="underline">En savoir plus</Link>
             </p>
           )}
         </div>
@@ -87,7 +87,7 @@ export function PricingSection() {
                     </div>
                   ))}
                 </div>
-                <Link href={`/auth/register?role=recruiter&plan=${plan.id}`}>
+                <Link href={`/inscription?role=recruiter&plan=${plan.id}`}>
                   <Button kind={hl ? 'primary' : 'outline'} size="lg" full iconRight={<ArrowRight size={14} />}>
                     {launchDays ? 'Démarrer gratuitement' : 'Essai gratuit 30 jours'}
                   </Button>
@@ -116,7 +116,7 @@ export function PricingSection() {
                 <div className="text-xs text-white/60 mt-0.5">Kazajob ne facturera jamais les candidats.</div>
               </div>
             </div>
-            <Link href="/auth/register" className="shrink-0">
+            <Link href="/inscription" className="shrink-0">
               <Button kind="primary" size="md">Créer mon compte gratuit</Button>
             </Link>
           </div>

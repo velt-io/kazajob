@@ -67,11 +67,11 @@ export function LaunchBanner() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/recruiter/company"
+          <Link href="/recruteur/entreprise"
             className="text-xs font-bold px-3 py-2 rounded-lg border border-[var(--kz-edge)] bg-[var(--kz-paper)] hover:bg-[var(--kz-cream2)] transition-colors">
             Comparer les offres
           </Link>
-          <Link href="/recruiter/company"
+          <Link href="/recruteur/entreprise"
             className="text-xs font-bold px-3 py-2 rounded-lg border border-[var(--kz-edge)] flex items-center gap-1 hover:opacity-90 transition-opacity"
             style={{ background: KZ.violet, color: 'white' }}>
             Passer à une offre supérieure <ArrowUpRight size={13} />

@@ -29,7 +29,7 @@ export async function postToMissionLocale(job: PartnerJob): Promise<DiffusionRes
   //     contrat:     job.job_type,
   //     localisation: job.location,
   //     entreprise:  job.company.name,
-  //     lien:        `https://kazajob.re/candidate/jobs/${job.id}`,
+  //     lien:        `https://kazajob.re/candidat/offres/${job.id}`,
   //   }),
   // })
   // if (!res.ok) throw new Error(`Mission Locale POST : ${res.status}`)

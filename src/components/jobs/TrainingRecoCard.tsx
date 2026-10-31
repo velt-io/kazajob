@@ -47,7 +47,7 @@ export function TrainingRecoCard({ sector }: { sector?: string | null }) {
           <p className="text-sm text-[var(--kz-text)] mb-4">Des formations disponibles à La Réunion pour renforcer votre profil :</p>
           <div className="flex flex-col gap-2.5">
             {recos.map((r) => (
-              <Link key={r.id} href={`/candidate/training/${r.id}`} className="block rounded-xl border border-[var(--kz-edge)] bg-[var(--kz-paper)] p-3 hover:shadow-[3px_3px_0_var(--kz-shadow)] transition-all">
+              <Link key={r.id} href={`/candidat/formations/${r.id}`} className="block rounded-xl border border-[var(--kz-edge)] bg-[var(--kz-paper)] p-3 hover:shadow-[3px_3px_0_var(--kz-shadow)] transition-all">
                 <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                   <GraduationCap size={14} color={KZ.violet} />
                   <span className="text-sm font-bold text-[var(--kz-ink)]">{r.title}</span>
@@ -72,7 +72,7 @@ export function TrainingRecoCard({ sector }: { sector?: string | null }) {
         </p>
       )}
 
-      <Link href="/candidate/training" className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold" style={{ color: KZ.violet }}>
+      <Link href="/candidat/formations" className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold" style={{ color: KZ.violet }}>
         Voir toutes les formations <ArrowRight size={14} />
       </Link>
     </div>

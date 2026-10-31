@@ -35,20 +35,20 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
     // Navigation contextuelle selon le type
     const data = n.data ?? {}
     if (n.type === 'application_status' && data.applicationId) {
-      router.push('/candidate/applications')
+      router.push('/candidat/candidatures')
     } else if (n.type === 'new_job_match' && data.jobId) {
-      router.push(`/candidate/jobs/${data.jobId}`)
+      router.push(`/candidat/offres/${data.jobId}`)
     } else if (n.type === 'interview_scheduled') {
-      router.push('/candidate/agenda')
+      router.push('/candidat/entretiens')
     }
     setBellOpen(false)
   }
 
   const profilePath = profile?.role === 'recruiter'
-    ? '/recruiter/dashboard'
-    : profile?.role === 'admin' ? '/admin/dashboard' : '/candidate/profile'
+    ? '/recruteur/tableau-de-bord'
+    : profile?.role === 'admin' ? '/admin/tableau-de-bord' : '/candidat/profil'
 
-  const settingsPath = profile?.role === 'candidate' ? '/candidate/settings' : '/recruiter/dashboard'
+  const settingsPath = profile?.role === 'candidate' ? '/candidat/parametres' : '/recruteur/tableau-de-bord'
 
   return (
     <header className="h-14 lg:h-[60px] px-4 os-glass !border-x-0 !border-t-0 !bg-[rgba(18,18,22,0.65)] flex items-center gap-3 shrink-0 z-10">
@@ -135,7 +135,7 @@ export function TopBar({ searchPlaceholder, onSearch, onMenuClick }: TopBarProps
               </div>
               {profile?.role === 'candidate' && (
                 <div className="px-4 py-2.5 border-t border-white/[0.06]">
-                  <Link href="/candidate/settings" onClick={() => setBellOpen(false)}
+                  <Link href="/candidat/parametres" onClick={() => setBellOpen(false)}
                     className="text-xs font-semibold text-[#0A84FF] hover:underline">
                     Gérer les préférences de notifications
                   </Link>

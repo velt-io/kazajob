@@ -143,7 +143,7 @@ const jsonLd = {
       publisher: { '@id': 'https://kazajob.re/#organization' },
       potentialAction: {
         '@type': 'SearchAction',
-        target: { '@type': 'EntryPoint', urlTemplate: 'https://kazajob.re/candidate/jobs?q={search_term_string}' },
+        target: { '@type': 'EntryPoint', urlTemplate: 'https://kazajob.re/candidat/offres?q={search_term_string}' },
         'query-input': 'required name=search_term_string',
       },
     },

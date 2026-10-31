@@ -97,7 +97,7 @@ export function ApplicationCard({ app, actions, messaging, busy, landed, draggin
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             {candidate ? (
-              <Link href={`/recruiter/candidates/${candidate.id}`} className="text-[14px] font-semibold text-white truncate hover:underline underline-offset-2" draggable={false}>
+              <Link href={`/recruteur/candidats/${candidate.id}`} className="text-[14px] font-semibold text-white truncate hover:underline underline-offset-2" draggable={false}>
                 {name}
               </Link>
             ) : <span className="text-[14px] font-semibold text-white truncate">{name}</span>}
@@ -201,7 +201,7 @@ export function ApplicationRow({ app, actions, messaging, busy, landed }: {
         {candidate && <IconButton label="Ajouter au vivier" onClick={() => actions.onPool(app)}><Bookmark size={15} /></IconButton>}
         {candidate && (
           <Tooltip content="Voir le profil">
-            <Link href={`/recruiter/candidates/${candidate.id}`} aria-label="Voir le profil" className="osr-icon-btn"><ChevronRight size={16} /></Link>
+            <Link href={`/recruteur/candidats/${candidate.id}`} aria-label="Voir le profil" className="osr-icon-btn"><ChevronRight size={16} /></Link>
           </Tooltip>
         )}
       </div>

@@ -262,7 +262,7 @@ export async function POST(req: NextRequest) {
         inviterName: inviter?.fullName ?? 'Un recruteur',
         companyName: (inv as { company?: { name: string } }).company?.name ?? 'une entreprise',
         role: inv.role === 'admin' ? 'admin' : 'member',
-        acceptUrl: `https://kazajob.re/recruiter/join?invite=${token}`,
+        acceptUrl: `https://kazajob.re/recruteur/rejoindre?invite=${token}`,
       })
       await resend.emails.send({ from: FROM, to: inv.email, subject, html })
       return NextResponse.json({ ok: true })

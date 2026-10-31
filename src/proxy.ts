@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 
 // Routes publiques sous /candidate accessibles sans connexion (SEO + visiteurs)
-const PUBLIC_CANDIDATE_PATHS = ['/candidate/jobs', '/candidate/training']
+const PUBLIC_CANDIDATE_PATHS = ['/candidat/offres', '/candidat/formations']
 
 const DASHBOARD: Record<string, string> = {
-  candidate: '/candidate/dashboard',
-  recruiter: '/recruiter/dashboard',
-  admin:     '/admin/dashboard',
+  candidate: '/candidat/tableau-de-bord',
+  recruiter: '/recruteur/tableau-de-bord',
+  admin:     '/admin/tableau-de-bord',
 }
 
 export default auth((request) => {
@@ -16,12 +16,12 @@ export default auth((request) => {
   const path = request.nextUrl.pathname
 
   // Onboarding — protégé
-  if (path.startsWith('/onboarding') && !user) {
-    return NextResponse.redirect(new URL('/auth/register', request.url))
+  if (path.startsWith('/premiers-pas') && !user) {
+    return NextResponse.redirect(new URL('/inscription', request.url))
   }
 
   // Routes auth → rediriger si déjà connecté
-  if (user && (path === '/auth/login' || path === '/auth/register')) {
+  if (user && (path === '/connexion' || path === '/inscription')) {
     return NextResponse.redirect(new URL(DASHBOARD[role] ?? DASHBOARD.candidate, request.url))
   }
 
@@ -29,22 +29,22 @@ export default auth((request) => {
   const isPublicCandidatePath = PUBLIC_CANDIDATE_PATHS.some(p =>
     path === p || path.startsWith(p + '/')
   )
-  const protectedPrefixes = ['/candidate', '/recruiter', '/admin']
+  const protectedPrefixes = ['/candidat', '/recruteur', '/admin']
   const isProtected = protectedPrefixes.some((p) => path.startsWith(p)) && !isPublicCandidatePath
 
   if (isProtected && !user) {
     const next = encodeURIComponent(path)
-    return NextResponse.redirect(new URL(`/auth/login?next=${next}`, request.url))
+    return NextResponse.redirect(new URL(`/connexion?next=${next}`, request.url))
   }
 
   // Vérification du rôle — STRICT
   if (user && isProtected) {
     // Accès /candidate → réservé aux candidats et admins
-    if (path.startsWith('/candidate') && role !== 'candidate' && role !== 'admin') {
+    if (path.startsWith('/candidat') && role !== 'candidate' && role !== 'admin') {
       return NextResponse.redirect(new URL(DASHBOARD[role] ?? DASHBOARD.candidate, request.url))
     }
     // Accès /recruiter → réservé aux recruteurs et admins
-    if (path.startsWith('/recruiter') && role !== 'recruiter' && role !== 'admin') {
+    if (path.startsWith('/recruteur') && role !== 'recruiter' && role !== 'admin') {
       return NextResponse.redirect(new URL(DASHBOARD[role] ?? DASHBOARD.candidate, request.url))
     }
     // Accès /admin → réservé aux admins uniquement

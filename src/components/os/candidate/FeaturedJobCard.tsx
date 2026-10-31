@@ -48,7 +48,7 @@ export function FeaturedJobCard({ job, eyebrow, index = 0 }: { job: Job; eyebrow
         )}
       </div>
 
-      <Link href={`/candidate/jobs/${job.id}`} className="absolute inset-0 z-[2] rounded-[30px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={`${job.title} — ${company}`} />
+      <Link href={`/candidat/offres/${job.id}`} className="absolute inset-0 z-[2] rounded-[30px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={`${job.title} — ${company}`} />
     </article>
   )
 }

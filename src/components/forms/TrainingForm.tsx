@@ -137,7 +137,7 @@ export function TrainingForm({ training, recruiterId, companyId, admin, onSucces
 
     setSaving(false)
     onSuccess?.()
-    router.push(admin ? '/admin/jobs' : '/recruiter/training')
+    router.push(admin ? '/admin/offres' : '/recruteur/formations')
   }
 
   const hfOk = !title || hasMentionHF(title)

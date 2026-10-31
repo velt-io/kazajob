@@ -50,7 +50,7 @@ export function AvatarShowcaseSection() {
             ))}
           </div>
 
-          <Link href="/auth/register">
+          <Link href="/inscription">
             <Button kind="primary" size="lg" iconRight={<ArrowRight size={15} />}>Créer mon perso — gratuit</Button>
           </Link>
         </div>

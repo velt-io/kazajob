@@ -26,7 +26,7 @@ if (process.env.AUTH_LINKEDIN_ID) oauthProviders.push(LinkedIn({ allowDangerousE
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
-  pages: { signIn: '/auth/login' },
+  pages: { signIn: '/connexion' },
   providers: [
     Credentials({
       credentials: { email: {}, password: {} },
